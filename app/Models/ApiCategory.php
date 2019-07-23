@@ -25,7 +25,7 @@ class ApiCategory extends Model
         // TODO: Implement __clone() method.
     }
     /**
-     * 查询一条记录
+     * todo：查询一条记录
      * @param $field
      * @param $value
      * @param string $op
@@ -44,31 +44,7 @@ class ApiCategory extends Model
      */
     public function getResultListsLevel2()
     {
-        $result = DB::table(self::$tableName)->orderBy('path')->get(['name as label','id as value','pid','level']);
-        return $result;
-    }
-
-    /**
-     * 权限分页列表
-     * @param $name
-     * @param $pid
-     * @param $page
-     * @param $limit
-     * @return Collection
-     */
-    public function getResultLists($name,$pid,$page,$limit=10)
-    {
-        $where[] = array('id','>',0);
-        if (!empty($name)){
-            $where[] = ['name','like','%'.$name.'%'];
-        }
-        if (!empty($pid)){
-            $where[] = ['pid','=',$pid];
-            $result['data'] = DB::table(self::$tableName)->where($where)->orWhere('id',$pid)->offset($limit*($page-1))->limit($limit)->orderBy('path')->get();
-        }else{
-            $result['data'] = DB::table(self::$tableName)->where($where)->offset($limit*($page-1))->limit($limit)->orderBy('path')->get();
-        }
-        $result['total'] = DB::table(self::$tableName)->where($where)->count();
+        $result = DB::table(self::$tableName)->orderBy('path')->get(['name','id as value','pid','level']);
         return $result;
     }
     /**

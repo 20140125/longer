@@ -26,7 +26,7 @@ class MusicController extends BaseController
      * @var OAuth $oauthModel 授权模型
      * @var Users $userModel 用户模型
      */
-    protected $rootUrl='https://api.imjad.cn/cloudmusic/?',$musicUserSearchModel,$musicModel,$userMusicModel,$oauthModel,$userModel;
+    protected $rootUrl='https://api.imjad.cn/cloudmusic/?',$musicUserSearchModel,$musicModel,$userMusicModel,$oauthModel;
 
     /**
      * 构造函数
@@ -40,7 +40,6 @@ class MusicController extends BaseController
         $this->musicModel = Music::getInstance();
         $this->userMusicModel = UserMusic::getInstance();
         $this->oauthModel = OAuth::getInstance();
-        $this->userModel = Users::getInstance();
     }
 
     /**
@@ -80,7 +79,7 @@ class MusicController extends BaseController
                     $item->search_type_name = $this->searchType($item->search_type);
                     $item->form='mysql';
                 }
-                return $this->ajax_return(Code::SUCCESS,'success',$result);
+                return $this->ajax_return(Code::SUCCESS,'successfully',$result);
                 break;
             default:
                 return $this->ajax_return(Code::ERROR,'error');
@@ -111,7 +110,7 @@ class MusicController extends BaseController
             case 10:
                 $arr = $this->searchAlbum($result, $data);
         }
-        return $this->ajax_return(Code::SUCCESS,'success',$arr);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$arr);
     }
 
     /**
@@ -207,7 +206,7 @@ class MusicController extends BaseController
             $arr['data'][] = $music;
         }
         $arr['total'] = count($result['songs']);
-        return $this->ajax_return(Code::SUCCESS,'success',$arr);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$arr);
     }
 
     /**
@@ -224,7 +223,7 @@ class MusicController extends BaseController
         if (!empty($music->music_url) && strtotime('+1 hour',strtotime($music->updated_at))>strtotime(date("Y-m-d 23:59:59")) && $this->post['form'] === 'mysql'){
             $arr['music_url'] = $music->music_url;
             $arr['lyric'] = $this->lyric($this->post['music_id'],$this->post['s']);
-            return $this->ajax_return(Code::SUCCESS,'success',$arr);
+            return $this->ajax_return(Code::SUCCESS,'successfully',$arr);
         }
         $data = array('type' =>'song', 'id' =>$this->post['music_id']);
         $result = $this->curl($this->rootUrl.http_build_query($data));
@@ -244,7 +243,7 @@ class MusicController extends BaseController
             unset($arr['lyric']);
             $this->userMusicModel->updateResult($arr, 'music_id', $this->post['music_id']);
         }
-        return $this->ajax_return(Code::SUCCESS,'success',$arr);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$arr);
     }
 
     /**
@@ -353,7 +352,7 @@ class MusicController extends BaseController
             $result = $this->userMusicModel->updateResult($data,$where);
         }
         if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'success');
+            return $this->ajax_return(Code::SUCCESS,'successfully');
         }
         return $this->ajax_return(Code::ERROR,'error');
     }
@@ -373,7 +372,7 @@ class MusicController extends BaseController
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
         $result = $this->userMusicModel->getResultLists($this->post['page'],$this->post['limit'],$this->post['openid'],$this->post['status']??'');
-        return $this->ajax_return(Code::SUCCESS,'success',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**
@@ -387,7 +386,7 @@ class MusicController extends BaseController
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
         $result = $this->musicUserSearchModel->getSearchCount();
-        return $this->ajax_return(Code::SUCCESS,'success',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**

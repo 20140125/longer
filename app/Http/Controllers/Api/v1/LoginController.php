@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * 登录
+ * todo 登录
  * Class LoginController
  * @package App\Http\Controllers\Api\v1
  */
 class LoginController extends BaseController
 {
     /**
-     * 用户登录
+     * todo 用户登录
      * @param Request $request
      * @return JsonResponse
      */
@@ -27,15 +27,18 @@ class LoginController extends BaseController
         if ($validate->fails()){
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $result = $this->adminUserModel->loginRes($this->post);
+        $result = $this->userModel->loginRes($this->post);
         if ($result === Code::ERROR){
             return $this->ajax_return(Code::ERROR,'account or password validate error');
         }
-        return $this->ajax_return(Code::SUCCESS,'login success',$result);
+        if ($result === Code::NOT_ALLOW){
+            return $this->ajax_return(Code::NOT_ALLOW,'users not allow login system');
+        }
+        return $this->ajax_return(Code::SUCCESS,'login successfully',$result);
     }
 
     /**
-     * 用户合法性
+     * todo 用户合法性
      * @param Request $request
      * @return JsonResponse
      */
@@ -44,15 +47,15 @@ class LoginController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $username = $this->adminUserModel->getResult('remember_token',$this->post['token']);
+        $username = $this->userModel->getResult('access_token',$this->post['token']);
         if (!empty($username)){
-            $role = $this->adminRoleModel->getResult('id',$username->role_id);
+            $role = $this->roleModel->getResult('id',$username->role_id);
             return $this->ajax_return(Code::SUCCESS,'permission',['auth'=>$role->auth_url]);
         }
         return $this->ajax_return(Code::ERROR,'permission denied');
     }
     /**
-     * 退出登陆
+     * todo  退出登陆
      * @param Request $request
      * @return JsonResponse
      */
@@ -61,10 +64,10 @@ class LoginController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $username = $this->adminUserModel->getResult('remember_token',$request->post('token'));
+        $username = $this->userModel->getResult('access_token',$request->post('token'));
         if (!empty($username)){
-            $username->remember_token = md5(md5($username->password).time());
-            $this->adminUserModel->updateResult(object_to_array($username),'remember_token',$request->post('token'));
+            $username->access_token = md5(md5($username->password).time());
+            $this->userModel->updateResult(object_to_array($username),'access_token',$request->post('token'));
             return $this->ajax_return(Code::SUCCESS,'permission');
         }
         return $this->ajax_return(Code::ERROR,'permission denied');

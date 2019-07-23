@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Utils\Code;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Users extends Model
@@ -25,7 +27,47 @@ class Users extends Model
     }
 
     /**
-     * 查询一条记录
+     * todo 登陆后台
+     * @param $data
+     * @return int
+     */
+    public function loginRes($data)
+    {
+        $result = self::getInstance()->getResult( 'username',$data['username']);
+        if (empty($result)){
+            return Code::ERROR;
+        }
+        $password = md5 (md5($data['password']).$result->salt);
+        if ($password!==$result->password){
+            return Code::ERROR;
+        }
+        if ($result->status == '2'){
+            return Code::NOT_ALLOW;
+        }
+        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time());
+        $request['salt'] = get_round_num(8);
+        $request['password'] = md5 (md5($data['password']).$request['salt']);
+        $request['access_token'] = md5 (md5($request['password']).$request['salt']);
+        self::getInstance()->updateResult($request,'id',$result->id);
+        $admin['token'] = $request['access_token'];
+        $admin['username'] = $result->username;
+        return $admin;
+    }
+
+    /**
+     * todo 获取管理员列表
+     * @return Collection
+     */
+    public function  getResultList()
+    {
+        $result = DB::table(self::$tableName)->join('os_role',self::$tableName.'.role_id','=','os_role.id')
+            ->get(['os_users.*','os_role.id as role_id']);
+        return $result;
+    }
+
+
+    /**
+     * todo 查询一条记录
      * @param $field
      * @param $value
      * @param string $op
@@ -38,19 +80,18 @@ class Users extends Model
         return $result;
     }
     /**
-     * 添加记录
+     * todo 添加记录
      * @param $data
      * @return bool
      */
     public function addResult($data)
     {
-        $data['created_at'] = date('Y-m-d H:i:s');
         $result = DB::table(self::$tableName)->insertGetId($data);
         return $result;
     }
 
     /**
-     * 更新一条数据
+     * todo 更新一条数据
      * @param $data
      * @param $field
      * @param $value
@@ -59,13 +100,12 @@ class Users extends Model
      */
     public function updateResult($data,$field,$value,$op='=')
     {
-        $data['updated_at'] = date('Y-m-d H:i:s');
         $result = DB::table(self::$tableName)->where($field,$value,$op)->update($data);
         return $result;
     }
 
     /**
-     * 删除一条数据
+     * todo 删除一条数据
      * @param $field
      * @param $value
      * @param $op
@@ -73,7 +113,7 @@ class Users extends Model
      */
     public function deleteResult($field,$value,$op='=')
     {
-        $result = DB::table(self::$tableName)->whereIn($field,$value,$op)->delete();
+        $result = DB::table(self::$tableName)->where($field,$value,$op)->delete();
         return $result;
     }
 }

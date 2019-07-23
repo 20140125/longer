@@ -2,16 +2,15 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
-use App\Http\Controllers\Utils\crypt\WXBizDataCrypt;
 use App\Models\Users;
 use Illuminate\Config\Repository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
+
 /**
- * 用户管理
+ * todo 用户管理
  * Class UsersController
  * @package App\Http\Controllers\Api\v1
  */
@@ -25,10 +24,6 @@ class UsersController extends BaseController
      * @var Repository|mixed 用户密钥（小程序）
      */
     protected $appsecret;
-    /**
-     * @var Repository|mixed 默认密码
-     */
-    protected $default_pass;
 
     /**
      * UsersController constructor.
@@ -39,29 +34,10 @@ class UsersController extends BaseController
         parent::__construct($request);
         $this->appid = config('app.app_id');
         $this->appsecret = config('app.app_secret');
-        $this->default_pass = config('app.default_pass');
     }
 
     /**
-     * 微信登陆信息
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function login(Request $request)
-    {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
-        $result = Users::getInstance()->updateResult($this->post,'openid',$this->post['openid']);
-        if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'success');
-        }
-        return $this->ajax_return(Code::ERROR,'error');
-
-    }
-
-    /**
-     * 微信获取用户的openid
+     * todo 微信获取用户的openid
      * @param Request $request
      * @return JsonResponse
      */
@@ -93,18 +69,26 @@ class UsersController extends BaseController
         }else if ($result->exp_time<time()){
             Users::getInstance()->updateResult($data,'openid',$parsedData['openid']);
         }
-        return $this->ajax_return(Code::SUCCESS,'success',$parsedData);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$parsedData);
     }
 
     /**
-     * redis 订阅
+     * todo 微信登陆信息
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function publish()
+    public function login(Request $request)
     {
-        $redis = Redis::connection();
-        $redis->publish('user_channel','这是一个测试');
-    }
+        if ($request->isMethod('get')){
+            return $this->ajax_return(Code::METHOD_ERROR,'error');
+        }
+        $result = Users::getInstance()->updateResult($this->post,'openid',$this->post['openid']);
+        if (!empty($result)){
+            return $this->ajax_return(Code::SUCCESS,'login successfully');
+        }
+        return $this->ajax_return(Code::ERROR,'error');
 
+    }
     /**
      * 管理员信息
      * @param Request $request
@@ -115,19 +99,17 @@ class UsersController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $result['userLists'] = $this->adminUserModel->getResultList();
+        $result['userLists'] = $this->userModel->getResultList();
         foreach ($result['userLists'] as &$item){
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
-            unset($item->remember_token);
         }
-        $result['roleLists'] = $this->adminRoleModel->getResult2('1');
-        $result['default_pass'] = $this->default_pass;
-        return $this->ajax_return(Code::SUCCESS,'success',$result);
+        $result['roleLists'] = $this->roleModel->getResult2('1',['id','role_name']);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**
-     * 管理员保存
+     * todo 管理员保存
      * @param Request $request
      * @return JsonResponse
      */
@@ -140,29 +122,17 @@ class UsersController extends BaseController
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $data = $this->post;
-        $data['password'] = empty($data['password'])?'123456789':$data['password']; //设置默认密码
-        $salt = get_round_num(8);
-        $args = array(
-            'username' =>$data['username'],
-            'email' =>$data['email'],
-            'salt' => $salt,
-            'status' =>$data['status'],
-            'role_id' =>$data['role_id'],
-            'password' =>md5(md5($data['password']).$salt),
-            'ip_address' =>$request->ip(),
-            'created_at' =>time(),
-            'updated_at' =>time()
-        );
-        $args['role_id'] = $this->adminRoleModel->getResult('role_name',$args['role_id'])->id;
-        $result = $this->adminUserModel->addResult($args);
+        $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
+        $this->post['role_id'] = $this->roleModel->getResult('id',$this->post['role_id'])->id;
+        $this->post['ip_address'] = $request->ip();
+        $result = $this->userModel->addResult($this->post);
         if ($result){
-            return $this->ajax_return(Code::SUCCESS,'add user success');
+            return $this->ajax_return(Code::SUCCESS,'add user successfully');
         }
         return $this->ajax_return(Code::ERROR,'add user error');
     }
     /**
-     * 管理员更新
+     * todo 管理员更新
      * @param Request $request
      * @return JsonResponse
      */
@@ -171,53 +141,51 @@ class UsersController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        //区分修改类型 0 只是修改显示状态 1 修改管理员信息
-        $data = $this->post;
-        $flag = !empty($data['act'])?0:1;
-        $salt = get_round_num(8);
-        switch ($flag){
-            case 0:
-                $validate = Validator::make($this->post,['status' => 'required|string|in:1,2','id'=>'required|integer|gt:1'],['id.gt'=>'Permission denied']);
-                if ($validate->fails()){
-                    return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-                }
-                $args = array('status' =>$data['status']);
-                break;
-            case 1:
-                $rule = $this->rule(1);
-                $args = array(
-                    'username' =>$data['username'],
-                    'email' =>$data['email'],
-                    'status' =>$data['status'],
-                    'role_id' =>empty($data['role_id'])?0:$data['role_id'],
-                    'ip_address' =>$request->ip(),
-                    'created_at' =>strtotime($data['created_at']),
-                    'updated_at' =>time()
-                );
-                $args['role_id'] = $this->adminRoleModel->getResult('role_name',$args['role_id'])->id;
-                if (!empty($data['password'])){
-                    $rule = $this->rule(2);
-                    $args['salt'] = $salt;
-                    $args['password'] = md5(md5($data['password']).$salt);
-                }
-                $validate = Validator::make($this->post,$rule);
-                if ($validate->fails()){
-                    return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-                }
-                break;
-            default:
-                return $this->ajax_return(Code::ERROR,'input args error');
-                break;
+        //修改用户禁用状态
+        if (!empty($this->post['act'])){
+            $validate = Validator::make($this->post,$this->rule(4));
+            if ($validate->fails()){
+                return $this->ajax_return(Code::ERROR,$validate->errors()->first());
+            }
+            unset($this->post['act']);
+            $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
+            if (!empty($result)){
+                return $this->ajax_return(Code::SUCCESS,'update users status successfully');
+            }
+            return $this->ajax_return(Code::SUCCESS,'update users status error');
         }
-        $result = $this->adminUserModel->updateResult($args,'id',$data['id']);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,'update user success');
+        $password = $this->userModel->getResult('id',$this->post['id'])->password;
+        $this->post['created_at'] = strtotime($this->post['created_at']);
+        $this->post['update_at'] = time();
+        //用户没有修改密码
+        if ($password == $this->post['password']){
+            $validate = Validator::make($this->post,$this->rule(1));
+            if ($validate->fails()){
+                return $this->ajax_return(Code::ERROR,$validate->errors()->first());
+            }
+            unset($this->post['password']);
+            $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
+            if (!empty($result)){
+                return $this->ajax_return(Code::SUCCESS,'update users successfully');
+            }
+            return $this->ajax_return(Code::SUCCESS,'update users error');
         }
-        return $this->ajax_return(Code::ERROR,'update user error');
+        //用户修改密码
+        $validate = Validator::make($this->post,$this->rule(2));
+        if ($validate->fails()){
+            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
+        }
+        $this->post['salt'] = get_round_num(8);
+        $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
+        $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
+        if (!empty($result)){
+            return $this->ajax_return(Code::SUCCESS,'update users successfully');
+        }
+        return $this->ajax_return(Code::SUCCESS,'update users error');
     }
 
     /**
-     * 删除管理员用户
+     * todo 删除管理员用户
      * @param Request $request
      * @return JsonResponse
      */
@@ -230,9 +198,9 @@ class UsersController extends BaseController
         if ($validate->fails()) {
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $result = $this->adminUserModel->deleteResult('id',$this->post['id']);
+        $result = $this->userModel->deleteResult('id',$this->post['id']);
         if ($result){
-            return $this->ajax_return(Code::SUCCESS,'delete user success');
+            return $this->ajax_return(Code::SUCCESS,'delete user successfully');
         }
         return $this->ajax_return(Code::ERROR,'delete user error');
     }
@@ -244,13 +212,14 @@ class UsersController extends BaseController
      */
     protected function rule($status)
     {
-        $rule = array();
         switch ($status){
             case 1:
                 $rule = [
                     'username' => 'required|between:4,16|string',
                     'email' => 'required|email',
-                    'status'   => 'required|string|between:1,2'
+                    'status'   => 'required|integer|between:1,2',
+                    'phone_number' => 'required|size:11',
+                    'role_id' => 'required|integer'
                 ];
                 break;
             case 2:
@@ -258,16 +227,32 @@ class UsersController extends BaseController
                     'username' => 'required|between:4,16|string',
                     'email' => 'required|email',
                     'password' => 'required|string|between:6,16',
-                    'status'   => 'required|string|in:1,2'
+                    'salt' => 'required|string|size:8',
+                    'status'   => 'required|integer|in:1,2',
+                    'phone_number' => 'required|size:11',
+                    'role_id' => 'required|integer'
                 ];
                 break;
             case 3:
                 $rule= [
-                    'username' => 'required|between:4,16|string|unique:os_admin_users',
+                    'username' => 'required|between:4,16|string|unique:os_users',
                     'email' => 'required|email',
                     'password' => 'required|string|between:6,16',
-                    'status'   => 'required|string|in:1,2'
+                    'status'   => 'required|integer|in:1,2',
+                    'role_id' => 'required|integer',
+                    'salt' => 'required|string|size:8',
+                    'created_at' => 'required|digits:10',
+                    'updated_at' => 'required|digits:10'
                 ];
+                break;
+            case 4:
+                $rule = [
+                    'status'   => 'required|string|between:1,2',
+                    'id' => 'required|integer'
+                ];
+                break;
+            default:
+                $rule = [];
                 break;
         }
         return $rule;

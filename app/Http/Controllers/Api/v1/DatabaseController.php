@@ -39,7 +39,7 @@ class DatabaseController extends BaseController
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
         $result = $this->databaseModel->lists();
-        return $this->ajax_return(Code::SUCCESS,'success',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**
@@ -58,6 +58,6 @@ class DatabaseController extends BaseController
             $content = $this->databaseModel->createTable($item).$this->databaseModel->sourceTable($item);
             write_file($savePath,$content);
         }
-        return $this->ajax_return(Code::SUCCESS,'success');
+        return $this->ajax_return(Code::SUCCESS,'successfully');
     }
 }

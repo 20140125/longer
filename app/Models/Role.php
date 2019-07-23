@@ -40,15 +40,16 @@ class Role extends Model
     /**
      * 获取角色列表
      * @param int $status
+     * @param array $column
      * @return Collection
      */
-    public function getResult2($status = 0)
+    public function getResult2($status = 0,$column = ['*'])
     {
         $where=[];
         if (!empty($status)){
             $where[] = array('status','=',$status);
         }
-        $result = DB::table(self::$tableName)->where($where)->get();
+        $result = DB::table(self::$tableName)->where($where)->get($column);
         return $result;
     }
 

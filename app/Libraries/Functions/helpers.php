@@ -213,13 +213,14 @@ if (!function_exists('file_lists'))
         $fileArr = array();
         $openDir = opendir($filePath);
         while ($file = readdir($openDir)){
-            if (!in_array($file,['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules'])){
+            if (!in_array($file,['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml'])){
                 $fileArr[] = array(
                     'label'=>$file,
                     'fileType' =>filetype($filePath.$file),
                     'children' =>[],
-                    'path' =>filetype($filePath.$file)=='dir'?$filePath.$file.'/':$filePath.$file,
-                    'size' =>filesize($filePath.$file)
+                    'path' =>filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
+                    'size' =>md5($filePath.$file),
+                    'auth' => file_chmod($filePath.$file)
                 );
             }
         }
@@ -274,7 +275,8 @@ if (!function_exists('write_file'))
     /**
      * 文件写入
      * @param $filepath
-     * @return string
+     * @param $content
+     * @return int
      */
     function write_file($filepath,$content)
     {
@@ -283,13 +285,62 @@ if (!function_exists('write_file'))
         return $written;
     }
 }
+if (!function_exists('file_rename')){
+    /**
+     * todo：文件重命名
+     * @param $oldFile
+     * @param $newFile
+     * @return bool
+     */
+    function file_rename($oldFile,$newFile)
+    {
+        if ((is_file($oldFile) || is_dir($oldFile)) && !file_exists($newFile)){
+            return rename($oldFile,$newFile);
+        }
+        return false;
+    }
+}
+if (!function_exists('save_file')){
+    /**
+     * todo：保存文件
+     * @param $filepath
+     * @return bool
+     */
+    function save_file($filepath)
+    {
+        if (file_exists($filepath)){
+            return false;
+        }
+        $file = mb_substr($filepath,strripos($filepath,'/')+1);
+        if (strstr($file,'.') === false){
+            mkdir($filepath);
+            return true;
+        }
+        fopen($filepath,'a');
+        fwrite($filepath,basename($filepath));
+        fclose($filepath);
+        return true;
+    }
+}
+
+if (!function_exists('file_chmod')){
+    /**
+     * todo：获取权限
+     * @param $filepath
+     * @return bool|string
+     */
+    function file_chmod($filepath){
+        return substr(base_convert(@fileperms($filepath),10,8),-3);
+    }
+}
+
 if (!function_exists('gzip'))
 {
     /**
      * 文件压缩
-     * @param $docLists
-     * @param $path
-     * @param $zipProductPath
+     * @param array $docLists 文件列表
+     * @param string $path 文件路径
+     * @param string $zipProductPath 文件名称
      * @return bool
      */
     function gzip($docLists,$path,$zipProductPath)
@@ -472,7 +523,6 @@ if(!function_exists('http_query'))
          curl_setopt($ch, CURLOPT_TIMEOUT, 60); // 60 second
          //如果数据存在则POST方式
          if (!empty($data)) {
-             \Illuminate\Support\Facades\Log::error($data);
              curl_setopt($ch, CURLOPT_POST, 1);
              curl_setopt($ch, CURLOPT_POSTFIELDS, $data); //POST数据
          }

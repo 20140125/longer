@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * 系统日志管理
+ * todo 系统日志管理
  * Class LogController
  * @package App\Http\Controllers\Api\v1
  */
@@ -19,7 +19,7 @@ class LogController extends BaseController
     protected $logModel;
 
     /**
-     * LogController constructor.
+     * todo LogController constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -29,7 +29,7 @@ class LogController extends BaseController
     }
 
     /**
-     * 日志列表
+     * todo 日志列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -42,7 +42,7 @@ class LogController extends BaseController
         foreach ($result['data'] as &$item){
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
         }
-        return $this->ajax_return(Code::SUCCESS,'success',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**
@@ -55,13 +55,13 @@ class LogController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $this->post['username'] = $this->adminUserModel->getResult('remember_token',$this->post['token'])->username;
+        $this->post['username'] = $this->userModel->getResult('access_token',$this->post['token'])->username;
         $result = act_log($this->post);
-        return $this->ajax_return(Code::SUCCESS,'success',$result);
+        return $this->ajax_return(Code::SUCCESS,'save log successfully',$result);
     }
 
     /**
-     * 删除日志
+     * todo 删除日志
      * @param Request $request
      * @return JsonResponse
      */
@@ -72,7 +72,7 @@ class LogController extends BaseController
         }
         $result = $this->logModel->deleteResult('id',$this->post['id'],'=');
         if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'delete log success');
+            return $this->ajax_return(Code::SUCCESS,'delete log successfully');
         }
         return $this->ajax_return(Code::ERROR,'delete log error');
     }

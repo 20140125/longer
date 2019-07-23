@@ -25,7 +25,7 @@ class ArticleController extends BaseController
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
         $result = Article::getInstance()->getLists($this->post['page'],$this->post['limit'],'');
-        return $this->ajax_return(Code::SUCCESS,'success',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
     /**
      * 修改文章
@@ -49,7 +49,7 @@ class ArticleController extends BaseController
         }
         $result = Article::getInstance()->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'success');
+            return $this->ajax_return(Code::SUCCESS,'successfully');
         }
         return $this->ajax_return(Code::ERROR,'error');
     }

@@ -11,11 +11,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class AuthController
+ * @package App\Http\Controllers\Api\v1
+ */
 class AuthController extends BaseController
 {
 
     /**
-     * 权限列表
+     * todo 权限列表
      * @param Request $request
      * @return Factory|JsonResponse|\Illuminate\View\View
      */
@@ -26,11 +30,11 @@ class AuthController extends BaseController
         }
         $result['authLists'] = $this->ruleModel->getAuthLists($this->post['name']??'',$this->post['pid']??0,$this->post['page']??1,$this->post['limit']??20);
         $result['selectAuth'] = $this->ruleModel->getResult2('1',2);
-        return $this->ajax_return(Code::SUCCESS,'success','',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**
-     * 权限保存
+     * todo 权限保存
      * @param Request $request
      * @return JsonResponse
      */
@@ -39,20 +43,20 @@ class AuthController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $validate = Validator::make($this->post,['name'=> 'required|unique:os_auth','href' =>'required']);
+        $validate = Validator::make($this->post,['name'=> 'required|unique:os_rule','href' =>'required|unique:os_rule']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
         $result = $this->ruleModel->addResult($this->post);
         if (!empty($result)){
-            $this->sys_log('权限保存成功');
-            return $this->ajax_return(Code::SUCCESS,'success',route('auth-index'));
+            act_log('权限保存成功');
+            return $this->ajax_return(Code::SUCCESS,'save rule successfully');
         }
         return $this->ajax_return(Code::ERROR,'error');
     }
 
     /**
-     * 更新权限
+     * todo 更新权限
      * @param Request $request
      * @return JsonResponse
      */
@@ -66,24 +70,26 @@ class AuthController extends BaseController
             if ($validate->fails()){
                 return $this->ajax_return(Code::ERROR,$validate->errors()->first());
             }
-            unset($this->post['show_name']);
-        }else{
-            $validate = Validator::make($this->post,['status'=> 'required|in:1,2','id' =>'required|integer']);
-            if ($validate->fails()){
-                return $this->ajax_return(Code::ERROR,$validate->errors()->first());
+            $result = $this->ruleModel->updateResult($this->post,'id',$this->post['id']);
+            if (!empty($result)){
+                return $this->ajax_return(Code::SUCCESS,'update rule successfully');
             }
-            unset($this->post['act']);
+            return $this->ajax_return(Code::ERROR,'update rule error');
+        }
+        unset($this->post['act']);
+        $validate = Validator::make($this->post,['status'=> 'required|in:1,2','id' =>'required|integer']);
+        if ($validate->fails()){
+            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
         $result = $this->ruleModel->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
-            $this->sys_log('更新权限成功');
-            return $this->ajax_return(Code::SUCCESS,'success',route('auth-index'));
+            return $this->ajax_return(Code::SUCCESS,'update rule status successfully');
         }
-        return $this->ajax_return(Code::ERROR,'error');
+        return $this->ajax_return(Code::ERROR,'update rule status error');
     }
 
     /**
-     * 删除权限
+     * todo 删除权限
      * @param Request $request
      * @return JsonResponse
      */
@@ -103,8 +109,8 @@ class AuthController extends BaseController
         }
         $result = $this->ruleModel->deleteResult('id',$this->post['id']);
         if (!empty($result)){
-            $this->sys_log('删除权限');
-            return $this->ajax_return(Code::SUCCESS,'success');
+            act_log('删除权限');
+            return $this->ajax_return(Code::SUCCESS,'successfully');
         }
         return $this->ajax_return(Code::ERROR,'error');
     }

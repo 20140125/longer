@@ -3,27 +3,32 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\Rsa;
-use App\Models\AdminUser;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Models\Rule;
+use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * 公共类
+ * todo 公共类
  * Class BaseController
  * @package App\Http\Controllers\Api\v1
  */
 class BaseController extends Controller
 {
     /**
-     * @var AdminUser $adminUserModel 用户模型
+     * @var Users $userModel 用户模型
      */
-    protected $adminUserModel;
+    protected $userModel;
     /**
-     * @var Role $adminRoleModel 角色模型
+     * @var Role $roleModel 角色模型
      */
-    protected $adminRoleModel;
+    protected $roleModel;
+    /**
+     * @var Rule $ruleModel
+     */
+    protected $ruleModel;
     /**
      * @var array $post 请求数据
      */
@@ -45,8 +50,9 @@ class BaseController extends Controller
     public function __construct(Request $request)
     {
         $this->post = $request->post();
-        $this->adminUserModel = AdminUser::getInstance();
-        $this->adminRoleModel = Role::getInstance();
+        $this->userModel = Users::getInstance();
+        $this->roleModel = Role::getInstance();
+        $this->ruleModel = Rule::getInstance();
         $this->backupPath = public_path('backup/');
         //公用权限
         $common_url = [
@@ -57,7 +63,6 @@ class BaseController extends Controller
             route('logDelete'),
             route('menu'),
             route('apiLogout'),
-            route('apiTree'),
             route('apiMusicIndex'),
             route('apiMusicPlay'),
             route('wxLogin'),
@@ -72,13 +77,13 @@ class BaseController extends Controller
             $this->setCode(Code::ERROR,'required params missing');
         }
         if (!in_array(asset($url),$common_url)){
-            $users = $this->adminUserModel->getResult('remember_token',$this->post['token']);
+            $users = $this->userModel->getResult('access_token',$this->post['token']);
             if (empty($users)){
                 $this->setCode(Code::NOT_ALLOW,'Permission denied');
             }
             if ($users->role_id !== 1){
-                $role = $this->adminRoleModel->getResult('id',$users->role_id,'=',['auth_ids','auth_url']);
-                if (!empty($role) && !in_array(str_replace(['/api/v1','user'],['/admin','adminuser'],$url),json_decode($role->auth_url,true)) && !in_array(asset($url),$common_url)){
+                $role = $this->roleModel->getResult('id',$users->role_id,'=',['auth_ids','auth_url']);
+                if (!empty($role) && !in_array(str_replace(['/api/v1'],['/admin'],$url),json_decode($role->auth_url,true)) && !in_array(asset($url),$common_url)){
                     $this->setCode(Code::NOT_ALLOW,'Permission denied');
                 }
             }
