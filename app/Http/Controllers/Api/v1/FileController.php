@@ -5,6 +5,7 @@ use App\Http\Controllers\Utils\Code;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -222,8 +223,11 @@ class FileController extends BaseController
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $bool = chmod($this->post['path'],(0+$this->post['auth']));
-        if ($bool){
+        shell_exec("chmod -R 0{$this->post['auth']} {$this->post['path']}");
+        Log::error(file_chmod($this->post['path']));
+        Log::error($this->post['auth']);
+        Log::error("chmod -R 0{$this->post['auth']} {$this->post['path']}");
+        if (file_chmod($this->post['path'])==$this->post['auth']){
             return $this->ajax_return(Code::SUCCESS,'Modify file permissions successfully');
         }
         return $this->ajax_return(Code::ERROR,'Modify file permissions failed');
