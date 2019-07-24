@@ -222,8 +222,8 @@ class FileController extends BaseController
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $bool = chmod($this->post['path'],(0+$this->post['auth']));
-        if ($bool){
+        shell_exec("chmod -R {$this->post['auth']} {$this->post['path']}");
+        if (file_chmod($this->post['path'])==$this->post['auth']){
             return $this->ajax_return(Code::SUCCESS,'Modify file permissions successfully');
         }
         return $this->ajax_return(Code::ERROR,'Modify file permissions failed');
