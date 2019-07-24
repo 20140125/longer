@@ -339,23 +339,22 @@ if (!function_exists('gzip'))
     /**
      * 文件压缩
      * @param array $docLists 文件列表
-     * @param string $path 文件路径
-     * @param string $zipProductPath 文件名称
+     * @param string $zipProductPath 文件路径
+     * @param string $filename 文件名
      * @return bool
      */
-    function gzip($docLists,$path,$zipProductPath)
+    function gzip($docLists,$zipProductPath,$filename)
     {
         $zipObj = new ZipArchive();
-        $result = $zipObj->open($zipProductPath,ZipArchive::CREATE);
+        $result = $zipObj->open($zipProductPath.$filename,ZipArchive::CREATE);
         if($result!==TRUE){  //创建zip文件
             return false;
         }
         foreach ($docLists as $item){
-            $filePath = file_path($path,$item);
-            if (is_dir($filePath)){
-                add_file_to_zip($filePath,$zipObj);
+            if (is_dir($item)){
+                add_file_to_zip($item,$zipObj);
             }else{
-                $zipObj->addFile($filePath);
+                $zipObj->addFile($item);
             }
         }
         $zipObj->close();
@@ -395,14 +394,14 @@ if (!function_exists('unzip'))
      * @param $filePath
      * @return bool
      */
-    function unzip($dir,$filePath)
+    function unzip($dir)
     {
         $baseName=explode('.',basename($dir));
         if(file_exists($dir)){
             $zip=new ZipArchive();
             $ext=$baseName[1];
             if($ext==='zip'){
-                $path=$filePath.DIRECTORY_SEPARATOR.$baseName[0];
+                $path=$baseName[0];
                 if(!is_dir($path)){
                     mkdir($path,0777,true);
                 }
@@ -430,27 +429,30 @@ if(!function_exists('remove_files'))
     function remove_files($path)
     {
         if (is_file($path)){
-            return unlink($path);
-        }else{
-            //先删除目录下的文件：
-            $dh=opendir($path);
-            while ($file=readdir($dh)) {
-                if(!in_array($file,['.','..'])) {
-                    $fullPath=$path.DIRECTORY_SEPARATOR.$file;
-                    if(!is_dir($fullPath)) {
-                        unlink($fullPath);
-                    } else {
-                        remove_files($fullPath);
-                    }
-                }
-            }
-            @closedir($dh);
-            //删除当前文件夹：
-            if(rmdir($path)) {
-                return true;
-            } else {
+            try{
+                return unlink($path);
+            }catch (Exception $exception){
                 return false;
             }
+        }
+        //先删除目录下的文件：
+        $dh=opendir($path);
+        while ($file=readdir($dh)) {
+            if(!in_array($file,['.','..'])) {
+                $fullPath=$path.DIRECTORY_SEPARATOR.$file;
+                if(!is_dir($fullPath)) {
+                    unlink($fullPath);
+                } else {
+                    remove_files($fullPath);
+                }
+            }
+        }
+        @closedir($dh);
+        //删除当前文件夹：
+        if(rmdir($path)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
@@ -481,17 +483,17 @@ if(!function_exists('is_mobile'))
      */
     function is_mobile(){
         $useragent=isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-        $useragent_commentsblock=preg_match('|\(.*?\)|',$useragent,$matches)>0?$matches[0]:'';
-        function _is_mobile($substrs,$text){
-            foreach($substrs as $substr)
-                if(false!==strpos($text,$substr)){
+        $useragent_comments_block=preg_match('|\(.*?\)|',$useragent,$matches)>0?$matches[0]:'';
+        function _is_mobile($substr,$text){
+            foreach($substr as $str)
+                if(false!==strpos($text,$str)){
                     return true;
                 }
             return false;
         }
         $mobile_os_list=array('Google Wireless Transcoder','Windows CE','WindowsCE','Symbian','Android','armv6l','armv5','Mobile','CentOS','mowser','AvantGo','Opera Mobi','J2ME/MIDP','Smartphone','Go.Web','Palm','iPAQ');
         $mobile_token_list=array('Profile/MIDP','Configuration/CLDC-','160×160','176×220','240×240','240×320','320×240','UP.Browser','UP.Link','SymbianOS','PalmOS','PocketPC','SonyEricsson','Nokia','BlackBerry','Vodafone','BenQ','Novarra-Vision','Iris','NetFront','HTC_','Xda_','SAMSUNG-SGH','Wapaka','DoCoMo','iPhone','iPod');
-        $found_mobile=_is_mobile($mobile_os_list,$useragent_commentsblock) ||
+        $found_mobile=_is_mobile($mobile_os_list,$useragent_comments_block) ||
             _is_mobile($mobile_token_list,$useragent);
         if ($found_mobile){
             return true;
@@ -772,7 +774,7 @@ if (!function_exists('cut_file'))
 {
 
     /**
-     * 文件的分割
+     * todo：文件的分割
      * @param string $filename 文件名
      * @param string $block 文件分割大小
      * @return bool

@@ -44,12 +44,11 @@ class FileController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $validate = Validator::make($this->post,['path'=>'required|string','type'=>'required|string','docLists'=>'required|array']);
+        $validate = Validator::make($this->post,['path'=>'required|string','resource'=>'required|string','docLists'=>'required|array']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $zipProductPath = $this->backupPath.$this->post['type'].'_'.date("YmdHis").'.zip';
-        $bool = gzip($this->post['docLists'],$this->post['path'],$zipProductPath);
+        $bool = gzip($this->post['docLists'],$this->post['path'],$this->post['resource'].'_'.date("YmdHis").'.zip');
         if ($bool){
             return $this->ajax_return(Code::SUCCESS,'compression file successfully');
         }
@@ -82,8 +81,11 @@ class FileController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $filePath = file_path($this->post['path']??'base_path',$this->post['basename']??'/README.md');
-        $bool = unzip($filePath,public_path());
+        $validate = Validator::make($this->post,['path'=>'required|string']);
+        if ($validate->fails()){
+            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
+        }
+        $bool = unzip($this->post['path']);
         if ($bool){
             return $this->ajax_return(Code::SUCCESS,'Decompression file successfully');
         }
@@ -159,11 +161,13 @@ class FileController extends BaseController
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
+        //服务器上面需要 777 权限才能删除文件
+        chmod($this->post['path'],0777);
         $bool = remove_files($this->post['path']);
         if ($bool){
             return $this->ajax_return(Code::SUCCESS,'delete file successfully');
         }
-        return $this->ajax_return(Code::ERROR,'delete file error');
+        return $this->ajax_return(Code::ERROR,'delete file failed');
     }
 
     /**
@@ -184,7 +188,7 @@ class FileController extends BaseController
         if ($bool){
             return $this->ajax_return(Code::SUCCESS,'create file successfully');
         }
-        return $this->ajax_return(Code::ERROR,'create file error');
+        return $this->ajax_return(Code::ERROR,'create file failed');
     }
 
     /**
@@ -218,11 +222,11 @@ class FileController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $validate = Validator::make($this->post,['path'=>'required|string','auth'=>'required|integer|max:777']);
+        $validate = Validator::make($this->post,['path'=>'required|string','auth'=>'required|integer|max:666']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        shell_exec("chmod -R {$this->post['auth']} {$this->post['path']}");
+        chmod($this->post['path'],octdec((int)"0".$this->post['auth']));
         if (file_chmod($this->post['path'])==$this->post['auth']){
             return $this->ajax_return(Code::SUCCESS,'Modify file permissions successfully');
         }

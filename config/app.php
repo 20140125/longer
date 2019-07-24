@@ -121,6 +121,29 @@ return [
 
     'key' => env('APP_KEY'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | 第三方授权登录
+    |--------------------------------------------------------------------------
+    */
+    'amap_key' => env('AMAPKEY'),
+
+    'qq_appid' => env('QQ_APPID'),
+    'qq_secret' => env('QQ_APPKEY'),
+    'github_appid' => env('GITHUB_ClientID'),
+    'github_secret' => env('GITHUB_ClientSecret'),
+    'weibo_appid' => env('WEIBO_APPID'),
+    'weibo_secret' => env('WEIBO_AppSecret'),
+    'gitee_appid' => env('GITEE_APPID'),
+    'gitee_secret' => env('GITEE_SECRET'),
+    'baidu_appid' => env('BAIDU_APIKey'),
+    'baidu_secret' => env('BAIDU_SecretKey'),
+    /*
+     |--------------------------------------------------------------------------
+     | 第三方授权登录
+     |--------------------------------------------------------------------------
+     */
+
     'cipher' => 'AES-256-CBC',
 
     /*
