@@ -213,7 +213,7 @@ if (!function_exists('file_lists'))
         $fileArr = array();
         $openDir = opendir($filePath);
         while ($file = readdir($openDir)){
-            if (!in_array($file,['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml'])){
+            if (!in_array($file,['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','public'])){
                 $fileArr[] = array(
                     'label'=>$file,
                     'fileType' =>filetype($filePath.$file),
