@@ -156,7 +156,7 @@ class UsersController extends BaseController
         }
         $password = $this->userModel->getResult('id',$this->post['id'])->password;
         $this->post['created_at'] = strtotime($this->post['created_at']);
-        $this->post['update_at'] = time();
+        $this->post['updated_at'] = time();
         //用户没有修改密码
         if ($password == $this->post['password']){
             $validate = Validator::make($this->post,$this->rule(1));
