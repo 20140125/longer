@@ -47,7 +47,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'file/chmod','v1\FileController@auth');
     Route::match(['get','post'],'file/zip','v1\FileController@compression');
     Route::match(['get','post'],'file/unzip','v1\FileController@Decompression');
-    Route::match(['get'],'file/download','v1\FileController@download');
+    Route::match(['get','post'],'file/download','v1\FileController@download')->name('downloadFile');
+    Route::match(['get','post'],'file/upload','v1\FileController@upload');
     Route::match(['get','post'],'file/delete','v1\FileController@delete');
 
     Route::match(['get','post'],'role/index','v1\RoleController@index');

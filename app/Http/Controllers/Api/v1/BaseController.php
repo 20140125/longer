@@ -9,6 +9,7 @@ use App\Models\Rule;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * todo 公共类
@@ -69,10 +70,14 @@ class BaseController extends Controller
             route('getOpenId'),
             route('apiMusicHistory'),
             route('apiMusicHistoryLists'),
-            route('apiMusicSearch')
+            route('apiMusicSearch'),
+            route('downloadFile')
         ];
         //私有权限
         $url = $request->getRequestUri();
+        if (strstr($url,'?')){
+            $url = substr($url,0,find_str($request->getRequestUri(),"?",2));
+        }
         if (empty($this->post['token']) && !in_array(asset($url),$common_url)){
             $this->setCode(Code::ERROR,'required params missing');
         }

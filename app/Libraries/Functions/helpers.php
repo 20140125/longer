@@ -347,7 +347,7 @@ if (!function_exists('gzip'))
     {
         $zipObj = new ZipArchive();
         $result = $zipObj->open($zipProductPath.$filename,ZipArchive::CREATE);
-        if($result!==TRUE){  //创建zip文件
+        if(!$result){  //创建zip文件
             return false;
         }
         foreach ($docLists as $item){
@@ -358,7 +358,7 @@ if (!function_exists('gzip'))
             }
         }
         $zipObj->close();
-        return file_exists($zipProductPath);
+        return file_exists($zipProductPath.$filename);
     }
 }
 if (!function_exists('add_file_to_zip'))
@@ -390,33 +390,29 @@ if (!function_exists('unzip'))
 {
     /**
      * 文件解压
-     * @param $dir
-     * @param $filePath
+     * @param string $path 文件路径
+     * @param string $resource 解压包文件名称
      * @return bool
      */
-    function unzip($dir)
+    function unzip($path,$resource='')
     {
-        $baseName=explode('.',basename($dir));
-        if(file_exists($dir)){
-            $zip=new ZipArchive();
-            $ext=$baseName[1];
-            if($ext==='zip'){
-                $path=$baseName[0];
-                if(!is_dir($path)){
-                    mkdir($path,0777,true);
-                }
-                //打开zip文件返回bool值
-                if(false!==$zip->open($dir)){
-                    //将完整的归档或给定文件提取到指定的目标
-                    $zip->extractTo($path);
-                }
-                //关闭资源
-                $zip->close();
-                return true;
-            }
+        if(!file_exists($path)){
             return false;
         }
-        return false;
+        $zip=new ZipArchive();
+        $arr = explode('.',basename($path));
+        if(!in_array($arr[1],['zip','ZIP'])){
+            return false;
+        }
+        $filePath = str_replace(basename($path),'',$path).(empty($resource) ? $arr [0] : $resource);
+        if(!is_dir($filePath)){
+            mkdir($filePath,0777,true);
+        }
+        if($zip->open($path)){     //打开zip文件返回bool值
+            $zip->extractTo($filePath);   //将完整的归档或给定文件提取到指定的目标
+        }
+        $zip->close();    //关闭资源
+        return true;
     }
 }
 if(!function_exists('remove_files'))

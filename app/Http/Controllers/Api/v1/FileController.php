@@ -85,8 +85,10 @@ class FileController extends BaseController
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $bool = unzip($this->post['path']);
+        $bool = unzip($this->post['path'],$this->post['resource']);
         if ($bool){
+            //删除压缩包 (个人需求而定)
+            remove_files($this->post['path']);
             return $this->ajax_return(Code::SUCCESS,'Decompression file successfully');
         }
         return $this->ajax_return(Code::ERROR,'Decompression file error');
@@ -112,21 +114,27 @@ class FileController extends BaseController
             $filename = date('YmdHis').uniqid().'.'.$ext;
             //存储文件。disk里面的public。总的来说，就是调用disk模块里的public配置
             Storage::disk('public')->put($filename, file_get_contents($path));
-            return $this->ajax_return(Code::SUCCESS,'upload successfully',array('src'=>config('filesystems.disks')['public']['url'].'/'.$filename));
+            return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('src'=>config('filesystems.disks')['public']['url'].'/'.$filename));
         }
-        return $this->ajax_return(Code::ERROR,'upload error',array('src'=>''));
+        return $this->ajax_return(Code::ERROR,'upload file failed',array('src'=>''));
     }
 
     /**
      * todo：文件下载
      * @param Request $request
      * @param Response $response
-     * @return BinaryFileResponse
+     * @return JsonResponse|BinaryFileResponse
      */
     public function download(Request $request,Response $response)
     {
-        $filePath = file_path($request->get('path')??'base_path',$request->get('basename')??'/README.md');
-        return $response::download($filePath,basename($filePath));
+        if (empty($request->get('path'))){
+            return $response::json(array('info'=>'下载文件不存在'),404);
+        }
+        $username = $this->userModel->getResult('access_token',$request->get('token'));
+        if (empty($username)){
+            return $this->ajax_return(Code::ERROR,'permission denied');
+        }
+        return $response::download($request->get('path'),basename($request->get('path')));
     }
 
     /**
@@ -165,9 +173,9 @@ class FileController extends BaseController
         chmod($this->post['path'],0777);
         $bool = remove_files($this->post['path']);
         if ($bool){
-            return $this->ajax_return(Code::SUCCESS,'delete file successfully');
+            return $this->ajax_return(Code::SUCCESS,'remove file successfully');
         }
-        return $this->ajax_return(Code::ERROR,'delete file failed');
+        return $this->ajax_return(Code::ERROR,'remove file failed');
     }
 
     /**
