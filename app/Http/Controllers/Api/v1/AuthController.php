@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\View;
 
 /**
  * Class AuthController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class AuthController extends BaseController

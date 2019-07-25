@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 /**
  * todo 登录
  * Class LoginController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class LoginController extends BaseController

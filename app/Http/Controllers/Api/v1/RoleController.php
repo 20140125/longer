@@ -2,7 +2,6 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
-use App\Models\AuthRule;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,6 +11,7 @@ use Illuminate\View\View;
 /**
  * 角色管理
  * Class RoleController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class RoleController extends BaseController
@@ -54,13 +54,13 @@ class RoleController extends BaseController
         foreach ($authLists as $item){
             $auth_url[] = strtolower($item->href);
         }
-        $this->post['auth_url'] = json_encode($auth_url);
+        $this->post['auth_url'] = str_replace("\\",'',json_encode($auth_url));
         $this->post['auth_ids'] = json_encode($this->post['auth_ids']);
         $result = $this->roleModel->addResult($this->post);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'role save successfully');
         }
-        return $this->ajax_return(Code::ERROR,'role save error');
+        return $this->ajax_return(Code::ERROR,'role save failed');
     }
 
     /**
@@ -94,7 +94,7 @@ class RoleController extends BaseController
         foreach ($authLists as $item){
             $auth_url[] = strtolower($item->href);
         }
-        $this->post['auth_url'] = json_encode($auth_url);
+        $this->post['auth_url'] = str_replace("\\",'',json_encode($auth_url));
         $this->post['auth_ids'] = json_encode($this->post['auth_ids']);
         $this->post['updated_at'] = time();
         $this->post['created_at'] = strtotime($this->post['created_at']);
@@ -102,7 +102,7 @@ class RoleController extends BaseController
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'role update successfully');
         }
-        return $this->ajax_return(Code::ERROR,'role update error');
+        return $this->ajax_return(Code::ERROR,'role update failed');
     }
 
     /**
@@ -123,6 +123,6 @@ class RoleController extends BaseController
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'delete role successfully');
         }
-        return $this->ajax_return(Code::ERROR,'delete role error');
+        return $this->ajax_return(Code::ERROR,'delete role failed');
     }
 }

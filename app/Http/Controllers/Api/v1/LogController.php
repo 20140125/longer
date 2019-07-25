@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 /**
  * todo 系统日志管理
  * Class LogController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class LogController extends BaseController

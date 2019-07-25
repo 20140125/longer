@@ -12,8 +12,9 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * 文件管理
+ * todo：文件管理
  * Class FileController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class FileController extends BaseController
@@ -52,7 +53,7 @@ class FileController extends BaseController
         if ($bool){
             return $this->ajax_return(Code::SUCCESS,'compression file successfully');
         }
-        return $this->ajax_return(Code::ERROR,'compression file error');
+        return $this->ajax_return(Code::ERROR,'compression file failed');
     }
 
     /**
@@ -91,7 +92,7 @@ class FileController extends BaseController
             remove_files($this->post['path']);
             return $this->ajax_return(Code::SUCCESS,'Decompression file successfully');
         }
-        return $this->ajax_return(Code::ERROR,'Decompression file error');
+        return $this->ajax_return(Code::ERROR,'Decompression file failed');
     }
 
     /**
@@ -110,13 +111,16 @@ class FileController extends BaseController
             $ext = $file->getClientOriginalExtension();
             //获取文件的绝对路径
             $path = $file->getRealPath();
-            //定义文件名
-            $filename = date('YmdHis').uniqid().'.'.$ext;
+            //获取文件名
+            $filename = $file->getClientOriginalName();
             //存储文件。disk里面的public。总的来说，就是调用disk模块里的public配置
             Storage::disk('public')->put($filename, file_get_contents($path));
-            return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('src'=>config('filesystems.disks')['public']['url'].'/'.$filename));
+            //文件移动
+            $file->move($this->post['path'].DIRECTORY_SEPARATOR,$filename);
+            //删除文件
+            return $this->ajax_return(Code::SUCCESS,'upload file successfully');
         }
-        return $this->ajax_return(Code::ERROR,'upload file failed',array('src'=>''));
+        return $this->ajax_return(Code::ERROR,'upload file failed');
     }
 
     /**

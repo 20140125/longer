@@ -12,6 +12,7 @@ use Illuminate\Routing\Redirector;
 
 /**
  * Class OauthCallbackController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class OauthCallbackController

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 /**
  * 导航栏
  * Class MenuController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class MenuController extends BaseController

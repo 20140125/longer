@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 /**
  * 数据库管理
  * Class DatabaseController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class DatabaseController extends BaseController

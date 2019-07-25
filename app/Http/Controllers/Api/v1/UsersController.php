@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 /**
  * todo 用户管理
  * Class UsersController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class UsersController extends BaseController

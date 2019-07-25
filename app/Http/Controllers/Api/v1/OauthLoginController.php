@@ -9,8 +9,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Routing\Redirector;
 
 /**
- * QQ授权
+ * todo：第三方授权
  * Class QQController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class OauthLoginController extends Controller

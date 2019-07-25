@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 /**
  * 文章管理
+ * @author <fl140125@gmail.com>
  * Class ArticleController
  * @package App\Http\Controllers\Api\v1
  */

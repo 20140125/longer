@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * todo 公共类
  * Class BaseController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
 class BaseController extends Controller
