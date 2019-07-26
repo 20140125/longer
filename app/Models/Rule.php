@@ -113,10 +113,11 @@ class Rule extends Model
         if (!empty($pid)){
             $where[] = ['pid','=',$pid];
             $result['data'] = DB::table($this->table)->where($where)->orWhere('id',$pid)->offset($limit*($page-1))->limit($limit)->orderBy('path')->get();
+            $result['total'] = DB::table($this->table)->where($where)->orWhere('id',$pid)->count();
         }else{
             $result['data'] = DB::table($this->table)->where($where)->offset($limit*($page-1))->limit($limit)->orderBy('path')->get();
+            $result['total'] = DB::table($this->table)->where($where)->count();
         }
-        $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
 
@@ -151,12 +152,14 @@ class Rule extends Model
     {
         $parent_result = self::getInstance()->getResult($field,$value,$op);
         if (!empty($parent_result)){
-            if (!strstr($parent_result->path,strval($value))){
-                $data['path'] = $parent_result->path.'-'.$value;
-                $data['level'] = substr_count($data['path'],'-');
+            if (!empty($parent_result->path)){
+                $data['path'] = $parent_result->path.'-'.$data['id'];
+            } else {
+                $data['path'] = $data['id'];
             }
+            $data['level'] = substr_count($data['path'],'-');
         }
-        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
+        $result = DB::table($this->table)->where($field,$op,$data['id'])->update($data);
         return $result;
     }
 

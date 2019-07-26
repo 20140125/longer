@@ -138,7 +138,7 @@ class OauthCallbackController
             $oauthRes =  $this->oauthModel->addResult($data);
         }
         if (!empty($oauthRes)){
-            return redirect('/#/admin/index');
+            return redirect('/#/admin/index/'.$data['access_token']);
         }
         return redirect('/#/login');
     }

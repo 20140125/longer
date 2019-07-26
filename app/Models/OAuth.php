@@ -66,7 +66,7 @@ class OAuth extends Model
      */
     public function addResult($data)
     {
-        $data['created_at'] = date('Y-m-d H:i:s',time());
+        $data['created_at'] = time();
         $result = DB::table(self::$tableName)->insertGetId($data);
         return $result;
     }
@@ -80,7 +80,7 @@ class OAuth extends Model
      */
     public function updateResult($data,$field,$value=null,$op='=')
     {
-        $data['updated_at'] = date('Y-m-d H:i:s',time());
+        $data['updated_at'] = time();
         $result = DB::table(self::$tableName)->where($field,$op,$value)->update($data);
         return $result;
     }

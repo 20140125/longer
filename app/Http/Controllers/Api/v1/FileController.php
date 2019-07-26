@@ -12,7 +12,7 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * todo：文件管理
+ * todo：save文件管理
  * Class FileController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
@@ -115,10 +115,14 @@ class FileController extends BaseController
             $filename = $file->getClientOriginalName();
             //存储文件。disk里面的public。总的来说，就是调用disk模块里的public配置
             Storage::disk('public')->put($filename, file_get_contents($path));
-            //文件移动
-            $file->move($this->post['path'].DIRECTORY_SEPARATOR,$filename);
-            //删除文件
-            return $this->ajax_return(Code::SUCCESS,'upload file successfully');
+            //上传图片不做处理，其他文件移动位置
+            if (!in_array($ext,['jpg','png','jpeg','gif'])){
+                //文件移动
+                Storage::disk('public')->move($this->post['path'].DIRECTORY_SEPARATOR,$filename);
+                //删除文件
+                Storage::disk('public')->delete($filename);
+            }
+            return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('name'=>$filename));
         }
         return $this->ajax_return(Code::ERROR,'upload file failed');
     }
@@ -243,5 +247,23 @@ class FileController extends BaseController
             return $this->ajax_return(Code::SUCCESS,'Modify file permissions successfully');
         }
         return $this->ajax_return(Code::ERROR,'Modify file permissions failed');
+    }
+
+    /**
+     * todo：图片预览
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function preview(Request $request)
+    {
+        if ($request->isMethod('get')){
+            return $this->ajax_return(Code::METHOD_ERROR,'error');
+        }
+        $validate = Validator::make($this->post,['name'=>'required|string']);
+        if ($validate->fails()){
+            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
+        }
+        $url = config('app.url').DIRECTORY_SEPARATOR.'storage/'.$this->post['name'];
+        return $this->ajax_return(Code::SUCCESS,'Get the file address successfully', ['src'=>$url]);
     }
 }

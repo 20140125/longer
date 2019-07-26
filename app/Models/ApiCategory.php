@@ -44,7 +44,7 @@ class ApiCategory extends Model
      */
     public function getResultListsLevel2()
     {
-        $result = DB::table(self::$tableName)->orderBy('path')->get(['name','id as value','pid','level']);
+        $result = DB::table(self::$tableName)->orderBy('path')->get(['name','id','pid','level']);
         return $result;
     }
     /**
@@ -77,12 +77,14 @@ class ApiCategory extends Model
     {
         $parent_result = self::getInstance()->getResult($field,$value,$op);
         if (!empty($parent_result)){
-            if (!strstr($parent_result->path,strval($value))){
-                $data['path'] = $parent_result->path.'-'.$value;
-                $data['level'] = substr_count($data['path'],'-');
+            if (!empty($parent_result->path)){
+                $data['path'] = $parent_result->path.'-'.$data['id'];
+            } else {
+                $data['path'] = $data['id'];
             }
+            $data['level'] = substr_count($data['path'],'-');
         }
-        $result = DB::table(self::$tableName)->where($field,$op,$value)->update($data);
+        $result = DB::table(self::$tableName)->where($field,$op,$data['id'])->update($data);
         return $result;
     }
 

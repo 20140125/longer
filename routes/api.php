@@ -49,6 +49,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'file/download','v1\FileController@download')->name('downloadFile');
     Route::match(['get','post'],'file/upload','v1\FileController@upload');
     Route::match(['get','post'],'file/delete','v1\FileController@delete');
+    Route::match(['get','post'],'image/preview','v1\FileController@preview');
 
     Route::match(['get','post'],'role/index','v1\RoleController@index');
     Route::match(['get','post'],'role/update','v1\RoleController@update');
@@ -57,13 +58,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
 
     Route::match(['get','post'],'database/index','v1\DatabaseController@index');
     Route::match(['get','post'],'database/backup','v1\DatabaseController@backup');
-
-    Route::match(['get','post'],'local/index','v1\PositionController@index');
-    Route::match(['get','post'],'tools/index','v1\PositionController@tools');
-
-    Route::match(['get','post'],'article/index','v1\ArticleController@index');
-    Route::match(['get','post'],'article/update','v1\ArticleController@update');
-    Route::match(['get','post'],'article/delete','v1\ArticleController@delete');
 
     Route::match(['get','post'],'api/index','v1\ApiController@index');
     Route::match(['post','get'],'api/update','v1\ApiController@update');
