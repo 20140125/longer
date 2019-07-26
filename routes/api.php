@@ -18,7 +18,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'user/login','v1\LoginController@index')->name('apiLogin');
     Route::match(['get','post'],'checkLogin','v1\LoginController@check')->name('checkLogin');
     Route::match(['get','post'],'logout','v1\LoginController@logout')->name('apiLogout');
-    Route::match(['get','post'],'captcha','v1\LoginController@setCaptcha')->name('captcha');
     Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');
     /********************************************共有权限********************************************************/
 
@@ -74,12 +73,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'category/delete','v1\ApiController@CategoryDelete');
     Route::match(['post','get'],'category/save','v1\ApiController@categorySave');
     Route::match(['post','get'],'category/update','v1\ApiController@CategoryUpdate');
-
-    Route::match(['post','get'],'music/index','v1\MusicController@index')->name('apiMusicIndex');
-    Route::match(['post','get'],'music/play','v1\MusicController@play')->name('apiMusicPlay');
-    Route::match(['post','get'],'music/add','v1\MusicController@addUserMusic')->name('apiMusicHistory');
-    Route::match(['post','get'],'music/history','v1\MusicController@getHistory')->name('apiMusicHistoryLists');
-    Route::match(['post','get'],'music/search','v1\MusicController@getSearch')->name('apiMusicSearch');
 
     /********************************************私有权限********************************************************/
 

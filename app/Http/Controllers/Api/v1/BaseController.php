@@ -59,19 +59,10 @@ class BaseController extends Controller
         //公用权限
         $common_url = [
             route('apiLogin'),
-            route('captcha'),
             route('checkLogin'),
-            route('logSave'),
-            route('logDelete'),
-            route('menu'),
             route('apiLogout'),
-            route('apiMusicIndex'),
-            route('apiMusicPlay'),
-            route('wxLogin'),
-            route('getOpenId'),
-            route('apiMusicHistory'),
-            route('apiMusicHistoryLists'),
-            route('apiMusicSearch'),
+            route('logSave'),
+            route('menu'),
             route('downloadFile')
         ];
         //私有权限

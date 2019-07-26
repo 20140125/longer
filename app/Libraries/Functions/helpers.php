@@ -816,4 +816,3 @@ if (!function_exists('merger_file'))
         $targetFileObj = null;
     }
 }
-

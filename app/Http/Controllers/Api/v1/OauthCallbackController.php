@@ -79,7 +79,7 @@ class OauthCallbackController
         // 1 获取access_token
         $result = $gitHubOAuth->getAccessToken($request->get('code'),$request->get('state'));
         // 2 获取用户信息
-        $userInfo = $gitHubOAuth->getUserInfo($result['access_token']);
+        $userInfo = json_decode($gitHubOAuth->getUserInfo($result['access_token']),true);
         $data = array(
             'username' =>$userInfo['login'],
             'openid' =>$userInfo['id'],
