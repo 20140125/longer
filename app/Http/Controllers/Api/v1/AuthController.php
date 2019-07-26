@@ -50,7 +50,6 @@ class AuthController extends BaseController
         }
         $result = $this->ruleModel->addResult($this->post);
         if (!empty($result)){
-            act_log('权限保存成功');
             return $this->ajax_return(Code::SUCCESS,'save rule successfully');
         }
         return $this->ajax_return(Code::ERROR,'error');
@@ -71,7 +70,7 @@ class AuthController extends BaseController
             if ($validate->fails()){
                 return $this->ajax_return(Code::ERROR,$validate->errors()->first());
             }
-            $result = $this->ruleModel->updateResult($this->post,'id',$this->post['id']);
+            $result = $this->ruleModel->updateResult($this->post,'id',$this->post['pid']);
             if (!empty($result)){
                 return $this->ajax_return(Code::SUCCESS,'update rule successfully');
             }
@@ -110,7 +109,6 @@ class AuthController extends BaseController
         }
         $result = $this->ruleModel->deleteResult('id',$this->post['id']);
         if (!empty($result)){
-            act_log('删除权限');
             return $this->ajax_return(Code::SUCCESS,'successfully');
         }
         return $this->ajax_return(Code::ERROR,'error');

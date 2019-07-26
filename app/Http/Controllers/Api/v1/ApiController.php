@@ -154,7 +154,8 @@ class ApiController extends BaseController
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $result = $this->apiCategoryModel->updateResult($this->post,'id',$this->post['id']);
+        unset($this->post['children']);
+        $result = $this->apiCategoryModel->updateResult($this->post,'id',$this->post['pid']);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'update api category successfully');
         }

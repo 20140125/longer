@@ -77,7 +77,7 @@ if (!function_exists('get_tree'))
         foreach ($data as $key=> $item){
             $res = object_to_array($data[$key]);
             if ($res['pid'] == $pid){
-                $res[$attr] = get_tree($data,$res['value'],$attr);
+                $res[$attr] = get_tree($data,$res['id'],$attr);
                 $tree[] = $res;
             }
         }
@@ -216,7 +216,7 @@ if (!function_exists('file_lists'))
             if (!in_array($file,['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','public'])){
                 $fileArr[] = array(
                     'label'=>$file,
-                    'fileType' =>filetype($filePath.$file),
+                    'fileType' => filetype($filePath.$file),
                     'children' =>[],
                     'path' =>filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
                     'size' =>md5($filePath.$file),
@@ -816,4 +816,3 @@ if (!function_exists('merger_file'))
         $targetFileObj = null;
     }
 }
-

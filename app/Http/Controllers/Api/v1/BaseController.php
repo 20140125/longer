@@ -62,8 +62,7 @@ class BaseController extends Controller
             route('checkLogin'),
             route('apiLogout'),
             route('logSave'),
-            route('menu'),
-            route('downloadFile')
+            route('menu')
         ];
         //私有权限
         $url = $request->getRequestUri();
