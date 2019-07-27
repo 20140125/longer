@@ -89,6 +89,7 @@ class BaseController extends Controller
             $this->setCode(Code::ERROR,'required params missing');
         }
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
+        Log::error(json_encode($this->users));
         if (empty($this->users)){
             $this->setCode(Code::NOT_ALLOW,'Permission denied');
         }
