@@ -37,4 +37,35 @@ class MenuController extends BaseController
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$authLists);
     }
+    /**
+     * todo 用户合法性
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function check(Request $request)
+    {
+        if ($request->isMethod('get')){
+            return $this->ajax_return(Code::METHOD_ERROR,'error');
+        }
+        $role = $this->roleModel->getResult('id',$this->users->role_id);
+        if (!empty($role)){
+            return $this->ajax_return(Code::SUCCESS,'permission',['auth'=>$role->auth_url]);
+        }
+        return $this->ajax_return(Code::ERROR,'permission denied');
+    }
+    /**
+     * todo  退出登陆
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        if ($request->isMethod('get')){
+            return $this->ajax_return(Code::METHOD_ERROR,'error');
+        }
+        if (!empty($result)){
+            return $this->ajax_return(Code::SUCCESS,'permission');
+        }
+        return $this->ajax_return(Code::ERROR,'permission denied');
+    }
 }
