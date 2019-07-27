@@ -47,9 +47,9 @@ class Users extends Model
         $request = array('ip_address' =>request()->ip(), 'updated_at' =>time());
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($data['password']).$request['salt']);
-        $request['access_token'] = md5 (md5($request['password']).$request['salt']);
+        $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
         self::getInstance()->updateResult($request,'id',$result->id);
-        $admin['token'] = $request['access_token'];
+        $admin['token'] = $request['remember_token'];
         $admin['username'] = $result->username;
         return $admin;
     }

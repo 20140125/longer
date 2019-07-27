@@ -48,9 +48,8 @@ class LoginController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $username = $this->userModel->getResult('access_token',$this->post['token']);
-        if (!empty($username)){
-            $role = $this->roleModel->getResult('id',$username->role_id);
+        $role = $this->roleModel->getResult('id',$this->users->role_id);
+        if (!empty($role)){
             return $this->ajax_return(Code::SUCCESS,'permission',['auth'=>$role->auth_url]);
         }
         return $this->ajax_return(Code::ERROR,'permission denied');
@@ -65,10 +64,7 @@ class LoginController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $username = $this->userModel->getResult('access_token',$request->post('token'));
-        if (!empty($username)){
-            $username->access_token = md5(md5($username->password).time());
-            $this->userModel->updateResult(object_to_array($username),'access_token',$request->post('token'));
+        if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'permission');
         }
         return $this->ajax_return(Code::ERROR,'permission denied');
