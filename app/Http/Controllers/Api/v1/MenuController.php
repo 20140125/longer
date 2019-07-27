@@ -63,9 +63,16 @@ class MenuController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'permission');
+        if (isset($this->users->salt)){
+            $this->users->remember_token = md5(md5($this->users->password).time());
+            $result = $this->userModel->updateResult(object_to_array($this->users),'id',$this->users->id);
+        }else{
+            $this->users->remember_token = md5(md5($this->users->remember_token).time());
+            $result = $this->oauthModel->updateResult(object_to_array($this->users),'id',$this->users->id);
         }
-        return $this->ajax_return(Code::ERROR,'permission denied');
+        if (!empty($result)){
+            return $this->ajax_return(Code::SUCCESS,'logout system successfully');
+        }
+        return $this->ajax_return(Code::ERROR,'logout system failed');
     }
 }

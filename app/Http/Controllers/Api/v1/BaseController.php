@@ -75,7 +75,6 @@ class BaseController extends Controller
         $this->backupPath = public_path('backup/');
         //公用权限
         $common_url = [
-            route('apiLogin'),
             route('checkLogin'),
             route('apiLogout'),
             route('logSave'),
@@ -86,7 +85,7 @@ class BaseController extends Controller
         if (strstr($url,'?')){
             $url = substr($url,0,find_str($request->getRequestUri(),"?",2));
         }
-        if (empty($this->post['token']) && asset($url)!== route('apiLogin')){
+        if (empty($this->post['token'])){
             $this->setCode(Code::ERROR,'required params missing');
         }
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
