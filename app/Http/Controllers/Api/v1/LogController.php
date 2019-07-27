@@ -56,7 +56,7 @@ class LogController extends BaseController
         if ($request->isMethod('get')){
             return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
-        $this->post['username'] = $this->userModel->getResult('access_token',$this->post['token'])->username;
+        $this->post['username'] = $this->userModel->getResult('remember_token',$this->post['token'])->username;
         $result = act_log($this->post);
         return $this->ajax_return(Code::SUCCESS,'save log successfully',$result);
     }
