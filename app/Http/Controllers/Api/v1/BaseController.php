@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use PhpParser\Node\Expr\Cast\Object_;
 
 /**
  * todo 公共类
@@ -89,7 +87,6 @@ class BaseController extends Controller
             $this->setCode(Code::ERROR,'required params missing');
         }
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
-        Log::error(json_encode($this->users));
         if (empty($this->users)){
             $this->setCode(Code::NOT_ALLOW,'Permission denied');
         }
