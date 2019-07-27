@@ -82,7 +82,7 @@ class OauthCallbackController
         $userInfo = json_decode($gitHubOAuth->getUserInfo($result['access_token']),true);
         $data = array(
             'username' =>$userInfo['login'],
-            'openid' =>$userInfo['id'],
+            'openid' =>(string)$userInfo['id'],
             'avatar_url' =>$userInfo['avatar_url'],
             'access_token' =>$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
@@ -90,7 +90,7 @@ class OauthCallbackController
             'oauth_type' => 'github',
             'remember_token' =>md5(md5($userInfo['login']).$userInfo['id'].time()),
         );
-        $where[] = array('openid','=',$userInfo['id']);
+        $where[] = array('openid','=',(string)$userInfo['id']);
         $where[] = array('oauth_type','=','github');
         return $this->oauth($data,$where);
     }
