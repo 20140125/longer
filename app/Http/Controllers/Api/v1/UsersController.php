@@ -144,7 +144,7 @@ class UsersController extends BaseController
         }
         //修改用户禁用状态
         if (!empty($this->post['act'])){
-            $validate = Validator::make($this->post,$this->rule(4));
+            $validate = Validator::make($this->post,$this->rule(4),['id.gt'=>'Permission denied']);
             if ($validate->fails()){
                 return $this->ajax_return(Code::ERROR,$validate->errors()->first());
             }
@@ -249,7 +249,7 @@ class UsersController extends BaseController
             case 4:
                 $rule = [
                     'status'   => 'required|string|between:1,2',
-                    'id' => 'required|integer'
+                    'id' => 'required|integer|gt:1'
                 ];
                 break;
             default:
