@@ -38,6 +38,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'log/save','v1\LogController@save')->name('logSave');
     Route::match(['get','post'],'log/delete','v1\LogController@delete')->name('logDelete');
 
+    Route::match(['get','post'],'config/index','v1\ConfigController@index');
+
     Route::match(['get','post'],'file/index','v1\FileController@index');
     Route::match(['get','post'],'file/read','v1\FileController@read');
     Route::match(['get','post'],'file/save','v1\FileController@save');

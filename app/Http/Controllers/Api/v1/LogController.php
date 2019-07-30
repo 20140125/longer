@@ -31,14 +31,10 @@ class LogController extends BaseController
 
     /**
      * todo 日志列表
-     * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $result = $this->logModel->getLists($this->post['page'],$this->post['limit'],'');
         foreach ($result['data'] as &$item){
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
@@ -48,29 +44,21 @@ class LogController extends BaseController
 
     /**
      * @todo :日志保存
-     * @param Request $request
      * @return JsonResponse
      */
-    public function save(Request $request)
+    public function save()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
-        $this->post['username'] = $this->userModel->getResult('remember_token',$this->post['token'])->username;
+        $this->post['username'] = $this->userModel->getResult('remember_token',$this->post['token'])->username ?? $this->oauthModel->getResult('remember_token',$this->post['token'])->username;
         $result = act_log($this->post);
         return $this->ajax_return(Code::SUCCESS,'save log successfully',$result);
     }
 
     /**
      * todo 删除日志
-     * @param Request $request
      * @return JsonResponse
      */
-    public function delete(Request $request)
+    public function delete()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $result = $this->logModel->deleteResult('id',$this->post['id'],'=');
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'delete log successfully');

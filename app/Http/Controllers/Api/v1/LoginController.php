@@ -39,7 +39,7 @@ class LoginController
     public function index(Request $request)
     {
         if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'error');
+            return ajax_return(Code::METHOD_ERROR,'Permission denied');
         }
         $validate = Validator::make($this->post, ['username' =>'required|between:4,16|string','password' =>'required|between:6,16|string']);
         if ($validate->fails()){

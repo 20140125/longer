@@ -65,6 +65,13 @@ class BaseController extends Controller
      */
     public function __construct(Request $request)
     {
+        $url = $request->getRequestUri();
+        if (strstr($url,'?')){
+            $url = substr($url,0,find_str($request->getRequestUri(),'?',2));
+        }
+        if ($request->isMethod('get') && $url!==route('downloadFile')){
+            $this->setCode(Code::METHOD_ERROR,'Method Not Allowed');
+        }
         $this->post = $request->post();
         $this->userModel = Users::getInstance();
         $this->roleModel = Role::getInstance();
@@ -78,13 +85,9 @@ class BaseController extends Controller
             route('logSave'),
             route('menu')
         ];
-        //私有权限
-        $url = $request->getRequestUri();
-        if (strstr($url,'?')){
-            $url = substr($url,0,find_str($request->getRequestUri(),"?",2));
-        }
+        //判断必填字段是否为空
         if (empty($this->post['token'])){
-            $this->setCode(Code::ERROR,'required params missing');
+            $this->setCode(Code::Unauthorized,'required params missing');
         }
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
         if (empty($this->users)){
@@ -108,6 +111,7 @@ class BaseController extends Controller
      */
     protected function setCode($code,$message)
     {
+        set_code($code);
         exit(json_encode(array('code'=>$code,'msg'=>$message)));
     }
 

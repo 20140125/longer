@@ -2,11 +2,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\View\View;
 
 /**
  * 角色管理
@@ -18,14 +15,10 @@ class RoleController extends BaseController
 {
     /**
      * todo：角色列表
-     * @param Request $request
-     * @return Factory|JsonResponse|View
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $roleLists = $this->roleModel->getResult2();
         foreach ($roleLists as &$item){
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
@@ -37,14 +30,10 @@ class RoleController extends BaseController
 
     /**
      * todo：角色保存
-     * @param Request $request
      * @return JsonResponse
      */
-    public function save(Request $request)
+    public function save()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post, ['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string'] );
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -65,14 +54,10 @@ class RoleController extends BaseController
 
     /**
      * todo：角色更新
-     * @param Request $request
      * @return JsonResponse
      */
-    public function update(Request $request)
+    public function update()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         if (!empty($this->post['act']) && $this->post['act'] == 'status'){
             unset($this->post['act']);
             $validate = Validator::make($this->post, ['status'=>'required|in:1,2','id'=>'required|integer|gt:1' ],[  'id.gt'=>'Permission denied']);
@@ -107,14 +92,10 @@ class RoleController extends BaseController
 
     /**
      * todo：删除角色
-     * @param Request $request
      * @return JsonResponse
      */
-    public function delete(Request $request)
+    public function delete()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post, ['id'=>'required|integer|gt:1'],['id.gt'=>'Permission denied'] );
         if ($validate->fails()) {
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 
 /**
- * todo 用户管理
+ * TODO: 用户管理
  * Class UsersController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
@@ -38,15 +38,11 @@ class UsersController extends BaseController
     }
 
     /**
-     * todo 微信获取用户的openid
-     * @param Request $request
+     * TODO: 微信获取用户的openid
      * @return JsonResponse
      */
-    public function getOpenId(Request $request)
+    public function getOpenId()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $url = 'https://api.weixin.qq.com/sns/jscode2session?';
         $data = array(
             'appid' =>$this->appid,
@@ -74,15 +70,11 @@ class UsersController extends BaseController
     }
 
     /**
-     * todo 微信登陆信息
-     * @param Request $request
+     * TODO: 微信登陆信息
      * @return JsonResponse
      */
-    public function login(Request $request)
+    public function login()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $result = Users::getInstance()->updateResult($this->post,'openid',$this->post['openid']);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'login successfully');
@@ -91,15 +83,11 @@ class UsersController extends BaseController
 
     }
     /**
-     * 管理员信息
-     * @param Request $request
+     * TODO: 管理员信息
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $result['userLists'] = $this->userModel->getResultList();
         foreach ($result['userLists'] as &$item){
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
@@ -110,15 +98,12 @@ class UsersController extends BaseController
     }
 
     /**
-     * todo 管理员保存
+     * TODO: 管理员保存
      * @param Request $request
      * @return JsonResponse
      */
     public function save(Request $request)
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,$this->rule(3));
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -133,15 +118,11 @@ class UsersController extends BaseController
         return $this->ajax_return(Code::ERROR,'add user error');
     }
     /**
-     * todo 管理员更新
-     * @param Request $request
+     * TODO: 管理员更新
      * @return JsonResponse
      */
-    public function update(Request $request)
+    public function update()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         //修改用户禁用状态
         if (!empty($this->post['act'])){
             $validate = Validator::make($this->post,$this->rule(4),['id.gt'=>'Permission denied']);
@@ -186,15 +167,11 @@ class UsersController extends BaseController
     }
 
     /**
-     * todo 删除管理员用户
-     * @param Request $request
+     * TODO: 删除管理员用户
      * @return JsonResponse
      */
-    public function delete(Request $request)
+    public function delete()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['id'=>'required|integer|gt:1'],['id.gt'=>'Permission denied']);
         if ($validate->fails()) {
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -207,7 +184,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * 验证规则
+     * TODO: 验证规则
      * @param $status 1 不验证密码 （更新）  2 验证密码 （更新）  3 验证用户名（添加）
      * @return array
      */

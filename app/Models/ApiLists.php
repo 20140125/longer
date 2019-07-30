@@ -7,12 +7,25 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class ApiLists
+ * @author <fl140125@gmail.com>
+ * @package App\Models
+ */
 class ApiLists extends Model
 {
-    protected static $tableName = 'os_api_lists';
-
+    /**
+     * @var string $table
+     */
+    public $table = 'os_api_lists';
+    /**
+     * @var $instance
+     */
     protected static $instance;
 
+    /**
+     * @return ApiLists
+     */
     static public function getInstance()
     {
         if (!self::$instance instanceof self){
@@ -25,7 +38,7 @@ class ApiLists extends Model
         // TODO: Implement __clone() method.
     }
     /**
-     * 查询一条记录
+     * TODO: 查询一条记录
      * @param $field
      * @param $value
      * @param string $op
@@ -34,29 +47,11 @@ class ApiLists extends Model
      */
     public function getResult($field, $value,$op='=', $column = ['*'])
     {
-        $result = DB::table(self::$tableName)->where($field,$op,$value)->first($column);
-        return $result;
-    }
-
-    /**
-     * 权限分页列表
-     * @param $name
-     * @param $page
-     * @param $limit
-     * @return Collection
-     */
-    public function getResultLists($name,$page,$limit=10)
-    {
-        $where = [];
-        if (!empty($name)){
-            $where[] = ['name','like','%'.$name.'%'];
-        }
-        $result['data'] = DB::table(self::$tableName)->where($where)->offset($limit*($page-1))->limit($limit)->get();
-        $result['total'] = DB::table(self::$tableName)->where($where)->count();
+        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
         return $result;
     }
     /**
-     * 添加记录
+     * TODO: 添加记录
      * @param $data
      * @return bool
      */
@@ -64,11 +59,11 @@ class ApiLists extends Model
     {
         $data['request'] = empty($data['request'])?"[]":json_encode($data['request'],JSON_UNESCAPED_UNICODE);
         $data['response'] = empty($data['response'])?"[]":json_encode($data['response'],JSON_UNESCAPED_UNICODE);
-        $result = DB::table(self::$tableName)->insertGetId($data);
+        $result = DB::table($this->table)->insertGetId($data);
         return $result;
     }
     /**
-     * 更新一条数据
+     * TODO: 更新一条数据
      * @param $data
      * @param $field
      * @param $value
@@ -79,19 +74,19 @@ class ApiLists extends Model
     {
         $data['request'] = empty($data['request'])?"[]":json_encode($data['request'],JSON_UNESCAPED_UNICODE);
         $data['response'] = empty($data['response'])?"[]":json_encode($data['response'],JSON_UNESCAPED_UNICODE);
-        $result = DB::table(self::$tableName)->where($field,$op,$value)->update($data);
+        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
         return $result;
     }
 
     /**
-     * 删除一条数据
+     * TODO: 删除一条数据
      * @param $field
      * @param $value
      * @return int
      */
     public function deleteResult($field,$value)
     {
-        $result = DB::table(self::$tableName)->where($field,$value)->delete();
+        $result = DB::table($this->table)->where($field,$value)->delete();
         return $result;
     }
 }

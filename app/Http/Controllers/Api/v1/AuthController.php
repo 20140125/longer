@@ -3,13 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
-
-
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
 
 /**
  * Class AuthController
@@ -18,17 +13,12 @@ use Illuminate\Support\Facades\View;
  */
 class AuthController extends BaseController
 {
-
     /**
      * todo 权限列表
-     * @param Request $request
-     * @return Factory|JsonResponse|\Illuminate\View\View
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->isMethod('get')){
-            return view('admin.auth.index');
-        }
         $result['authLists'] = $this->ruleModel->getAuthLists($this->post['name']??'',$this->post['pid']??0,$this->post['page']??1,$this->post['limit']??20);
         $result['selectAuth'] = $this->ruleModel->getResult2('1',2);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
@@ -36,14 +26,10 @@ class AuthController extends BaseController
 
     /**
      * todo 权限保存
-     * @param Request $request
      * @return JsonResponse
      */
-    public function save(Request $request)
+    public function save()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['name'=> 'required|unique:os_rule','href' =>'required|unique:os_rule']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -57,14 +43,10 @@ class AuthController extends BaseController
 
     /**
      * todo 更新权限
-     * @param Request $request
      * @return JsonResponse
      */
-    public function update(Request $request)
+    public function update()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         if (empty($this->post['act'])){
             $validate = Validator::make($this->post,['name'=> 'required','href' =>'required']);
             if ($validate->fails()){
@@ -90,14 +72,10 @@ class AuthController extends BaseController
 
     /**
      * todo 删除权限
-     * @param Request $request
      * @return JsonResponse
      */
-    public function delete(Request $request)
+    public function delete()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['id'=>'required|integer','level'=>'gt:0']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());

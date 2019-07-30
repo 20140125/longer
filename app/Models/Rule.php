@@ -9,12 +9,18 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Class Rule
+ * @author <fl140125@gmail.com>
  * @package App\Models
  */
 class Rule extends Model
 {
+    /**
+     * @var string $table
+     */
     protected $table='os_rule';
-
+    /**
+     * @var $instance
+     */
     private static $instance;
 
     private function __clone()
@@ -22,6 +28,9 @@ class Rule extends Model
         // TODO: Implement __clone() method.
     }
 
+    /**
+     * @return Rule
+     */
     static public function getInstance()
     {
         if (!self::$instance instanceof self){
@@ -31,7 +40,7 @@ class Rule extends Model
     }
 
     /**
-     * todo 查询一条记录
+     * TODO：查询一条记录
      * @param $field
      * @param $value
      * @param string $op
@@ -52,7 +61,7 @@ class Rule extends Model
     }
 
     /**
-     * todo 查询一级显示的分类
+     * TODO：查询一级显示的分类
      * @param string $status
      * @param int $level
      * @return Collection
@@ -68,7 +77,7 @@ class Rule extends Model
     }
 
     /**
-     * todo 权限列表
+     * TODO：权限列表
      * @param array $ids
      * @return Collection
      */
@@ -85,7 +94,7 @@ class Rule extends Model
     }
 
      /**
-     * todo：权限列表
+     * TODO：权限列表
      * @return Collection
      */
     public function getAuthList()
@@ -97,7 +106,7 @@ class Rule extends Model
 
 
     /**
-     * todo 权限分页列表
+     * TODO：权限分页列表
      * @param $name
      * @param $pid
      * @param $page
@@ -122,14 +131,14 @@ class Rule extends Model
     }
 
     /**
-     * todo 添加记录
+     * TODO 添加记录
      * @param $data
      * @return bool
      */
     public function addResult($data)
     {
         $id = DB::table($this->table)->insertGetId($data);
-        $parent_result = self::getInstance()->getResult('id',$data['pid']);
+        $parent_result = $this->getResult('id',$data['pid']);
         $data['path'] = $id;
         $data['level'] = 0;
         if (!empty($parent_result)){
@@ -141,7 +150,7 @@ class Rule extends Model
     }
 
     /**
-     * todo 更新一条数据
+     * TODO 更新一条数据
      * @param $data
      * @param $field
      * @param $value
@@ -150,7 +159,7 @@ class Rule extends Model
      */
     public function updateResult($data,$field,$value,$op='=')
     {
-        $parent_result = self::getInstance()->getResult($field,$value,$op);
+        $parent_result = $this->getResult($field,$value,$op);
         if (!empty($parent_result)){
             if (!empty($parent_result->path)){
                 $data['path'] = $parent_result->path.'-'.$data['id'];
@@ -164,7 +173,7 @@ class Rule extends Model
     }
 
     /**
-     * todo 删除一条数据
+     * TODO 删除一条数据
      * @param $field
      * @param $value
      * @param string $op

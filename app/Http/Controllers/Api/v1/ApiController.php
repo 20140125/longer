@@ -48,14 +48,13 @@ class ApiController extends BaseController
     /*********************************************************************api 列表****************************************************************/
     /**
      * api 列表
-     * @param Request $request
      * @return JsonResponse
      */
-
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
+        $validate = Validator::make($this->post,['type'=>'required|integer']);
+        if ($validate->fails()){
+            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
         $result = $this->apiListsModel->getResult('type',$this->post['type']);
         if (empty($result)){
@@ -66,27 +65,19 @@ class ApiController extends BaseController
 
     /**
      * todo：接口分类
-     * @param Request $request
      * @return JsonResponse
      */
-    public function category(Request $request)
+    public function category()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $result = $this->apiCategoryModel->getResultListsLevel2();
         return $this->ajax_return(Code::SUCCESS,'successfully', ['category_tree'=>get_tree($result,0,'children'),'category'=>$result]);
     }
     /**
      * todo：保存API数据
-     * @param Request $request
      * @return JsonResponse
      */
-    public function save(Request $request)
+    public function save()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,$this->rules('lists'));
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -100,14 +91,10 @@ class ApiController extends BaseController
 
     /**
      * todo 更新API数据
-     * @param Request $request
      * @return JsonResponse
      */
-    public function update(Request $request)
+    public function update()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,$this->rules('lists'));
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -122,14 +109,10 @@ class ApiController extends BaseController
 
     /**
      * todo：保存APICategory数据
-     * @param Request $request
      * @return JsonResponse
      */
-    public function categorySave(Request $request)
+    public function categorySave()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,$this->rules('category'));
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -142,14 +125,10 @@ class ApiController extends BaseController
     }
     /**
      * todo 更新APICategory数据
-     * @param Request $request
      * @return JsonResponse
      */
-    public function categoryUpdate(Request $request)
+    public function categoryUpdate()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,$this->rules('category'));
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -164,14 +143,10 @@ class ApiController extends BaseController
 
     /**
      * todo 删除api分类
-     * @param Request $request
      * @return JsonResponse
      */
-    public function CategoryDelete(Request $request)
+    public function CategoryDelete()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['id'=>'required|integer']);
         if ($validate->fails()) {
             return $this->ajax_return(Code::ERROR, $validate->errors()->first());

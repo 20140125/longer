@@ -8,16 +8,34 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class Users
+ * @author <fl140125@gmail.com>
+ * @package App\Models
+ */
 class Users extends Model
 {
-    protected static $tableName = 'os_users';
+    /**
+     * @var string $table
+     */
+    public $table = 'os_users';
+    /**
+     * @var static $instance
+     */
     private static $instance;
+    /**
+     * @var static $code
+     */
     protected static $code;
 
     private function __clone()
     {
         // TODO: Implement __clone() method.
     }
+
+    /**
+     * @return Users
+     */
     static public function getInstance()
     {
         if (!self::$instance instanceof self){
@@ -27,13 +45,13 @@ class Users extends Model
     }
 
     /**
-     * todo 登陆后台
+     * TODO:  登陆后台
      * @param $data
      * @return int
      */
     public function loginRes($data)
     {
-        $result = self::getInstance()->getResult( 'username',$data['username']);
+        $result = $this->getResult( 'username',$data['username']);
         if (empty($result)){
             return Code::ERROR;
         }
@@ -41,33 +59,33 @@ class Users extends Model
         if ($password!==$result->password){
             return Code::ERROR;
         }
-        if ($result->status == '2'){
+        if ($result->status == 2){
             return Code::NOT_ALLOW;
         }
         $request = array('ip_address' =>request()->ip(), 'updated_at' =>time());
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($data['password']).$request['salt']);
         $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
-        self::getInstance()->updateResult($request,'id',$result->id);
+        $this->updateResult($request,'id',$result->id);
         $admin['token'] = $request['remember_token'];
         $admin['username'] = $result->username;
         return $admin;
     }
 
     /**
-     * todo 获取管理员列表
+     * TODO:  获取管理员列表
      * @return Collection
      */
     public function  getResultList()
     {
-        $result = DB::table(self::$tableName)->join('os_role',self::$tableName.'.role_id','=','os_role.id')
+        $result = DB::table($this->table)->join('os_role',$this->table.'.role_id','=','os_role.id')
             ->get(['os_users.*','os_role.id as role_id']);
         return $result;
     }
 
 
     /**
-     * todo 查询一条记录
+     * TODO:  查询一条记录
      * @param $field
      * @param $value
      * @param string $op
@@ -76,22 +94,22 @@ class Users extends Model
      */
     public function getResult($field, $value,$op='=', $column = ['*'])
     {
-        $result = DB::table(self::$tableName)->where($field,$op,$value)->first($column);
+        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
         return $result;
     }
     /**
-     * todo 添加记录
+     * TODO:  添加记录
      * @param $data
      * @return bool
      */
     public function addResult($data)
     {
-        $result = DB::table(self::$tableName)->insertGetId($data);
+        $result = DB::table($this->table)->insertGetId($data);
         return $result;
     }
 
     /**
-     * todo 更新一条数据
+     * TODO:  更新一条数据
      * @param $data
      * @param $field
      * @param $value
@@ -100,12 +118,12 @@ class Users extends Model
      */
     public function updateResult($data,$field,$value,$op='=')
     {
-        $result = DB::table(self::$tableName)->where($field,$value,$op)->update($data);
+        $result = DB::table($this->table)->where($field,$value,$op)->update($data);
         return $result;
     }
 
     /**
-     * todo 删除一条数据
+     * TODO:  删除一条数据
      * @param $field
      * @param $value
      * @param $op
@@ -113,7 +131,7 @@ class Users extends Model
      */
     public function deleteResult($field,$value,$op='=')
     {
-        $result = DB::table(self::$tableName)->where($field,$value,$op)->delete();
+        $result = DB::table($this->table)->where($field,$value,$op)->delete();
         return $result;
     }
 }

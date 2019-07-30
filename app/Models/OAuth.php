@@ -6,14 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class OAuth
+ * @author <fl140125@gmail.com>
+ * @package App\Models
+ */
 class OAuth extends Model
 {
-    protected static $tableName = 'os_oauth';
+    /**
+     * @var string $table
+     */
+    public $table = 'os_oauth';
+    /**
+     * @var static $instance
+     */
     protected static $instance;
     private function __clone()
     {
         // TODO: Implement __clone() method.
     }
+
+    /**
+     * @return OAuth
+     */
     static public function getInstance()
     {
         if (!self::$instance instanceof self){
@@ -23,31 +38,31 @@ class OAuth extends Model
     }
 
     /**
-     * 获取授权列表
+     * TODO:获取授权列表
      * @param $page
      * @param $limit
      * @return mixed
      */
     public function getResultLists($page,$limit)
     {
-        $result['data'] = DB::table(self::$tableName)->limit($limit)->orderBy('updated_at','desc')->offset($limit*($page-1))->get();
-        $result['total'] = DB::table(self::$tableName)->count();
+        $result['data'] = DB::table($this->table)->limit($limit)->orderBy('updated_at','desc')->offset($limit*($page-1))->get();
+        $result['total'] = DB::table($this->table)->count();
         return $result;
     }
 
     /**
-     * 授权图表
+     * TODO:授权图表
      * @return mixed
      */
     public function oauthChart()
     {
-        $result['oauth_type'] = DB::table(self::$tableName)->groupBy('oauth_type')
+        $result['oauth_type'] = DB::table($this->table)->groupBy('oauth_type')
             ->select(DB::raw('oauth_type,count(oauth_type) as count'))
             ->get();
         return $result;
     }
     /**
-     * 查询一条记录
+     * TODO:查询一条记录
      * @param $field
      * @param $value
      * @param string $op
@@ -56,22 +71,22 @@ class OAuth extends Model
      */
     public function getResult($field, $value='',$op='=', $column = ['*'])
     {
-        $result = DB::table(self::$tableName)->where($field,$op,$value)->first($column);
+        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
         return $result;
     }
     /**
-     * 添加记录
+     * TODO:添加记录
      * @param $data
      * @return bool
      */
     public function addResult($data)
     {
         $data['created_at'] = time();
-        $result = DB::table(self::$tableName)->insertGetId($data);
+        $result = DB::table($this->table)->insertGetId($data);
         return $result;
     }
     /**
-     * 更新一条数据
+     * TODO:更新一条数据
      * @param $data
      * @param $field
      * @param $value
@@ -81,19 +96,19 @@ class OAuth extends Model
     public function updateResult($data,$field,$value=null,$op='=')
     {
         $data['updated_at'] = time();
-        $result = DB::table(self::$tableName)->where($field,$op,$value)->update($data);
+        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
         return $result;
     }
 
     /**
-     * 删除一条数据
+     * TODO:删除一条数据
      * @param $field
      * @param $value
      * @return int
      */
     public function deleteResult($field,$value)
     {
-        $result = DB::table(self::$tableName)->whereIn($field,$value)->delete();
+        $result = DB::table($this->table)->whereIn($field,$value)->delete();
         return $result;
     }
 }

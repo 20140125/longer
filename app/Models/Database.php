@@ -5,16 +5,37 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class Database
+ * @author <fl140125@gmail.com>
+ * @package App\Models
+ */
 class Database extends Model
 {
+    /**
+     * @var $instance
+     */
     private static $instance;
+    /**
+     * @var string $start_line
+     */
     private $start_line;
+    /**
+     * @var string $end_line
+     */
     private $end_line;
+    /**
+     * @var string $str_line
+     */
     private $str_line;
     private function __clone()
     {
         // TODO: Implement __clone() method.
     }
+
+    /**
+     * @return Database
+     */
     static public function getInstance()
     {
         if (!self::$instance instanceof self){
@@ -23,6 +44,10 @@ class Database extends Model
         return self::$instance;
     }
 
+    /**
+     * Database constructor.
+     * @param array $attributes
+     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -58,7 +83,7 @@ class Database extends Model
      */
     public  function createTable($tableName)
     {
-        $result = DB::select("SHOW CREATE TABLE {$tableName}");
+        $result = DB::select(sprintf("SHOW CREATE TABLE %s", $tableName));
         $sql = $this->start_line;
         foreach ($result as $item){
             $item = object_to_array($item);
@@ -77,13 +102,13 @@ class Database extends Model
      */
     public function sourceTable($tableName)
     {
-        $result = DB::select("SELECT * FROM `".$tableName."`");
+        $result = DB::select(sprintf("SELECT * FROM %s", $tableName));
         $sql=";\n-- ----------------------------\n-- Records of $tableName\n-- ----------------------------\n";
         if (empty($result)){
             return $sql;
         }
         foreach ($result as $item){
-            $sql.="INSERT INTO `".$tableName."` VALUES (";
+            $sql.="INSERT INTO $tableName VALUES (";
             foreach ($item as $keys => $rows) {
                 $sql.= "'$rows',";
             }

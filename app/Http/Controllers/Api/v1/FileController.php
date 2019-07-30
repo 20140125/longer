@@ -21,13 +21,13 @@ class FileController extends BaseController
 {
     /**
      * todo：文件列表
-     * @param Request $request
      * @return Factory|JsonResponse|View
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
+        $validate = Validator::make($this->post,['path'=>'required|string','basename'=>'required|string']);
+        if ($validate->fails()){
+            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
         }
         $basename = $this->post['basename'];
         $path = $this->post['path'];
@@ -37,14 +37,10 @@ class FileController extends BaseController
 
     /**
      * todo：文件打包
-     * @param Request $request
      * @return JsonResponse
      */
-    public function compression(Request $request)
+    public function compression()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['path'=>'required|string','resource'=>'required|string','docLists'=>'required|array']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -58,14 +54,10 @@ class FileController extends BaseController
 
     /**
      * todo：文件内容
-     * @param Request $request
      * @return JsonResponse
      */
-    public function read(Request $request)
+    public function read()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['path'=>'required|string']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -74,14 +66,10 @@ class FileController extends BaseController
     }
     /**
      * todo：文件解压
-     * @param Request $request
      * @return JsonResponse
      */
-    public function Decompression(Request $request)
+    public function Decompression()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['path'=>'required|string']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -102,9 +90,6 @@ class FileController extends BaseController
      */
     public function upload(Request $request)
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $file = $request->file('file');
         if ($file->isValid()){
             //获取文件的扩展名
@@ -135,8 +120,8 @@ class FileController extends BaseController
      */
     public function download(Request $request,Response $response)
     {
-        if (empty($request->get('path'))){
-            return $response::json(array('info'=>'下载文件不存在'),404);
+        if ($request->isMethod('get')){
+            return $this->ajax_return(Code::METHOD_ERROR,'error');
         }
         $username = $this->userModel->getResult('access_token',$request->get('token'));
         if (empty($username)){
@@ -147,14 +132,10 @@ class FileController extends BaseController
 
     /**
      * todo：文件更新
-     * @param Request $request
      * @return JsonResponse
      */
-    public function update(Request $request)
+    public function update()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['path'=>'required|string']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -165,14 +146,10 @@ class FileController extends BaseController
 
     /**
      * todo：文件删除
-     * @param Request $request
      * @return JsonResponse
      */
-    public function delete(Request $request)
+    public function delete()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['path'=>'required|string']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -188,14 +165,10 @@ class FileController extends BaseController
 
     /**
      * todo：文件新建
-     * @param Request $request
      * @return JsonResponse
      */
-    public function save(Request $request)
+    public function save()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['path'=>'required|string']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -209,14 +182,10 @@ class FileController extends BaseController
 
     /**
      * todo：文件重命名
-     * @param Request $request
      * @return JsonResponse
      */
-    public function rename(Request $request)
+    public function rename()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['oldFile'=>'required|string','newFile'=>'required|string']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -230,14 +199,10 @@ class FileController extends BaseController
 
     /**
      * todo：修改文件权限
-     * @param Request $request
      * @return JsonResponse
      */
-    public function auth(Request $request)
+    public function auth()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['path'=>'required|string','auth'=>'required|integer|max:666']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());
@@ -251,14 +216,10 @@ class FileController extends BaseController
 
     /**
      * todo：图片预览
-     * @param Request $request
      * @return JsonResponse
      */
-    public function preview(Request $request)
+    public function preview()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $validate = Validator::make($this->post,['name'=>'required|string']);
         if ($validate->fails()){
             return $this->ajax_return(Code::ERROR,$validate->errors()->first());

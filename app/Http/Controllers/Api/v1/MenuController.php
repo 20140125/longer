@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * 导航栏
@@ -15,14 +14,10 @@ class MenuController extends BaseController
 {
     /**
      * todo 权限列表
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getMenu(Request $request)
+    public function getMenu()
     {
-        if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'error');
-        }
         $role = $this->roleModel->getResult('id',$this->users->role_id);
         if (empty($role)){
             return $this->ajax_return(Code::ERROR,'permission denied');
@@ -39,30 +34,22 @@ class MenuController extends BaseController
     }
     /**
      * todo 用户合法性
-     * @param Request $request
      * @return JsonResponse
      */
-    public function check(Request $request)
+    public function check()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $role = $this->roleModel->getResult('id',$this->users->role_id);
         if (!empty($role)){
-            return $this->ajax_return(Code::SUCCESS,'permission',['auth'=>$role->auth_url]);
+            return $this->ajax_return(Code::SUCCESS,'permission',['auth'=>$role->auth_url,'token'=>$this->users->remember_token,'username'=>$this->users->username]);
         }
         return $this->ajax_return(Code::ERROR,'permission denied');
     }
     /**
      * todo  退出登陆
-     * @param Request $request
      * @return JsonResponse
      */
-    public function logout(Request $request)
+    public function logout()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         if (isset($this->users->salt)){
             $this->users->remember_token = md5(md5($this->users->password).time());
             $result = $this->userModel->updateResult(object_to_array($this->users),'id',$this->users->id);

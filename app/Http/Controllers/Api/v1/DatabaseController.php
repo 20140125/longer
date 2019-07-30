@@ -30,29 +30,21 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * 数据表列表
-     * @param Request $request
+     * TODO:数据表列表
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         $result = $this->databaseModel->lists();
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**
-     * 数据表备份
-     * @param Request $request
+     * TODO:数据表备份
      * @return JsonResponse
      */
-    public function backup(Request $request)
+    public function backup()
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
         function_exists('set_time_limit') && set_time_limit(0);
         foreach ($this->post['tableName'] as $item){
             $savePath = $this->backupPath.DIRECTORY_SEPARATOR.$item.'.sql';

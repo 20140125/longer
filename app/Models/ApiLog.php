@@ -6,12 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class ApiLog
+ * @author <fl140125@gmail.com>
+ * @package App\Models
+ */
 class ApiLog extends Model
 {
-    protected static $tableName = 'os_api_log';
-
+    /**
+     * @var string $table
+     */
+    public $table = 'os_api_log';
+    /**
+     * @var $instance
+     */
     protected static $instance;
 
+    /**
+     * @return ApiLog
+     */
     static public function getInstance()
     {
         if (!self::$instance instanceof self){
@@ -24,7 +37,7 @@ class ApiLog extends Model
         // TODO: Implement __clone() method.
     }
     /**
-     * 查询记录
+     * TODO: 查询记录
      * @param $field
      * @param $value
      * @param string $op
@@ -33,29 +46,29 @@ class ApiLog extends Model
      */
     public function getResult($field, $value,$op='=', $column = ['*'])
     {
-        $result = DB::table(self::$tableName)->where($field,$op,$value)->orderBy('id','desc')->limit(10)->get($column);
+        $result = DB::table($this->table)->where($field,$op,$value)->orderBy('id','desc')->limit(10)->get($column);
         return $result;
     }
     /**
-     * 添加记录
+     * TODO: 添加记录
      * @param $data
      * @return bool
      */
     public function addResult($data)
     {
-        $result = DB::table(self::$tableName)->insertGetId($data);
+        $result = DB::table($this->table)->insertGetId($data);
         return $result;
     }
 
     /**
-     * 删除api日志
+     * TODO: 删除api日志
      * @param $filed
      * @param $value
      * @return int
      */
     public function deleteResult($filed,$value)
     {
-        $result = DB::table(self::$tableName)->where($filed,$value)->delete();
+        $result = DB::table($this->table)->where($filed,$value)->delete();
         return $result;
     }
 }

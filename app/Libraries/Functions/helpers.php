@@ -316,10 +316,9 @@ if (!function_exists('save_file')){
             mkdir($filepath);
             return true;
         }
-        fopen($filepath,'a');
-        fwrite($filepath,basename($filepath));
-        fclose($filepath);
-        return true;
+        $fileObj = new SplFileObject($filepath,'a');
+        $written = $fileObj->fwrite(basename($filepath));
+        return $written;
     }
 }
 
@@ -630,12 +629,12 @@ if (!function_exists('act_log'))
     {
         $data = array(
             'username' =>$info['username'],
-            'url' =>request()->getRequestUri(),
+            'url' =>$info['url'],
             'ip_address' =>request()->getClientIp(),
             'created_at' =>time(),
             'log' =>$info,
         );
-        $data['log'] = json_encode($data,JSON_UNESCAPED_UNICODE);
+        $data['log'] =str_replace('\\','', json_encode($data,JSON_UNESCAPED_UNICODE));
         return Log::getInstance()->addResult($data);
     }
 }
