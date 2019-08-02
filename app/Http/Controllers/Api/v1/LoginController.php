@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Models\Config;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,6 +21,10 @@ class LoginController
      */
     protected $userModel;
     /**
+     * @var Config $configModel
+     */
+    protected $configModel;
+    /**
      * @var array $post
      */
     protected $post;
@@ -27,6 +32,7 @@ class LoginController
     public function __construct(Request $request)
     {
         $this->userModel = Users::getInstance();
+        $this->configModel = Config::getInstance();
         $this->post = $request->post();
 
     }
@@ -53,5 +59,19 @@ class LoginController
             return ajax_return(Code::NOT_ALLOW,'users not allow login system');
         }
         return ajax_return(Code::SUCCESS,'login successfully','',$result);
+    }
+
+    /**
+     * TODO：获取配置
+     * @return JsonResponse
+     */
+    public function config()
+    {
+        $validate = Validator::make($this->post,['name'=>'required|string']);
+        if ($validate->fails()){
+            return ajax_return(Code::ERROR,$validate->errors()->first());
+        }
+        $result = $this->configModel->getResult('name',$this->post['name'],'=',['value']);
+        return ajax_return(Code::SUCCESS,'successfully','',json_decode($result->value,true));
     }
 }

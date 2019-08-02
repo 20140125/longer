@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Oauth\GiteeController;
 use App\Http\Controllers\Oauth\GithubController;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiboController;
@@ -92,6 +93,34 @@ class OauthCallbackController
         );
         $where[] = array('openid','=',(string)$userInfo['id']);
         $where[] = array('oauth_type','=','github');
+        return $this->oauth($data,$where);
+    }
+
+    /**
+     * todo：Weibo授权回调
+     * @param Request $request
+     * @return RedirectResponse|Redirector
+     * @throws \Exception
+     */
+    public function gitee(Request $request)
+    {
+        $appId = config('app.gitee_appid');
+        $appSecret = config('app.gitee_secret');
+        $giteeOauth = new GiteeController($appId,$appSecret);
+        $result = $giteeOauth->getAccessToken($request->get('code'),$request->get('state'));
+        $userInfo = $giteeOauth->getUserInfo($result['access_token']);
+        $data = array(
+            'username' =>$userInfo['name'],
+            'openid' =>$userInfo['id'],
+            'avatar_url' =>$userInfo['avatar_large'],
+            'access_token' =>$result['access_token'],
+            'url' =>empty($userInfo['url'])?'':$userInfo['url'],
+            'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
+            'oauth_type' => 'gitee',
+            'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
+        );
+        $where[] = array('openid','=',$userInfo['id']);
+        $where[] = array('oauth_type','=','gitee');
         return $this->oauth($data,$where);
     }
 

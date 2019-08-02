@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(function () {
     /********************************************共有权限********************************************************/
-    Route::match(['get','post'],'user/login','v1\LoginController@index')->name('apiLogin');
+    Route::match(['get','post'],'login','v1\LoginController@index')->name('apiLogin');
+    Route::match(['get','post'],'config','v1\LoginController@config')->name('getConfig');
     Route::match(['get','post'],'checkLogin','v1\MenuController@check')->name('checkLogin');
     Route::match(['get','post'],'logout','v1\MenuController@logout')->name('apiLogout');
     Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');

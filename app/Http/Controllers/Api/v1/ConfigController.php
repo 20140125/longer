@@ -29,7 +29,6 @@ class ConfigController extends BaseController
         parent::__construct($request);
         $this->configModel = Config::getInstance();
     }
-
     /**
      * TODO：获取配置列表
      * @return JsonResponse

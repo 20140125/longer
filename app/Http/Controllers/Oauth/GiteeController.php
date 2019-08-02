@@ -36,15 +36,15 @@ class GiteeController extends OauthController
 
     /**
      * todo：获取登录页面跳转url
-     * @param string $callbackUrl
+     * @param string $callback
      * @param int $length
      * @return string
      */
-    public function getAuthUrl($callbackUrl = '', $length = 32)
+    public function getAuthUrl($callback = '', $length = 32)
     {
         $arr = array(
             'client_id'			=>	$this->appid,
-            'redirect_uri'		=>	null === $callbackUrl ? $this->redirectUri : $callbackUrl,
+            'redirect_uri' => empty($callback) ? $this->redirectUri : $callback,
             'response_type'		=>	'code',
             'state'				=>	$this->getState($length),
         );
@@ -58,7 +58,7 @@ class GiteeController extends OauthController
      * @return mixed
      * @throws \Exception
      */
-    protected function getAccessToken($code,$state)
+    public function getAccessToken($code,$state)
     {
         $arr = [
             'grant_type'	=>	'authorization_code',
