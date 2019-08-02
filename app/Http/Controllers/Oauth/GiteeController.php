@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Oauth;
 
-use Illuminate\Support\Facades\Log;
-
 /**
  * Class GiteeController
  * @author <fl140125@gmail.com>
@@ -73,8 +71,8 @@ class GiteeController extends OauthController
             'redirect_uri'	=>	$this->redirectUri,
             'client_secret'	=>	$this->appsecret
         ];
+        $this->curl->setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36");
         $result = $this->curl->post($this->apiUrl."oauth/token?".http_build_query($arr));
-        Log::error(json_encode($this->curl));
         if (!$result){
             throw new \Exception('接口请求失败');
         }
@@ -89,7 +87,7 @@ class GiteeController extends OauthController
      */
     public function getUserInfo($access_token)
     {
-        $result = $this->curl->post($this->apiUrl.'api/v5/user?'.'access_token='.$access_token);
+        $result = $this->curl->post($this->apiUrl."api/v5/user?access_token=$access_token");
         if (!$result){
             throw new \Exception('接口请求失败');
         }
