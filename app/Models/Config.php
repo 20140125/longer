@@ -125,9 +125,10 @@ class Config extends Model
         $configVal = json_decode($config->value,true);
         $data['updated_at'] = date('Y-m-d H:i:s');
         $configObj = $data;
+        $configObj['status'] = (int)$configObj['status'];
         $configArr = [];
         foreach ($configVal as $item) {
-            if ($item['pid'] == $value) {
+            if ($item['id'] == $data['id']) {
                 if ($data['act'] === 'update') {
                     unset($configObj['act']);
                     array_push($configArr,$configObj);
