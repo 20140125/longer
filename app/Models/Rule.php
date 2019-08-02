@@ -160,7 +160,7 @@ class Rule extends Model
     public function updateResult($data,$field,$value,$op='=')
     {
         $parent_result = $this->getResult($field,$value,$op);
-        if (!empty($parent_result)){
+        if (!empty($parent_result) && !empty($data['path'])){
             if (!empty($parent_result->path)){
                 $data['path'] = $parent_result->path.'-'.$data['id'];
             } else {
