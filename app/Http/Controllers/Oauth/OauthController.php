@@ -2,13 +2,27 @@
 
 namespace App\Http\Controllers\Oauth;
 
-use Illuminate\Http\Request;
+use Curl\Curl;
 use App\Http\Controllers\Controller;
 
+/**
+ * Class OauthController
+ * @author <fl140125@gmail.com>
+ * @package App\Http\Controllers\Oauth
+ */
 class OauthController extends Controller
 {
     public $state;
-    public $headers = [];
+    /**
+     * @var Curl
+     */
+    protected $curl;
+
+    public function __construct()
+    {
+        $this->curl = new Curl();
+    }
+
     /**
      * todo：获取状态值
      * @param int $length

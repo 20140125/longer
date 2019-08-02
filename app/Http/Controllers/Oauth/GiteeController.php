@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers\Oauth;
 
+use Illuminate\Support\Facades\Log;
 
+/**
+ * Class GiteeController
+ * @author <fl140125@gmail.com>
+ * @package App\Http\Controllers\Oauth
+ */
 class GiteeController extends OauthController
 {
     /**
@@ -29,6 +35,7 @@ class GiteeController extends OauthController
      */
     public function __construct($appid,$appsecret)
     {
+        parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
         $this->redirectUri = config('app.url').'/api/v1/callback/gitee';
@@ -54,23 +61,22 @@ class GiteeController extends OauthController
     /**
      * todo：获取access_token
      * @param $code
-     * @param $state
      * @return mixed
      * @throws \Exception
      */
-    public function getAccessToken($code,$state)
+    public function getAccessToken($code)
     {
         $arr = [
             'grant_type'	=>	'authorization_code',
             'code'			=>	$code,
-            'state'         =>  $state,
             'client_id'		=>	$this->appid,
             'redirect_uri'	=>	$this->redirectUri,
-            'client_secret'	=>	$this->appsecret,
+            'client_secret'	=>	$this->appsecret
         ];
-        $result = http_query($this->apiUrl.'oauth/token',$arr);
-        if ($result['state'] != 200) {
-            throw new \Exception('网络异常');
+        $result = $this->curl->post($this->apiUrl."oauth/token?".http_build_query($arr));
+        Log::error(json_encode($this->curl));
+        if (!$result){
+            throw new \Exception('接口请求失败');
         }
         return $result;
     }
@@ -83,9 +89,9 @@ class GiteeController extends OauthController
      */
     public function getUserInfo($access_token)
     {
-        $result = http_query($this->apiUrl.'api/v5/user?'.'access_token='.$access_token);
-        if ($result['state'] != 200) {
-            throw new \Exception('网络异常');
+        $result = $this->curl->post($this->apiUrl.'api/v5/user?'.'access_token='.$access_token);
+        if (!$result){
+            throw new \Exception('接口请求失败');
         }
         return $result['data'];
     }

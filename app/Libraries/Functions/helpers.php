@@ -497,40 +497,6 @@ if(!function_exists('is_mobile'))
         }
     }
 }
-if(!function_exists('http_query'))
-{
-    /**
-     * @param $url
-     * @param array $data
-     * @param array $headers
-     * @return mixed
-     */
-     function http_query($url, $data = array(), $headers = array())
-     {
-         $ch = curl_init();
-         curl_setopt($ch, CURLOPT_URL, $url); //请求的url
-         if(!empty($headers)){
-             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); //这是header
-         }
-         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
-         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
-         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36');
-         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); //将curl_exec()获取的信息以文件流的形式返回，而不是直接输出。
-         curl_setopt($ch, CURLOPT_FAILONERROR, true); //显示状态码
-         curl_setopt($ch, CURLOPT_TIMEOUT, 60); // 60 second
-         //如果数据存在则POST方式
-         if (!empty($data)) {
-             curl_setopt($ch, CURLOPT_POST, 1);
-             curl_setopt($ch, CURLOPT_POSTFIELDS, $data); //POST数据
-         }
-         $res = curl_exec($ch); //得到的字符串
-         $state = curl_getinfo($ch, CURLINFO_HTTP_CODE); //最后一个收到的HTTP代码
-         curl_close($ch);
-         $re['state'] = $state;
-         $re['data'] = $res;
-         return $re;
-     }
-}
 if(!function_exists('authcode'))
 {
     /**

@@ -5,6 +5,7 @@ use App\Http\Controllers\Utils\Code;
 
 /**
  * Class WeiboController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
 class WeiboController extends OauthController
@@ -33,6 +34,7 @@ class WeiboController extends OauthController
      */
     public function __construct($appid,$appsecret)
     {
+        parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
         $this->redirectUri = config('app.url').'/api/v1/callback/weibo';
@@ -75,8 +77,8 @@ class WeiboController extends OauthController
             'code' => $code,
             'redirect_uri' => $this->redirectUri
         ];
-        $result = http_query($this->apiUrl.'oauth2/access_token',$arr);
-        if ($result['state']!==200){
+        $result = $this->curl->post($this->apiUrl.'oauth2/access_token',$arr);
+        if (!$result){
             throw new \Exception('接口请求失败');
         }
         return $result;
@@ -95,8 +97,8 @@ class WeiboController extends OauthController
             'access_token' =>$access_token,
             'uid' =>$uid
         ];
-        $result = http_query($this->apiUrl.'2/users/show.json'.http_build_query($arr));
-        if ($result['state']!==200){
+        $result = $this->curl->post($this->apiUrl.'2/users/show.json'.http_build_query($arr));
+        if (!$result){
             throw new \Exception('接口请求失败');
         }
         if (isset($result['data']['error_code'])){

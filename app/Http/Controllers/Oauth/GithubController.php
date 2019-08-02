@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class GithubController
+ * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
 class GithubController extends OauthController
@@ -36,6 +37,7 @@ class GithubController extends OauthController
      */
     public function __construct($appid,$appsecret)
     {
+        parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
         $this->redirectUri = config('app.url').'/api/v1/callback/github';
@@ -76,9 +78,9 @@ class GithubController extends OauthController
             'redirect_uri' => $this->redirectUri,
             'state' => $state
         ];
-        $result = http_query($this->apiUrl.'login/oauth/access_token',$arr);
-        if ($result['state'] != 200) {
-            throw new \Exception('网络异常');
+        $result = $this->curl->post($this->apiUrl.'login/oauth/access_token',$arr);
+        if (!$result){
+            throw new \Exception('接口请求失败');
         }
         $result = $this->__getAccessToken($result['data']);
         if (isset($result['access_token'])){
@@ -96,9 +98,9 @@ class GithubController extends OauthController
      */
     public function getUserInfo($access_token)
     {
-        $result = http_query('https://api.github.com/user?access_token='.$access_token);
-        if ($result['state'] != 200) {
-            throw new \Exception('网络异常');
+        $result = $this->curl->post('https://api.github.com/user?access_token='.$access_token);
+        if (!$result){
+            throw new \Exception('接口请求失败');
         }
         return $result['data'];
     }

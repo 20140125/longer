@@ -10,7 +10,6 @@ use App\Models\OAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-
 /**
  * Class OauthCallbackController
  * @author <fl140125@gmail.com>
@@ -107,7 +106,7 @@ class OauthCallbackController
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
         $giteeOauth = new GiteeController($appId,$appSecret);
-        $result = $giteeOauth->getAccessToken($request->get('code'),$request->get('state'));
+        $result = $giteeOauth->getAccessToken($request->get('code'));
         $userInfo = $giteeOauth->getUserInfo($result['access_token']);
         $data = array(
             'username' =>$userInfo['name'],
