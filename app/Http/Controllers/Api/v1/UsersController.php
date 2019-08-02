@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Models\Users;
+use Curl\Curl;
 use Illuminate\Config\Repository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -50,7 +51,8 @@ class UsersController extends BaseController
             'js_code' =>$this->post['code'],
             'grant_type' =>'authorization_code'
         );
-        $response = http_query($url.http_build_query($data));
+        $curl = new Curl();
+        $response = $curl->post($url.http_build_query($data));
         $parsedData = json_decode(trim($response['data']), true, 512, JSON_OBJECT_AS_ARRAY);
         if (!empty($parsedData['errcode'])){
             return $this->ajax_return(Code::ERROR,$parsedData['errmsg']);
