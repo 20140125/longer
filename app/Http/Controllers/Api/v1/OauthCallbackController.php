@@ -57,6 +57,7 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'qq',
+            'role_id' => '2',
             'expires' =>time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['nickname']).$QQOauth->openid.time()),
         );
@@ -88,6 +89,7 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'github',
+            'role_id' => '2',
             'remember_token' =>md5(md5($userInfo['login']).$userInfo['id'].time()),
         );
         $where[] = array('openid','=',(string)$userInfo['id']);
@@ -116,6 +118,7 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'gitee',
+            'role_id' => '2',
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
         $where[] = array('openid','=',$userInfo['id']);
@@ -144,6 +147,7 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'weibo',
+            'role_id' => '2',
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
         $where[] = array('openid','=',$userInfo['id']);
