@@ -10,6 +10,7 @@ use App\Models\OAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+
 /**
  * Class OauthCallbackController
  * @author <fl140125@gmail.com>
@@ -173,7 +174,7 @@ class OauthCallbackController
             $oauthRes =  $this->oauthModel->addResult($data);
         }
         if (!empty($oauthRes)){
-            return redirect('/#/admin/index/'.$data['access_token']);
+            return redirect('/#/admin/index/'.$data['remember_token']);
         }
         return redirect('/#/login');
     }
