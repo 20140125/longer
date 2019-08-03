@@ -87,10 +87,10 @@ class GiteeController extends OauthController
      */
     public function getUserInfo($access_token)
     {
-        $result = $this->curl->post($this->apiUrl."api/v5/user?access_token=$access_token");
+        $result = $this->curl->get($this->apiUrl."api/v5/user?access_token=$access_token");
         if (!$result){
             throw new \Exception('接口请求失败');
         }
-        return $result['data'];
+        return $result;
     }
 }

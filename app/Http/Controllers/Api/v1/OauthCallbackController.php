@@ -106,12 +106,12 @@ class OauthCallbackController
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
         $giteeOauth = new GiteeController($appId,$appSecret);
-        $result = $giteeOauth->getAccessToken($request->get('code'));
-        $userInfo = $giteeOauth->getUserInfo($result['access_token']);
+        $result = object_to_array($giteeOauth->getAccessToken($request->get('code')));
+        $userInfo = object_to_array($giteeOauth->getUserInfo($result['access_token']));
         $data = array(
             'username' =>$userInfo['name'],
             'openid' =>$userInfo['id'],
-            'avatar_url' =>$userInfo['avatar_large'],
+            'avatar_url' =>$userInfo['avatar_url'],
             'access_token' =>$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
