@@ -112,7 +112,7 @@ class OauthCallbackController
         $userInfo = object_to_array($giteeOauth->getUserInfo($result['access_token']));
         $data = array(
             'username' =>$userInfo['name'],
-            'openid' =>$userInfo['id'],
+            'openid' =>(string)$userInfo['id'],
             'avatar_url' =>$userInfo['avatar_url'],
             'access_token' =>$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
@@ -141,7 +141,7 @@ class OauthCallbackController
         $userInfo = $weiboOAuth->getUserInfo($result['access_token'],$result['uid']);
         $data = array(
             'username' =>$userInfo['name'],
-            'openid' =>$userInfo['id'],
+            'openid' =>(string)$userInfo['id'],
             'avatar_url' =>$userInfo['avatar_large'],
             'access_token' =>$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
