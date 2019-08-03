@@ -79,7 +79,7 @@ class WeiboController extends OauthController
         ];
         $result = $this->curl->post($this->apiUrl.'oauth2/access_token',$arr);
         if (!$result){
-            throw new \Exception('接口请求失败');
+            return $this->error(Code::ERROR,'接口请求失败');
         }
         return $result;
     }
@@ -99,10 +99,10 @@ class WeiboController extends OauthController
         ];
         $result = $this->curl->post($this->apiUrl.'2/users/show.json'.http_build_query($arr));
         if (!$result){
-            throw new \Exception('接口请求失败');
+            return $this->error(Code::ERROR,'接口请求失败');
         }
-        if (isset($result['data']['error_code'])){
-            return $this->error(Code::ERROR,$result['data']['error']);
+        if (isset($result['error_code'])){
+            return $this->error(Code::ERROR,$result['error']);
         }
         return $result;
     }

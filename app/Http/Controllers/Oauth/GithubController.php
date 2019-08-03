@@ -80,9 +80,9 @@ class GithubController extends OauthController
         ];
         $result = $this->curl->post($this->apiUrl.'login/oauth/access_token',$arr);
         if (!$result){
-            throw new \Exception('接口请求失败');
+            return $this->error(Code::ERROR,'接口请求失败');
         }
-        $result = $this->__getAccessToken($result['data']);
+        $result = $this->__getAccessToken($result);
         if (isset($result['access_token'])){
             return $result;
         }
@@ -100,8 +100,8 @@ class GithubController extends OauthController
     {
         $result = $this->curl->post('https://api.github.com/user?access_token='.$access_token);
         if (!$result){
-            throw new \Exception('接口请求失败');
+            return $this->error(Code::ERROR,'接口请求失败');
         }
-        return $result['data'];
+        return $result;
     }
 }

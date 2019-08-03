@@ -84,9 +84,9 @@ class QQController extends OauthController
         ];
         $result = $this->curl->post($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
         if (!$result){
-            throw new \Exception('接口请求失败');
+            return $this->error(Code::ERROR,'接口请求失败');
         }
-        $result = $this->__getAccessToken($result['data']);
+        $result = $this->__getAccessToken($result);
         if (isset($result['access_token'])){
             return $result;
         }
@@ -106,12 +106,12 @@ class QQController extends OauthController
         ];
         $result = $this->curl->post($this->apiUrl.'oauth2.0/me?'.http_build_query($arr));
         if (!$result){
-            throw new \Exception('接口请求失败');
+            return $this->error(Code::ERROR,'接口请求失败');
         }
-        if (isset($this->json($result['data'])['error'])){
-            return $this->error(Code::ERROR,$this->json($result['data'])['error_description']);
+        if (isset($this->json($result)['error'])){
+            return $this->error(Code::ERROR,$this->json($result)['error_description']);
         }
-        return $this->json($result['data'])['openid'];
+        return $this->json($result)['openid'];
     }
 
     /**
@@ -130,12 +130,12 @@ class QQController extends OauthController
         ];
         $result = $this->curl->post($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
         if (!$result){
-            throw new \Exception('接口请求失败');
+            return $this->error(Code::ERROR,'接口请求失败');
         }
-        if (isset($this->json($result['data'])['error'])){
-            return $this->error(Code::ERROR,$this->json($result['data'])['error_description']);
+        if (isset($this->json($result)['error'])){
+            return $this->error(Code::ERROR,$this->json($result)['error_description']);
         }
-        return  $this->json($result['data']);
+        return  $this->json($result);
     }
 
     /**
@@ -154,12 +154,12 @@ class QQController extends OauthController
         ];
         $result = $this->curl->post($this->apiUrl.'user/get_user_info?'.http_build_query($arr));
         if (!$result){
-            throw new \Exception('接口请求失败');
+            return $this->error(Code::ERROR,'接口请求失败');
         }
-        if (isset($this->json($result['data'])['error'])){
-            return ajax_return(Code::ERROR,$this->json($result['data'])['error_description']);
+        if (isset($this->json($result)['error'])){
+            return ajax_return(Code::ERROR,$this->json($result)['error_description']);
         }
-        return $this->json($result['data']);
+        return $this->json($result);
     }
 
     /**
