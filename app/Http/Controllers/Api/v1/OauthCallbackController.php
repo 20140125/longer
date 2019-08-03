@@ -50,14 +50,14 @@ class OauthCallbackController
         // 2 获取用户信息
         $userInfo = $QQOauth->getUserInfo($result['access_token']);
         $data = array(
-            'username' =>$userInfo['nickname'],
-            'openid' =>$QQOauth->openid,
+            'username' =>(string)$userInfo['nickname'],
+            'openid' =>(string)$QQOauth->openid,
             'avatar_url' =>empty($userInfo['figureurl_qq_2'])?$userInfo['figureurl_qq_1']:$userInfo['figureurl_qq_2'],
-            'access_token' =>$result['access_token'],
+            'access_token' =>(string)$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'qq',
-            'role_id' => '2',
+            'role_id' => 2,
             'expires' =>time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['nickname']).$QQOauth->openid.time()),
         );
@@ -84,12 +84,13 @@ class OauthCallbackController
         $data = array(
             'username' =>$userInfo['login'],
             'openid' =>(string)$userInfo['id'],
-            'avatar_url' =>$userInfo['avatar_url'],
-            'access_token' =>$result['access_token'],
+            'avatar_url' =>(string)$userInfo['avatar_url'],
+            'access_token' =>(string)$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'github',
-            'role_id' => '2',
+            'role_id' => 2,
+            'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['login']).$userInfo['id'].time()),
         );
         $where[] = array('openid','=',(string)$userInfo['id']);
@@ -111,17 +112,18 @@ class OauthCallbackController
         $result = object_to_array($giteeOauth->getAccessToken($request->get('code')));
         $userInfo = object_to_array($giteeOauth->getUserInfo($result['access_token']));
         $data = array(
-            'username' =>$userInfo['name'],
+            'username' =>(string)$userInfo['name'],
             'openid' =>(string)$userInfo['id'],
-            'avatar_url' =>$userInfo['avatar_url'],
-            'access_token' =>$result['access_token'],
+            'avatar_url' =>(string)$userInfo['avatar_url'],
+            'access_token' =>(string)$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'gitee',
-            'role_id' => '2',
+            'role_id' => 2,
+            'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
-        $where[] = array('openid','=',$userInfo['id']);
+        $where[] = array('openid','=',(string)$userInfo['id']);
         $where[] = array('oauth_type','=','gitee');
         return $this->oauth($data,$where);
     }
@@ -147,10 +149,11 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'weibo',
-            'role_id' => '2',
+            'role_id' => 2,
+            'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
-        $where[] = array('openid','=',$userInfo['id']);
+        $where[] = array('openid','=',(string)$userInfo['id']);
         $where[] = array('oauth_type','=','weibo');
         return $this->oauth($data,$where);
     }
