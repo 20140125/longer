@@ -80,7 +80,7 @@ class OauthCallbackController
         // 1 获取access_token
         $result = $gitHubOAuth->getAccessToken($request->get('code'),$request->get('state'));
         // 2 获取用户信息
-        $userInfo = json_decode($gitHubOAuth->getUserInfo($result['access_token']),true);
+        $userInfo = object_to_array($gitHubOAuth->getUserInfo($result['access_token']));
         $data = array(
             'username' =>$userInfo['login'],
             'openid' =>(string)$userInfo['id'],
@@ -142,10 +142,10 @@ class OauthCallbackController
         $result = $weiboOAuth->getAccessToken($request->get('code'));
         $userInfo = $weiboOAuth->getUserInfo($result['access_token'],$result['uid']);
         $data = array(
-            'username' =>$userInfo['name'],
+            'username' =>(string)$userInfo['name'],
             'openid' =>(string)$userInfo['id'],
-            'avatar_url' =>$userInfo['avatar_large'],
-            'access_token' =>$result['access_token'],
+            'avatar_url' =>(string)explode('?',$userInfo['avatar_hd'])[0],
+            'access_token' =>(string)$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'weibo',

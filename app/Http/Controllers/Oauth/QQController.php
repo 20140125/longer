@@ -82,7 +82,7 @@ class QQController extends OauthController
             'code' => $code,
             'redirect_uri' => $this->redirectUri
         ];
-        $result = $this->curl->post($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
+        $result = $this->curl->get($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
         if (!$result){
             return $this->error(Code::ERROR,'接口请求失败');
         }
@@ -104,7 +104,7 @@ class QQController extends OauthController
         $arr = [
             'access_token' =>$access_token
         ];
-        $result = $this->curl->post($this->apiUrl.'oauth2.0/me?'.http_build_query($arr));
+        $result = $this->curl->get($this->apiUrl.'oauth2.0/me?'.http_build_query($arr));
         if (!$result){
             return $this->error(Code::ERROR,'接口请求失败');
         }
@@ -128,7 +128,7 @@ class QQController extends OauthController
             'client_secret'	=>	$this->appsecret,
             'refresh_token'	=>	$refreshToken
         ];
-        $result = $this->curl->post($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
+        $result = $this->curl->get($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
         if (!$result){
             return $this->error(Code::ERROR,'接口请求失败');
         }
@@ -152,7 +152,7 @@ class QQController extends OauthController
             'oauth_consumer_key' => $this->appid,
             'openid' => $this->openid
         ];
-        $result = $this->curl->post($this->apiUrl.'user/get_user_info?'.http_build_query($arr));
+        $result = $this->curl->get($this->apiUrl.'user/get_user_info?'.http_build_query($arr));
         if (!$result){
             return $this->error(Code::ERROR,'接口请求失败');
         }

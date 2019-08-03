@@ -87,7 +87,7 @@ class BaseController extends Controller
         ];
         //判断必填字段是否为空
         if (empty($this->post['token'])){
-            $this->setCode(Code::Unauthorized,'required params missing');
+            $this->setCode(Code::Unauthorized,'Unauthorized');
         }
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
         if (empty($this->users)){
