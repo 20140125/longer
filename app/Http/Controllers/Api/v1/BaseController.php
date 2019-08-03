@@ -91,7 +91,7 @@ class BaseController extends Controller
             $this->setCode(Code::Unauthorized,'Unauthorized');
         }
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
-        Log::error($this->users);
+        Log::error(json_encode($this->users));
         if (empty($this->users)){
             $this->setCode(Code::NOT_ALLOW,'Permission denied1');
         }
