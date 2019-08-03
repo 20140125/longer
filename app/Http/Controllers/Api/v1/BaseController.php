@@ -91,7 +91,7 @@ class BaseController extends Controller
         }
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
         if (empty($this->users)){
-            $this->setCode(Code::NOT_ALLOW,'Permission denied');
+            $this->setCode(Code::Unauthorized,'Unauthorized');
         }
         if ($this->users->role_id !== 1){
             $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids']);
