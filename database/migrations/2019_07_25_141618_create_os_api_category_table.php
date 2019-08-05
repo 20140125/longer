@@ -15,7 +15,11 @@ class CreateOsApiCategoryTable extends Migration
     {
         Schema::create('os_api_category', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->index('pid');
+            $table->string('name',64)->default('0')->comment('接口名称');
+            $table->integer('pid')->default(0)->comment('上级ID');
+            $table->string('path',64)->default('0')->comment('接口路径');
+            $table->tinyInteger('level')->default(0)->comment('接口层级');
         });
     }
 

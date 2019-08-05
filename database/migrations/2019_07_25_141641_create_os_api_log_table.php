@@ -15,7 +15,11 @@ class CreateOsApiLogTable extends Migration
     {
         Schema::create('os_api_log', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->index('api_id');
+            $table->string('username',64)->default('0')->comment('执行人');
+            $table->integer('api_id')->default(0)->comment('接口ID');
+            $table->string('desc')->default('0')->comment('操作记录');
+            $table->integer('updated_at')->default(0)->nullable()->comment('操作时间');
         });
     }
 

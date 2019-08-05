@@ -15,7 +15,12 @@ class CreateOsRuleTable extends Migration
     {
         Schema::create('os_rule', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->string('name',64)->default('0')->comment('权限名称');
+            $table->string('href',64)->default('0')->comment('权限地址');
+            $table->integer('pid')->default(0)->comment('权限上级');
+            $table->string('path')->default('0')->comment('权限路径');
+            $table->string('level')->default('0')->comment('权限等级');
+            $table->tinyInteger('status')->default(1)->comment('权限状态 1 开启 2 关闭');
         });
     }
 
