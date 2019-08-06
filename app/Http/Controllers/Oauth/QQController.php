@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class QQ extends Oauth
+class QQController extends OAuthController
 {
     /**
      * @var $appid
@@ -32,7 +32,9 @@ class QQ extends Oauth
      * @var string $openid
      */
     public $openid;
-
+    /**
+     * @var static $instance
+     */
     protected static $instance;
 
     /**
@@ -51,7 +53,7 @@ class QQ extends Oauth
     /**
      * @param $appid
      * @param $appsecret
-     * @return QQ
+     * @return QQController
      */
     static public function getInstance($appid,$appsecret)
     {

@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class Github extends Oauth
+class GithubController extends OAuthController
 {
     /**
      * @var string $appid
@@ -25,6 +25,10 @@ class Github extends Oauth
      * @var string $redirectUri
      */
     protected $redirectUri;
+    /**
+     * @var static $instance
+     */
+    protected static $instance;
     /**
      * @var string API 业务域名
      */
@@ -40,7 +44,20 @@ class Github extends Oauth
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url').'/api/v1/callback/github';
+        $this->redirectUri = config('app.url').'api/v1/callback/github';
+    }
+
+    /**
+     * @param $appid
+     * @param $appsecret
+     * @return GithubController
+     */
+    static public function getInstance($appid,$appsecret)
+    {
+        if (!self::$instance instanceof self) {
+            self::$instance = new static($appid,$appsecret);
+        }
+        return self::$instance;
     }
 
     /**

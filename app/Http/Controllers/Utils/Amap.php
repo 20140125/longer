@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Utils;
 
+use Illuminate\Config\Repository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -9,7 +10,7 @@ class Amap
 {
     protected static $instance;
     /**
-     * @var \Illuminate\Config\Repository|mixed
+     * @var Repository|mixed
      */
     protected $amapkey;
     /**

@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class Oauth extends Controller
+class OAuthController extends Controller
 {
     public $state;
     /**
@@ -62,7 +62,7 @@ class Oauth extends Controller
      */
     public function error($code,$message)
     {
-        return array('code'=>$code,'message'=>$message);
+        return json_encode(array('code'=>$code,'message'=>$message),JSON_UNESCAPED_UNICODE);
     }
 
     /**

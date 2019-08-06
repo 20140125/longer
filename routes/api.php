@@ -96,6 +96,9 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //Gitee
     Route::get('oauth-login/gitee','v1\OauthLoginController@gitee')->name('giteeLogin');
     Route::get('callback/gitee','v1\OauthCallbackController@gitee')->name('giteeCallback');
+    //Baidu
+    Route::get('oauth-login/baidu','v1\OauthLoginController@baidu')->name('baiduLogin');
+    Route::get('callback/baidu','v1\OauthCallbackController@baidu')->name('baiduCallback');
     /******************************************第三方登陆**********************************************************/
 
 });

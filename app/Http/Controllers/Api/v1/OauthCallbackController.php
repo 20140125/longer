@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Oauth\Gitee;
-use App\Http\Controllers\Oauth\Github;
-use App\Http\Controllers\Oauth\QQ;
-use App\Http\Controllers\Oauth\WeiBo;
+use App\Http\Controllers\Oauth\BaiDuController;
+use App\Http\Controllers\Oauth\GiteeController;
+use App\Http\Controllers\Oauth\GithubController;
+use App\Http\Controllers\Oauth\QQController;
+use App\Http\Controllers\Oauth\WeiBoController;
 use App\Models\OAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,7 +46,7 @@ class OauthCallbackController
     {
         $appId = config('app.qq_appid');
         $appSecret = config('app.qq_secret');
-        $QQOauth = new QQ($appId,$appSecret);
+        $QQOauth = QQController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $QQOauth->getAccessToken($request->get('code'));
         // 2.1 判断 access_token 有没有过期
@@ -84,7 +85,7 @@ class OauthCallbackController
     {
         $appId = config('app.github_appid');
         $appSecret = config('app.github_secret');
-        $gitHubOAuth = new Github($appId,$appSecret);
+        $gitHubOAuth = GithubController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $gitHubOAuth->getAccessToken($request->get('code'),$request->get('state'));
         // 2.1 判断 access_token 有没有过期
@@ -123,7 +124,7 @@ class OauthCallbackController
     {
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
-        $giteeOauth = new Gitee($appId,$appSecret);
+        $giteeOauth = GiteeController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = object_to_array($giteeOauth->getAccessToken($request->get('code')));
         // 2.1 判断 access_token 有没有过期
@@ -162,7 +163,7 @@ class OauthCallbackController
     {
         $appId = config('app.weibo_appid');
         $appSecret = config('app.weibo_secret');
-        $weiboOAuth = new WeiBo($appId,$appSecret);
+        $weiboOAuth = WeiBoController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $weiboOAuth->getAccessToken($request->get('code'));
         // 2.1 判断 access_token 有没有过期
@@ -188,6 +189,44 @@ class OauthCallbackController
         );
         $where[] = array('openid','=',(string)$userInfo['id']);
         $where[] = array('oauth_type','=','weibo');
+        return $this->oauth($data,$where);
+    }
+
+    /**
+     * TODO：Baidu授权回调
+     * @param Request $request
+     * @return RedirectResponse|Redirector
+     */
+    public function baidu(Request $request)
+    {
+        $appId = config('app.baidu_appid');
+        $appSecret = config('app.baidu_secret');
+        $baiDuOauth = BaiDuController::getInstance($appId,$appSecret);
+        // 1 获取access_token
+        $result = $baiDuOauth->getAccessToken($request->get('code'));
+        // 2.1 判断 access_token 有没有过期
+        $oauthWhere[] = array('access_token','=',$result['access_token']);
+        $oauthWhere[] = array('oauth_type','=','baidu');
+        $oauthResult = $this->oauthModel->getResult($oauthWhere);
+        if (!empty($oauthResult)){
+            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
+        }
+        // 2.2 获取用户信息
+        $userInfo = $baiDuOauth->getUserInfo($result['access_token']);
+        $data = array(
+            'username' =>(string)$userInfo['uname'],
+            'openid' =>(string)$userInfo['uid'],
+            'avatar_url' =>(string)"https://tb.himg.baidu.com/sys/portrait/item/{$userInfo['portrait']}",
+            'access_token' =>(string)$result['access_token'],
+            'url' =>empty($userInfo['url'])?'':$userInfo['url'],
+            'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
+            'oauth_type' => 'baidu',
+            'role_id' => 2,
+            'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
+            'remember_token' =>md5(md5($userInfo['uname']).$userInfo['uid'].time()),
+        );
+        $where[] = array('openid','=',(string)$userInfo['uid']);
+        $where[] = array('oauth_type','=','baidu');
         return $this->oauth($data,$where);
     }
 

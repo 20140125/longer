@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
+use phpDocumentor\Reflection\DocBlock\Tags\See;
 
 /**
  * Class GiteeController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class Gitee extends Oauth
+class GiteeController extends OAuthController
 {
     /**
      * @var string $appid
@@ -27,6 +28,10 @@ class Gitee extends Oauth
      * @var string API 业务域名
      */
     protected $apiUrl = 'https://gitee.com/';
+    /**
+     * @var static $instance
+     */
+    protected static $instance;
 
     /**
      * GithubController constructor.
@@ -38,7 +43,20 @@ class Gitee extends Oauth
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url').'/api/v1/callback/gitee';
+        $this->redirectUri = config('app.url').'api/v1/callback/gitee';
+    }
+
+    /**
+     * @param $appid
+     * @param $appsecret
+     * @return GiteeController
+     */
+    static public function getInstance($appid,$appsecret)
+    {
+        if (!self::$instance instanceof self) {
+            self::$instance = new static($appid,$appsecret);
+        }
+        return self::$instance;
     }
 
     /**

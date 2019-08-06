@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Oauth\QQ;
+use App\Http\Controllers\Oauth\QQController;
 use Illuminate\Console\Command;
 use App\Models\OAuth as oauthModel;
 
@@ -66,7 +66,7 @@ class Oauth extends Command
                 try {
                     $appId = config('app.qq_appid');
                     $appSecret = config('app.qq_secret');
-                    $result = QQ::getInstance($appId,$appSecret)->refreshToken($refresh_token);
+                    $result = QQController::getInstance($appId,$appSecret)->refreshToken($refresh_token);
                     if ($result['code'] !== 201) {
                         $where[] = ['oauth_type',$oauth_type];
                         $where[] = ['refresh_token',$refresh_token];

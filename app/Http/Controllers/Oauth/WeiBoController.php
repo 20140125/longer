@@ -8,7 +8,7 @@ use App\Http\Controllers\Utils\Code;
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class WeiBo extends Oauth
+class WeiBoController extends OAuthController
 {
     /**
      * @var string $appid
@@ -26,6 +26,10 @@ class WeiBo extends Oauth
      * @var string $apiUrl 授权业务域名
      */
     protected $apiUrl = 'https://api.weibo.com/';
+    /**
+     * @var static $instance
+     */
+    protected static $instance;
 
     /**
      * WeiboController constructor.
@@ -38,6 +42,19 @@ class WeiBo extends Oauth
         $this->appid = $appid;
         $this->appsecret = $appsecret;
         $this->redirectUri = config('app.url').'/api/v1/callback/weibo';
+    }
+
+    /**
+     * @param $appid
+     * @param $appsecret
+     * @return WeiBoController
+     */
+    static public function getInstance($appid,$appsecret)
+    {
+        if (!self::$instance instanceof self) {
+            self::$instance = new static($appid,$appsecret);
+        }
+        return self::$instance;
     }
 
     /**
