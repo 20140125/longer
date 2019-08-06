@@ -88,14 +88,7 @@ class OauthCallbackController
         $gitHubOAuth = GithubController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $gitHubOAuth->getAccessToken($request->get('code'),$request->get('state'));
-        // 2.1 判断 access_token 有没有过期
-        $oauthWhere[] = array('access_token','=',$result['access_token']);
-        $oauthWhere[] = array('oauth_type','=','github');
-        $oauthResult = $this->oauthModel->getResult($oauthWhere);
-        if (!empty($oauthResult)){
-            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
-        }
-        // 2.2 获取用户信息
+        // 2 获取用户信息
         $userInfo = object_to_array($gitHubOAuth->getUserInfo($result['access_token']));
         $data = array(
             'username' =>$userInfo['login'],
@@ -127,14 +120,7 @@ class OauthCallbackController
         $giteeOauth = GiteeController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = object_to_array($giteeOauth->getAccessToken($request->get('code')));
-        // 2.1 判断 access_token 有没有过期
-        $oauthWhere[] = array('access_token','=',$result['access_token']);
-        $oauthWhere[] = array('oauth_type','=','gitee');
-        $oauthResult = $this->oauthModel->getResult($oauthWhere);
-        if (!empty($oauthResult)){
-            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
-        }
-        // 2.2 获取用户信息
+        // 2 获取用户信息
         $userInfo = object_to_array($giteeOauth->getUserInfo($result['access_token']));
         $data = array(
             'username' =>(string)$userInfo['name'],
@@ -166,14 +152,7 @@ class OauthCallbackController
         $weiboOAuth = WeiBoController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $weiboOAuth->getAccessToken($request->get('code'));
-        // 2.1 判断 access_token 有没有过期
-        $oauthWhere[] = array('access_token','=',$result['access_token']);
-        $oauthWhere[] = array('oauth_type','=','weibo');
-        $oauthResult = $this->oauthModel->getResult($oauthWhere);
-        if (!empty($oauthResult)){
-            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
-        }
-        // 2.2 获取用户信息
+        // 2 获取用户信息
         $userInfo = $weiboOAuth->getUserInfo($result['access_token'],$result['uid']);
         $data = array(
             'username' =>(string)$userInfo['name'],
@@ -204,14 +183,7 @@ class OauthCallbackController
         $baiDuOauth = BaiDuController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $baiDuOauth->getAccessToken($request->get('code'));
-        // 2.1 判断 access_token 有没有过期
-        $oauthWhere[] = array('access_token','=',$result['access_token']);
-        $oauthWhere[] = array('oauth_type','=','baidu');
-        $oauthResult = $this->oauthModel->getResult($oauthWhere);
-        if (!empty($oauthResult)){
-            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
-        }
-        // 2.2 获取用户信息
+        // 2 获取用户信息
         $userInfo = $baiDuOauth->getUserInfo($result['access_token']);
         $data = array(
             'username' =>(string)$userInfo['uname'],

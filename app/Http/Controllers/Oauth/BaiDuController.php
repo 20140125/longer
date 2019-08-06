@@ -107,8 +107,8 @@ class BaiDuController extends OAuthController
         if (!$result){
             return $this->error(Code::ERROR,'接口请求失败');
         }
-        $result = json_decode($result,true);
-        if ($result['error']){
+        $result = object_to_array($result);
+        if (isset($result['error'])) {
             return $this->error(Code::ERROR,'error_description');
         }
         return $result;
@@ -129,8 +129,8 @@ class BaiDuController extends OAuthController
         if (!$result){
             return $this->error(Code::ERROR,'接口请求失败');
         }
-        $result = json_decode($result,true);
-        if ($result['error']){
+        $result = object_to_array($result);
+        if (isset($result['error'])) {
             return $this->error(Code::ERROR,'error_description');
         }
         return $result;
