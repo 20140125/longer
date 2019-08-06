@@ -8,7 +8,7 @@ use App\Http\Controllers\Utils\Code;
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class WeiboController extends OauthController
+class WeiBo extends Oauth
 {
     /**
      * @var string $appid

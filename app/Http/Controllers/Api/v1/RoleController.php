@@ -34,10 +34,7 @@ class RoleController extends BaseController
      */
     public function save()
     {
-        $validate = Validator::make($this->post, ['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string'] );
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string']);
         $authLists = $this->ruleModel->getResult('id',$this->post['auth_ids'],'in',['href']);
         $auth_url = array();
         foreach ($authLists as $item){
@@ -60,20 +57,14 @@ class RoleController extends BaseController
     {
         if (!empty($this->post['act']) && $this->post['act'] == 'status'){
             unset($this->post['act']);
-            $validate = Validator::make($this->post, ['status'=>'required|in:1,2','id'=>'required|integer|gt:1' ],[  'id.gt'=>'Permission denied']);
-            if ($validate->fails()){
-                return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-            }
+            $this->validatePost(['status'=>'required|in:1,2','id'=>'required|integer|gt:1' ],['id.gt'=>'Permission denied']);
             $result = $this->roleModel->updateResult($this->post,'id',$this->post['id']);
             if (!empty($result)){
                 return $this->ajax_return(Code::SUCCESS,'role update status successfully');
             }
             return $this->ajax_return(Code::ERROR,'role update status error');
         }
-        $validate = Validator::make($this->post, [  'status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string' ]);
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string']);
         $authLists = $this->ruleModel->getResult('id', $this->post['auth_ids'],'in',['href']);
         $auth_url = array();
         foreach ($authLists as $item){
@@ -96,10 +87,7 @@ class RoleController extends BaseController
      */
     public function delete()
     {
-        $validate = Validator::make($this->post, ['id'=>'required|integer|gt:1'],['id.gt'=>'Permission denied'] );
-        if ($validate->fails()) {
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['id'=>'required|integer|gt:1'],['id.gt'=>'Permission denied']);
         $result = $this->roleModel->deleteResult('id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'delete role successfully');

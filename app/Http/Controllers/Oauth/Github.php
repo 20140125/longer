@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class GithubController extends OauthController
+class Github extends Oauth
 {
     /**
      * @var string $appid
@@ -57,7 +57,7 @@ class GithubController extends OauthController
             'redirect_uri' => empty($callback) ? $this->redirectUri : $callback,
             'scope' => $scope,  // user:email read:user user:follow
             'state' => $this->getState($length),
-            'allow_signup' => false, //是否在登录页显示注册，默认false
+            'allow_signup' => true, //是否在登录页显示注册，默认false
         ];
         return $this->apiUrl.'login/oauth/authorize?'.http_build_query($arr);
     }

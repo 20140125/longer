@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * todo 公共类
@@ -86,20 +87,21 @@ class BaseController extends Controller
             route('menu')
         ];
         //判断必填字段是否为空
-        if (empty($this->post['token'])){
+        $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
+        if ($validate->fails()) {
             $this->setCode(Code::Unauthorized,'Unauthorized');
         }
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
-        if (empty($this->users)){
+        if (empty($this->users)) {
             $this->setCode(Code::Unauthorized,'Unauthorized');
         }
-        if ($this->users->role_id !== 1){
+        if ($this->users->role_id !== 1) {
             $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids']);
-            if (!empty($this->role) && !in_array(str_replace(['/api/v1'],['/admin'],$url),json_decode($this->role->auth_url,true)) && !in_array(asset($url),$common_url)){
+            if (!empty($this->role) && !in_array(str_replace(['/api/v1'],['/admin'],$url),json_decode($this->role->auth_url,true)) && !in_array(asset($url),$common_url)) {
                 $this->setCode(Code::NOT_ALLOW,'Permission denied');
             }
         }
-        if (!in_array(asset($url),$common_url)){
+        if (!in_array(asset($url),$common_url)) {
             unset($this->post['token']);
         }
     }
@@ -131,6 +133,23 @@ class BaseController extends Controller
         );
         return response()->json($item,$code);
     }
+
+    /**
+     * TODO：数据检验
+     * @param array $rules
+     * @param array $message
+     */
+    protected function validatePost(array $rules,array $message = [])
+    {
+        $validate = Validator::make($this->post,$rules,$message);
+        if ($validate->fails()) {
+            if ($validate->errors()->first() == 'Permission denied'){
+                $this->setCode(Code::NOT_ALLOW,$validate->errors()->first());
+            }
+            $this->setCode(Code::ERROR,$validate->errors()->first());
+        }
+    }
+
     /**
      * 公钥加密
      * @param string $data

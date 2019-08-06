@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class OauthController extends Controller
+class Oauth extends Controller
 {
     public $state;
     /**

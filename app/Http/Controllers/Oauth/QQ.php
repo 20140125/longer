@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
-class QQController extends OauthController
+class QQ extends Oauth
 {
     /**
      * @var $appid
@@ -33,6 +33,8 @@ class QQController extends OauthController
      */
     public $openid;
 
+    protected static $instance;
+
     /**
      * QQController constructor.
      * @param $appid
@@ -44,6 +46,19 @@ class QQController extends OauthController
         $this->appid = $appid;
         $this->appsecret = $appsecret;
         $this->redirectUri = config('app.url').'/api/v1/callback/qq';
+    }
+
+    /**
+     * @param $appid
+     * @param $appsecret
+     * @return QQ
+     */
+    static public function getInstance($appid,$appsecret)
+    {
+        if (!self::$instance instanceof self){
+            self::$instance = new static($appid,$appsecret);
+        }
+        return self::$instance;
     }
 
     /**
@@ -99,7 +114,7 @@ class QQController extends OauthController
      * @return array
      * @throws \Exception
      */
-    protected function getOpenId($access_token)
+    public function getOpenId($access_token)
     {
         $arr = [
             'access_token' =>$access_token
@@ -135,7 +150,7 @@ class QQController extends OauthController
         if (isset($this->json($result)['error'])){
             return $this->error(Code::ERROR,$this->json($result)['error_description']);
         }
-        return  $this->json($result);
+        return  $this->__getAccessToken($result);
     }
 
     /**
@@ -156,18 +171,10 @@ class QQController extends OauthController
         if (!$result){
             return $this->error(Code::ERROR,'接口请求失败');
         }
-        if (isset($this->json($result)['error'])){
-            return ajax_return(Code::ERROR,$this->json($result)['error_description']);
+        $result = json_decode($result,true);
+        if (isset($result['ret']) && $result['ret']!=0){
+            return ajax_return(Code::ERROR,$result['msg']);
         }
-        return $this->json($result);
-    }
-
-    /**
-     * todo：成功授权后的回调地址
-     * @return string
-     */
-    public function redirectUri()
-    {
-        return rawurlencode($this->redirectUri);
+        return $result;
     }
 }

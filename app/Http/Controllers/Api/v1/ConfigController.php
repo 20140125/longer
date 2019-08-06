@@ -52,10 +52,7 @@ class ConfigController extends BaseController
      */
     public function save()
     {
-        $validate = Validator::make($this->post,['name'=>'required|string|unique:os_config']);
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['name'=>'required|string|unique:os_config']);
         $result = $this->configModel->addResult($this->post);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'save config successfully');
@@ -69,13 +66,11 @@ class ConfigController extends BaseController
     public function update()
     {
         if (!empty($this->post['act']) && $this->post['act'] === 'status'){
-            $validate = Validator::make($this->post,['id'=>'required|integer','status'=>'required|integer|in:1,2']);
+            $rule = ['id'=>'required|integer','status'=>'required|integer|in:1,2'];
         } else {
-            $validate = Validator::make($this->post,['id'=>'required|integer','name'=>'required|string']);
+            $rule = ['id'=>'required|integer','name'=>'required|string'];
         }
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost($rule);
         $result = $this->configModel->updateResult($this->post,'id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'update config successfully');
@@ -89,10 +84,7 @@ class ConfigController extends BaseController
      */
     public function value()
     {
-        $validate = Validator::make($this->post,['id'=>'required|integer','name'=>'required|string']);
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['id'=>'required|integer','name'=>'required|string']);
         $result = $this->configModel->updateValResult($this->post,'id',$this->post['pid']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'update config value successfully');
@@ -106,10 +98,7 @@ class ConfigController extends BaseController
      */
     public function delete()
     {
-        $validate = Validator::make($this->post,['id'=>'required|integer']);
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['id'=>'required|integer']);
         $result = $this->configModel->deleteResult($this->post,'id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'remove config successfully');

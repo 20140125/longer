@@ -52,10 +52,7 @@ class ApiController extends BaseController
      */
     public function index()
     {
-        $validate = Validator::make($this->post,['type'=>'required|integer']);
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['type'=>'required|integer']);
         $result = $this->apiListsModel->getResult('type',$this->post['type']);
         if (empty($result)){
             return $this->ajax_return(Code::ERROR,'interface not found');
@@ -78,10 +75,7 @@ class ApiController extends BaseController
      */
     public function save()
     {
-        $validate = Validator::make($this->post,$this->rules('lists'));
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost($this->rules('lists'));
         $result = $this->apiListsModel->addResult($this->post);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'save api lists successfully');
@@ -95,10 +89,7 @@ class ApiController extends BaseController
      */
     public function update()
     {
-        $validate = Validator::make($this->post,$this->rules('lists'));
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost($this->rules('lists'));
         $result = $this->apiListsModel->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'update api lists successfully');
@@ -113,10 +104,7 @@ class ApiController extends BaseController
      */
     public function categorySave()
     {
-        $validate = Validator::make($this->post,$this->rules('category'));
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost($this->rules('category'));
         $result = $this->apiCategoryModel->addResult($this->post);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'save api category successfully');
@@ -129,10 +117,7 @@ class ApiController extends BaseController
      */
     public function categoryUpdate()
     {
-        $validate = Validator::make($this->post,$this->rules('category'));
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost($this->rules('category'));
         unset($this->post['children']);
         $result = $this->apiCategoryModel->updateResult($this->post,'id',$this->post['pid']);
         if (!empty($result)){
@@ -147,10 +132,7 @@ class ApiController extends BaseController
      */
     public function CategoryDelete()
     {
-        $validate = Validator::make($this->post,['id'=>'required|integer']);
-        if ($validate->fails()) {
-            return $this->ajax_return(Code::ERROR, $validate->errors()->first());
-        }
+        $this->validatePost(['id'=>'required|integer']);
         $result = $this->apiCategoryModel->deleteResult('id',$this->post['id']);
         if (!empty($result)){
             $this->apiListsModel->deleteResult('type',$this->post['id']);

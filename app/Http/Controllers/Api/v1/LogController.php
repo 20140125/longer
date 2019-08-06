@@ -35,7 +35,8 @@ class LogController extends BaseController
      */
     public function index()
     {
-        $result = $this->logModel->getLists($this->post['page'],$this->post['limit'],'');
+        $this->validatePost(['page'=>'required|integer|min:1','limit'=>'required|integer|min:15']);
+        $result = $this->logModel->getLists($this->post['page']??1,$this->post['limit']??15,'');
         foreach ($result['data'] as &$item){
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
         }
@@ -59,6 +60,7 @@ class LogController extends BaseController
      */
     public function delete()
     {
+        $this->validatePost(['id'=>'required|integer|min:1']);
         $result = $this->logModel->deleteResult('id',$this->post['id'],'=');
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'delete log successfully');

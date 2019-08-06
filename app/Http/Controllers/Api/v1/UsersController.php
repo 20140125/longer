@@ -41,9 +41,11 @@ class UsersController extends BaseController
     /**
      * TODO: 微信获取用户的openid
      * @return JsonResponse
+     * @throws \ErrorException
      */
     public function getOpenId()
     {
+        $this->validatePost(['code'=>'required|string']);
         $url = 'https://api.weixin.qq.com/sns/jscode2session?';
         $data = array(
             'appid' =>$this->appid,
@@ -106,10 +108,7 @@ class UsersController extends BaseController
      */
     public function save(Request $request)
     {
-        $validate = Validator::make($this->post,$this->rule(3));
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost($this->rule(3));
         $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
         $this->post['role_id'] = $this->roleModel->getResult('id',$this->post['role_id'])->id;
         $this->post['ip_address'] = $request->ip();
@@ -127,10 +126,7 @@ class UsersController extends BaseController
     {
         //修改用户禁用状态
         if (!empty($this->post['act'])){
-            $validate = Validator::make($this->post,$this->rule(4),['id.gt'=>'Permission denied']);
-            if ($validate->fails()){
-                return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-            }
+            $this->validatePost($this->rule(4),['id.gt'=>'Permission denied']);
             unset($this->post['act']);
             $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
             if (!empty($result)){
@@ -143,10 +139,7 @@ class UsersController extends BaseController
         $this->post['updated_at'] = time();
         //用户没有修改密码
         if ($password == $this->post['password']){
-            $validate = Validator::make($this->post,$this->rule(1));
-            if ($validate->fails()){
-                return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-            }
+            $this->validatePost($this->rule(1));
             unset($this->post['password']);
             $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
             if (!empty($result)){
@@ -155,10 +148,7 @@ class UsersController extends BaseController
             return $this->ajax_return(Code::SUCCESS,'update users error');
         }
         //用户修改密码
-        $validate = Validator::make($this->post,$this->rule(2));
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost($this->rule(2));
         $this->post['salt'] = get_round_num(8);
         $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
         $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
@@ -174,10 +164,7 @@ class UsersController extends BaseController
      */
     public function delete()
     {
-        $validate = Validator::make($this->post,['id'=>'required|integer|gt:1'],['id.gt'=>'Permission denied']);
-        if ($validate->fails()) {
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['id'=>'required|integer|gt:1'],['id.gt'=>'Permission denied']);
         $result = $this->userModel->deleteResult('id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'delete user successfully');

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -48,6 +49,17 @@ class OAuth extends Model
         $result['data'] = DB::table($this->table)->limit($limit)->orderBy('updated_at','desc')->offset($limit*($page-1))->get();
         $result['total'] = DB::table($this->table)->count();
         return $result;
+    }
+
+    /**
+     * TODO：获取授权列表
+     * @param $where
+     * @param array $column
+     * @return Collection
+     */
+    public function getOauthLists($where,$column = ['*'])
+    {
+        return DB::table($this->table)->where($where)->get($column);
     }
 
     /**

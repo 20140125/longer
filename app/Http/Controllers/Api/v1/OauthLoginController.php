@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Controllers\Api\v1;
-use App\Http\Controllers\Oauth\GiteeController;
-use App\Http\Controllers\Oauth\GithubController;
-use App\Http\Controllers\Oauth\WeiboController;
+use App\Http\Controllers\Oauth\Gitee;
+use App\Http\Controllers\Oauth\Github;
+use App\Http\Controllers\Oauth\WeiBo;
 use Illuminate\Http\RedirectResponse;
-use App\Http\Controllers\Oauth\QQController as QQOauth;
+use App\Http\Controllers\Oauth\QQ;
 use App\Http\Controllers\Controller;
 use Illuminate\Routing\Redirector;
 
@@ -24,7 +24,7 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.qq_appid');
         $appSecret = config('app.qq_secret');
-        $QQOauth = new QQOauth($appId,$appSecret);
+        $QQOauth = new QQ($appId,$appSecret);
         $url = $QQOauth->getAuthUrl();
         session(['qq_state'=>$QQOauth->state]);
         return redirect($url);
@@ -38,7 +38,7 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.github_appid');
         $appSecret = config('app.github_secret');
-        $gitHubOAuth = new GithubController($appId,$appSecret);
+        $gitHubOAuth = new Github($appId,$appSecret);
         $url = $gitHubOAuth->getAuthUrl();
         session(['github_state'=>$gitHubOAuth->state]);
         return redirect($url);
@@ -52,7 +52,7 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.weibo_appid');
         $appSecret = config('app.weibo_secret');
-        $weiboOAuth = new WeiboController($appId,$appSecret);
+        $weiboOAuth = new WeiBo($appId,$appSecret);
         $url = $weiboOAuth->getAuthUrl();
         session(['weibo_state'=>$weiboOAuth->state]);
         return redirect($url);
@@ -66,7 +66,7 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
-        $giteeOAuth = new GiteeController($appId,$appSecret);
+        $giteeOAuth = new Gitee($appId,$appSecret);
         $url = $giteeOAuth->getAuthUrl();
         session(['weibo_state'=>$giteeOAuth->state]);
         return redirect($url);

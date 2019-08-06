@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Oauth\GiteeController;
-use App\Http\Controllers\Oauth\GithubController;
-use App\Http\Controllers\Oauth\QQController;
-use App\Http\Controllers\Oauth\WeiboController;
+use App\Http\Controllers\Oauth\Gitee;
+use App\Http\Controllers\Oauth\Github;
+use App\Http\Controllers\Oauth\QQ;
+use App\Http\Controllers\Oauth\WeiBo;
 use App\Models\OAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,10 +45,17 @@ class OauthCallbackController
     {
         $appId = config('app.qq_appid');
         $appSecret = config('app.qq_secret');
-        $QQOauth = new QQController($appId,$appSecret);
+        $QQOauth = new QQ($appId,$appSecret);
         // 1 获取access_token
         $result = $QQOauth->getAccessToken($request->get('code'));
-        // 2 获取用户信息
+        // 2.1 判断 access_token 有没有过期
+        $oauthWhere[] = array('access_token','=',$result['access_token']);
+        $oauthWhere[] = array('oauth_type','=','qq');
+        $oauthResult = $this->oauthModel->getResult($oauthWhere);
+        if (!empty($oauthResult)){
+            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
+        }
+        // 2.2 获取用户信息
         $userInfo = $QQOauth->getUserInfo($result['access_token']);
         $data = array(
             'username' =>(string)$userInfo['nickname'],
@@ -77,10 +84,17 @@ class OauthCallbackController
     {
         $appId = config('app.github_appid');
         $appSecret = config('app.github_secret');
-        $gitHubOAuth = new GithubController($appId,$appSecret);
+        $gitHubOAuth = new Github($appId,$appSecret);
         // 1 获取access_token
         $result = $gitHubOAuth->getAccessToken($request->get('code'),$request->get('state'));
-        // 2 获取用户信息
+        // 2.1 判断 access_token 有没有过期
+        $oauthWhere[] = array('access_token','=',$result['access_token']);
+        $oauthWhere[] = array('oauth_type','=','github');
+        $oauthResult = $this->oauthModel->getResult($oauthWhere);
+        if (!empty($oauthResult)){
+            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
+        }
+        // 2.2 获取用户信息
         $userInfo = object_to_array($gitHubOAuth->getUserInfo($result['access_token']));
         $data = array(
             'username' =>$userInfo['login'],
@@ -109,8 +123,17 @@ class OauthCallbackController
     {
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
-        $giteeOauth = new GiteeController($appId,$appSecret);
+        $giteeOauth = new Gitee($appId,$appSecret);
+        // 1 获取access_token
         $result = object_to_array($giteeOauth->getAccessToken($request->get('code')));
+        // 2.1 判断 access_token 有没有过期
+        $oauthWhere[] = array('access_token','=',$result['access_token']);
+        $oauthWhere[] = array('oauth_type','=','gitee');
+        $oauthResult = $this->oauthModel->getResult($oauthWhere);
+        if (!empty($oauthResult)){
+            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
+        }
+        // 2.2 获取用户信息
         $userInfo = object_to_array($giteeOauth->getUserInfo($result['access_token']));
         $data = array(
             'username' =>(string)$userInfo['name'],
@@ -139,8 +162,17 @@ class OauthCallbackController
     {
         $appId = config('app.weibo_appid');
         $appSecret = config('app.weibo_secret');
-        $weiboOAuth = new WeiboController($appId,$appSecret);
+        $weiboOAuth = new WeiBo($appId,$appSecret);
+        // 1 获取access_token
         $result = $weiboOAuth->getAccessToken($request->get('code'));
+        // 2.1 判断 access_token 有没有过期
+        $oauthWhere[] = array('access_token','=',$result['access_token']);
+        $oauthWhere[] = array('oauth_type','=','weibo');
+        $oauthResult = $this->oauthModel->getResult($oauthWhere);
+        if (!empty($oauthResult)){
+            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
+        }
+        // 2.2 获取用户信息
         $userInfo = $weiboOAuth->getUserInfo($result['access_token'],$result['uid']);
         $data = array(
             'username' =>(string)$userInfo['name'],

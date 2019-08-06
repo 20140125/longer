@@ -19,7 +19,7 @@ class AuthController extends BaseController
      */
     public function index()
     {
-        $result['authLists'] = $this->ruleModel->getAuthLists($this->post['name']??'',$this->post['pid']??0,$this->post['page']??1,$this->post['limit']??20);
+        $result['authLists'] = $this->ruleModel->getAuthLists($this->post['name']??'',$this->post['pid']??0,$this->post['page']??1,$this->post['limit']??15);
         $result['selectAuth'] = $this->ruleModel->getResult2('1',2);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
@@ -30,10 +30,7 @@ class AuthController extends BaseController
      */
     public function save()
     {
-        $validate = Validator::make($this->post,['name'=> 'required|unique:os_rule','href' =>'required|unique:os_rule']);
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['name'=> 'required|unique:os_rule','href' =>'required|unique:os_rule']);
         $result = $this->ruleModel->addResult($this->post);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'save rule successfully');
@@ -48,10 +45,7 @@ class AuthController extends BaseController
     public function update()
     {
         if (empty($this->post['act'])){
-            $validate = Validator::make($this->post,['name'=> 'required','href' =>'required']);
-            if ($validate->fails()){
-                return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-            }
+            $this->validatePost(['name'=> 'required|string','href' =>'required|string']);
             $result = $this->ruleModel->updateResult($this->post,'id',$this->post['pid']);
             if (!empty($result)){
                 return $this->ajax_return(Code::SUCCESS,'update rule successfully');
@@ -59,10 +53,7 @@ class AuthController extends BaseController
             return $this->ajax_return(Code::ERROR,'update rule error');
         }
         unset($this->post['act']);
-        $validate = Validator::make($this->post,['status'=> 'required|in:1,2','id' =>'required|integer']);
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['status'=> 'required|in:1,2','id' =>'required|integer']);
         $result = $this->ruleModel->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'update rule status successfully');
@@ -76,10 +67,7 @@ class AuthController extends BaseController
      */
     public function delete()
     {
-        $validate = Validator::make($this->post,['id'=>'required|integer','level'=>'gt:0']);
-        if ($validate->fails()){
-            return $this->ajax_return(Code::ERROR,$validate->errors()->first());
-        }
+        $this->validatePost(['id'=>'required|integer','level'=>'gt:0']);
         //查看下面是否还有下级权限
         $_child = $this->ruleModel->getResult('pid',$this->post['id']);
         if (!empty($_child)){
