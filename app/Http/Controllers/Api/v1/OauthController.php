@@ -38,7 +38,8 @@ class OauthController extends BaseController
      */
     public function update()
     {
-        $this->validatePost(['username'=>'required|string','path'=>'required|url','role_id'=>'required|integer','status'=>'required|integer|in:1,2']);
+        $this->validatePost(['username'=>'required|string','avatar_url'=>'required|url','role_id'=>'required|integer','status'=>'required|integer|in:1,2']);
+        $this->post['created_at'] = strtotime($this->post['created_at']);
         $result = $this->oauthModel->updateResult($this->post,'id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'update oauth successfully');

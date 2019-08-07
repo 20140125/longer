@@ -70,8 +70,8 @@ class Oauth extends Command
                     if ($result['code'] !== 201) {
                         $where[] = ['oauth_type',$oauth_type];
                         $where[] = ['refresh_token',$refresh_token];
-                        $result['remember_token'] = md5(md5($result['remember_token']).time());
-                        $oauth = oauthModel::getInstance()->updateResult($result,$where);
+                        $result->remember_token = md5(md5($result->remember_token).time());
+                        $oauth = oauthModel::getInstance()->updateResult(object_to_array($result),$where);
                         if ($oauth) {
                             $this->info('update oauth success');
                             return ;
