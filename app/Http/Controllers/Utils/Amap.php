@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Utils;
 
+use Curl\Curl;
 use Illuminate\Config\Repository;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class Amap
 {
@@ -17,8 +16,14 @@ class Amap
      * @var string $url
      */
     protected $url;
-
+    /**
+     * @var array $data
+     */
     protected $data = array();
+    /**
+     * @var Curl $Curl
+     */
+    protected $Curl;
 
     private function __clone()
     {
@@ -35,10 +40,8 @@ class Amap
     {
         $this->amapkey = config('app.amap_key');
         $this->url = 'https://restapi.amap.com/v3/';
-        $this->data = array(
-            'key' =>$this->amapkey,
-            'output' =>'json'
-        );
+        $this->data = array('key' =>$this->amapkey, 'output' =>'json');
+        $this->Curl = new  Curl();
     }
 
     /**
@@ -51,7 +54,7 @@ class Amap
         $weatherUrl = 'weather/weatherInfo';
         $this->data['city'] = $adcode;
         $this->data['extensions'] = 'base';
-        $weatherInfo = http_query($this->url.$weatherUrl,$this->data);
+        $weatherInfo = $this->Curl->post($this->url.$weatherUrl,$this->data);
         return $weatherInfo;
     }
 
@@ -64,7 +67,7 @@ class Amap
     {
         $ipUrl = 'ip';
         $this->data['ip'] = $ipAddress;
-        $ipInfo = http_query($this->url.$ipUrl,$this->data);
+        $ipInfo = $this->Curl->post($this->url.$ipUrl,$this->data);
         return $ipInfo;
     }
 
@@ -79,7 +82,7 @@ class Amap
         $geoUrl = 'geocode/geo';
         $this->data['city'] = $city;
         $this->data['address'] = $address;
-        $geoInfo = http_query($this->url.$geoUrl,$this->data);
+        $geoInfo = $this->Curl->post($this->url.$geoUrl,$this->data);
         return $geoInfo;
     }
 
@@ -94,7 +97,7 @@ class Amap
         $directionUrl = 'direction/walking';
         $this->data['origin'] = $origin;
         $this->data['destination'] = $destination;
-        $geoInfo = http_query($this->url.$directionUrl,$this->data);
+        $geoInfo = $this->Curl->post($this->url.$directionUrl,$this->data);
         return $geoInfo;
     }
 
@@ -110,7 +113,7 @@ class Amap
         $this->data['keywords'] = $keywords;
         $this->data['location'] = $location;
         $this->data['city'] = $city;
-        $assistantInfo = http_query($this->url.$assistantUrl,$this->data);
+        $assistantInfo = $this->Curl->post($this->url.$assistantUrl,$this->data);
         return $assistantInfo;
     }
 }
