@@ -47,7 +47,7 @@ class QQController extends OAuthController
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url').'/api/v1/callback/qq';
+        $this->redirectUri = config('app.url').'api/v1/callback/qq';
     }
 
     /**

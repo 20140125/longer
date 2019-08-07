@@ -41,7 +41,7 @@ class WeiBoController extends OAuthController
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url').'/api/v1/callback/weibo';
+        $this->redirectUri = config('app.url').'api/v1/callback/weibo';
     }
 
     /**
