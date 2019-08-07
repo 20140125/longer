@@ -49,14 +49,7 @@ class OauthCallbackController
         $QQOauth = QQController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $QQOauth->getAccessToken($request->get('code'));
-        // 2.1 判断 access_token 有没有过期
-        $oauthWhere[] = array('access_token','=',$result['access_token']);
-        $oauthWhere[] = array('oauth_type','=','qq');
-        $oauthResult = $this->oauthModel->getResult($oauthWhere);
-        if (!empty($oauthResult)){
-            return $this->oauth(object_to_array($oauthResult),$oauthWhere);
-        }
-        // 2.2 获取用户信息
+        // 2 获取用户信息
         $userInfo = $QQOauth->getUserInfo($result['access_token']);
         $data = array(
             'username' =>(string)$userInfo['nickname'],
