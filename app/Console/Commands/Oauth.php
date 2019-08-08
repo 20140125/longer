@@ -2,10 +2,17 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Oauth\BaiDuController;
+use App\Http\Controllers\Oauth\GiteeController;
 use App\Http\Controllers\Oauth\QQController;
 use Illuminate\Console\Command;
 use App\Models\OAuth as oauthModel;
 
+/**
+ * Class Oauth
+ * @author <fl140125@gmail.com>
+ * @package App\Console\Commands
+ */
 class Oauth extends Command
 {
     /**
@@ -40,6 +47,9 @@ class Oauth extends Command
         $this->getOauth();
     }
 
+    /**
+     *
+     */
     private function getOauth()
     {
         $where[] = ['expires','<',time()];
@@ -56,8 +66,8 @@ class Oauth extends Command
 
     /**
      * TODO：刷新 access_token
-     * @param $oauth_type
-     * @param $refresh_token
+     * @param string $oauth_type 账号来源
+     * @param string $refresh_token 用于刷新 access_token
      */
     private function refreshToken($oauth_type,$refresh_token)
     {
@@ -73,16 +83,67 @@ class Oauth extends Command
                         $result->remember_token = md5(md5($result->remember_token).time());
                         $oauth = oauthModel::getInstance()->updateResult(object_to_array($result),$where);
                         if ($oauth) {
-                            $this->info('update oauth success');
+                            $this->info('update  qq oauth success');
                             return ;
                         }
-                        $this->warn('update oauth failed');
+                        $this->warn('update qq oauth failed');
                         return ;
                     }
                     $this->warn(json_encode($result));
                 } catch (\Exception $e) {
-                    $this->error($e->getMessage());
+                    $this->error($e->getMessage().' qq');
                 }
+                break;
+            case 'gitee':
+                try{
+                    $appId = config('app.gitee_appid');
+                    $appSecret = config('app.gitee_secret');
+                    $result = GiteeController::getInstance($appId,$appSecret)->refreshToken($refresh_token);
+                    if ($result['code'] !== 201) {
+                        $where[] = ['oauth_type',$oauth_type];
+                        $where[] = ['refresh_token',$refresh_token];
+                        $result->remember_token = md5(md5($result->remember_token).time());
+                        $oauth = oauthModel::getInstance()->updateResult(object_to_array($result),$where);
+                        if ($oauth) {
+                            $this->info('update gitee oauth success');
+                            return ;
+                        }
+                        $this->warn('update  gitee oauth failed');
+                        return ;
+                    }
+                    $this->warn(json_encode($result));
+                }catch (\Exception $exception){
+                    $this->error($exception->getMessage().' gitee');
+                }
+                break;
+            case 'baidu':
+                try{
+                    $appId = config('app.baidu_appid');
+                    $appSecret = config('app.baidu_secret');
+                    $result = BaiDuController::getInstance($appId,$appSecret)->refreshToken($refresh_token);
+                    if ($result['code'] !== 201) {
+                        $where[] = ['oauth_type',$oauth_type];
+                        $where[] = ['refresh_token',$refresh_token];
+                        $result->remember_token = md5(md5($result->remember_token).time());
+                        $oauth = oauthModel::getInstance()->updateResult(object_to_array($result),$where);
+                        if ($oauth) {
+                            $this->info('update baidu oauth success');
+                            return ;
+                        }
+                        $this->warn('update baidu oauth failed');
+                        return ;
+                    }
+                    $this->warn(json_encode($result));
+                }catch (\Exception $exception){
+                    $this->error($exception->getMessage().' baidu');
+                }
+                break;
+            case 'github':
+            case 'weibo':
+                $this->error('refresh_token does not exists');
+                break;
+            default:
+                $this->error('账户来源不存在');
                 break;
         }
     }

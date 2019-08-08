@@ -175,7 +175,7 @@ class QQController extends OAuthController
         }
         $result = json_decode($result,true);
         if (isset($result['ret']) && $result['ret']!=0){
-            return ajax_return(Code::ERROR,$result['msg']);
+            return $this->error(Code::ERROR,$result['msg']);
         }
         return $result;
     }

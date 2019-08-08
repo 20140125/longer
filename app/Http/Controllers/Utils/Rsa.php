@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Utils;
 
+/**
+ * Class Rsa
+ * @author <fl140125@gmail.com>
+ * @package App\Http\Controllers\Utils
+ */
 class Rsa
 {
     private static $PRIVATE_KEY = '';  //私钥（用于用户加密）

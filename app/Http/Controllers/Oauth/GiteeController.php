@@ -100,6 +100,29 @@ class GiteeController extends OAuthController
     }
 
     /**
+     * todo：刷新AccessToken续期
+     * @param $refresh_token
+     * @return array|mixed
+     */
+    public function refreshToken($refresh_token)
+    {
+        $arr = [
+            'grant_type'	=>	'refresh_token',
+            'refresh_token'	=>	$refresh_token
+        ];
+        $this->curl->setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36");
+        $result = $this->curl->post($this->apiUrl."oauth/token?".http_build_query($arr));
+        if (!$result){
+            return $this->error(Code::ERROR,'接口请求失败');
+        }
+        $result = object_to_array($result);
+        if (isset($result['error'])){
+            return $this->error(Code::ERROR,$result['error_description']);
+        }
+        return $result;
+    }
+
+    /**
      * todo：获取用户资料
      * @param $access_token
      * @return mixed

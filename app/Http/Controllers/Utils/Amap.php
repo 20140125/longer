@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Utils;
 use Curl\Curl;
 use Illuminate\Config\Repository;
 
+/**
+ * Class Amap
+ * @author <fl140125@gmail.com>
+ * @package App\Http\Controllers\Utils
+ */
 class Amap
 {
     protected static $instance;
