@@ -23,7 +23,7 @@ class CreateOsOauthTable extends Migration
             $table->string('access_token',64)->default('0')->comment('第三方账号token');
             $table->string('avatar_url',128)->default('0')->comment('用户头像');
             $table->string('url',128)->default('0')->comment('详细地址');
-            $table->string('refresh_token',64)->default('0')->comment('刷新token');
+            $table->string('refresh_token',128)->default('0')->comment('刷新token');
             $table->string('oauth_type',16)->default('0')->comment('账户来源');
             $table->integer('role_id')->default(0)->comment('角色ID');
             $table->string('remember_token',32)->default('0')->comment('用户token');

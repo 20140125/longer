@@ -595,7 +595,7 @@ if (!function_exists('act_log'))
     {
         $data = array(
             'username' =>$info['username'],
-            'url' =>$info['url'],
+            'url' =>$info['href'],
             'ip_address' =>request()->getClientIp(),
             'created_at' =>time(),
             'log' =>$info,
