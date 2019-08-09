@@ -19,8 +19,8 @@ class AuthController extends BaseController
      */
     public function index()
     {
-        $result['authLists'] = $this->ruleModel->getAuthLists($this->post['name']??'',$this->post['pid']??0,$this->post['page']??1,$this->post['limit']??15);
-        $result['selectAuth'] = $this->ruleModel->getResult2('1',2);
+        $result['authLists'] = $this->authModel->getAuthLists($this->post['name']??'',$this->post['pid']??0,$this->post['page']??1,$this->post['limit']??15);
+        $result['selectAuth'] = $this->authModel->getResult2('1',2);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
@@ -31,7 +31,7 @@ class AuthController extends BaseController
     public function save()
     {
         $this->validatePost(['name'=> 'required|unique:os_rule','href' =>'required|unique:os_rule']);
-        $result = $this->ruleModel->addResult($this->post);
+        $result = $this->authModel->addResult($this->post);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'save rule successfully');
         }
@@ -46,7 +46,7 @@ class AuthController extends BaseController
     {
         if (empty($this->post['act'])){
             $this->validatePost(['name'=> 'required|string','href' =>'required|string']);
-            $result = $this->ruleModel->updateResult($this->post,'id',$this->post['pid']);
+            $result = $this->authModel->updateResult($this->post,'id',$this->post['pid']);
             if (!empty($result)){
                 return $this->ajax_return(Code::SUCCESS,'update rule successfully');
             }
@@ -54,7 +54,7 @@ class AuthController extends BaseController
         }
         unset($this->post['act']);
         $this->validatePost(['status'=> 'required|in:1,2','id' =>'required|integer']);
-        $result = $this->ruleModel->updateResult($this->post,'id',$this->post['id']);
+        $result = $this->authModel->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'update rule status successfully');
         }
@@ -69,11 +69,11 @@ class AuthController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer','level'=>'gt:0']);
         //查看下面是否还有下级权限
-        $_child = $this->ruleModel->getResult('pid',$this->post['id']);
+        $_child = $this->authModel->getResult('pid',$this->post['id']);
         if (!empty($_child)){
             return $this->ajax_return(Code::ERROR,'权限下面还存在下级，不能删除！');
         }
-        $result = $this->ruleModel->deleteResult('id',$this->post['id']);
+        $result = $this->authModel->deleteResult('id',$this->post['id']);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'successfully');
         }

@@ -101,13 +101,12 @@ class QQController extends OAuthController
         ];
         $result = $this->curl->get($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
-        $result = $this->__getAccessToken($result);
-        if (isset($result['access_token'])){
-            return $result;
+        if (isset($this->json($result)['error'])){
+            return $this->error(Code::ERROR,$this->json($result)['error_description']);
         }
-        return false;
+        return  $this->__getAccessToken($result);
     }
 
     /**
@@ -123,7 +122,7 @@ class QQController extends OAuthController
         ];
         $result = $this->curl->get($this->apiUrl.'oauth2.0/me?'.http_build_query($arr));
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
         if (isset($this->json($result)['error'])){
             return $this->error(Code::ERROR,$this->json($result)['error_description']);
@@ -147,7 +146,7 @@ class QQController extends OAuthController
         ];
         $result = $this->curl->get($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
         if (isset($this->json($result)['error'])){
             return $this->error(Code::ERROR,$this->json($result)['error_description']);
@@ -171,7 +170,7 @@ class QQController extends OAuthController
         ];
         $result = $this->curl->get($this->apiUrl.'user/get_user_info?'.http_build_query($arr));
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
         $result = json_decode($result,true);
         if (isset($result['ret']) && $result['ret']!=0){

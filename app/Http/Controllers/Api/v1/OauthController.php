@@ -19,7 +19,7 @@ class OauthController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer|gt:0','limit'=>'required|integer']);
-        $result = $this->oauthModel->getResultLists($this->post['page']??1,$this->post['limit']??15);
+        $result = $this->oauthModel->getResultLists($this->post['page'],$this->post['limit'],$this->users->username);
         $oauthImageLists = [];
         foreach ($result['data'] as &$item){
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
@@ -44,6 +44,7 @@ class OauthController extends BaseController
         } else {
             $this->validatePost(['username'=>'required|string','avatar_url'=>'required|url','role_id'=>'required|integer','status'=>'required|integer|in:1,2']);
             $this->post['created_at'] = strtotime($this->post['created_at']);
+            $this->post['oauth_type'] = strtolower($this->post['oauth_type']);
         }
         $result = $this->oauthModel->updateResult($this->post,'id',$this->post['id']);
         if ($result){

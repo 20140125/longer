@@ -97,13 +97,13 @@ class GithubController extends OAuthController
         ];
         $result = $this->curl->post($this->apiUrl.'login/oauth/access_token',$arr);
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
         $result = $this->__getAccessToken($result);
-        if (isset($result['access_token'])){
-            return $result;
+        if (isset($result['error'])){
+            return $this->error(Code::ERROR,$result['error_description']);
         }
-        return false;
+        return $result;
 
     }
 
@@ -117,7 +117,11 @@ class GithubController extends OAuthController
     {
         $result = $this->curl->get('https://api.github.com/user?access_token='.$access_token);
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
+        }
+        $result = json_decode($result,true);
+        if (isset($result['message'])){
+            return $this->error(Code::ERROR,'Get user failed');
         }
         return $result;
     }

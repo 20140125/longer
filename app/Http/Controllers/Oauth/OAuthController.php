@@ -21,6 +21,7 @@ class OAuthController extends Controller
     public function __construct()
     {
         $this->curl = new Curl();
+        $this->curl->setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36");
     }
 
     /**
@@ -62,7 +63,7 @@ class OAuthController extends Controller
      */
     public function error($code,$message)
     {
-        return json_encode(array('code'=>$code,'message'=>$message),JSON_UNESCAPED_UNICODE);
+        return array('code'=>$code,'message'=>$message);
     }
 
     /**

@@ -37,13 +37,24 @@ class ReqRuleController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer','limit'=>'required|integer']);
-        $result = $this->reqRuleModel->getResultLists($this->post['page'],$this->post['limit']);
+        $result = $this->reqRuleModel->getResultLists($this->post['page'],$this->post['limit'],$this->users->username);
         foreach ($result['data'] as &$item) {
             $item->created_at = empty($item->created_at) ? '' : date('Y-m-d H:i:s',$item->created_at);
             $item->updated_at = empty($item->updated_at) ? '' : date('Y-m-d H:i:s',$item->updated_at);
             $item->expires = empty($item->expires) ? '' : date('Y-m-d H:i:s',$item->expires);
         }
-        return $this->ajax_return(Code::SUCCESS,'save request rule successfully',$result);
+        //获取所有权限
+        $ruleLists = $this->authModel->getAuthList(['name','href','level']);
+        //获取登录用户的权限
+        $loginAuth = json_decode($this->role->auth_url,true);
+        foreach ($ruleLists as &$item){
+            $item->disable = false;
+            if (in_array($item->href,$loginAuth)) {
+                $item->disable = true;
+            }
+        }
+        $result['ruleLists'] = $ruleLists;
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**
@@ -52,23 +63,35 @@ class ReqRuleController extends BaseController
      */
     public function save()
     {
-        $this->validatePost(['username'=>'required|string','href'=>'required|string']);
-        $this->post['href'] = str_replace('v1','admin',$this->post['href']);
-        $this->validatePost(['href'=>'exists:os_rule']);
+        $this->validatePost(['username'=>'required|string|exists:os_oauth','href'=>'required|Array']);
         if ($this->post['username']!==$this->users->username) {
             return $this->ajax_return(Code::ERROR,'username check failed');
         }
+        if (isset($this->post['expires']) && !empty($this->post['expires'])){
+            if (strtotime($this->post['expires'])>strtotime('+1 year')) {
+                return $this->ajax_return(Code::ERROR,'authorization expires must be a date before '.date('Y-m-d H:i:s',strtotime('+1 year')));
+            }
+            if (strtotime($this->post['expires'])<= time()) {
+                return $this->ajax_return(Code::ERROR,'authorization expires must be a date after '.date('Y-m-d H:i:s'));
+            }
+        }
         $req['username'] = $this->users->username;
         $req['user_id'] = $this->users->id;
-        $req['href'] = $this->post['href'];
+        $req['expires'] = empty($this->post['expires']) ? 0 : strtotime($this->post['expires']);
+        $req['desc'] = empty($this->post['desc']) ? '' : $this->post['desc'];
         $where[] = ['username',$req['username']];
         $where[] = ['user_id',$req['user_id']];
-        $where[] = ['href',$this->post['href']];
-        $reqRes = $this->reqRuleModel->getResult($where);
-        if (!empty($reqRes)) {
-            $result = $this->reqRuleModel->updateResult($req,$where);
-        } else {
-            $result = $this->reqRuleModel->addResult($req);
+        $result = 0;
+        foreach ($this->post['href'] as &$href){
+            $href = str_replace('v1','admin',$href);
+            $req['href'] = $href;
+            $where[] = ['href',$href];
+            $reqRes = $this->reqRuleModel->getResult($where);
+            if (!empty($reqRes)) {
+                $result = $this->reqRuleModel->updateResult($req,$where);
+            } else {
+                $result = $this->reqRuleModel->addResult($req);
+            }
         }
         if ($result) {
             return $this->ajax_return(Code::SUCCESS,'save request authorization successfully');
@@ -103,7 +126,7 @@ class ReqRuleController extends BaseController
                 $auth_ids = json_decode($role->auth_ids,true);
                 $auth_url = json_decode($role->auth_url,true);
                 //根据用户请求授权地址获取该条规则信息
-                $rule = $this->ruleModel->getResult('href',$getReq->href);
+                $rule = $this->authModel->getResult('href',$getReq->href);
                 array_push($auth_ids,(int)$rule->id);
                 array_push($auth_url,$rule->href);
                 try{
@@ -138,14 +161,17 @@ class ReqRuleController extends BaseController
             DB::rollBack();
             return $this->ajax_return(Code::SUCCESS,'request authorization has refused');
         }
-        //修改用户申请授权信息
+        //修改用户申请授权信息 最大授权到期时间不得超过当前时间一年
         $this->validatePost([
             'status'=>'required|integer',
             'id'=>'required|integer',
             'username'=>'required|string',
-            'href'=>'required|string|exists:os_rule',
+            'href'=>'required|Array',
             'created_at' => 'required|date',
-            'expires' => 'required|date',
+            'expires' => 'required|date|before:'.date('Y-m-d H:i:s',strtotime('+1 year')).'|after:'.date('Y-m-d H:i:s'),
+        ],[
+            'expires.before' => 'authorization expires must be a date before '.date('Y-m-d H:i:s',strtotime('+1 year')),
+            'expires.after'  => 'authorization expires must be a date after '.date('Y-m-d H:i:s')
         ]);
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $this->post['expires'] = strtotime($this->post['expires']);
@@ -172,7 +198,7 @@ class ReqRuleController extends BaseController
         $auth_ids = json_decode($role->auth_ids,true);
         $auth_url = json_decode($role->auth_url,true);
         //根据用户请求授权地址获取该条规则信息
-        $rule = $this->ruleModel->getResult('href',$getReq->href);
+        $rule = $this->authModel->getResult('href',$getReq->href);
         //获取数key
         $arr_ids_key = count(array_keys($auth_ids,$rule->id))>0 ? array_keys($auth_ids,$rule->id)[0] : 0;
         $arr_url_key = count(array_keys($auth_url,$rule->href))>0 ? array_keys($auth_url,$rule->href)[0] : '0';

@@ -24,7 +24,7 @@ class RoleController extends BaseController
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
         }
-        $authLists = $this->ruleModel->getAuthList();
+        $authLists = $this->authModel->getAuthList(['id as key','name as label']);
         return $this->ajax_return(Code::SUCCESS,'successfully',['role'=>$roleLists,'auth'=>$authLists]);
     }
 
@@ -35,7 +35,7 @@ class RoleController extends BaseController
     public function save()
     {
         $this->validatePost(['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string']);
-        $authLists = $this->ruleModel->getResult('id',$this->post['auth_ids'],'in',['href']);
+        $authLists = $this->authModel->getResult('id',$this->post['auth_ids'],'in',['href']);
         $auth_url = array();
         foreach ($authLists as $item){
             $auth_url[] = strtolower($item->href);
@@ -65,7 +65,7 @@ class RoleController extends BaseController
             return $this->ajax_return(Code::ERROR,'role update status error');
         }
         $this->validatePost(['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string']);
-        $authLists = $this->ruleModel->getResult('id', $this->post['auth_ids'],'in',['href']);
+        $authLists = $this->authModel->getResult('id', $this->post['auth_ids'],'in',['href']);
         $auth_url = array();
         foreach ($authLists as $item){
             $auth_url[] = strtolower($item->href);

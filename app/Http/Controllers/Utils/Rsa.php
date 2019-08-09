@@ -18,6 +18,9 @@ class Rsa
         // TODO: Implement __clone() method.
     }
 
+    /**
+     * @return Rsa
+     */
     static public function getInstance()
     {
         if (!self::$instance instanceof self){
@@ -33,8 +36,8 @@ class Rsa
      */
     public function __construct($pubkey='',$prikey='')
     {
-        self::$PUBLIC_KEY = empty($pubkey)?file_get_contents(public_path('/rsa/app_public_key.pem')):file_get_contents($pubkey);
-        self::$PRIVATE_KEY = empty($prikey)?file_get_contents(public_path('/rsa/app_private_key.pem')):file_get_contents($prikey);
+        self::$PUBLIC_KEY = empty($pubkey) ? file_get_contents(public_path('/rsa/app_public_key.pem')) : file_get_contents($pubkey);
+        self::$PRIVATE_KEY = empty($prikey) ? file_get_contents(public_path('/rsa/app_private_key.pem')) : file_get_contents($prikey);
     }
 
     /**
@@ -48,7 +51,7 @@ class Rsa
     }
 
     /**
-     * 获取公钥
+     * TODO：获取公钥
      * @return bool|resource
      */
     private static function getPublicKey()
@@ -58,7 +61,7 @@ class Rsa
     }
 
     /**
-     * 私钥加密
+     * TODO：私钥加密
      * @param string $data
      * @return null|string
      */
@@ -71,7 +74,7 @@ class Rsa
     }
 
     /**
-     * 公钥加密
+     * TODO：公钥加密
      * @param string $data
      * @return null|string
      */
@@ -84,7 +87,7 @@ class Rsa
     }
 
     /**
-     * 私钥解密
+     * TODO：私钥解密
      * @param string $encrypted
      * @return null
      */
@@ -97,7 +100,7 @@ class Rsa
     }
 
     /**
-     * 公钥解密
+     * TODO：公钥解密
      * @param string $encrypted
      * @return null
      */
@@ -110,7 +113,7 @@ class Rsa
     }
 
     /**
-     * 私钥生成签名
+     * TODO：私钥生成签名
      * @param $data
      * @return string|null
      */
@@ -133,7 +136,7 @@ class Rsa
     }
 
     /**
-     * 公钥验证签名
+     * TODO：公钥验证签名
      * @param string $data 参数
      * @param string $signature 签名
      * @return int|null
@@ -154,7 +157,7 @@ class Rsa
     }
 
     /**
-     * 构析函数，用来释放公钥和私钥
+     * TODO：构析函数，用来释放公钥和私钥
      */
     public function __destruct() {
         openssl_free_key(self::getPrivateKey());

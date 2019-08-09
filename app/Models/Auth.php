@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
  * @author <fl140125@gmail.com>
  * @package App\Models
  */
-class Rule extends Model
+class Auth extends Model
 {
     /**
      * @var string $table
@@ -29,7 +29,7 @@ class Rule extends Model
     }
 
     /**
-     * @return Rule
+     * @return Auth
      */
     static public function getInstance()
     {
@@ -94,13 +94,14 @@ class Rule extends Model
     }
 
      /**
-     * TODO：权限列表
-     * @return Collection
+      * TODO：权限列表
+      * @param $column
+      * @return Collection
      */
-    public function getAuthList()
+    public function getAuthList($column = ['*'])
     {
         $where[] = array('id','>',0);
-        $result = DB::table($this->table)->where($where)->orderBy('path')->get(['id as key','name as label']);
+        $result = DB::table($this->table)->where($where)->orderBy('path')->get($column);
         return $result;
     }
 

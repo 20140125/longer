@@ -6,7 +6,7 @@ use App\Http\Controllers\Utils\Rsa;
 use App\Http\Controllers\Controller;
 use App\Models\OAuth;
 use App\Models\Role;
-use App\Models\Rule;
+use App\Models\Auth;
 use App\Models\Users;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -31,9 +31,9 @@ class BaseController extends Controller
      */
     protected $roleModel;
     /**
-     * @var Rule $ruleModel
+     * @var Auth $authModel
      */
-    protected $ruleModel;
+    protected $authModel;
     /**
      * @var OAuth $oauthModel
      */
@@ -76,7 +76,7 @@ class BaseController extends Controller
         $this->post = $request->post();
         $this->userModel = Users::getInstance();
         $this->roleModel = Role::getInstance();
-        $this->ruleModel = Rule::getInstance();
+        $this->authModel = Auth::getInstance();
         $this->oauthModel = OAuth::getInstance();
         $this->backupPath = public_path('backup/');
         //公用权限
@@ -103,8 +103,8 @@ class BaseController extends Controller
             $this->setCode(Code::NOT_ALLOW,'Permission denied');
         }
         //用户不属于超级管理员
+        $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids']);
         if ($this->users->role_id !== 1) {
-            $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids']);
             if (!empty($this->role) && !in_array(str_replace(['/api/v1'],['/admin'],$url),json_decode($this->role->auth_url,true)) && !in_array(asset($url),$common_url)) {
                 $this->setCode(Code::NOT_ALLOW,'Permission denied');
             }

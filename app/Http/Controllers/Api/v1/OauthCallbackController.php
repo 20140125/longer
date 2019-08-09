@@ -7,6 +7,7 @@ use App\Http\Controllers\Oauth\GiteeController;
 use App\Http\Controllers\Oauth\GithubController;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiBoController;
+use App\Http\Controllers\Utils\Code;
 use App\Models\OAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class OauthCallbackController
     }
 
     /**
-     * todo：QQ授权登录回调地址
+     * TODO：QQ授权登录回调地址
      * @param Request $request
      * @return RedirectResponse|Redirector
      * @throws \Exception
@@ -49,8 +50,10 @@ class OauthCallbackController
         $QQOauth = QQController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $QQOauth->getAccessToken($request->get('code'));
+        $this->throwException($result);
         // 2 获取用户信息
         $userInfo = $QQOauth->getUserInfo($result['access_token']);
+        $this->throwException($userInfo);
         $data = array(
             'username' =>(string)$userInfo['nickname'],
             'openid' =>(string)$QQOauth->openid,
@@ -69,7 +72,7 @@ class OauthCallbackController
     }
 
     /**
-     * todo：gitHub授权回调
+     * TODO：gitHub授权回调
      * @param Request $request
      * @return RedirectResponse|Redirector
      * @throws \Exception
@@ -81,8 +84,10 @@ class OauthCallbackController
         $gitHubOAuth = GithubController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $gitHubOAuth->getAccessToken($request->get('code'),$request->get('state'));
+        $this->throwException($result);
         // 2 获取用户信息
         $userInfo = object_to_array($gitHubOAuth->getUserInfo($result['access_token']));
+        $this->throwException($userInfo);
         $data = array(
             'username' =>$userInfo['login'],
             'openid' =>(string)$userInfo['id'],
@@ -101,7 +106,7 @@ class OauthCallbackController
     }
 
     /**
-     * todo：Weibo授权回调
+     * TODO：Weibo授权回调
      * @param Request $request
      * @return RedirectResponse|Redirector
      * @throws \Exception
@@ -113,8 +118,10 @@ class OauthCallbackController
         $giteeOauth = GiteeController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = object_to_array($giteeOauth->getAccessToken($request->get('code')));
+        $this->throwException($result);
         // 2 获取用户信息
         $userInfo = object_to_array($giteeOauth->getUserInfo($result['access_token']));
+        $this->throwException($userInfo);
         $data = array(
             'username' =>(string)$userInfo['name'],
             'openid' =>(string)$userInfo['id'],
@@ -133,7 +140,7 @@ class OauthCallbackController
     }
 
     /**
-     * todo：Weibo授权回调
+     * TODO：Weibo授权回调
      * @param Request $request
      * @return RedirectResponse|Redirector
      * @throws \Exception
@@ -145,8 +152,10 @@ class OauthCallbackController
         $weiboOAuth = WeiBoController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $weiboOAuth->getAccessToken($request->get('code'));
+        $this->throwException($result);
         // 2 获取用户信息
         $userInfo = $weiboOAuth->getUserInfo($result['access_token'],$result['uid']);
+        $this->throwException($userInfo);
         $data = array(
             'username' =>(string)$userInfo['name'],
             'openid' =>(string)$userInfo['id'],
@@ -176,8 +185,10 @@ class OauthCallbackController
         $baiDuOauth = BaiDuController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $baiDuOauth->getAccessToken($request->get('code'));
+        $this->throwException($result);
         // 2 获取用户信息
         $userInfo = $baiDuOauth->getUserInfo($result['access_token']);
+        $this->throwException($userInfo);
         $data = array(
             'username' =>(string)$userInfo['uname'],
             'openid' =>(string)$userInfo['uid'],
@@ -196,7 +207,7 @@ class OauthCallbackController
     }
 
     /**
-     * todo：授权信息添加
+     * TODO：授权信息添加
      * @param $data
      * @param $where
      * @return RedirectResponse|Redirector
@@ -213,5 +224,22 @@ class OauthCallbackController
             return redirect('/#/admin/index/'.$data['remember_token']);
         }
         return redirect('/#/login');
+    }
+
+    /**
+     * TODO：异常捕获
+     * @param $response
+     * @return RedirectResponse|Redirector
+     */
+    protected function throwException($response)
+    {
+        try{
+            if (isset($response['code']) && $response['code'] === Code::ERROR) {
+                set_code($response['code']);
+                return redirect('/#/login');
+            }
+        }catch (\Exception $exception){
+            echo $exception->getMessage();
+        }
     }
 }

@@ -25,10 +25,10 @@ class MenuController extends BaseController
         }
         switch ($this->users->role_id){
             case 1:
-                $authLists = $this->ruleModel->getAuthTree();
+                $authLists = $this->authModel->getAuthTree();
                 break;
             default:
-                $authLists = $this->ruleModel->getAuthTree(json_decode($this->role->auth_ids,true));
+                $authLists = $this->authModel->getAuthTree(json_decode($this->role->auth_ids,true));
                 break;
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$authLists);

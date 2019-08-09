@@ -102,14 +102,13 @@ class BaiDuController extends OAuthController
             'client_secret' => $this->appsecret,
             'redirect_uri' => $this->redirectUri,
         ];
-        $this->curl->setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36");
         $result = $this->curl->get($this->apiUrl.'oauth/2.0/token?'.http_build_query($arr));
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
         $result = object_to_array($result);
         if (isset($result['error'])) {
-            return $this->error(Code::ERROR,'error_description');
+            return $this->error(Code::ERROR,$result['error_description']);
         }
         return $result;
     }
@@ -127,11 +126,11 @@ class BaiDuController extends OAuthController
         ];
         $result = $this->curl->get($this->apiUrl.'rest/2.0/passport/users/getLoggedInUser?'.http_build_query($arr));
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
         $result = object_to_array($result);
         if (isset($result['error'])) {
-            return $this->error(Code::ERROR,'error_description');
+            return $this->error(Code::ERROR,$result['error_description']);
         }
         return $result;
     }
@@ -152,11 +151,11 @@ class BaiDuController extends OAuthController
         );
         $result = $this->curl->get($this->apiUrl.'oauth/2.0/token?'.http_build_query($arr));
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
-        $result = json_decode($result,true);
+        $result = object_to_array($result);
         if ($result['error']){
-            return $this->error(Code::ERROR,'error_description');
+            return $this->error(Code::ERROR,$result['error_description']);
         }
         return $result;
     }

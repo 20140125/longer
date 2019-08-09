@@ -96,7 +96,7 @@ class WeiBoController extends OAuthController
         ];
         $result = $this->curl->post($this->apiUrl.'oauth2/access_token',$arr);
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
         $result = object_to_array($result);
         if (isset($result['error_code'])){
@@ -116,7 +116,7 @@ class WeiBoController extends OAuthController
     {
         $result = $this->curl->get($this->apiUrl."2/users/show.json?access_token={$access_token}&uid={$uid}");
         if (!$result){
-            return $this->error(Code::ERROR,'接口请求失败');
+            return $this->error(Code::ERROR,'request interface failed');
         }
         $result = object_to_array($result);
         if (isset($result['error_code'])){
