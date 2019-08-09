@@ -91,16 +91,16 @@ class BaseController extends Controller
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
         //token不正确用户未授权登录
         if ($validate->fails()) {
-            $this->setCode(Code::Unauthorized,'Unauthorized');
+            $this->setCode(Code::Unauthorized,'user login state expired');
         }
         //用户不存在
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
         if (empty($this->users)) {
-            $this->setCode(Code::Unauthorized,'Unauthorized');
+            $this->setCode(Code::Unauthorized,'user does not exists');
         }
         //用户被禁用
         if ($this->users->status!==1){
-            $this->setCode(Code::NOT_ALLOW,'Permission denied');
+            $this->setCode(Code::Unauthorized,'user disabled');
         }
         //用户不属于超级管理员
         $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids']);
