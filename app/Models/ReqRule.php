@@ -64,14 +64,15 @@ class ReqRule extends Model
      * TODO：请求授权列表
      * @param $page
      * @param $limit
-     * @param $username
+     * @param $user
      * @return mixed
      */
-    public function getResultLists($page,$limit,$username='')
+    public function getResultLists($page,$limit,$user)
     {
         $where = [];
-        if (!in_array($username,['admin'])){
-            $where[] = ['username',$username];
+        if (!in_array($user->username,['admin'])){
+            $where[] = ['username',$user->username];
+            $where[] = ['user_id',$user->id];
         }
         $result['data'] = DB::table($this->table)->limit($limit)->where($where)->offset($limit*($page-1))->orderBy('expires')->get();
         $result['total'] = DB::table($this->table)->where($where)->count();

@@ -37,7 +37,7 @@ class ReqRuleController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer','limit'=>'required|integer']);
-        $result = $this->reqRuleModel->getResultLists($this->post['page'],$this->post['limit'],$this->users->username);
+        $result = $this->reqRuleModel->getResultLists($this->post['page'],$this->post['limit'],$this->users);
         foreach ($result['data'] as &$item) {
             $item->created_at = empty($item->created_at) ? '' : date('Y-m-d H:i:s',$item->created_at);
             $item->updated_at = empty($item->updated_at) ? '' : date('Y-m-d H:i:s',$item->updated_at);

@@ -42,14 +42,17 @@ class OAuth extends Model
      * TODO:获取授权列表
      * @param $page
      * @param $limit
-     * @param $username
+     * @param $user
      * @return mixed
      */
-    public function getResultLists($page,$limit,$username='')
+    public function getResultLists($page,$limit,$user)
     {
         $where = [];
-        if (!in_array($username,['admin'])){
-            $where[] = ['username',$username];
+        if (!in_array($user->username,['admin'])){
+            if (!in_array($user->username,['admin'])){
+                $where[] = ['username',$user->username];
+                $where[] = ['id',$user->id];
+            }
         }
         $result['data'] = DB::table($this->table)->limit($limit)->where($where)->orderBy('updated_at','desc')->offset($limit*($page-1))->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
