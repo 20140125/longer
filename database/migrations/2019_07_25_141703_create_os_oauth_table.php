@@ -31,6 +31,7 @@ class CreateOsOauthTable extends Migration
             $table->integer('updated_at')->default(0)->comment('修改时间');
             $table->integer('expires')->default(0)->comment('access_token过期时间');
             $table->string('email',64)->nullable()->comment('授权用户邮箱,便于收取通知');
+            $table->char('code',8)->nullable()->comment('验证码');
             $table->tinyInteger('status')->default(1)->comment('允许登录 1 是 2 否');
         });
     }

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Mail\Oauth;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Mail;
+
 /**
  * TODO：授权列表
  * Class OauthController
@@ -51,6 +54,43 @@ class OauthController extends BaseController
             return $this->ajax_return(Code::SUCCESS,'update oauth successfully');
         }
         return $this->ajax_return(Code::ERROR,'update oauth failed');
+    }
+
+    /**
+     * TODO:验证邮箱是否正确
+     * @return JsonResponse
+     */
+    public function email()
+    {
+        $this->validatePost(['email'=>'required|string|email|unique:os_oauth','id=>required|integer|exists:os_oauth']);
+        $this->post['verify_code'] = get_round_num(6,'number');
+        Mail::to($this->post['email'])->send(new Oauth($this->post));
+        if (!Mail::failures()) {
+            $data = array(
+                'email' => $this->post['email'],
+                'code'  => $this->post['verify_code']
+            );
+            $result = $this->oauthModel->updateResult($data,'id',$this->post['id']);
+            if ($result){
+                return $this->ajax_return(Code::SUCCESS,'email send successfully');
+            }
+            return $this->ajax_return(Code::ERROR,'email send failed');
+        }
+        return $this->ajax_return(Code::ERROR,'please enter the correct email address');
+    }
+
+    /**
+     * TODO:校验验证码是否正确
+     * @return JsonResponse
+     */
+    public function code()
+    {
+        $this->validatePost(['code'=>'required|string','id=>required|integer']);
+        $result = $this->oauthModel->getResult('id',$this->post['id']);
+        if ($result->code === $this->post['code']) {
+            return $this->ajax_return(Code::SUCCESS,'verify code successfully');
+        }
+        return $this->ajax_return(Code::SUCCESS,'verify code successfully');
     }
 
     /**

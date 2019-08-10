@@ -33,14 +33,38 @@ if (!function_exists('ajax_return'))
 if (!function_exists('get_round_num'))
 {
     /**
-     * 生成随机字符串
+     * TODO:生成随机字符串
      * @param int $length
-     * @return string
+     * @param string $type
+     * @return bool|string
      */
-    function get_round_num($length=8)
+    function get_round_num($length=8,$type='all')
     {
-        static $str = '0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM';
-        return mb_substr(str_shuffle($str),0,$length);
+        switch ($type){
+            case 'all':
+                $str = '0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM';
+                break;
+            case 'number':
+                $str = '0123456789';
+                break;
+            case 'str':
+                $str = 'qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM';
+                break;
+            case 'large':
+                $str = 'WERTYUIOPLKJHGFDSAZXCVBNM';
+                break;
+            case 'small':
+                $str = 'qwertyuioplkjhgfdsazxcvbnm';
+                break;
+            default:
+                $str = '';
+                break;
+        }
+        $char='';
+        for ($i=0;$i<$length;$i++){
+            $char.= mb_substr(str_shuffle($str),0,1);
+        }
+        return $char;
     }
 }
 if (!function_exists('find_str'))

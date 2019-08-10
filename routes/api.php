@@ -37,9 +37,10 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'auth/delete','v1\AuthController@delete');
     //授权
     Route::match(['get','post'],'oauth/index','v1\OauthController@index');
-    Route::match(['get','post'],'oauth/save','v1\OauthController@save');
+    Route::match(['get','post'],'oauth/sendMail','v1\OauthController@email');
     Route::match(['get','post'],'oauth/update','v1\OauthController@update');
     Route::match(['get','post'],'oauth/delete','v1\OauthController@delete');
+    Route::match(['get','post'],'oauth/verifyCode','v1\OauthController@code');
     //请求授权
     Route::match(['get','post'],'req-rule/index','v1\ReqRuleController@index');
     Route::match(['get','post'],'req-rule/save','v1\ReqRuleController@save')->name('reqRuleSave');
