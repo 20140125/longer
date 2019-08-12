@@ -119,14 +119,14 @@ class FileController extends BaseController
      */
     public function download(Request $request,Response $response)
     {
-        if ($request->isMethod('get')){
-            return $this->ajax_return(Code::METHOD_ERROR,'error');
-        }
-        $username = $this->userModel->getResult('access_token',$request->get('token'));
+        $username = $this->userModel->getResult('remember_token',$request->get('token'));
         if (empty($username)){
-            return $this->ajax_return(Code::ERROR,'permission denied');
+            return $this->ajax_return(Code::NOT_FOUND,'permission denied');
         }
-        return $response::download($request->get('path'),basename($request->get('path')));
+        if (is_file($request->get('path'))){
+            return $response::download($request->get('path'),basename($request->get('path')));
+        }
+        return $this->ajax_return(Code::NOT_FOUND,'permission denied');
     }
 
     /**
