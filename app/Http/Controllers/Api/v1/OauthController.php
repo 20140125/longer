@@ -62,21 +62,25 @@ class OauthController extends BaseController
      */
     public function email()
     {
-        $this->validatePost(['email'=>'required|string|email|unique:os_oauth','id=>required|integer|exists:os_oauth']);
+        $this->validatePost(['email'=>'required|string|email|unique:os_oauth', 'id=>required|integer', 'username'=>'required|string', 'remember_token'=>'required|string']);
         $this->post['verify_code'] = get_round_num(6,'number');
-        Mail::to($this->post['email'])->send(new Oauth($this->post));
-        if (!Mail::failures()) {
-            $data = array(
-                'email' => $this->post['email'],
-                'code'  => $this->post['verify_code']
-            );
-            $result = $this->oauthModel->updateResult($data,'id',$this->post['id']);
-            if ($result){
-                return $this->ajax_return(Code::SUCCESS,'email send successfully');
+        try{
+            Mail::to($this->post['email'])->send(new Oauth($this->post));
+            if (!Mail::failures()) {
+                $data = array(
+                    'email' => $this->post['email'],
+                    'code'  => $this->post['verify_code']
+                );
+                $result = $this->oauthModel->updateResult($data,'id',$this->post['id']);
+                if ($result){
+                    return $this->ajax_return(Code::SUCCESS,'email send successfully');
+                }
+                return $this->ajax_return(Code::ERROR,'email send failed');
             }
-            return $this->ajax_return(Code::ERROR,'email send failed');
+            return $this->ajax_return(Code::ERROR,'please enter the correct email address');
+        }catch (\Exception $exception){
+            return $this->ajax_return(Code::ERROR,'please enter the correct email address');
         }
-        return $this->ajax_return(Code::ERROR,'please enter the correct email address');
     }
 
     /**

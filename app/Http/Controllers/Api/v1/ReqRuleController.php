@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Mail\Notice;
 use App\Models\ReqRule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * TODO：用户请求授权
@@ -49,7 +51,7 @@ class ReqRuleController extends BaseController
         $loginAuth = json_decode($this->role->auth_url,true);
         foreach ($ruleLists as &$item){
             $item->disable = false;
-            if (in_array($item->href,$loginAuth)) {
+            if (in_array(strtolower($item->href),$loginAuth)) {
                 $item->disable = true;
             }
         }
@@ -127,8 +129,12 @@ class ReqRuleController extends BaseController
                 $auth_url = json_decode($role->auth_url,true);
                 //根据用户请求授权地址获取该条规则信息
                 $rule = $this->authModel->getResult('href',$getReq->href);
-                array_push($auth_ids,(int)$rule->id);
-                array_push($auth_url,$rule->href);
+                if (!in_array((int)$rule->id,$auth_ids)) {
+                    array_push($auth_ids,(int)$rule->id);
+                }
+                if (!in_array($rule->href,$auth_url)) {
+                   array_push($auth_url,$rule->href);
+                }
                 try{
                     $setReq = array(
                         'role_name' => $getReq->username,
@@ -148,6 +154,20 @@ class ReqRuleController extends BaseController
                         $data['role_id'] = $this->roleModel->addResult($setReq);
                         //修改请求授权用户的角色ID
                         $this->oauthModel->updateResult($data,'id',$oauth->id);
+                    }
+                    //邮件发送告知用户授权已经成功
+                    if (!empty($oauth->email)) {
+                        try {
+                            $mail = array( 'href' =>$getReq->href, 'rule_name' => $rule->name,'username' =>$getReq->username,'remember_token'=>$oauth->remember_token );
+                            Mail::to($oauth->email)->send(new Notice($mail));
+                        } catch (\Exception $exception) {
+                            $info = array(
+                                'username' => $oauth->username,
+                                'href' => $oauth->email,
+                                'msg' => $exception->getMessage()
+                            );
+                            act_log($info);
+                        }
                     }
                     //提交事务
                     DB::commit();
@@ -175,6 +195,7 @@ class ReqRuleController extends BaseController
         ]);
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $this->post['expires'] = strtotime($this->post['expires']);
+        $this->post['href'] = implode('',$this->post['href']);
         $result = $this->reqRuleModel->updateResult($this->post,'id',$this->post['id']);
         if ($result) {
             return $this->ajax_return(Code::SUCCESS,'update request authorization successfully');
@@ -201,10 +222,14 @@ class ReqRuleController extends BaseController
         $rule = $this->authModel->getResult('href',$getReq->href);
         //获取数key
         $arr_ids_key = count(array_keys($auth_ids,$rule->id))>0 ? array_keys($auth_ids,$rule->id)[0] : 0;
-        $arr_url_key = count(array_keys($auth_url,$rule->href))>0 ? array_keys($auth_url,$rule->href)[0] : '0';
+        $arr_url_key = count(array_keys($auth_url,$rule->href))>0 ? array_keys($auth_url,$rule->href)[0] : 0;
         //删除数组指定key
-        array_splice($auth_ids, $arr_ids_key, 1);
-        array_splice($auth_url,$arr_url_key,1);
+        if (!empty($arr_ids_key)) {
+            array_splice($auth_ids, $arr_ids_key, 1);
+        }
+        if (!empty($arr_url_key)) {
+            array_splice($auth_url,$arr_url_key,1);
+        }
         DB::beginTransaction();
         try{
             $result = $this->reqRuleModel->deleteResult('id',$this->post['id']);
