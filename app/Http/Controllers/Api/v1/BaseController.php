@@ -70,7 +70,7 @@ class BaseController extends Controller
         if (strstr($url,'?')){
             $url = substr($url,0,find_str($request->getRequestUri(),'?',2));
         }
-        if ($request->isMethod('get') && $url!==route('downloadFile')){
+        if ($request->isMethod('get') && asset($url)!==route('downloadFile')){
             $this->setCode(Code::METHOD_ERROR,'Method Not Allowed');
         }
         $this->post = $request->post();
@@ -90,12 +90,12 @@ class BaseController extends Controller
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
         //token不正确用户未授权登录
-        if ($validate->fails()) {
+        if ($validate->fails() || empty($request->header('Authorization'))) {
             $this->setCode(Code::Unauthorized,'user login state expired');
         }
         //用户不存在
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
-        if (empty($this->users)) {
+        if (empty($this->users) || !in_array($this->post['token'],explode('-',$request->header('Authorization')))) {
             $this->setCode(Code::Unauthorized,'user does not exists');
         }
         //用户被禁用

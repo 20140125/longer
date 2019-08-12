@@ -19,6 +19,8 @@ class Code
     const NOT_ALLOW = 403;
     //没有登录
     const Unauthorized = 401;
+    //页面不存在
+    const NOT_FOUND = 404;
     /**
      * @var static $instance
      */
