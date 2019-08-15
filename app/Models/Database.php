@@ -57,7 +57,7 @@ class Database extends Model
     }
 
     /**
-     * 数据列表
+     * TODO:数据列表
      * @return array
      */
     public function lists()
@@ -77,7 +77,7 @@ class Database extends Model
         return $tables;
     }
     /**
-     * 创建数据表SQL
+     * TODO:创建数据表SQL
      * @param $tableName
      * @return string
      */
@@ -88,7 +88,7 @@ class Database extends Model
         foreach ($result as $item){
             $item = object_to_array($item);
             $sql.="-- ----------------------------\n-- Table structure for {$item['Table']}\n-- ----------------------------\n";
-            $sql.= "DROP TABLE IF EXISTS `".$item["Table"]."`;";
+            $sql.= sprintf("DROP TABLE IF EXISTS `%s`",$item["Table"]).";";
             $sql.= "\n".$item['Create Table'];
             $sql.=";\n".$this->str_line;
         }
@@ -96,7 +96,7 @@ class Database extends Model
     }
 
     /**
-     * 数据表数据SQL
+     * TODO:数据表数据SQL
      * @param $tableName
      * @return bool|string
      */
@@ -105,10 +105,11 @@ class Database extends Model
         $result = DB::select(sprintf("SELECT * FROM %s", $tableName));
         $sql=";\n-- ----------------------------\n-- Records of $tableName\n-- ----------------------------\n";
         if (empty($result)){
+            $sql.= $this->end_line;
             return $sql;
         }
         foreach ($result as $item){
-            $sql.="INSERT INTO $tableName VALUES (";
+            $sql.= sprintf("INSERT INTO %s VALUES %s",$tableName,"(");
             foreach ($item as $keys => $rows) {
                 $sql.= "'$rows',";
             }
@@ -119,5 +120,37 @@ class Database extends Model
         $sql.= $this->end_line;
         $sql=rtrim($sql, ',');
         return $sql;
+    }
+
+    /**
+     * TODO:数据表修复
+     * @param $tableName
+     * @return array
+     */
+    public function repairTable($tableName)
+    {
+        $result = DB::select(sprintf("REPAIR TABLE %s", $tableName));
+        return $result;
+    }
+    /**
+     * TODO:数据表优化
+     * @param $tableName
+     * @return array
+     */
+    public function optimizeTable($tableName)
+    {
+        $result = DB::select(sprintf("OPTIMIZE TABLE %s", $tableName));
+        return $result;
+    }
+    /**
+     * TODO:修改数据表注释
+     * @param $tableName
+     * @param $comment
+     * @return array
+     */
+    public function commentTable($tableName,$comment)
+    {
+        $result = DB::select(sprintf("ALTER TABLE %s COMMENT '%s'", $tableName,$comment));
+        return $result;
     }
 }

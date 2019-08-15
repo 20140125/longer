@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -19,7 +20,11 @@ class AuthController extends BaseController
      */
     public function index()
     {
-        $result['authLists'] = $this->authModel->getAuthLists($this->post['name']??'',$this->post['pid']??0,$this->post['page']??1,$this->post['limit']??15);
+        $result['authLists'] = Cache::get('auth');
+        if (empty($result['authLists'])) {
+            $result['authLists'] = $this->authModel->getAuthLists();
+            Cache::forever('auth',$result['authLists']);
+        }
         $result['selectAuth'] = $this->authModel->getResult2('1',2);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }

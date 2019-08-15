@@ -18,7 +18,8 @@ class CreateOsApiLogTable extends Migration
             $table->index('api_id');
             $table->string('username',64)->default('0')->comment('执行人');
             $table->integer('api_id')->default(0)->comment('接口ID');
-            $table->string('desc')->default('0')->comment('操作记录');
+            $table->string('desc',218)->default('0')->comment('操作描述');
+            $table->text('history')->nullable()->comment('历史记录');
             $table->integer('updated_at')->default(0)->nullable()->comment('操作时间');
         });
     }

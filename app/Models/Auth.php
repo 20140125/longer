@@ -108,26 +108,12 @@ class Auth extends Model
 
     /**
      * TODO：权限分页列表
-     * @param $name
-     * @param $pid
-     * @param $page
-     * @param $limit
+     * @param array $column
      * @return Collection
      */
-    public function getAuthLists($name,$pid,$page,$limit)
+    public function getAuthLists($column = ['*'])
     {
-        $where[] = array('id','>',0);
-        if (!empty($name)){
-            $where[] = ['name','like','%'.$name.'%'];
-        }
-        if (!empty($pid)){
-            $where[] = ['pid','=',$pid];
-            $result['data'] = DB::table($this->table)->where($where)->orWhere('id',$pid)->offset($limit*($page-1))->limit($limit)->orderBy('path')->get();
-            $result['total'] = DB::table($this->table)->where($where)->orWhere('id',$pid)->count();
-        }else{
-            $result['data'] = DB::table($this->table)->where($where)->offset($limit*($page-1))->limit($limit)->orderBy('path')->get();
-            $result['total'] = DB::table($this->table)->where($where)->count();
-        }
+        $result = DB::table($this->table)->get($column);
         return $result;
     }
 

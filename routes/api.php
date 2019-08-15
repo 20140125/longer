@@ -77,6 +77,11 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //数据库
     Route::match(['get','post'],'database/index','v1\DatabaseController@index');
     Route::match(['get','post'],'database/backup','v1\DatabaseController@backup');
+    Route::match(['get','post'],'database/repair','v1\DatabaseController@repair');
+    Route::match(['get','post'],'database/optimize','v1\DatabaseController@optimize');
+    Route::match(['get','post'],'database/comment','v1\DatabaseController@comment');
+    //城市
+    Route::match(['get','post'],'area/index','v1\AreaController@index');
     //API接口
     Route::match(['get','post'],'api/index','v1\ApiController@index');
     Route::match(['post','get'],'api/update','v1\ApiController@update');

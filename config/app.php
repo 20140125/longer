@@ -126,20 +126,20 @@ return [
     | 第三方授权登录
     |--------------------------------------------------------------------------
     */
-    'amap_key' => env('AMAP_KEY'),
-    'aliyun_appid' => env('ALIYUN_APPID'),
-    'aliyun_secret' => env('ALIYUN_APPSECRET'),
+    'amap_key' => env('AMAP_KEY',''),
+    'aliyun_appid' => env('ALIYUN_APPID',''),
+    'aliyun_secret' => env('ALIYUN_APPSECRET',''),
 
-    'qq_appid' => env('QQ_APPID'),
-    'qq_secret' => env('QQ_APPSECRET'),
-    'github_appid' => env('GITHUB_APPID'),
-    'github_secret' => env('GITHUB_APPSECRET'),
-    'weibo_appid' => env('WEIBO_APPID'),
-    'weibo_secret' => env('WEIBO_APPSECRET'),
-    'gitee_appid' => env('GITEE_APPID'),
-    'gitee_secret' => env('GITEE_APPSECRET'),
-    'baidu_appid' => env('BAIDU_APPID'),
-    'baidu_secret' => env('BAIDU_APPSECRET'),
+    'qq_appid' => env('QQ_APPID',''),
+    'qq_secret' => env('QQ_APPSECRET',''),
+    'github_appid' => env('GITHUB_APPID',''),
+    'github_secret' => env('GITHUB_APPSECRET',''),
+    'weibo_appid' => env('WEIBO_APPID',''),
+    'weibo_secret' => env('WEIBO_APPSECRET',''),
+    'gitee_appid' => env('GITEE_APPID',''),
+    'gitee_secret' => env('GITEE_APPSECRET',''),
+    'baidu_appid' => env('BAIDU_APPID',''),
+    'baidu_secret' => env('BAIDU_APPSECRET',''),
     /*
      |--------------------------------------------------------------------------
      | 第三方授权登录

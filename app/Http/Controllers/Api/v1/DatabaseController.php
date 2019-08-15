@@ -45,12 +45,57 @@ class DatabaseController extends BaseController
      */
     public function backup()
     {
+        $this->validatePost(['name'=>'required|string']);
         function_exists('set_time_limit') && set_time_limit(0);
-        foreach ($this->post['tableName'] as $item){
-            $savePath = $this->backupPath.DIRECTORY_SEPARATOR.$item.'.sql';
-            $content = $this->databaseModel->createTable($item).$this->databaseModel->sourceTable($item);
-            write_file($savePath,$content);
+        $savePath = $this->backupPath.DIRECTORY_SEPARATOR.date('Y_m_d').'_'.get_round_num(6,'number').'_'.$this->post['name'].'.sql';
+        $content = $this->databaseModel->createTable($this->post['name']).$this->databaseModel->sourceTable($this->post['name']);
+        $s_time = time();
+        if (write_file($savePath,$content)){
+            $e_time = time();
+            return $this->ajax_return(Code::SUCCESS,'database backup successfully',['times'=>$e_time-$s_time]);
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully');
+        $e_time = time();
+        return $this->ajax_return(Code::ERROR,'database backup failed',['times'=>$e_time-$s_time]);
+    }
+
+    /**
+     * TODO：修复数据表
+     * @return JsonResponse
+     */
+    public function repair()
+    {
+        $this->validatePost(['name'=>'required|string']);
+        $result = $this->databaseModel->repairTable($this->post['name']);
+        if ($result){
+            return $this->ajax_return(Code::SUCCESS,'database repair successfully');
+        }
+        return $this->ajax_return(Code::ERROR,'database repair failed');
+    }
+
+    /**
+     * TODO：优化数据表
+     * @return JsonResponse
+     */
+    public function optimize()
+    {
+        $this->validatePost(['name'=>'required|string']);
+        $result = $this->databaseModel->optimizeTable($this->post['name']);
+        if ($result){
+            return $this->ajax_return(Code::SUCCESS,'database optimize successfully');
+        }
+        return $this->ajax_return(Code::ERROR,'database optimize failed');
+    }
+    /**
+     * TODO：优化数据表
+     * @return JsonResponse
+     */
+    public function comment()
+    {
+        $this->validatePost(['name'=>'required|string','comment'=>'required|string']);
+        $result = $this->databaseModel->commentTable($this->post['name'],$this->post['comment']);
+        if (is_array($result)){
+            return $this->ajax_return(Code::SUCCESS,'database comment update successfully');
+        }
+        return $this->ajax_return(Code::ERROR,'database comment update failed');
     }
 }

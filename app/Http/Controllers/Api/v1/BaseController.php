@@ -78,7 +78,7 @@ class BaseController extends Controller
         $this->roleModel = Role::getInstance();
         $this->authModel = Auth::getInstance();
         $this->oauthModel = OAuth::getInstance();
-        $this->backupPath = public_path('backup/');
+        $this->backupPath = base_path('database/migrations');
         //公用权限
         $common_url = [
             route('checkLogin'),

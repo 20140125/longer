@@ -62,13 +62,14 @@ class Amap
     /**
      * TODO:获取天气状况
      * @param $adcode
-     * @return int|mixed|null
+     * @param string $extensions
+     * @return mixed
      */
-    public function getWeather($adcode)
+    public function getWeather($adcode,$extensions = 'base')
     {
         $weatherUrl = 'weather/weatherInfo';
         $this->data['city'] = $adcode;
-        $this->data['extensions'] = 'base';
+        $this->data['extensions'] = $extensions;
         $weatherInfo = $this->Curl->post($this->url.$weatherUrl,$this->data);
         return $weatherInfo;
     }
