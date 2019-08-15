@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -31,13 +32,40 @@ class Area extends Model
     }
 
     /**
+     * TODO:获取数据
+     * @param $filed
+     * @param $value
+     * @param $op
+     * @param array $columns
+     * @return Model|Builder|object|null
+     */
+    public function getResult($filed,$value,$op='=',$columns=['*'])
+    {
+        return DB::table($this->table)->where($filed,$op,$value)->first($columns);
+    }
+
+    /**
      * TODO:获取所有记录
+     * @param int $pid
      * @param array $columns
      * @return Collection
      */
-    public function getResultLists($columns=['*'])
+    public function getResultLists($pid = 1,$columns=['*'])
     {
-        $result = DB::table($this->table)->get($columns);
+        $result = DB::table($this->table)->where('parent_id',$pid)->get($columns);
         return $result;
+    }
+
+    /**
+     * TODO:更新数据
+     * @param $data
+     * @param $filed
+     * @param $value
+     * @param string $op
+     * @return int
+     */
+    public function updateResult($data,$filed,$value,$op='=')
+    {
+        return DB::table($this->table)->where($filed,$op,$value)->update($data);
     }
 }

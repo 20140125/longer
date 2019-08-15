@@ -70,7 +70,7 @@ class Amap
         $weatherUrl = 'weather/weatherInfo';
         $this->data['city'] = $adcode;
         $this->data['extensions'] = $extensions;
-        $weatherInfo = $this->Curl->post($this->url.$weatherUrl,$this->data);
+        $weatherInfo = $this->Curl->get($this->url.$weatherUrl,$this->data);
         return $weatherInfo;
     }
 
@@ -83,7 +83,7 @@ class Amap
     {
         $ipUrl = 'ip';
         $this->data['ip'] = $ipAddress;
-        $ipInfo = $this->Curl->post($this->url.$ipUrl,$this->data);
+        $ipInfo = $this->Curl->get($this->url.$ipUrl,$this->data);
         return $ipInfo;
     }
 
@@ -98,7 +98,7 @@ class Amap
         $geoUrl = 'geocode/geo';
         $this->data['city'] = $city;
         $this->data['address'] = $address;
-        $geoInfo = $this->Curl->post($this->url.$geoUrl,$this->data);
+        $geoInfo = $this->Curl->get($this->url.$geoUrl,$this->data);
         return $geoInfo;
     }
 
@@ -113,7 +113,7 @@ class Amap
         $directionUrl = 'direction/walking';
         $this->data['origin'] = $origin;
         $this->data['destination'] = $destination;
-        $geoInfo = $this->Curl->post($this->url.$directionUrl,$this->data);
+        $geoInfo = $this->Curl->get($this->url.$directionUrl,$this->data);
         return $geoInfo;
     }
 
@@ -130,7 +130,7 @@ class Amap
         $this->data['keywords'] = $keywords;
         $this->data['location'] = $location;
         $this->data['city'] = $city;
-        $assistantInfo = $this->Curl->post($this->url.$assistantUrl,$this->data);
+        $assistantInfo = $this->Curl->get($this->url.$assistantUrl,$this->data);
         return $assistantInfo;
     }
 }

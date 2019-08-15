@@ -82,6 +82,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'database/comment','v1\DatabaseController@comment');
     //城市
     Route::match(['get','post'],'area/index','v1\AreaController@index');
+    Route::match(['get','post'],'area/weather','v1\AreaController@weather');
     //API接口
     Route::match(['get','post'],'api/index','v1\ApiController@index');
     Route::match(['post','get'],'api/update','v1\ApiController@update');
