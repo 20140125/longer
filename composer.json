@@ -15,7 +15,9 @@
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "php-curl-class/php-curl-class": "@dev",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "workerman/phpsocket.io": "^1.1",
+        "workerman/workerman": "^3.5"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
