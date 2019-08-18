@@ -24,6 +24,8 @@ class AuthServer extends Command
      */
     protected $description = 'auth server';
 
+    protected $ip;
+
     /**
      * Create a new command instance.
      * AuthServer constructor.
@@ -31,6 +33,7 @@ class AuthServer extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->ip = config('app.ip_address');
     }
     /**
      *
@@ -56,25 +59,25 @@ class AuthServer extends Command
         $worker                  = new BusinessWorker();
         $worker->name            = 'BusinessWorker';
         $worker->count           = 1;
-        $worker->registerAddress = '127.0.0.1:1236';
+        $worker->registerAddress = "{$this->ip}:1236";
         $worker->eventHandler    = \App\Events\WorkerMan\Events::class;
     }
 
     private function startGateWay()
     {
-        $gateway = new Gateway("websocket://127.0.0.1:2346");
+        $gateway = new Gateway("websocket://{$this->ip}:2346");
         $gateway->name                 = 'Gateway';
         $gateway->count                = 1;
-        $gateway->lanIp                = '127.0.0.1';
+        $gateway->lanIp                = '{$this->ip}';
         $gateway->startPort            = 2300;
         $gateway->pingInterval         = 10;
         $gateway->pingNotResponseLimit = 10;
         $gateway->pingData             = '{"type":"ping"}';
-        $gateway->registerAddress      = '127.0.0.1:1236';
+        $gateway->registerAddress      = "{$this->ip}:1236";
     }
 
     private function startRegister()
     {
-        new Register('text://0.0.0.0:1236');
+        new Register("text://{$this->ip}:1236");
     }
 }

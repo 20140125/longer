@@ -41,7 +41,7 @@ class MenuController extends BaseController
     {
         $role = $this->roleModel->getResult('id',$this->users->role_id);
         if (!empty($role)){
-            return $this->ajax_return(Code::SUCCESS,'permission',['auth'=>$role->auth_url,'token'=>$this->users->remember_token,'username'=>$this->users->username]);
+            return $this->ajax_return(Code::SUCCESS,'permission',['auth'=>$role->auth_url,'token'=>$this->users->remember_token,'username'=>$this->users->username,'ip'=>config('app.ip_address')]);
         }
         set_code(Code::NOT_ALLOW);
         return $this->ajax_return(Code::NOT_ALLOW,'permission denied');
