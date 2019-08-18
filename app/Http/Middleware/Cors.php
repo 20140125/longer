@@ -17,6 +17,7 @@ class Cors
         $response = $next($request);
         $origin = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
         $allow_origin = [
+            'http://localhost:8080',
             'http://localhost:8081',
             'http://www.laravel.com:2021',
         ];

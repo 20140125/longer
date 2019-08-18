@@ -67,9 +67,9 @@ class AuthServer extends Command
         $gateway->count                = 1;
         $gateway->lanIp                = '127.0.0.1';
         $gateway->startPort            = 2300;
-        $gateway->pingInterval         = 30;
-        $gateway->pingNotResponseLimit = 0;
-        $gateway->pingData             = '{"type":"@heart@"}';
+        $gateway->pingInterval         = 10;
+        $gateway->pingNotResponseLimit = 10;
+        $gateway->pingData             = '{"type":"ping"}';
         $gateway->registerAddress      = '127.0.0.1:1236';
     }
 
