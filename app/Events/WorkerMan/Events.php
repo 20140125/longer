@@ -9,7 +9,7 @@ class Events
 
     public static function onWorkerStart($businessWorker)
     {
-        echo 'onWorkerStart'.json_encode($businessWorker);
+        echo 'onWorkerStart';
     }
 
     /**
