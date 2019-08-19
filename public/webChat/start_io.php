@@ -62,7 +62,7 @@ $sender_io->on('workerStart', function() {
                 'verify_peer' => false,
             )
         );
-        $inner_http_worker = new Worker('http://0.0.0.0:433',$context);
+        $inner_http_worker = new Worker('https://0.0.0.0:433',$context);
     }
     // 当http客户端发来数据时触发
     $inner_http_worker->onMessage = function($http_connection, $data) {
