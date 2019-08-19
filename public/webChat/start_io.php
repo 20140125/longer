@@ -51,7 +51,19 @@ $sender_io->on('connection', function($socket) {
 // 当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据
 $sender_io->on('workerStart', function() {
     // 监听一个http端口
-    $inner_http_worker = new Worker('http://0.0.0.0:2121');
+    if(strpos(strtolower(PHP_OS), 'win') === 0) {
+        $inner_http_worker = new Worker('http://0.0.0.0:2121');
+    } else {
+        // 证书最好是申请的证书
+        $context = array(
+            'ssl' => array(
+                'local_cert'  => '/www/server/panel/vhost/cert/wk.fanglonger.com/fullchain.pem', // 也可以是crt文件
+                'local_pk'    => '/www/server/panel/vhost/cert/wk.fanglonger.com/privkey.pem',
+                'verify_peer' => false,
+            )
+        );
+        $inner_http_worker = new Worker('http://0.0.0.0:433',$context);
+    }
     // 当http客户端发来数据时触发
     $inner_http_worker->onMessage = function($http_connection, $data) {
         global $uidConnectionMap;
