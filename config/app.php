@@ -53,7 +53,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'ip_address' =>env('IP_ADDRESS','127.0.0.1'),
+    'ip_address' =>env('WORKER_SOCKET_URL','127.0.0.1:2120'),
+    'push_url' =>env('WORKER_PUSH_URL','127.0.0.1:2121'),
 
     'asset_url' => env('ASSET_URL', null),
 

@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * todo 公共类
+ * TODO:公共类
  * Class BaseController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
@@ -60,7 +60,7 @@ class BaseController extends Controller
     protected $backupPath;
 
     /**
-     * todo：构造函数
+     * TODO:构造函数
      * BaseController constructor.
      * @param Request $request
      */
@@ -115,7 +115,7 @@ class BaseController extends Controller
     }
 
     /**
-     * 设置code
+     * TODO:设置code
      * @param $code
      * @param $message
      */
@@ -126,7 +126,7 @@ class BaseController extends Controller
     }
 
     /**
-     * 数据返回
+     * TODO:数据返回
      * @param $code
      * @param $msg
      * @param array $data
@@ -159,7 +159,7 @@ class BaseController extends Controller
     }
 
     /**
-     * 公钥加密
+     * TODO:公钥加密
      * @param string $data
      * @return string|null
      */
@@ -169,7 +169,7 @@ class BaseController extends Controller
     }
 
     /**
-     * 私钥解密
+     * TODO:私钥解密
      * @param string $data
      * @return null
      */

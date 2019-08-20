@@ -1,6 +1,5 @@
 <?php
 use Workerman\Worker;
-use Workerman\Lib\Timer;
 use PHPSocketIO\SocketIO;
 include __DIR__ . '/vendor/autoload.php';
 
@@ -31,10 +30,19 @@ $sender_io->on('connection', function($socket) {
         // 将这个连接加入到uid分组，方便针对uid推送数据
         $socket->join($uid);
         $socket->uid = $uid;
-        // 更新这个socket对应页面的在线数据
-        $socket->emit('update_online_count', "当前<b>{$last_online_count}</b>人在线，共打开<b>{$last_online_page_count}</b>个页面");
     });
-
+    //当客户端发送消息过来触发
+    $socket->on('chat_web',function ($data)use($socket) {
+        global $sender_io;
+        switch ($data['type']) {
+            case 'get_oauth':
+                $sender_io->to('admin')->emit('chat_client',$data);
+                break;
+            case 'set_oauth':
+                $sender_io->to($data['username'])->emit('chat_client',$data);
+                break;
+        }
+    });
     // 当客户端断开连接是触发（一般是关闭网页或者跳转刷新导致）
     $socket->on('disconnect', function () use($socket) {
         if(!isset($socket->uid)) {
@@ -45,6 +53,8 @@ $sender_io->on('connection', function($socket) {
         if(--$uidConnectionMap[$socket->uid] <= 0) {
             unset($uidConnectionMap[$socket->uid]);
         }
+        //告知客户端用户离线
+        $sender_io->to(md5('admin'))->emit('logout',$socket->uid.'已经离线');
     });
 });
 
@@ -60,18 +70,18 @@ $sender_io->on('workerStart', function() {
             case 'publish':
                 global $sender_io;
                 $to = @$_POST['to'];
-                $_POST['content'] = htmlspecialchars(@$_POST['content']);
+                $_POST['content'] = trim(htmlspecialchars(@$_POST['content']));
                 // 有指定uid则向uid所在socket组发送数据
-                if($to){
+                if($to) {
                     $sender_io->to($to)->emit('new_msg', $_POST['content']);
-                // 否则向所有uid推送数据
-                }else{
+                } else {
+                    // 否则向所有uid推送数据
                     $sender_io->emit('new_msg', @$_POST['content']);
                 }
                 // http接口返回，如果用户离线socket返回fail
                 if($to && !isset($uidConnectionMap[$to])) {
                     return $http_connection->send('offline');
-                }else{
+                } else {
                     return $http_connection->send('ok');
                 }
                 break;
@@ -80,20 +90,7 @@ $sender_io->on('workerStart', function() {
     };
     // 执行监听
     $inner_http_worker->listen();
-    // 一个定时器，定时向所有uid推送当前uid在线数及在线页面数
-    Timer::add(1, function(){
-        global $uidConnectionMap, $sender_io, $last_online_count, $last_online_page_count;
-        $online_count_now = count($uidConnectionMap);
-        $online_page_count_now = array_sum($uidConnectionMap);
-        // 只有在客户端在线数变化了才广播，减少不必要的客户端通讯
-        if($last_online_count != $online_count_now || $last_online_page_count != $online_page_count_now) {
-            $sender_io->emit('update_online_count', "当前<b>{$online_count_now}</b>人在线，共打开<b>{$online_page_count_now}</b>个页面");
-            $last_online_count = $online_count_now;
-            $last_online_page_count = $online_page_count_now;
-        }
-    });
 });
-
 if(!defined('GLOBAL_START')) {
     Worker::runAll();
 }
