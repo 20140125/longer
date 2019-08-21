@@ -31,18 +31,6 @@ $sender_io->on('connection', function($socket) {
         $socket->join($uid);
         $socket->uid = $uid;
     });
-    //当客户端发送消息过来触发
-    $socket->on('chat_web',function ($data)use($socket) {
-        global $sender_io;
-        switch ($data['type']) {
-            case 'get_oauth':
-                $sender_io->to('admin')->emit('chat_client',$data);
-                break;
-            case 'set_oauth':
-                $sender_io->to($data['username'])->emit('chat_client',$data);
-                break;
-        }
-    });
     // 当客户端断开连接是触发（一般是关闭网页或者跳转刷新导致）
     $socket->on('disconnect', function () use($socket) {
         if(!isset($socket->uid)) {
@@ -71,17 +59,17 @@ $sender_io->on('workerStart', function() {
                 global $sender_io;
                 $to = @$_POST['to'];
                 $_POST['content'] = trim(htmlspecialchars(@$_POST['content']));
-                // 有指定uid则向uid所在socket组发送数据
-                if($to) {
-                    $sender_io->to($to)->emit('new_msg', $_POST['content']);
-                } else {
-                    // 否则向所有uid推送数据
-                    $sender_io->emit('new_msg', @$_POST['content']);
-                }
                 // http接口返回，如果用户离线socket返回fail
                 if($to && !isset($uidConnectionMap[$to])) {
                     return $http_connection->send('offline');
                 } else {
+                    // 有指定uid则向uid所在socket组发送数据
+                    if($to) {
+                        $sender_io->to($to)->emit('new_msg', $_POST['content']);
+                    } else {
+                        // 否则向所有uid推送数据
+                        $sender_io->emit('new_msg', @$_POST['content']);
+                    }
                     return $http_connection->send('ok');
                 }
                 break;

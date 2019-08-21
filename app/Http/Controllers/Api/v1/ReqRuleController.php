@@ -94,6 +94,7 @@ class ReqRuleController extends BaseController
             } else {
                 $result = $this->reqRuleModel->addResult($req);
             }
+            $this->workerManPush($this->post['username'].'申请权限','admin');
         }
         if ($result) {
             return $this->ajax_return(Code::SUCCESS,'save request authorization successfully');
