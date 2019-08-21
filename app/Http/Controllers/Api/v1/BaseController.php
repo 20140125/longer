@@ -182,6 +182,7 @@ class BaseController extends Controller
      * TODO：站内信息推送
      * @param $content
      * @param string $uid
+     * @return bool|string
      */
     protected function workerManPush($content,$uid='')
     {
@@ -201,6 +202,6 @@ class BaseController extends Controller
         curl_setopt ( $ch, CURLOPT_HTTPHEADER, array("Expect:"));
         $return = curl_exec ( $ch );
         curl_close ( $ch );
-        var_export($return);
+        return $return;
     }
 }

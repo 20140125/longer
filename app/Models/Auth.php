@@ -155,6 +155,7 @@ class Auth extends Model
             }
             $data['level'] = substr_count($data['path'],'-');
         }
+        unset($data['__child']);
         $result = DB::table($this->table)->where($field,$op,$data['id'])->update($data);
         return $result;
     }

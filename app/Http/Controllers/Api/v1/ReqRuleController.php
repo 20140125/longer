@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Mail\Notice;
+use App\Models\Push;
 use App\Models\ReqRule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -94,7 +95,16 @@ class ReqRuleController extends BaseController
             } else {
                 $result = $this->reqRuleModel->addResult($req);
             }
-            $this->workerManPush($this->post['username'].'申请权限','admin');
+            //生成推送记录
+            $rs = $this->workerManPush($this->post['username'].'申请权限','admin');
+            $push = array(
+                'uid' => md5('admin'),
+                'username' => 'admin',
+                'info' => $this->post['username'].'申请权限',
+                'state' =>$rs,
+                'status' => 1
+            );
+            Push::getInstance()->addResult($push);
         }
         if ($result) {
             return $this->ajax_return(Code::SUCCESS,'save request authorization successfully');
@@ -156,8 +166,19 @@ class ReqRuleController extends BaseController
                         //修改请求授权用户的角色ID
                         $this->oauthModel->updateResult($data,'id',$oauth->id);
                     }
+                    //站内信息推送
+                    $rs = $this->workerManPush('权限已经审核通过',$oauth->username);
+                    //生成推送记录
+                    $push = array(
+                        'uid' => md5($oauth->username),
+                        'username' => 'admin',
+                        'info' => $oauth->username.'权限已经审核通过',
+                        'state' =>$rs,
+                        'status' => 1
+                    );
+                    $result = Push::getInstance()->addResult($push);
                     //邮件发送告知用户授权已经成功
-                    if (!empty($oauth->email)) {
+                    if (!empty($oauth->email) && !$result) {
                         try {
                             $mail = array( 'href' =>$getReq->href, 'rule_name' => $rule->name,'username' =>$getReq->username,'remember_token'=>$oauth->remember_token );
                             Mail::to($oauth->email)->send(new Notice($mail));
@@ -175,12 +196,13 @@ class ReqRuleController extends BaseController
                 }catch (\Exception $exception){
                     //回滚
                     DB::rollBack();
+                    return $this->ajax_return(Code::ERROR,$exception->getMessage());
                 }
                 return $this->ajax_return(Code::SUCCESS,'request authorization has passed');
             }
             //回滚
             DB::rollBack();
-            return $this->ajax_return(Code::SUCCESS,'request authorization has refused');
+            return $this->ajax_return(Code::ERROR,'request authorization has refused');
         }
         //修改用户申请授权信息 最大授权到期时间不得超过当前时间一年
         $this->validatePost([

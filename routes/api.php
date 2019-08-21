@@ -83,6 +83,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //城市
     Route::match(['get','post'],'area/index','v1\AreaController@index');
     Route::match(['get','post'],'area/weather','v1\AreaController@weather');
+    //站内信息推送
+    Route::match(['get','post'],'push/index','v1\PushController@index');
     //API接口
     Route::match(['get','post'],'api/index','v1\ApiController@index');
     Route::match(['post','get'],'api/update','v1\ApiController@update');
