@@ -1,0 +1,27 @@
+2019-08-20 13:40:45 pid:5271 Workerman[start.php] start in DEBUG mode
+2019-08-20 14:26:33 pid:5271 Workerman[start.php] stopping ...
+2019-08-20 14:26:35 pid:5271 worker[PHPSocketIO:5272] exit with status 9
+2019-08-20 14:26:35 pid:5271 Workerman[start.php] has been stopped
+2019-08-21 15:36:13 pid:19901 Workerman[start.php] start in DAEMON mode
+2019-08-21 15:41:01 pid:19903 worker[PHPSocketIO:19906] exit with status 11
+2019-08-21 15:41:02 pid:19903 worker[PHPSocketIO:20369] exit with status 11
+2019-08-21 15:41:04 pid:19903 worker[PHPSocketIO:20370] exit with status 11
+2019-08-21 15:41:10 pid:19903 worker[PHPSocketIO:20372] exit with status 11
+2019-08-21 15:41:11 pid:20381 Workerman[start.php] start in DEBUG mode
+2019-08-21 15:41:11 pid:20381 Workerman[start.php] already running
+2019-08-21 15:41:16 pid:20397 Workerman[start.php] stop 
+2019-08-21 15:41:16 pid:20397 Workerman[start.php] is stopping ...
+2019-08-21 15:41:16 pid:19903 Workerman[start.php] stopping ...
+2019-08-21 15:41:18 pid:19903 worker[PHPSocketIO:20375] exit with status 9
+2019-08-21 15:41:18 pid:19903 Workerman[start.php] has been stopped
+2019-08-21 15:41:18 pid:20397 Workerman[start.php] stop success
+2019-08-21 15:41:20 pid:20407 Workerman[start.php] start in DEBUG mode
+2019-08-21 15:41:25 pid:20407 worker[PHPSocketIO:20408] exit with status 11
+2019-08-21 15:41:30 pid:20407 worker[PHPSocketIO:20422] exit with status 11
+2019-08-21 15:41:31 pid:20407 worker[PHPSocketIO:20424] exit with status 11
+2019-08-21 15:41:33 pid:20407 worker[PHPSocketIO:20425] exit with status 11
+2019-08-21 15:41:39 pid:20407 worker[PHPSocketIO:20428] exit with status 11
+2019-08-21 15:41:45 pid:20407 worker[PHPSocketIO:20442] exit with status 11
+2019-08-21 15:42:20 pid:20407 Workerman[start.php] stopping ...
+2019-08-21 15:42:22 pid:20407 worker[PHPSocketIO:20443] exit with status 9
+2019-08-21 15:42:22 pid:20407 Workerman[start.php] has been stopped
