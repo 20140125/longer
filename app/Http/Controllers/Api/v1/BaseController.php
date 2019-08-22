@@ -8,6 +8,7 @@ use App\Models\OAuth;
 use App\Models\Role;
 use App\Models\Auth;
 use App\Models\Users;
+use Curl\Curl;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
@@ -182,7 +183,8 @@ class BaseController extends Controller
      * TODO：站内信息推送
      * @param $content
      * @param string $uid
-     * @return bool|string
+     * @return mixed
+     * @throws \ErrorException
      */
     protected function workerManPush($content,$uid='')
     {
@@ -193,15 +195,7 @@ class BaseController extends Controller
             "content" => $content,
             "to" => empty($uid) ? '' : md5($uid),
         );
-        $ch = curl_init ();
-        curl_setopt ( $ch, CURLOPT_URL, $push_api_url );
-        curl_setopt ( $ch, CURLOPT_POST, 1 );
-        curl_setopt ( $ch, CURLOPT_HEADER, 0 );
-        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
-        curl_setopt ( $ch, CURLOPT_POSTFIELDS, $post_data );
-        curl_setopt ( $ch, CURLOPT_HTTPHEADER, array("Expect:"));
-        $return = curl_exec ( $ch );
-        curl_close ( $ch );
+        $return = (new Curl())->post($push_api_url,$post_data);
         return $return;
     }
 }
