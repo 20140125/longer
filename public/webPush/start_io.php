@@ -7,7 +7,18 @@ $last_online_count = 0;
 // 记录最后一次广播的在线页面数
 $last_online_page_count = 0;
 // PHPSocketIO服务
-$sender_io = new SocketIO(2120);
+if(strpos(strtolower(PHP_OS), 'win') === 0) {
+    $sender_io = new SocketIO(2120);
+} else {
+    $context = array(
+        'ssl' => array(
+            'local_cert'  => '/www/server/panel/vhost/cert/www.fanglonger.com/fullchain.pem',//你证书的pem文件
+            'local_pk'    => '/www/server/panel/vhost/cert/www.fanglonger.com/privkey.pem',//你证书的key文件
+            'verify_peer' => false,
+        )
+    );
+    $sender_io = new SocketIO(2120);
+}
 // Redis 链接
 $redis = new Redis();
 $redis->connect('127.0.0.1',6379);
@@ -17,6 +28,7 @@ $sender_io->on('connection', function($socket) {
     $socket->on('login', function ($uid)use($socket) {
         // 已经登录过了
         global $redis;
+        $socket->uid = $uid;
         //判断值是否存在redis里面
         if ($redis->sIsMember('uidConnectionMap',$uid)) {
             return ;
@@ -24,8 +36,6 @@ $sender_io->on('connection', function($socket) {
         $redis->sAdd('uidConnectionMap',$uid);
         // 将这个连接加入到uid分组，方便针对uid推送数据
         $socket->join($uid);
-        // uid 加入到 socket
-        $socket->uid = $uid;
     });
 
     //用户离线
@@ -42,7 +52,19 @@ $sender_io->on('connection', function($socket) {
 // 当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据
 $sender_io->on('workerStart', function() {
     // 监听一个http端口
-    $inner_http_worker = new Worker('http://0.0.0.0:2121');
+    if(strpos(strtolower(PHP_OS), 'win') === 0) {
+        $inner_http_worker = new Worker('http://0.0.0.0:2121');
+    } else {
+        $context = array(
+            'ssl' => array(
+                'local_cert'  => '/www/server/panel/vhost/cert/www.fanglonger.com/fullchain.pem',//你证书的pem文件
+                'local_pk'    => '/www/server/panel/vhost/cert/www.fanglonger.com/privkey.pem',//你证书的key文件
+                'verify_peer' => false,
+            )
+        );
+        $inner_http_worker = new Worker('http://0.0.0.0:2121',$context);
+        $inner_http_worker->transport = 'ssl';
+    }
     // 当http客户端发来数据时触发
     $inner_http_worker->onMessage = function($connection) {
         $_POST = $_POST ? $_POST : $_GET;
