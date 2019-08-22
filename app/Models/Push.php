@@ -54,7 +54,7 @@ class Push extends Model
         if (!empty($status)) {
             $where[] = ['status',$status];
         }
-        $result['data'] = DB::table($this->table)->where($where)->orderBy('id')->offset($limit*($page-1))->limit($limit)->get();
+        $result['data'] = DB::table($this->table)->where($where)->orderBy('created_at')->offset($limit*($page-1))->limit($limit)->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }

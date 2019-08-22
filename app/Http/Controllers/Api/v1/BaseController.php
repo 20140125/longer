@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -196,6 +197,6 @@ class BaseController extends Controller
             "to" => empty($uid) ? '' : md5($uid),
         );
         $return = (new Curl())->post($push_api_url,$post_data);
-        return $return;
+        return $return == Code::WebSocketState[0] ? true : false;
     }
 }
