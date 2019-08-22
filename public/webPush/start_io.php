@@ -17,7 +17,7 @@ if(strpos(strtolower(PHP_OS), 'win') === 0) {
             'verify_peer' => false,
         )
     );
-    $sender_io = new SocketIO(2120);
+    $sender_io = new SocketIO(2120,$context);
 }
 // Redis 链接
 $redis = new Redis();
