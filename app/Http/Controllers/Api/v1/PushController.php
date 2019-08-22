@@ -94,11 +94,11 @@ class PushController extends BaseController
     {
         $this->post['state'] = Code::WebSocketState[1];
         $this->post['created_at'] = strtotime($this->post['created_at']);
+        $this->post['uid'] = $this->post['username'] == 'all' ? 'none' : $this->post['uid'];
         if ($this->post['status'] == '1') {
             try{
                 //推送给所有人
                 if ($this->post['username'] == 'all') {
-                    $this->post['uid']  = 'none';
                     if ($this->workerManPush($this->post['info'])) {
                         $this->post['state'] = Code::WebSocketState[0];
                         return ;
