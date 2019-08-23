@@ -198,7 +198,7 @@ class BaseController extends Controller
         );
         Log::error(json_encode($post_data));
         $return = (new Curl())->post($push_api_url,$post_data);
-        Log::error(json_encode(array($return,Code::WebSocketState[0])));
+        Log::error(json_encode(array($return,Code::WebSocketState[0],$push_api_url)));
         return $return == Code::WebSocketState[0] ? true : false;
     }
 }

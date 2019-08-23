@@ -59,14 +59,8 @@ class PushController extends BaseController
     {
         $this->validatePost(['info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
         $this->pushMessage();
-        $result = $this->pushModel->addResult($this->post);
-        if ($result && $this->post['state'] === Code::WebSocketState[0]) {
-            return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
-        }
-        if ($this->post['state'] === Code::WebSocketState[2]) {
-            return $this->ajax_return(Code::SUCCESS,$this->post['username'].' already '.$this->post['state']);
-        }
-        return $this->ajax_return(Code::ERROR,'push message '.$this->post['state']);
+        $this->pushModel->addResult($this->post);
+        return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
 
     /**
@@ -77,14 +71,8 @@ class PushController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer','info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
         $this->pushMessage();
-        $result = $this->pushModel->updateResult($this->post,'id',$this->post['id']);
-        if ($result && $this->post['state'] === Code::WebSocketState[0]) {
-            return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
-        }
-        if ($this->post['state'] === Code::WebSocketState[2]) {
-            return $this->ajax_return(Code::SUCCESS,$this->post['username'].' already '.$this->post['state']);
-        }
-        return $this->ajax_return(Code::ERROR,'push message '.$this->post['state']);
+        $this->pushModel->updateResult($this->post,'id',$this->post['id']);
+        return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
 
     /**
