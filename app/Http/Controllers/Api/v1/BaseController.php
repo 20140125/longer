@@ -196,8 +196,9 @@ class BaseController extends Controller
             "content" => $content,
             "to" => empty($uid) ? '' : md5($uid),
         );
+        Log::error(json_encode($post_data));
         $return = (new Curl())->post($push_api_url,$post_data);
-        Log::error($return == Code::WebSocketState[0] ? true : false);
+        Log::error(json_encode(array($return,Code::WebSocketState[0])));
         return $return == Code::WebSocketState[0] ? true : false;
     }
 }

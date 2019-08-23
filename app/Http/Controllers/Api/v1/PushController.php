@@ -104,6 +104,7 @@ class PushController extends BaseController
                         return ;
                     }
                     $this->post['state'] = Code::WebSocketState[2];
+                    return ;
                 }
                 //推送给个人
                 if ($this->redisClient->sIsMember('uidConnectionMap',$this->post['uid'])) {
