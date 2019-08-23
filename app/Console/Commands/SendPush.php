@@ -69,19 +69,23 @@ class SendPush extends Command
                         if ($this->workerManPush($item->info)) {
                             $item->state = Code::WebSocketState[0];
                             $this->info('广播所有人信息成功');
-                            return;
+                        } else {
+                            $item->state = Code::WebSocketState[1];
+                            $this->error('广播所有人信息失败');
                         }
-                        $this->error('广播所有人信息失败');
+
                     } else if ($this->redisClient->sIsMember(config('app.redis_user_key'), $item->uid)) {
                         if ($this->workerManPush($item->info, $item->username)) {
                             $item->state = Code::WebSocketState[0];
                             $this->info('站内实时消息推送成功');
-                            return;
+                        } else {
+                            $item->state = Code::WebSocketState[1];
+                            $this->error('站内实时消息推送失败');
                         }
-                        $this->error('站内实时消息推送失败');
-                        return ;
+                    } else {
+                        $item->state = Code::WebSocketState[2];
+                        $this->warn($item->username . '已经离线~');
                     }
-                    $this->warn($item->username . '已经离线~');
                     break;
                 case 2:
                     if ($item->created_at<=time()) {
@@ -89,20 +93,23 @@ class SendPush extends Command
                             if ($this->workerManPush($item->info)) {
                                 $item->state = Code::WebSocketState[0];
                                 $this->info('定时广播所有人信息成功');
-                                return;
+                            } else {
+                                $item->state = Code::WebSocketState[1];
+                                $this->error('定时广播所有人信息失败');
                             }
-                            $this->error('定时广播所有人信息失败');
+
                         } else if ($this->redisClient->sIsMember(config('app.redis_user_key'), $item->uid)) {
                             if ($this->workerManPush($item->info, $item->username)) {
                                 $item->state = Code::WebSocketState[0];
                                 $this->info('站内定时消息推送成功');
-                                return;
+                            } else {
+                                $item->state = Code::WebSocketState[1];
+                                $this->error('站内定时消息推送失败');
                             }
-                            $this->error('站内定时消息推送失败');
-                            return;
+                        } else {
+                            $item->state = Code::WebSocketState[2];
+                            $this->warn($item->username . '已经离线~');
                         }
-                        $this->warn($item->username . '已经离线~');
-                        return ;
                     }
                     $this->info('未到推送时间');
                     break;
