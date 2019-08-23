@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\Oauth',
-        'App\Console\Commands\ReqAuth',
+        'App\Console\Commands\ExpiresRule',
+        'App\Console\Commands\NormalRule',
         'App\Console\Commands\SendPush'
     ];
 

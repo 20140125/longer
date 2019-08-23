@@ -6,7 +6,9 @@
  * Time: 11:16
  */
 
-use App\Models\Log;
+use App\Models\Log as logModel;
+use Illuminate\Support\Facades\Log;
+use Curl\Curl;
 
 if (!function_exists('ajax_return'))
 {
@@ -625,7 +627,7 @@ if (!function_exists('act_log'))
             'log' =>$info,
         );
         $data['log'] =str_replace('\\','', json_encode($data,JSON_UNESCAPED_UNICODE));
-        return Log::getInstance()->addResult($data);
+        return logModel::getInstance()->addResult($data);
     }
 }
 
@@ -803,5 +805,63 @@ if (!function_exists('merger_file'))
         }
         $targetFileObj->fwrite($content);
         $targetFileObj = null;
+    }
+}
+if (!function_exists('web_push'))
+{
+    /**
+     * TODO:站内消息推送
+     * @param $content
+     * @param string $uid
+     * @return bool
+     * @throws ErrorException
+     */
+    function web_push($content,$uid='')
+    {
+        // 推送的url地址
+        $push_api_url = config('app.push_url');
+        $post_data = array(
+            "type" => "publish",
+            "content" => $content,
+            "to" => empty($uid) ? '' : md5($uid),
+        );
+        $curl = new Curl();
+        $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+        $curl->setOpt(CURLOPT_SSL_VERIFYHOST,false);
+        $curl->post($push_api_url,$post_data);
+        if ($curl->error) {
+            Log::error($curl->errorCode .":".$curl->errorMessage);
+            return false;
+        }
+        return true;
+    }
+}
+if (!function_exists('diff_times'))
+{
+    /**
+     * 计算时间差
+     * @param $s_time
+     * @param $now_time
+     * @param string $lan
+     * @return string
+     */
+    function diff_times($s_time,$now_time,$lan = 'zh')
+    {
+        date_default_timezone_set("Asia/Shanghai");
+        $diff_time = $s_time - $now_time;
+        $y = floor($diff_time/(3600*24*365));
+        $m = floor($diff_time%(3600*24*365)/(3600*24*30));
+        $d = floor($diff_time%(3600*24*30)/(3600*24));
+        $h = floor($diff_time%(3600*24)/3600);
+        $i = floor($diff_time%3600/60);
+        $s = floor($diff_time%60);
+        $str = '';
+        $str.= empty($y) ? '' : $y.($lan == 'zh' ? ' 年 ' : ' year ');
+        $str.= empty($m) ? '' : $m.($lan == 'zh' ? ' 月 ' : ' month ');
+        $str.= empty($d) ? '' : $d.($lan == 'zh' ? ' 天 ' : ' day ');
+        $str.= empty($h) ? '' : $h.($lan == 'zh' ? ' 时 ' : ' hour ');
+        $str.= empty($i) ? '' : $i.($lan == 'zh' ? ' 分 ' : ' minute ');
+        $str.= empty($s) ? '' : $s.($lan == 'zh' ? ' 秒 ' : ' second ');
+        return $str;
     }
 }

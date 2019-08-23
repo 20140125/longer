@@ -9,13 +9,11 @@ use App\Models\OAuth;
 use App\Models\Role;
 use App\Models\Auth;
 use App\Models\Users;
-use Curl\Curl;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -74,6 +72,7 @@ class BaseController extends Controller
      */
     public function __construct(Request $request)
     {
+        date_default_timezone_set("Asia/Shanghai");
         $url = $request->getRequestUri();
         if (strstr($url,'?')){
             $url = substr($url,0,find_str($request->getRequestUri(),'?',2));
@@ -199,14 +198,14 @@ class BaseController extends Controller
             try{
                 //推送给所有人
                 if ($this->post['username'] == 'all') {
-                    if ($this->workerManPush($this->post['info'])) {
+                    if (web_push($this->post['info'])) {
                         $this->post['state'] = Code::WebSocketState[0];
                     }
                     return ;
                 }
                 //推送给个人
                 if ($this->redisClient->sIsMember(config('app.redis_user_key'),$this->post['uid'])) {
-                    if ($this->workerManPush($this->post['info'],$this->post['uid'])) {
+                    if (web_push($this->post['info'],$this->post['uid'])) {
                         $this->post['state'] = Code::WebSocketState[0];
                         return ;
                     }
@@ -217,32 +216,5 @@ class BaseController extends Controller
                 act_log('站内信息推送失败：'.$e->getMessage());
             }
         }
-    }
-
-    /**
-     * TODO：站内信息推送
-     * @param $content
-     * @param string $uid
-     * @return mixed
-     * @throws \ErrorException
-     */
-    protected function workerManPush($content,$uid='')
-    {
-        // 推送的url地址
-        $push_api_url = config('app.push_url');
-        $post_data = array(
-            "type" => "publish",
-            "content" => $content,
-            "to" => empty($uid) ? '' : md5($uid),
-        );
-        $curl = new Curl();
-        $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
-        $curl->setOpt(CURLOPT_SSL_VERIFYHOST,false);
-        $curl->post($push_api_url,$post_data);
-        if ($curl->error) {
-            Log::error($curl->errorCode .":".$curl->errorMessage);
-            return false;
-        }
-        return true;
     }
 }

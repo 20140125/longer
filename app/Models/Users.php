@@ -87,12 +87,12 @@ class Users extends Model
     /**
      * TODO:  查询一条记录
      * @param $field
-     * @param $value
+     * @param string $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value,$op='=', $column = ['*'])
+    public function getResult($field, $value='',$op='=', $column = ['*'])
     {
         $result = DB::table($this->table)->where($field,$op,$value)->first($column);
         return $result;

@@ -19,11 +19,12 @@ class CreateOsReqRuleTable extends Migration
             $table->integer('user_id')->default(0)->comment('用户ID');
             $table->index('user_id');
             $table->string('href',32)->default('0')->comment('请求授权地址');
-            $table->index('href');
             $table->tinyInteger('status')->default(2)->comment('是否批准 1 是 2 否');
+            $table->index('status');
             $table->integer('created_at')->default(0)->comment('请求时间');
             $table->integer('updated_at')->nullable()->comment('授权时间');
             $table->integer('expires')->nullable()->comment('权限有限期');
+            $table->index('expires');
             $table->string('desc',128)->nullable()->comment('请求授权说明');
         });
     }

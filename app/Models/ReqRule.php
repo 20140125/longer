@@ -40,6 +40,16 @@ class ReqRule extends Model
     }
 
     /**
+     * TODO：获取列表
+     * @param array $where
+     * @return Collection
+     */
+    public function getCommandRule($where = [])
+    {
+        return DB::table($this->table)->where($where)->get();
+    }
+
+    /**
      * TODO：查询记录
      * @param $field
      * @param string $value
@@ -71,7 +81,6 @@ class ReqRule extends Model
     {
         $where = [];
         if (!in_array($user->username,['admin'])){
-            $where[] = ['username',$user->username];
             $where[] = ['user_id',$user->id];
         }
         $result['data'] = DB::table($this->table)->limit($limit)->where($where)->offset($limit*($page-1))->orderBy('expires')->get();

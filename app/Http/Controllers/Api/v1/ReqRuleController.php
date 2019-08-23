@@ -46,18 +46,33 @@ class ReqRuleController extends BaseController
             $item->updated_at = empty($item->updated_at) ? '' : date('Y-m-d H:i:s',$item->updated_at);
             $item->expires = empty($item->expires) ? '' : date('Y-m-d H:i:s',$item->expires);
         }
+        $result['userLists'] = $this->oauthModel->getOauthLists([],['id','username']);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+    }
+
+    /**
+     * TODO：根据角色获取权限
+     * @return JsonResponse
+     */
+    public function getAuth()
+    {
+        $this->validatePost(['username'=>'required|string','id'=>'required|integer']);
         //获取所有权限
         $ruleLists = $this->authModel->getAuthList(['name','href','level']);
-        //获取登录用户的权限
-        $loginAuth = json_decode($this->role->auth_url,true);
+        //获取登录角色
+        $where[] = ['username',$this->post['username']];
+        $where[] = ['id',$this->post['user_id']];
+        $users = $this->userModel->getResult($where) ?? $this->oauthModel->getResult($where);
+        //角色权限
+        $role = $this->roleModel->getResult('id',$users->role_id);
+        $loginAuth = json_decode($role->auth_url,true);
         foreach ($ruleLists as &$item){
             $item->disable = false;
             if (in_array(strtolower($item->href),$loginAuth)) {
                 $item->disable = true;
             }
         }
-        $result['ruleLists'] = $ruleLists;
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$ruleLists);
     }
 
     /**
@@ -81,7 +96,7 @@ class ReqRuleController extends BaseController
         $req['username'] = $this->users->username;
         $req['user_id'] = $this->users->id;
         $req['expires'] = empty($this->post['expires']) ? 0 : strtotime($this->post['expires']);
-        $req['desc'] = empty($this->post['desc']) ? '' : $this->post['desc'];
+        $req['desc'] = empty($this->post['desc']) ? '申请权限授权' : $this->post['desc'];
         $where[] = ['username',$req['username']];
         $where[] = ['user_id',$req['user_id']];
         $result = 0;

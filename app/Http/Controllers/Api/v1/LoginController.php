@@ -58,7 +58,7 @@ class LoginController
         if ($result === Code::NOT_ALLOW){
             return ajax_return(Code::NOT_ALLOW,'users not allow login system');
         }
-        $result['ip'] = config('app.ip_address');
+        $result['ip'] = config('app.socket_url');
         return ajax_return(Code::SUCCESS,'login successfully','',$result);
     }
 

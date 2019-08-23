@@ -46,6 +46,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'req-rule/save','v1\ReqRuleController@save')->name('reqRuleSave');
     Route::match(['get','post'],'req-rule/update','v1\ReqRuleController@update');
     Route::match(['get','post'],'req-rule/delete','v1\ReqRuleController@delete');
+    Route::match(['get','post'],'req-rule/getAuth','v1\ReqRuleController@getAuth');
     //日志
     Route::match(['get','post'],'log/index','v1\LogController@index');
     Route::match(['get','post'],'log/save','v1\LogController@save')->name('logSave');
