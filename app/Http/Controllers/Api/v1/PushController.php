@@ -101,9 +101,7 @@ class PushController extends BaseController
                 if ($this->post['username'] == 'all') {
                     if ($this->workerManPush($this->post['info'])) {
                         $this->post['state'] = Code::WebSocketState[0];
-                        return ;
                     }
-                    $this->post['state'] = Code::WebSocketState[2];
                     return ;
                 }
                 //推送给个人
@@ -113,9 +111,7 @@ class PushController extends BaseController
                         return ;
                     }
                     $this->post['state'] = Code::WebSocketState[2];
-                    return ;
                 }
-                $this->post['state'] = Code::WebSocketState[2];
             }catch (Exception $e){
                 act_log('站内信息推送失败：'.$e->getMessage());
             }
