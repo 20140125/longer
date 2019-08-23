@@ -199,7 +199,7 @@ class BaseController extends Controller
         $curl = new Curl();
         $curl->post($push_api_url,$post_data);
         if ($curl->error) {
-            Log::error($curl->errorCode." : ".$curl->errorMessage);
+            Log::error(json_encode($curl));
         } else {
             Log::error(json_encode($curl->response));
         }
