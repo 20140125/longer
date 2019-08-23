@@ -197,12 +197,13 @@ class BaseController extends Controller
             "to" => empty($uid) ? '' : md5($uid),
         );
         $curl = new Curl();
+        $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+        $curl->setOpt(CURLOPT_SSL_VERIFYHOST,false);
         $curl->post($push_api_url,$post_data);
         if ($curl->error) {
-            Log::error(json_encode($curl));
-        } else {
-            Log::error(json_encode($curl->response));
+            Log::error($curl->errorCode .":".$curl->errorMessage);
+            return false;
         }
-        return $curl->error;
+        return true;
     }
 }
