@@ -95,16 +95,19 @@ class ReqRuleController extends BaseController
             } else {
                 $result = $this->reqRuleModel->addResult($req);
             }
-            //生成推送记录
-            $rs = $this->workerManPush($this->post['username'].'申请权限','admin');
-            $push = array(
-                'uid' => md5('admin'),
-                'username' => 'admin',
-                'info' => $this->post['username'].'申请权限',
-                'state' =>$rs,
-                'status' => 1
+            //推送站内信息
+            $this->post['info'] = $this->post['username'].'申请权限';
+            $this->post['username'] = 'admin';
+            $this->pushMessage();
+            $message = array(
+                'username' => $this->post['username'],
+                'info' => $this->post['info'],
+                'uid'  => md5($this->post['username']),
+                'state' => $this->post['state'],
+                'status' => 1,
+                'created_at' => time()
             );
-            Push::getInstance()->addResult($push);
+            Push::getInstance()->addResult($message);
         }
         if ($result) {
             return $this->ajax_return(Code::SUCCESS,'save request authorization successfully');
@@ -166,19 +169,21 @@ class ReqRuleController extends BaseController
                         //修改请求授权用户的角色ID
                         $this->oauthModel->updateResult($data,'id',$oauth->id);
                     }
-                    //站内信息推送
-                    $rs = $this->workerManPush('权限已经审核通过',$oauth->username);
-                    //生成推送记录
-                    $push = array(
-                        'uid' => md5($oauth->username),
-                        'username' => 'admin',
-                        'info' => $oauth->username.'权限已经审核通过',
-                        'state' =>$rs,
-                        'status' => 1
+                    //推送站内信息
+                    $this->post['username'] = $getReq->username;
+                    $this->post['info'] = '你申请的权限已经审核通过~！';
+                    $this->pushMessage();
+                    $message = array(
+                        'username' => $this->post['username'],
+                        'info' => $this->post['info'],
+                        'uid'  => md5($this->post['username']),
+                        'state' => $this->post['state'],
+                        'status' => 1,
+                        'created_at' => time()
                     );
-                    $result = Push::getInstance()->addResult($push);
-                    //邮件发送告知用户授权已经成功
-                    if (!empty($oauth->email) && !$result) {
+                    Push::getInstance()->addResult($message);
+                    //如果用户已经绑定邮箱，并且站内通知没有成功，发送邮件告知用户授权已经成功
+                    if (!empty($oauth->email) && $this->post['state']!=Code::WebSocketState[0]) {
                         try {
                             $mail = array( 'href' =>$getReq->href, 'rule_name' => $rule->name,'username' =>$getReq->username,'remember_token'=>$oauth->remember_token );
                             Mail::to($oauth->email)->send(new Notice($mail));

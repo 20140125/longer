@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Http\Controllers\Utils\RedisClient;
 use App\Http\Controllers\Utils\Rsa;
 use App\Http\Controllers\Controller;
 use App\Models\OAuth;
@@ -9,6 +10,7 @@ use App\Models\Role;
 use App\Models\Auth;
 use App\Models\Users;
 use Curl\Curl;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
@@ -53,6 +55,10 @@ class BaseController extends Controller
      */
     protected $role;
     /**
+     * @var RedisClient $redisClient
+     */
+    protected $redisClient;
+    /**
      * @var Rsa $rsa rsa 加密
      */
     protected $rsaUtils;
@@ -80,6 +86,7 @@ class BaseController extends Controller
         $this->roleModel = Role::getInstance();
         $this->authModel = Auth::getInstance();
         $this->oauthModel = OAuth::getInstance();
+        $this->redisClient = new RedisClient('127.0.0.1');
         $this->backupPath = base_path('database/migrations');
         //公用权限
         $common_url = [
@@ -178,6 +185,38 @@ class BaseController extends Controller
     protected function privateDecrypt($data='')
     {
         return $this->rsaUtils::privateDecrypt($data);
+    }
+
+    /**
+     * TODO：推送站内信息处理
+     */
+    protected function pushMessage()
+    {
+        $this->post['state'] = Code::WebSocketState[1];
+        $this->post['created_at'] = strtotime($this->post['created_at']);
+        $this->post['uid'] = $this->post['username'] == 'all' ? 'none' : $this->post['uid'];
+        if ($this->post['status'] == '1') {
+            try{
+                //推送给所有人
+                if ($this->post['username'] == 'all') {
+                    if ($this->workerManPush($this->post['info'])) {
+                        $this->post['state'] = Code::WebSocketState[0];
+                    }
+                    return ;
+                }
+                //推送给个人
+                if ($this->redisClient->sIsMember(config('app.redis_user_key'),$this->post['uid'])) {
+                    if ($this->workerManPush($this->post['info'],$this->post['uid'])) {
+                        $this->post['state'] = Code::WebSocketState[0];
+                        return ;
+                    }
+                    return;
+                }
+                $this->post['state'] = Code::WebSocketState[2];
+            }catch (Exception $e){
+                act_log('站内信息推送失败：'.$e->getMessage());
+            }
+        }
     }
 
     /**

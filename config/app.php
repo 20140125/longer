@@ -55,6 +55,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
     'ip_address' =>env('WORKER_SOCKET_URL','http://127.0.0.1:2120/'),
     'push_url' =>env('WORKER_PUSH_URL','http://127.0.0.1:2121/'),
+    'redis_user_key' =>env('WORKER_REDIS_USER_KEY',''),
 
     'asset_url' => env('ASSET_URL', null),
 

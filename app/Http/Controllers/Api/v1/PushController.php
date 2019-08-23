@@ -21,11 +21,6 @@ class PushController extends BaseController
      */
     protected $pushModel;
     /**
-     * @var RedisClient $redisClient
-     */
-    protected $redisClient;
-
-    /**
      * PushController constructor.
      * @param Request $request
      */
@@ -33,7 +28,6 @@ class PushController extends BaseController
     {
         parent::__construct($request);
         $this->pushModel = Push::getInstance();
-        $this->redisClient = new RedisClient('127.0.0.1');
     }
 
     /**
@@ -73,38 +67,6 @@ class PushController extends BaseController
         $this->pushMessage();
         $this->pushModel->updateResult($this->post,'id',$this->post['id']);
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
-    }
-
-    /**
-     * TODO：推送站内信息处理
-     */
-    private function pushMessage()
-    {
-        $this->post['state'] = Code::WebSocketState[1];
-        $this->post['created_at'] = strtotime($this->post['created_at']);
-        $this->post['uid'] = $this->post['username'] == 'all' ? 'none' : $this->post['uid'];
-        if ($this->post['status'] == '1') {
-            try{
-                //推送给所有人
-                if ($this->post['username'] == 'all') {
-                    if ($this->workerManPush($this->post['info'])) {
-                        $this->post['state'] = Code::WebSocketState[0];
-                    }
-                    return ;
-                }
-                //推送给个人
-                if ($this->redisClient->sIsMember('uidConnectionMap',$this->post['uid'])) {
-                    if ($this->workerManPush($this->post['info'],$this->post['uid'])) {
-                        $this->post['state'] = Code::WebSocketState[0];
-                        return ;
-                    }
-                    return;
-                }
-                $this->post['state'] = Code::WebSocketState[2];
-            }catch (Exception $e){
-                act_log('站内信息推送失败：'.$e->getMessage());
-            }
-        }
     }
 
     /**

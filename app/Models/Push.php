@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -37,6 +38,15 @@ class Push extends Model
         // TODO: Implement __clone() method.
     }
 
+    /**
+     * TODO：获取列表
+     * @param $where
+     * @return Collection
+     */
+    public function getCommandPush($where)
+    {
+        return DB::table($this->table)->where($where)->get();
+    }
     /**
      * TODO:推送列表
      * @param $page

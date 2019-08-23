@@ -22,6 +22,10 @@ class Oauth extends Mailable
     {
         $this->request = $request;
     }
+    /**
+     * @var string $subject
+     */
+    public $subject = '邮箱验证码';
 
     /**
      * Build the message.

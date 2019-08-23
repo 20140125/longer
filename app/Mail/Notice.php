@@ -25,6 +25,11 @@ class Notice extends Mailable
     }
 
     /**
+     * @var string $subject
+     */
+    public $subject = '申请权限通知';
+
+    /**
      * Build the message.
      *
      * @return $this
