@@ -128,8 +128,10 @@ class SendPush extends Command
                             $item->state = Code::WebSocketState[2];
                             $this->warn($item->username . '已经离线~');
                         }
+                    } else {
+                        $this->info('未到推送时间');
+                        return;
                     }
-                    $this->info('未到推送时间');
                     break;
             }
             $this->pushModel->updateResult(object_to_array($item),'id',$item->id);

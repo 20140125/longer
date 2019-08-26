@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 class Cors
 {
     /**
+     * TODO:解决跨域
      * @param $request
      * @param Closure $next
      * @return mixed
