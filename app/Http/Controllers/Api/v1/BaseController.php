@@ -192,7 +192,7 @@ class BaseController extends Controller
     protected function pushMessage()
     {
         $this->post['state'] = Code::WebSocketState[1];
-        $this->post['created_at'] = strtotime($this->post['created_at']);
+        $this->post['created_at'] = empty($this->post['created_at'])? time():strtotime($this->post['created_at']);
         $this->post['uid'] = $this->post['username'] == 'all' ? 'none' : $this->post['uid'];
         if ($this->post['status'] == '1') {
             try{

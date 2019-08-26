@@ -6,8 +6,10 @@ use App\Http\Controllers\Utils\Code;
 use App\Mail\Notice;
 use App\Models\Push;
 use App\Models\ReqRule;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -45,6 +47,7 @@ class ReqRuleController extends BaseController
             $item->created_at = empty($item->created_at) ? '' : date('Y-m-d H:i:s',$item->created_at);
             $item->updated_at = empty($item->updated_at) ? '' : date('Y-m-d H:i:s',$item->updated_at);
             $item->expires = empty($item->expires) ? '' : date('Y-m-d H:i:s',$item->expires);
+            $item->ruleLists = $this->setAuth($item->user_id);
         }
         $result['userLists'] = $this->oauthModel->getOauthLists([],['id','username']);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
@@ -56,13 +59,23 @@ class ReqRuleController extends BaseController
      */
     public function getAuth()
     {
-        $this->validatePost(['username'=>'required|string','id'=>'required|integer']);
+        $this->validatePost(['user_id'=>'required|integer']);
+        $ruleLists = $this->setAuth($this->post['user_id']);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$ruleLists);
+    }
+
+    /**
+     * TODO：获取权限
+     * @param $userId
+     * @return Collection
+     */
+    private function setAuth($userId)
+    {
         //获取所有权限
         $ruleLists = $this->authModel->getAuthList(['name','href','level']);
         //获取登录角色
-        $where[] = ['username',$this->post['username']];
-        $where[] = ['id',$this->post['user_id']];
-        $users = $this->userModel->getResult($where) ?? $this->oauthModel->getResult($where);
+        $where[] = ['id',$userId];
+        $users = $this->oauthModel->getResult($where);
         //角色权限
         $role = $this->roleModel->getResult('id',$users->role_id);
         $loginAuth = json_decode($role->auth_url,true);
@@ -72,7 +85,7 @@ class ReqRuleController extends BaseController
                 $item->disable = true;
             }
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$ruleLists);
+        return $ruleLists;
     }
 
     /**
@@ -81,10 +94,7 @@ class ReqRuleController extends BaseController
      */
     public function save()
     {
-        $this->validatePost(['username'=>'required|string|exists:os_oauth','href'=>'required|Array']);
-        if ($this->post['username']!==$this->users->username) {
-            return $this->ajax_return(Code::ERROR,'username check failed');
-        }
+        $this->validatePost(['username'=>'required|string','href'=>'required|Array']);
         if (isset($this->post['expires']) && !empty($this->post['expires'])){
             if (strtotime($this->post['expires'])>strtotime('+1 year')) {
                 return $this->ajax_return(Code::ERROR,'authorization expires must be a date before '.date('Y-m-d H:i:s',strtotime('+1 year')));
@@ -93,8 +103,12 @@ class ReqRuleController extends BaseController
                 return $this->ajax_return(Code::ERROR,'authorization expires must be a date after '.date('Y-m-d H:i:s'));
             }
         }
-        $req['username'] = $this->users->username;
-        $req['user_id'] = $this->users->id;
+        $oauth = $this->oauthModel->getResult('username',$this->post['username']);
+        if (empty($oauth)) {
+            return $this->ajax_return(Code::ERROR,'user does not exist');
+        }
+        $req['username'] = $oauth->username;
+        $req['user_id'] = $oauth->id;
         $req['expires'] = empty($this->post['expires']) ? 0 : strtotime($this->post['expires']);
         $req['desc'] = empty($this->post['desc']) ? '申请权限授权' : $this->post['desc'];
         $where[] = ['username',$req['username']];
@@ -113,6 +127,8 @@ class ReqRuleController extends BaseController
             //推送站内信息
             $this->post['info'] = $this->post['username'].'申请权限';
             $this->post['username'] = 'admin';
+            $this->post['uid'] = md5($this->post['username']);
+            $this->post['status'] = 1;
             $this->pushMessage();
             $message = array(
                 'username' => $this->post['username'],
@@ -187,6 +203,8 @@ class ReqRuleController extends BaseController
                     //推送站内信息
                     $this->post['username'] = $getReq->username;
                     $this->post['info'] = '你申请的权限已经审核通过~！';
+                    $this->post['uid'] = md5($this->post['username']);
+                    $this->post['status'] = 1;
                     $this->pushMessage();
                     $message = array(
                         'username' => $this->post['username'],
@@ -202,7 +220,7 @@ class ReqRuleController extends BaseController
                         try {
                             $mail = array( 'href' =>$getReq->href, 'rule_name' => $rule->name,'username' =>$getReq->username,'remember_token'=>$oauth->remember_token );
                             Mail::to($oauth->email)->send(new Notice($mail));
-                        } catch (\Exception $exception) {
+                        } catch (Exception $exception) {
                             $info = array(
                                 'username' => $oauth->username,
                                 'href' => $oauth->email,
@@ -213,7 +231,7 @@ class ReqRuleController extends BaseController
                     }
                     //提交事务
                     DB::commit();
-                }catch (\Exception $exception){
+                }catch (Exception $exception){
                     //回滚
                     DB::rollBack();
                     return $this->ajax_return(Code::ERROR,$exception->getMessage());
@@ -286,7 +304,7 @@ class ReqRuleController extends BaseController
             }
             DB::commit();
             return $this->ajax_return(Code::SUCCESS,'remove authorization successfully');
-        }catch (\Exception $exception){
+        }catch (Exception $exception){
             DB::rollBack();
         }
         DB::rollBack();
