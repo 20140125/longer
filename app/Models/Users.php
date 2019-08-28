@@ -47,7 +47,7 @@ class Users extends Model
     /**
      * TODO:  登陆后台
      * @param $data
-     * @return int
+     * @return array|int
      */
     public function loginRes($data)
     {

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Http\Controllers\Utils\Rsa;
 use App\Models\Config;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
@@ -45,7 +46,7 @@ class LoginController
     public function index(Request $request)
     {
         if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'Permission denied');
+            return ajax_return(Code::METHOD_ERROR,'method not allow');
         }
         $validate = Validator::make($this->post, ['username' =>'required|between:4,16|string','password' =>'required|between:6,16|string']);
         if ($validate->fails()){
@@ -59,20 +60,24 @@ class LoginController
             return ajax_return(Code::NOT_ALLOW,'users not allow login system');
         }
         $result['ip'] = config('app.socket_url');
-        return ajax_return(Code::SUCCESS,'login successfully','',$result);
+        return ajax_return(Code::SUCCESS,'login successfully',$result);
     }
 
     /**
      * TODO：获取配置
+     * @param Request $request
      * @return JsonResponse
      */
-    public function config()
+    public function config(Request $request)
     {
+        if ($request->isMethod('get')){
+            return ajax_return(Code::METHOD_ERROR,'method not allow');
+        }
         $validate = Validator::make($this->post,['name'=>'required|string']);
         if ($validate->fails()){
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
         $result = $this->configModel->getResult('name',$this->post['name'],'=',['value']);
-        return ajax_return(Code::SUCCESS,'successfully','',json_decode($result->value,true));
+        return ajax_return(Code::SUCCESS,'successfully',json_decode($result->value,true));
     }
 }

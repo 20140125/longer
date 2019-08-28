@@ -9,9 +9,18 @@ namespace App\Http\Controllers\Utils;
  */
 class Rsa
 {
-    private static $PRIVATE_KEY = '';  //私钥（用于用户加密）
-    private static $PUBLIC_KEY = '';   //公钥（用于服务端数据解密）
-    private static $instance;
+    /**
+     * @var static $instance
+     */
+    protected static $instance;
+    /**
+     * @var false|string
+     */
+    protected $publicKey='';
+    /**
+     * @var false|string
+     */
+    protected $privateKey='';
 
     private function __clone()
     {
@@ -31,33 +40,29 @@ class Rsa
 
     /**
      * Rsa constructor.
-     * @param string $pubkey 公钥
-     * @param string $prikey 私钥
      */
-    public function __construct($pubkey='',$prikey='')
+    public function __construct()
     {
-        self::$PUBLIC_KEY = empty($pubkey) ? file_get_contents(public_path('/rsa/app_public_key.pem')) : file_get_contents($pubkey);
-        self::$PRIVATE_KEY = empty($prikey) ? file_get_contents(public_path('/rsa/app_private_key.pem')) : file_get_contents($prikey);
+        $this->privateKey = file_get_contents(public_path(config('app.rsa_private')));
+        $this->publicKey  = file_get_contents(public_path(config('app.rsa_public')));
     }
 
     /**
-     * 获取私钥
+     * TODO:获取私钥
      * @return bool|resource
      */
-    private static function getPrivateKey()
+    protected function getPrivateKey()
     {
-        $privateKey = self::$PRIVATE_KEY;
-        return openssl_pkey_get_private($privateKey);
+        return openssl_pkey_get_private($this->privateKey);
     }
 
     /**
      * TODO：获取公钥
      * @return bool|resource
      */
-    private static function getPublicKey()
+    protected function getPublicKey()
     {
-        $publicKey = self::$PUBLIC_KEY;
-        return openssl_pkey_get_public($publicKey);
+        return openssl_pkey_get_public($this->publicKey);
     }
 
     /**
@@ -65,7 +70,7 @@ class Rsa
      * @param string $data
      * @return null|string
      */
-    public static function privateEncrypt($data = '')
+    public function privateEncrypt($data = '')
     {
         if (!is_string($data)) {
             return null;
@@ -78,7 +83,7 @@ class Rsa
      * @param string $data
      * @return null|string
      */
-    public static function publicEncrypt($data = '')
+    public function publicEncrypt($data = '')
     {
         if (!is_string($data)) {
             return null;
@@ -91,7 +96,7 @@ class Rsa
      * @param string $encrypted
      * @return null
      */
-    public static function privateDecrypt($encrypted = '')
+    public function privateDecrypt($encrypted = '')
     {
         if (!is_string($encrypted)) {
             return null;
@@ -104,7 +109,7 @@ class Rsa
      * @param string $encrypted
      * @return null
      */
-    public static function publicDecrypt($encrypted = '')
+    public function publicDecrypt($encrypted = '')
     {
         if (!is_string($encrypted)) {
             return null;
@@ -117,7 +122,7 @@ class Rsa
      * @param $data
      * @return string|null
      */
-    public static function makeSign($data)
+    public function makeSign($data)
     {
         if (!is_string($data)) {
             return null;
@@ -141,7 +146,7 @@ class Rsa
      * @param string $signature 签名
      * @return int|null
      */
-    public static function checkSign($data,$signature)
+    public function checkSign($data,$signature)
     {
         if (!is_string($data)) {
             return null;
@@ -155,7 +160,6 @@ class Rsa
         $verify = openssl_verify($digest, base64_decode($signature), self::getPublicKey(), $algo);
         return $verify;
     }
-
     /**
      * TODO：构析函数，用来释放公钥和私钥
      */

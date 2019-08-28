@@ -7,6 +7,7 @@
  */
 
 use App\Models\Log as logModel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Curl\Curl;
 
@@ -16,16 +17,14 @@ if (!function_exists('ajax_return'))
      * 返回JSON数据
      * @param $code
      * @param $msg
-     * @param string $url
      * @param array $data
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    function ajax_return ($code,$msg,$url='',$data = [])
+    function ajax_return ($code,$msg,$data = [])
     {
         $item = array(
             'code' =>$code,
             'msg' =>$msg,
-            'url' =>$url??request()->getRequestUri(),
             'item' =>$data,
         );
         return response()->json($item,$code);
@@ -523,7 +522,7 @@ if(!function_exists('is_mobile'))
         }
     }
 }
-if(!function_exists('authcode'))
+if(!function_exists('auth_code'))
 {
     /**
      * @param $string
@@ -532,7 +531,7 @@ if(!function_exists('authcode'))
      * @param int $expiry
      * @return bool|string
      */
-    function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
+    function auth_code($string, $operation = 'DECODE', $key = '', $expiry = 0) {
         // 动态密匙长度，相同的明文会生成不同密文就是依靠动态密匙
         $ckey_length = 4;
         // 密匙
@@ -545,8 +544,8 @@ if(!function_exists('authcode'))
         $keyc = $ckey_length ? ($operation == 'DECODE' ? substr($string, 0, $ckey_length):
             substr(md5(microtime()), -$ckey_length)) : '';
         // 参与运算的密匙
-        $cryptkey = $keya.md5($keya.$keyc);
-        $key_length = strlen($cryptkey);
+        $crypt_key = $keya.md5($keya.$keyc);
+        $key_length = strlen($crypt_key);
         // 明文，前10位用来保存时间戳，解密时验证数据有效性，10到26位用来保存$keyb(密匙b)，
         // 解密时会通过这个密匙验证数据完整性
         // 如果是解码的话，会从第$ckey_length位开始，因为密文前$ckey_length位保存 动态密匙，以保证解密正确
@@ -555,14 +554,14 @@ if(!function_exists('authcode'))
         $string_length = strlen($string);
         $result = '';
         $box = range(0, 255);
-        $rndkey = array();
+        $rand_key = array();
         // 产生密匙簿
         for($i = 0; $i <= 255; $i++) {
-            $rndkey[$i] = ord($cryptkey[$i % $key_length]);
+            $rand_key[$i] = ord($crypt_key[$i % $key_length]);
         }
         // 用固定的算法，打乱密匙簿，增加随机性，好像很复杂，实际上对并不会增加密文的强度
         for($j = $i = 0; $i < 256; $i++) {
-            $j = ($j + $box[$i] + $rndkey[$i]) % 256;
+            $j = ($j + $box[$i] + $rand_key[$i]) % 256;
             $tmp = $box[$i];
             $box[$i] = $box[$j];
             $box[$j] = $tmp;
@@ -597,7 +596,8 @@ if(!function_exists('get_location_by_ip'))
     /**
      * 依据ip获地址信息 (高德地图)
      * @param string $ip
-     * @return int|mixed
+     * @return mixed
+     * @throws ErrorException
      */
     function get_location_by_ip($ip='')
     {
@@ -605,7 +605,7 @@ if(!function_exists('get_location_by_ip'))
         if(!empty($ip)){
             $data['ip'] = $ip;
         }
-        $result = http_query('http://restapi.amap.com/v3/ip', $data);
+        $result = (new Curl())->get('http://restapi.amap.com/v3/ip', $data);
         $result = json_decode($result, true);
         return $result;
     }

@@ -85,6 +85,7 @@ class BaseController extends Controller
         $this->roleModel = Role::getInstance();
         $this->authModel = Auth::getInstance();
         $this->oauthModel = OAuth::getInstance();
+        $this->rsaUtils = Rsa::getInstance();
         $this->redisClient = new RedisClient('127.0.0.1');
         $this->backupPath = base_path('database/migrations');
         //公用权限
@@ -173,7 +174,7 @@ class BaseController extends Controller
      */
     protected function publicEncrypt($data='')
     {
-        return $this->rsaUtils::publicEncrypt($data);
+        return $this->rsaUtils->publicEncrypt($data);
     }
 
     /**
@@ -183,7 +184,7 @@ class BaseController extends Controller
      */
     protected function privateDecrypt($data='')
     {
-        return $this->rsaUtils::privateDecrypt($data);
+        return $this->rsaUtils->privateDecrypt($data);
     }
 
     /**
