@@ -123,7 +123,7 @@ class ApiController extends BaseController
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'update api category successfully');
         }
-        return $this->ajax_return(Code::ERROR,'update api category error');
+        return $this->ajax_return( Code::ERROR,'update api category error');
     }
 
     /**

@@ -5,6 +5,7 @@
     "homepage": "http://www.workerman.net",
     "license" : "MIT",
     "require": {
-        "workerman/phpsocket.io" : ">1.0.0"
+        "workerman/phpsocket.io" : ">1.0.0",
+        "workerman/mysql": "^1.0"
     }
 }

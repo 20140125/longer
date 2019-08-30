@@ -624,7 +624,8 @@ if (!function_exists('act_log'))
             'url' =>$info['href'],
             'ip_address' =>request()->getClientIp(),
             'created_at' =>time(),
-            'log' =>$info,
+            'day' => date('Ymd'),
+            'log' =>$info
         );
         $data['log'] =str_replace('\\','', json_encode($data,JSON_UNESCAPED_UNICODE));
         return logModel::getInstance()->addResult($data);

@@ -53,7 +53,15 @@ class PushController extends BaseController
     {
         $this->validatePost(['info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
         $this->pushMessage();
-        $this->pushModel->addResult($this->post);
+        if ($this->post['username'] == 'all') {
+            $users = $this->redisClient->sMembers(config('app.redis_user_key'));
+            foreach ($users as $item) {
+                $this->post['uid'] = $item;
+                $this->pushModel->addResult($this->post);
+            }
+        } else {
+            $this->pushModel->addResult($this->post);
+        }
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
 
@@ -65,7 +73,15 @@ class PushController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer','info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
         $this->pushMessage();
-        $this->pushModel->updateResult($this->post,'id',$this->post['id']);
+        if ($this->post['username'] == 'all') {
+            $users = $this->redisClient->sMembers(config('app.redis_user_key'));
+            foreach ($users as $item) {
+                $this->post['uid'] = $item;
+                $this->pushModel->updateResult($this->post,'id',$this->post['id']);
+            }
+        } else {
+            $this->pushModel->updateResult($this->post,'id',$this->post['id']);
+        }
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
 

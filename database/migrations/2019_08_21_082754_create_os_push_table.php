@@ -21,6 +21,7 @@ class CreateOsPushTable extends Migration
             $table->string('state',16)->default('0')->comment('推送状态  offline 离线 successfully 成功 failed 失败');
             $table->index('state');
             $table->tinyInteger('status')->default(1)->comment('实时推送 1 是 2 否');
+            $table->tinyInteger('see')->default(1)->comment('查看次数');
             $table->integer('created_at')->default(0)->comment('推送时间');
             $table->index('created_at');
         });
