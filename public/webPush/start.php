@@ -6,7 +6,7 @@
 
 use Workerman\Worker;
 // composer 的 autoload 文件
-include __DIR__ . '/vendor/autoload.php';
+include  '../../vendor/autoload.php';
 
 if(strpos(strtolower(PHP_OS), 'win') === 0)
 {
