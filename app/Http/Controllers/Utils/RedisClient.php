@@ -16,7 +16,7 @@ class RedisClient
     /**
      * @var int $port
      */
-    protected $port = 6379;
+    protected $port = '6379';
     /**
      * @var string $password
      */
@@ -31,7 +31,7 @@ class RedisClient
      * @param int $port
      * @param string $password
      */
-    public function __construct($host,$port=6379,$password='')
+    public function __construct($host,$port='6379',$password='')
     {
         $this->redisClient = new \Redis();
         $this->host = $host;
