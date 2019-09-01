@@ -7,7 +7,7 @@ use Workerman\MySQL\Connection;
 include  '../../vendor/autoload.php';
 include __DIR__.'/config/db.php';
 // PHPSocketIO服务
-if(strpos(strtolower(PHP_OS), 'Linux') !== 0) {
+if(strpos(strtolower(PHP_OS), 'Win') === 0) {
     $sender_io = new SocketIO(2120);
 } else {
     $context = array(
@@ -57,7 +57,7 @@ $sender_io->on('connection', function($socket) {
 // 当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据
 $sender_io->on('workerStart', function () {
     // 监听一个http端口
-    if (strpos(strtolower(PHP_OS), 'Linux') !== 0) {
+    if(strpos(strtolower(PHP_OS), 'Win') === 0) {
         $inner_http_worker = new Worker('http://0.0.0.0:2121');
     } else {
         $context = array(
