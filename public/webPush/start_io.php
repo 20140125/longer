@@ -22,7 +22,10 @@ if(strpos(strtolower(PHP_OS), 'Linux') !== 0) {
 $redis = new Redis();
 $redis->connect('127.0.0.1',6379);
 $db = new Connection('127.0.0.1', '3306', 'root', '', 'longer');
-$day = range(date('Ymd',strtotime('-7 day')),date('Ymd'));
+$day = range(strtotime(date('Ymd',strtotime('-7 day'))),strtotime(date('Ymd')),24*60*60);
+foreach ($day as &$item) {
+    $item = date('Ymd',$item);
+}
 // 客户端发起连接事件时，设置连接socket的各种事件回调
 $sender_io->on('connection', function($socket) {
     // 当客户端发来登录事件时触发
