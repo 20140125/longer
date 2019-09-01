@@ -5,6 +5,7 @@ use Workerman\Worker;
 use PHPSocketIO\SocketIO;
 use Workerman\MySQL\Connection;
 include  '../../vendor/autoload.php';
+include __DIR__.'/config/db.php';
 // PHPSocketIO服务
 if(strpos(strtolower(PHP_OS), 'Linux') !== 0) {
     $sender_io = new SocketIO(2120);
@@ -21,7 +22,7 @@ if(strpos(strtolower(PHP_OS), 'Linux') !== 0) {
 // Redis 链接
 $redis = new Redis();
 $redis->connect('127.0.0.1',6379);
-$db = new Connection('127.0.0.1', '3306', 'root', '', 'longer');
+$db = new Connection(Host, Port, UserName, Password, DbName);
 $day = range(strtotime(date('Ymd',strtotime('-7 day'))),strtotime(date('Ymd')),24*60*60);
 foreach ($day as &$item) {
     $item = date('Ymd',$item);
