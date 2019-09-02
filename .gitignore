@@ -1,14 +1,22 @@
-/node_modules
-/public/hot
-/public/storage
-/storage/*.key
-/vendor
-.env
-.idea
-.env.backup
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
+# Created by .ignore support plugin (hsz.mobi)
+### Laravel template
+/vendor/
+node_modules/
 npm-debug.log
 yarn-error.log
-.gitignore
+.idea
+.DS_Store
+# Laravel 5 & Lumen specific
+public/storage
+public/hot
+
+# Laravel 5 & Lumen specific with changed public path
+public_html/storage
+public_html/hot
+
+storage/*.key
+.env
+Homestead.yaml
+Homestead.json
+/.vagrant
+.phpunit.result.cache
