@@ -37,7 +37,7 @@ class PushController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer|gt:0','limit'=>'required|integer|gt:0']);
-        $result = $this->pushModel->getResultLists($this->post['page'],$this->post['limit'],$this->post['state'],$this->post['status']);
+        $result = $this->pushModel->getResultLists($this->post['page'],$this->post['limit'],$this->users,$this->post['state'],$this->post['status']);
         foreach ($result['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
         }
@@ -83,6 +83,19 @@ class PushController extends BaseController
             $this->pushModel->updateResult($this->post,'id',$this->post['id']);
         }
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
+    }
+    /**
+     * TODO：查看站内推送的消息
+     * @return JsonResponse
+     */
+    public function read()
+    {
+        $this->validatePost(['id'=>'required|integer','see'=>'required|integer']);
+        $params['state'] = 'successfully';
+        $params['id'] = $this->post['id'];
+        $params['see'] = $this->post['see'];
+        $this->pushModel->updateResult($params,'id',$this->post['id']);
+        return $this->ajax_return(Code::SUCCESS,'successfully');
     }
 
     /**

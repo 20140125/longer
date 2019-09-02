@@ -51,11 +51,12 @@ class Push extends Model
      * TODO:推送列表
      * @param $page
      * @param $limit
+     * @param $user
      * @param string $state
      * @param string $status
      * @return mixed
      */
-    public function getResultLists($page,$limit,$state='',$status='')
+    public function getResultLists($page,$limit,$user,$state='',$status='')
     {
         $where = [];
         if (!empty($state)) {
@@ -63,6 +64,9 @@ class Push extends Model
         }
         if (!empty($status)) {
             $where[] = ['status',$status];
+        }
+        if (!in_array($user->username,['admin'])){
+            $where[] = ['uid',md5($user->username)];
         }
         $result['data'] = DB::table($this->table)->where($where)->orderBy('created_at')->offset($limit*($page-1))->limit($limit)->get();
         $result['total'] = DB::table($this->table)->where($where)->count();

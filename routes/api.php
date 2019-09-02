@@ -88,6 +88,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'push/index','v1\PushController@index');
     Route::match(['get','post'],'push/save','v1\PushController@save');
     Route::match(['get','post'],'push/update','v1\PushController@update');
+    Route::match(['get','post'],'push/see','v1\PushController@read');
     Route::match(['get','post'],'push/delete','v1\PushController@delete');
     //API接口
     Route::match(['get','post'],'api/index','v1\ApiController@index');
