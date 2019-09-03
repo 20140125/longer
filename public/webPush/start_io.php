@@ -69,13 +69,13 @@ $sender_io->on('connection', function($socket) {
     $total['day'] = $day;
     //每天的日志总量
     $logCount = getLogCount();
-    $log_last_count = $logCount[count($logCount)-1];
+    $log_last_count = $logCount[intval(count($logCount)-1)];
     //每天的通知总量
     $pushCount = getPushCount();
-    $push_last_count = $pushCount[count($pushCount)-1];
+    $push_last_count = $pushCount[intval(count($pushCount)-1)];
     //授权用户总量
     $oauthCount = getOauthCount();
-    $oauth_last_count = $oauthCount[count($oauthCount)-1];
+    $oauth_last_count = $oauthCount[intval(count($oauthCount)-1)];
     //推送到图表数据
     $total['total'] = array('log' => $logCount,'push'=>$pushCount,'oauth'=>$oauthCount);
     $sender_io->emit('charts', $total);
@@ -138,7 +138,7 @@ $sender_io->on('workerStart', function () {
         $redisUser = $redis->SMEMBERS('uidConnectionMap');
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
-            if ($push_data_count != $pushData[count($pushData)-1]) {
+            if ($push_data_count != count($pushData)) {
                 $sender_io->to($user)->emit('notice', $pushData);
             }
         }
@@ -153,7 +153,7 @@ $sender_io->on('workerStart', function () {
         //授权用户
         $oauthCount = getOauthCount();
         $total['total'] = array('log' => $logCount,'push'=>$pushCount,'oauth'=>$oauthCount);
-        if ($log_last_count != $logCount[count($logCount)-1] ||  $push_last_count != $pushCount[count($pushCount)-1] || $oauth_last_count != $oauthCount[count($oauthCount)-1]) {
+        if ($log_last_count != $logCount[intval(count($logCount)-1)] ||  $push_last_count != $pushCount[intval(count($pushCount)-1)] || $oauth_last_count != $oauthCount[intval(count($oauthCount)-1)]) {
             $sender_io->emit('charts', $total);
         }
     });
