@@ -8,6 +8,7 @@ use App\Http\Controllers\Oauth\GithubController;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Utils\Code;
+use App\Http\Controllers\Utils\RedisClient;
 use App\Models\OAuth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,6 +25,10 @@ class OauthCallbackController
      * @var OAuth $oauthModel
      */
     protected $oauthModel;
+    /**
+     * @var RedisClient $redisClient
+     */
+    protected $redisClient;
 
     /**
      * OauthCallbackController constructor.
@@ -34,7 +39,11 @@ class OauthCallbackController
         if (empty($request->get('code')) || empty($request->get('state'))){
             exit(redirect('/#/login'));
         }
+        if (!$this->redisClient->getValue($request->get('state'))) {
+            abort(404);
+        }
         $this->oauthModel = OAuth::getInstance();
+        $this->redisClient = new RedisClient();
     }
 
     /**
