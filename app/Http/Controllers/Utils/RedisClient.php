@@ -68,16 +68,6 @@ class RedisClient
     }
 
     /**
-     * TODO:判断key是否存在
-     * @param $key
-     * @return int
-     */
-    public function exists($key)
-    {
-        return $this->redisClient->exists($key);
-    }
-
-    /**
      * TODO:数据存储（Redis 集合(Set)）
      * @param $key
      * @param $value
