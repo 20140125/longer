@@ -98,14 +98,14 @@ class BaseController extends Controller
         ];
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
-        //token不正确用户未授权登录
+        //token不正确或为空
         if ($validate->fails() || empty($request->header('Authorization'))) {
             $this->setCode(Code::Unauthorized,'user login state expired');
         }
-        //用户不存在
+        //token不正确
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
         if (empty($this->users) || !in_array($this->post['token'],explode('-',$request->header('Authorization')))) {
-            $this->setCode(Code::Unauthorized,'user does not exists');
+            $this->setCode(Code::Unauthorized,'user token validate failed');
         }
         //用户被禁用
         if ($this->users->status!==1){
