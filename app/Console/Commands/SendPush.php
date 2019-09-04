@@ -70,10 +70,10 @@ class SendPush extends Command
                         try {
                             if (web_push($item->info)) {
                                 $item->state = Code::WebSocketState[0];
-                                $this->info('　站内实时消息推送所有人成功');
+                                $this->info("　".$item->username .'　站内实时消息推送所有人成功');
                             } else {
                                 $item->state = Code::WebSocketState[1];
-                                $this->error('　站内实时消息推送所有人失败');
+                                $this->error("　".$item->username .'　站内实时消息推送所有人失败');
                             }
                         } catch (\ErrorException $e) {
                             $this->error($e->getMessage());
@@ -83,10 +83,10 @@ class SendPush extends Command
                         try {
                             if (web_push($item->info, $item->username)) {
                                 $item->state = Code::WebSocketState[0];
-                                $this->info('　站内实时消息推送成功');
+                                $this->info("　".$item->username .'　站内实时消息推送成功');
                             } else {
                                 $item->state = Code::WebSocketState[1];
-                                $this->error('　站内实时消息推送失败');
+                                $this->error("　".$item->username .'　站内实时消息推送失败');
                             }
                         } catch (\ErrorException $e) {
                             $this->error($e->getMessage());
@@ -103,10 +103,10 @@ class SendPush extends Command
                             try {
                                 if (web_push($item->info)) {
                                     $item->state = Code::WebSocketState[0];
-                                    $this->info('　站内定时消息推送所有人成功');
+                                    $this->info("　".$item->username .'　站内定时消息推送所有人成功');
                                 } else {
                                     $item->state = Code::WebSocketState[1];
-                                    $this->error('　站内定时消息推送所有人失败');
+                                    $this->error("　".$item->username .'　站内定时消息推送所有人失败');
                                 }
                             } catch (\ErrorException $e) {
                                 $this->error($e->getMessage());
@@ -116,10 +116,10 @@ class SendPush extends Command
                             try {
                                 if (web_push($item->info, $item->username)) {
                                     $item->state = Code::WebSocketState[0];
-                                    $this->info('　站内定时消息推送成功');
+                                    $this->info("　".$item->username .'　站内定时消息推送成功');
                                 } else {
                                     $item->state = Code::WebSocketState[1];
-                                    $this->error('　站内定时消息推送失败');
+                                    $this->error("　".$item->username .'　站内定时消息推送失败');
                                 }
                             } catch (\ErrorException $e) {
                                 $this->error($e->getMessage());
