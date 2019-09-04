@@ -39,7 +39,7 @@ class OauthCallbackController
         if (empty($request->get('code')) || empty($request->get('state'))){
             exit(redirect('/#/login'));
         }
-        if (!$this->redisClient->getValue($request->get('state'))) {
+        if (empty($this->redisClient->getValue($request->get('state')))) {
             abort(404);
         }
         $this->oauthModel = OAuth::getInstance();
