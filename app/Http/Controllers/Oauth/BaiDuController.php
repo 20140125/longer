@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Oauth;
 use App\Http\Controllers\Utils\Code;
 
 /**
- * Class GiteeController
+ * Class BaiDuController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Oauth
  */
