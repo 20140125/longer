@@ -41,7 +41,7 @@ class OauthLoginController extends Controller
         $appSecret = config('app.qq_secret');
         $QQOauth = QQController::getInstance($appId,$appSecret);
         $url = $QQOauth->getAuthUrl();
-        $this->redisClient->setValue('qq_state',$QQOauth->state,10);
+        $this->redisClient->setValue('qq_state',$QQOauth->state,['EX' => 60]);
         return redirect($url);
     }
 
@@ -55,7 +55,7 @@ class OauthLoginController extends Controller
         $appSecret = config('app.github_secret');
         $gitHubOAuth = GithubController::getInstance($appId,$appSecret);
         $url = $gitHubOAuth->getAuthUrl();
-        $this->redisClient->setValue('github_state',$gitHubOAuth->state,10);
+        $this->redisClient->setValue('github_state',$gitHubOAuth->state,['EX' => 60]);
         return redirect($url);
     }
 
@@ -69,7 +69,7 @@ class OauthLoginController extends Controller
         $appSecret = config('app.weibo_secret');
         $weiboOAuth = WeiBoController::getInstance($appId,$appSecret);
         $url = $weiboOAuth->getAuthUrl();
-        $this->redisClient->setValue('weibo_state',$weiboOAuth->state,10);
+        $this->redisClient->setValue('weibo_state',$weiboOAuth->state,['EX' => 60]);
         return redirect($url);
     }
 
@@ -83,7 +83,7 @@ class OauthLoginController extends Controller
         $appSecret = config('app.gitee_secret');
         $giteeOAuth =GiteeController::getInstance($appId,$appSecret);
         $url = $giteeOAuth->getAuthUrl();
-        $this->redisClient->setValue('weibo_state',$giteeOAuth->state,10);
+        $this->redisClient->setValue('weibo_state',$giteeOAuth->state,['EX' => 60]);
         return redirect($url);
     }
     /**
@@ -96,7 +96,7 @@ class OauthLoginController extends Controller
         $appSecret = config('app.baidu_secret');
         $baiDuOauth = BaiDuController::getInstance($appId,$appSecret);
         $url = $baiDuOauth->getAuthUrl();
-        $this->redisClient->setValue('baidu_state',$baiDuOauth->state,10);
+        $this->redisClient->setValue('baidu_state',$baiDuOauth->state,['EX' => 60]);
         return redirect($url);
     }
 }
