@@ -19,7 +19,7 @@ class CreateFailedJobsTable extends Migration
             $table->text('queue');
             $table->longText('payload');
             $table->longText('exception');
-            $table->unsignedInteger('failed_at');
+            $table->timestamp('failed_at')->useCurrent();
         });
     }
 
@@ -30,6 +30,6 @@ class CreateFailedJobsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('failed_jobs');
     }
 }

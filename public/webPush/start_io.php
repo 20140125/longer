@@ -134,13 +134,16 @@ $sender_io->on('workerStart', function () {
     $inner_http_worker->listen();
     //定时器 (只有在客户端在线数变化了才广播，减少不必要的客户端通讯)
     Timer::add(2, function () {
-        global $sender_io, $redis, $day,$log_last_count,$push_last_count,$push_data_count,$online_user_count,$oauth_last_count;
+        global $sender_io, $redis, $day,$log_last_count,$push_last_count,$push_data_count,$online_user_count,$oauth_last_count,$times;
         $redisUser = $redis->SMEMBERS('uidConnectionMap');
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
             if ($push_data_count != count($pushData)) {
                 $sender_io->to($user)->emit('notice', $pushData);
             }
+        }
+        if ($day[count($day)-1] != date('Ymd')) {
+            $day = range(strtotime(date('Ymd',strtotime("-{$times} day"))),strtotime(date('Ymd')),24*60*60);
         }
         if ($online_user_count != count($redisUser)) {
             $sender_io->emit('online',count($redisUser));

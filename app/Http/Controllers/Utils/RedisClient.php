@@ -27,16 +27,13 @@ class RedisClient
     protected $redisClient;
     /**
      * RedisClient constructor.
-     * @param $host
-     * @param int $port
-     * @param string $password
      */
-    public function __construct($host,$port='6379',$password='')
+    public function __construct()
     {
         $this->redisClient = new \Redis();
-        $this->host = $host;
-        $this->port = $port;
-        $this->password = $password;
+        $this->host = config('app.redis_host');
+        $this->port = config('app.redis_port');
+        $this->password = config('app.redis_password');
         $this->redisClient->connect($this->host,$this->port);
         if (!empty($this->password)) {
             try{
