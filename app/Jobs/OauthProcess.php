@@ -43,6 +43,7 @@ class OauthProcess implements ShouldQueue
                 if (in_array(md5($item->username),$redisUser)) {
                     $this->post['state'] = 'successfully';
                 }
+                $this->post['state'] = 'offline';
                 $this->post['uid'] = md5($item->username);
                 $this->post['username'] = $item->username;
                 $this->post['created_at'] = $created_at;

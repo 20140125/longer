@@ -73,7 +73,7 @@ class PushController extends BaseController
     public function update()
     {
         $this->validatePost(['id'=>'required|integer','info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
-        //$this->pushMessage();
+        $this->pushMessage();
         $this->post['created_at'] = strtotime($this->post['created_at']);
         if ($this->post['username'] == 'all') {
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
