@@ -144,6 +144,9 @@ $sender_io->on('workerStart', function () {
         }
         if ($day[count($day)-1] != date('Ymd')) {
             $day = range(strtotime(date('Ymd',strtotime("-{$times} day"))),strtotime(date('Ymd')),24*60*60);
+            foreach ($day as &$item) {
+                $item = date('Ymd',$item);
+            }
         }
         if ($online_user_count != count($redisUser)) {
             $sender_io->emit('online',count($redisUser));
