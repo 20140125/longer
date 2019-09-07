@@ -17,7 +17,19 @@ use \GatewayWorker\Gateway;
 include   '../../vendor/autoload.php';
 
 // gateway 进程
-$gateway = new Gateway("Websocket://0.0.0.0:7272");
+if(in_array(PHP_OS,['WINNT','Darwin'])) {
+    $gateway = new Gateway("Websocket://0.0.0.0:7272");
+} else {
+    $context = array(
+        'ssl' => array(
+            'local_cert'  => '/www/server/panel/vhost/cert/www.fanglonger.com/fullchain.pem',//你证书的pem文件
+            'local_pk'    => '/www/server/panel/vhost/cert/www.fanglonger.com/privkey.pem',//你证书的key文件
+            'verify_peer' => false,
+        )
+    );
+    $gateway = new Gateway("Websocket://0.0.0.0:7272",$context);
+    $gateway->transport = 'ssl';
+}
 // 设置名称，方便status时查看
 $gateway->name = 'ChatGateway';
 // 设置进程数，gateway进程数建议与cpu核数相同
