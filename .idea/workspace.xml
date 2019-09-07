@@ -2,14 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/css/app.774358fac8cfb353ced0b48f212acb1e.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/css/app.774358fac8cfb353ced0b48f212acb1e.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/css/app.d29e7691d13397da355eb12440751d35.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/css/app.d29e7691d13397da355eb12440751d35.css.map" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/static/fonts/element-icons.535877f.woff" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/static/fonts/element-icons.732389d.ttf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/static/img/u0.ba54a8c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/js/app.1ca0ae2944d6217208ac.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/js/app.1ca0ae2944d6217208ac.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/js/app.a59307cebe8d3ba28408.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/js/app.a59307cebe8d3ba28408.js.map" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/static/js/manifest.2ae2e69a05c33dfc65f8.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/static/js/manifest.2ae2e69a05c33dfc65f8.js.map" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/static/js/vendor.d2b8194af4b6ca6fe47c.js" beforeDir="false" />
@@ -176,7 +175,7 @@
       <workItem from="1567769745610" duration="30000" />
       <workItem from="1567769787420" duration="454000" />
       <workItem from="1567770245946" duration="236000" />
-      <workItem from="1567772012773" duration="32209000" />
+      <workItem from="1567772012773" duration="32512000" />
     </task>
     <servers />
   </component>
