@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
+use App\Jobs\OauthProcess;
 use App\Models\Push;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -53,15 +54,15 @@ class PushController extends BaseController
     {
         $this->validatePost(['info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
         $this->pushMessage();
+        $this->post['created_at'] = time();
         if ($this->post['username'] == 'all') {
-            $users = $this->redisClient->sMembers(config('app.redis_user_key'));
-            foreach ($users as $item) {
-                $this->post['uid'] = $item;
-                $this->pushModel->addResult($this->post);
-            }
-        } else {
+            dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
+            $this->post['username'] = 'admin';
+            $this->post['uid'] = md5('admin');
             $this->pushModel->addResult($this->post);
+            return $this->ajax_return(Code::SUCCESS,'push message save successfully');
         }
+        $this->pushModel->addResult($this->post);
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
 
@@ -73,15 +74,12 @@ class PushController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer','info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
         $this->pushMessage();
+        $this->post['created_at'] = strtotime($this->post['created_at']);
         if ($this->post['username'] == 'all') {
-            $users = $this->redisClient->sMembers(config('app.redis_user_key'));
-            foreach ($users as $item) {
-                $this->post['uid'] = $item;
-                $this->pushModel->updateResult($this->post,'id',$this->post['id']);
-            }
-        } else {
-            $this->pushModel->updateResult($this->post,'id',$this->post['id']);
+            dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
+            return $this->ajax_return(Code::SUCCESS,'push message update successfully');
         }
+        $this->pushModel->updateResult($this->post,'id',$this->post['id']);
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
     /**

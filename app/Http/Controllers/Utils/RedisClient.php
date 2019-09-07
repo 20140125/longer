@@ -27,16 +27,13 @@ class RedisClient
     protected $redisClient;
     /**
      * RedisClient constructor.
-     * @param $host
-     * @param int $port
-     * @param string $password
      */
-    public function __construct($host,$port='6379',$password='')
+    public function __construct()
     {
         $this->redisClient = new \Redis();
-        $this->host = $host;
-        $this->port = $port;
-        $this->password = $password;
+        $this->host = config('app.redis_host');
+        $this->port = config('app.redis_port');
+        $this->password = config('app.redis_password');
         $this->redisClient->connect($this->host,$this->port);
         if (!empty($this->password)) {
             try{
@@ -150,5 +147,49 @@ class RedisClient
     public function rPop($key)
     {
         return $this->redisClient->rPop($key);
+    }
+
+    /**
+     * TODO:返回列表中指定区间内的元素（ Redis 列表(List)）
+     * @param $key
+     * @param $start
+     * @param $num
+     * @return array
+     */
+    public function lRange($key,$start,$num)
+    {
+        return $this->redisClient->lRange($key,$start,$num);
+    }
+
+    /**
+     * TODO:Redis Hgetall 命令用于返回哈希表中，所有的字段和值。（ Redis 哈希 (hash)）
+     * @param $key
+     * @return array
+     */
+    public function hGetAll($key)
+    {
+        return $this->redisClient->hGetAll($key);
+    }
+
+    /**
+     * TODO:命令用于为哈希表中的字段值加上指定增量值。（ Redis 哈希 (hash)）
+     * @param $from
+     * @param $to
+     * @return int
+     */
+    public function hIncrBy($from, $to)
+    {
+        return $this->redisClient->hIncrBy($to,$from,1);
+    }
+
+    /**
+     * TODO:命令用于删除哈希表 key 中的一个或多个指定字段，不存在的字段将被忽略。（ Redis 哈希 (hash)）
+     * @param $from
+     * @param $to
+     * @return bool|int
+     */
+    public function hDel($from, $to)
+    {
+        return $this->redisClient->hDel($to,$from);
     }
 }

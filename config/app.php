@@ -58,6 +58,10 @@ return [
     'redis_user_key' =>env('WORKER_REDIS_USER_KEY',''),
     'rsa_public' =>env('RSA_PUBLIC_KEY_PATH',''),
     'rsa_private' =>env('RSA_PRIVATE_KEY_PATH',''),
+    'redis_host' => env('REDIS_HOST','127.0.0.1'),
+    'redis_password' => env('REDIS_PASSWORD',null),
+    'redis_port' => env('REDIS_PORT','6379'),
+    'avatar_url' => env('AVATAR_URL',''),
 
     'asset_url' => env('ASSET_URL', null),
 

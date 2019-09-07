@@ -29,9 +29,9 @@ class OAuthController extends Controller
      * @param int $length
      * @return string
      */
-    public function getState($length = 8)
+    public function getState($length = 32)
     {
-        $this->state = md5(get_round_num($length));
+        $this->state = md5(get_round_num($length).time().uniqid());
         return $this->state;
     }
     /**

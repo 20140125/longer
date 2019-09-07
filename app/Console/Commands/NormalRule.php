@@ -46,7 +46,7 @@ class NormalRule extends Command
         parent::__construct();
         date_default_timezone_set("Asia/Shanghai");
         $this->reqRuleModel = ReqRule::getInstance();
-        $this->redisClient = new RedisClient('127.0.0.1');
+        $this->redisClient = new RedisClient();
     }
     /**
      * Execute the console command.

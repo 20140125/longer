@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
-use http\Exception;
-use Illuminate\Http\JsonResponse;
 
 /**
  * Class GithubController
