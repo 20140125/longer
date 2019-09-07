@@ -2,57 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Jobs/OauthProcess.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/webPush/Chat.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/webPush/Events.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/webPush/start_businessworker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/webPush/start_gateway.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/webPush/start_register.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage/framework/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/composerJson.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/longer.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/laravel-plugin.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/longer.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/symfony2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/ExpiresRule.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/ExpiresRule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/NormalRule.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/NormalRule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Console/Commands/SendPush.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Commands/SendPush.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/BaseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/BaseController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/LoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/LoginController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/MenuController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/MenuController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/OauthCallbackController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/OauthCallbackController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/OauthLoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/OauthLoginController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/PushController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/PushController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Oauth/BaiDuController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Oauth/BaiDuController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Oauth/GithubController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Oauth/GithubController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Oauth/OAuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Oauth/OAuthController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Utils/RedisClient.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Utils/RedisClient.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/app.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2019_07_25_141744_create_failed_jobs_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_09_03_151611_create_failed_jobs_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2019_07_25_141755_create_jobs_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_09_03_144739_create_jobs_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/css/app.01eb5acf80eb114b6eca4156943aa9c9.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/css/app.01eb5acf80eb114b6eca4156943aa9c9.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/fonts/element-icons.535877f.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/fonts/element-icons.732389d.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/img/u0.ba54a8c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/js/app.776d62a9a0c77e019321.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/js/app.776d62a9a0c77e019321.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/js/manifest.2ae2e69a05c33dfc65f8.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/js/manifest.2ae2e69a05c33dfc65f8.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/js/vendor.d2b8194af4b6ca6fe47c.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/js/vendor.d2b8194af4b6ca6fe47c.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/webPush/start.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/webPush/start.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/webPush/start_for_win.bat" beforeDir="false" afterPath="$PROJECT_DIR$/public/webPush/start_for_win.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/webPush/start_io.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/webPush/start_io.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -176,9 +129,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/public/webPush/config" />
-      <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -212,7 +165,7 @@
       <workItem from="1567769745610" duration="30000" />
       <workItem from="1567769787420" duration="454000" />
       <workItem from="1567770245946" duration="236000" />
-      <workItem from="1567772012773" duration="27985000" />
+      <workItem from="1567772012773" duration="29461000" />
     </task>
     <servers />
   </component>

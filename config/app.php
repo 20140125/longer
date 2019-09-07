@@ -62,6 +62,7 @@ return [
     'redis_password' => env('REDIS_PASSWORD',null),
     'redis_port' => env('REDIS_PORT','6379'),
     'avatar_url' => env('AVATAR_URL',''),
+    'websocket' =>env('WEBSOCKET_URL','ws://127.0.0.1:7272'),
 
     'asset_url' => env('ASSET_URL', null),
 

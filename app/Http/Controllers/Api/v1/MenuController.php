@@ -45,8 +45,9 @@ class MenuController extends BaseController
                 ['auth'=>$role->auth_url,
                     'token'=>$this->users->remember_token,
                     'username'=>$this->users->username,
-                    'ip'=>config('app.socket_url'),
-                    'avatar_url' => $this->users->username == 'admin' ? config('app.avatar_url') :$this->users->avatar_url
+                    'socket'=>config('app.socket_url'),
+                    'avatar_url' => $this->users->username == 'admin' ? config('app.avatar_url') :$this->users->avatar_url,
+                    'websocket'=>config('app.websocket')
                 ]
             );
         }
