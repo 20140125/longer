@@ -192,4 +192,22 @@ class RedisClient
     {
         return $this->redisClient->hDel($to,$from);
     }
+    /**
+     * TODO:获取所有的Key
+     * @param $pattern
+     * @return array
+     */
+    public function keys($pattern)
+    {
+        return $this->redisClient->keys($pattern);
+    }
+    /**
+     * TODO:获取聊天记录长度
+     * @param $key
+     * @return int
+     */
+    public function lLen($key)
+    {
+        return $this->redisClient->lLen($key);
+    }
 }

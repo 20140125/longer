@@ -51,14 +51,14 @@ $sender_io->on('connection', function($socket) {
             return ;
         }
         $redis->sAdd('uidConnectionMap',$uid);
-        $redisUser = $redis->SMEMBERS('uidConnectionMap');
+        $redisUser = $redis->SMEMBERS(RedisKey);
         $online_user_count = count($redisUser);
         // 将这个连接加入到uid分组，方便针对uid推送数据
         $socket->join($uid);
     });
     global $redis,$sender_io,$day,$log_last_count,$push_data_count,$push_last_count,$oauth_last_count;
     //已经登录的用户
-    $redisUser = $redis->SMEMBERS('uidConnectionMap');
+    $redisUser = $redis->SMEMBERS(RedisKey);
     foreach ($redisUser as $user) {
         $pushData = pushData($user);
         $push_data_count = count($pushData);
@@ -83,11 +83,11 @@ $sender_io->on('connection', function($socket) {
     //用户离线
     $socket->on('disconnect', function () use($socket) {
         global $redis;
-        if (!$redis->sIsMember('uidConnectionMap',$socket->uid)) {
+        if (!$redis->sIsMember(RedisKey,$socket->uid)) {
             return ;
         }
         //用户离线删除redis里的值
-        $redis->sREM('uidConnectionMap',$socket->uid);
+        $redis->sREM(RedisKey,$socket->uid);
     });
 });
 
@@ -116,7 +116,7 @@ $sender_io->on('workerStart', function () {
                 $to = @$_POST['to'];
                 $_POST['content'] = trim(htmlspecialchars(@$_POST['content']));
                 // http接口返回，如果用户离线socket返回fail
-                if ($to && !$redis->sIsMember('uidConnectionMap', $to)) {
+                if ($to && !$redis->sIsMember(RedisKey, $to)) {
                     return $connection->send('offline');
                 }
                 if ($to) {
@@ -135,10 +135,11 @@ $sender_io->on('workerStart', function () {
     //定时器 (只有在客户端在线数变化了才广播，减少不必要的客户端通讯)
     Timer::add(2, function () {
         global $sender_io, $redis, $day,$log_last_count,$push_last_count,$push_data_count,$online_user_count,$oauth_last_count,$times;
-        $redisUser = $redis->SMEMBERS('uidConnectionMap');
+        $redisUser = $redis->SMEMBERS(RedisKey);
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
             if ($push_data_count != count($pushData)) {
+                //站内通知推送
                 $sender_io->to($user)->emit('notice', $pushData);
             }
         }
@@ -148,18 +149,17 @@ $sender_io->on('workerStart', function () {
                 $item = date('Ymd',$item);
             }
         }
+        //在线人数推送
         if ($online_user_count != count($redisUser)) {
             $sender_io->emit('online',count($redisUser));
         }
         $total['day'] = $day;
-        //日志总量
         $logCount = getLogCount();
-        //站内通知总量
         $pushCount = getPushCount();
-        //授权用户
         $oauthCount = getOauthCount();
         $total['total'] = array('log' => $logCount,'push'=>$pushCount,'oauth'=>$oauthCount);
         if ($log_last_count != $logCount[intval(count($logCount)-1)] ||  $push_last_count != $pushCount[intval(count($pushCount)-1)] || $oauth_last_count != $oauthCount[intval(count($oauthCount)-1)]) {
+            //数据统计推送
             $sender_io->emit('charts', $total);
         }
     });

@@ -1,14 +1,30 @@
 <?php
+/**
+ * @author <fl140125@gmail.com>
+ * Class Chat
+ */
 class Chat
 {
+    /**
+     * @var Redis $redisClient
+     */
     protected $redisClient;
-    protected $checkUserReadable = false;
+    /**
+     * @var bool $checkUserReadable
+     */
+    public $checkUserReadable = true;
+    /**
+     * @var string $hashKey
+     */
+    protected $hashKey = 'unread_';
+    /**
+     * Chat constructor.
+     */
     public function __construct()
     {
         $this->redisClient = new Redis();
         $this->redisClient->connect('127.0.0.1',6379);
     }
-
     /**
      * TODO：缓存用户聊天记录
      * @param $from
@@ -16,29 +32,44 @@ class Chat
      * @param $message
      * @return bool|int
      */
-    public function setChatRecode($from,$to,$message)
+    public function setChatMsgLists($from,$to,$message)
     {
         $value = str_replace('\\','',json_encode($message,JSON_UNESCAPED_UNICODE));
-        $keyName = "receive_{$from}_{$to}";
+        $keyName = $to == 'all' ? 'receive_all' : "receive_{$from}_{$to}";
         $res = $this ->redisClient-> lPush($keyName, $value);
         //消息接受者无法立刻查看时，将消息设置为未读
         if (!$this -> checkUserReadable) {
-            $this -> cacheUnreadMsg($from, $to);
+            $this -> setUnreadMsgLists($from,$to);
         }
         return $res;
     }
-
     /**
      * TODO：获取聊天记录
      * @param $from
      * @param $to
      * @return array
      */
-    public function getChatRecord($from, $to)
+    public function getChatMsgLists($from, $to)
     {
+        //群聊消息
+        if ($to == 'all') {
+            $recName = 'receive_all';
+            $num = $this->getMsgLen($recName);
+            $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
+            $messageLists = array();
+            foreach ($recList as $item) {
+                array_push($messageLists,json_decode($item,true));
+            }
+            $time = array();
+            foreach ($messageLists as $item) {
+                $time[] = $item['time'];
+            }
+            array_multisort($time,SORT_ASC,$messageLists);
+            return $messageLists;
+        }
         //接受的消息
-        $recName = "receive_{$from}_{$to}";
-        $num = $this->getRecordLen($recName);
+        $recName =  "receive_{$from}_{$to}";
+        $num = $this->getMsgLen($recName);
         $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
         //发送的消息
         $sendName = "receive_{$to}_{$from}";
@@ -57,26 +88,23 @@ class Chat
         array_multisort($time,SORT_ASC,$messageLists);
         return $messageLists;
     }
-
     /**
      * TODO:获取聊天记录长度
      * @param $key
      * @return int
      */
-    protected function getRecordLen($key)
+    protected function getMsgLen($key)
     {
         return $this->redisClient->lLen($key);
     }
-
     /**
      * TODO：获取用户未读消息记录数
-     * @param $user
+     * @param $to
      * @return array
      */
-    public function getUnreadMsgCount($user) {
-        return $this ->redisClient-> hGetAll('unread_' . $user);
+    public function getUnreadMsgCount($to) {
+        return $this ->redisClient-> hGetAll($this->hashKey.$to);
     }
-
     /**
      * TODO：包括所有未读消息内容的数组
      * @param $from
@@ -96,18 +124,49 @@ class Chat
      * @param $to
      * @return int
      */
-    public function cacheUnreadMsg($from, $to)
+    public function setUnreadMsgLists($from,$to)
     {
-        return $this->redisClient->hIncrBy($from,$to,1);
+        return $this->redisClient->hIncrBy($this->hashKey.$to,$from,1);
     }
-
     /**
      * TODO:删除未读消息
      * @param $from
      * @param $to
      * @return bool|int
      */
-    public function setUnreadToRead($from, $to) {
-        return $this-> redisClient -> hDel('unread_' . $to, $from);
+    public function delUnreadMsg($from,$to)
+    {
+        return $this-> redisClient -> hDel($this->hashKey.$to, $from);
+    }
+    /**
+     * TODO:判断是否存在
+     * @param $key
+     * @param $value
+     * @return bool
+     */
+    public function sIsMember($key,$value)
+    {
+        return $this->redisClient->sIsMember($key,$value);
+    }
+    /**
+     * TODO：获取集合
+     * @param $key
+     * @return array
+     */
+    public function sMembers($key)
+    {
+        return $this->redisClient->SMEMBERS($key);
+    }
+
+    public function saveImg()
+    {
+        $arr = array();
+        for ($i = 0;$i<4;$i++) {
+            array_push($arr,'http://www.laravel.com/kf.jpg');
+        }
+        echo json_encode($arr);
     }
 }
+
+$chat = new Chat();
+$chat->saveImg();
