@@ -5,5 +5,5 @@ define('UserName','root');
 define('Password','');
 define('DbName','longer');
 define('RedisKey','uidConnectionMap');
-define('BgImg','http://localhost/bg.png');
-define('KFImg','http://localhost/kf.jpg');
+define('BgImg','http://www.laravel.com/bg.png');
+define('KFImg','http://www.laravel.com/kf.jpg');
