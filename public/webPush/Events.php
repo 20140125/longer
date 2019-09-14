@@ -68,7 +68,7 @@ class Events
                 $arr = array(
                     'room_id' => $room_id,
                     'client_name' => 'all',
-                    'client_img' => 'http://www.laravel.com/kf.jpg'
+                    'client_img' => KFImg
                 );
                 array_push($clients_list,$arr);
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
@@ -166,5 +166,4 @@ class Events
             Gateway::sendToGroup($room_id, json_encode($new_message));
         }
     }
-
 }

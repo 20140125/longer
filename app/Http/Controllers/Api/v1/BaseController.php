@@ -106,7 +106,7 @@ class BaseController extends Controller
         }
         //token不正确
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
-        if (empty($this->users) || !in_array($this->post['token'],explode('-',$request->header('Authorization')))) {
+        if (empty($this->users) || $this->post['token']!==mb_substr($request->header('Authorization'),32,32)) {
             $this->setCode(Code::Unauthorized,'user token validate failed');
         }
         //用户被禁用
