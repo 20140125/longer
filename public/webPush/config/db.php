@@ -4,3 +4,6 @@ define('Port','3306');
 define('UserName','root');
 define('Password','');
 define('DbName','longer');
+define('RedisKey','uidConnectionMap');
+define('BgImg','http://localhost/bg.png');
+define('KFImg','http://localhost/kf.jpg');
