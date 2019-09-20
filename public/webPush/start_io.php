@@ -138,10 +138,8 @@ $sender_io->on('workerStart', function () {
         $redisUser = $redis->SMEMBERS(RedisKey);
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
-            if ($push_data_count != count($pushData)) {
-                //站内通知推送
-                $sender_io->to($user)->emit('notice', $pushData);
-            }
+            //站内通知推送
+            $sender_io->to($user)->emit('notice', $pushData);
         }
         if ($day[count($day)-1] != date('Ymd')) {
             $day = range(strtotime(date('Ymd',strtotime("-{$times} day"))),strtotime(date('Ymd')),24*60*60);
@@ -171,8 +169,7 @@ $sender_io->on('workerStart', function () {
     function pushData($user)
     {
         global $db;
-        $result = $db->select('*')->from('os_push')
-            ->where("see = 0 and state<> 'successfully' and uid = '{$user}' ")->query();
+        $result = $db->select('*')->from('os_push')->where("uid = '{$user}' ")->orderByASC(['see'])->query();
         return $result;
     }
     /**
