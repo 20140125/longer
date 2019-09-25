@@ -158,6 +158,11 @@ class UsersController extends BaseController
         return $this->ajax_return(Code::SUCCESS,'update users error');
     }
 
+    public function center()
+    {
+
+    }
+
     /**
      * TODO: 删除管理员用户
      * @return JsonResponse

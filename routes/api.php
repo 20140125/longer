@@ -27,6 +27,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'user/index','v1\UsersController@index');
     Route::match(['get','post'],'user/update','v1\UsersController@update');
     Route::match(['get','post'],'user/save','v1\UsersController@save');
+    Route::match(['get','post'],'user/center','v1\UsersController@center')->name('userCenter');
     Route::match(['get','post'],'user/delete','v1\UsersController@delete');
     Route::match(['get','post'],'wx/login','v1\UsersController@login')->name('wxLogin');
     Route::match(['get','post'],'wx/getOpenid','v1\UsersController@getOpenId')->name('getOpenId');
@@ -84,6 +85,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //城市
     Route::match(['get','post'],'area/index','v1\AreaController@index');
     Route::match(['get','post'],'area/weather','v1\AreaController@weather');
+    Route::match(['get','post'],'area/lists','v1\AreaController@lists');
     //站内信息推送
     Route::match(['get','post'],'push/index','v1\PushController@index');
     Route::match(['get','post'],'push/save','v1\PushController@save');
