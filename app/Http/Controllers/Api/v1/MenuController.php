@@ -42,7 +42,8 @@ class MenuController extends BaseController
         $role = $this->roleModel->getResult('id',$this->users->role_id);
         if (!empty($role)){
             return $this->ajax_return(Code::SUCCESS,'permission',
-                ['auth'=>$role->auth_url,
+                [
+                    'auth'=>$role->auth_url,
                     'token'=>$this->users->remember_token,
                     'username'=>$this->users->username,
                     'socket'=>config('app.socket_url'),

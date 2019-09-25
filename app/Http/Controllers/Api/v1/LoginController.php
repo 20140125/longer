@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\Rsa;
 use App\Models\Config;
+use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class LoginController
     }
 
     /**
-     * todo 用户登录
+     * TODO:用户登录
      * @param Request $request
      * @return JsonResponse
      */
@@ -59,6 +60,9 @@ class LoginController
         if ($result === Code::NOT_ALLOW){
             return ajax_return(Code::NOT_ALLOW,'users not allow login system');
         }
+        $where[] = array('u_type',2);
+        $where[] = array('u_name',$result['username']);
+        UserCenter::getInstance()->updateResult(array('token'=>$result['token']),$where);
         return ajax_return(Code::SUCCESS,'login successfully',$result);
     }
 

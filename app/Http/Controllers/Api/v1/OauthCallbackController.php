@@ -10,6 +10,7 @@ use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\OAuth;
+use App\Models\UserCenter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -226,9 +227,13 @@ class OauthCallbackController
     {
         $oauth = $this->oauthModel->getResult($where);
         if (!empty($oauth)){
+            $where[] = array('u_type',1);
+            $where[] = array('u_name',$data['username']);
+            UserCenter::getInstance()->updateResult(array('token'=>$data['remember_token']),$where);
             $oauthRes =  $this->oauthModel->updateResult($data,$where);
         }else{
             $oauthRes =  $this->oauthModel->addResult($data);
+            UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauthRes));
         }
         if (!empty($oauthRes)){
             return redirect('/#/admin/index/'.$data['remember_token']);
