@@ -185,7 +185,8 @@ class UsersController extends BaseController
                 'u_name'=>'required|string','u_type'=>'required|integer',
                 'id'=>'required|integer','desc'=>'required|string|max:128',
                 'tags'=>'required|Array|max:128','notice_status'=>'required|integer|in:1,2',
-                'user_status'=>'required|integer|in:1,2','uid'=>'required|integer'
+                'user_status'=>'required|integer|in:1,2','uid'=>'required|integer',
+                'ip_address' => 'required|Array','local'=>'required|Array'
             ]
         );
         unset($this->post['email']);

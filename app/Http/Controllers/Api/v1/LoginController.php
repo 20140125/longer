@@ -62,7 +62,7 @@ class LoginController
         }
         $where[] = array('u_type',2);
         $where[] = array('u_name',$result['username']);
-        UserCenter::getInstance()->updateResult(array('token'=>$result['token']),$where);
+        UserCenter::getInstance()->updateResult(array('token'=>$result['token'],'type'=>'login'),$where);
         return ajax_return(Code::SUCCESS,'login successfully',$result);
     }
 

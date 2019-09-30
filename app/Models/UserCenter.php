@@ -62,9 +62,13 @@ class UserCenter extends Model
      */
     public function updateResult($data,$field,$value=null,$op='=')
     {
-        $data['tags'] = empty($data['tags']) ? '0' : str_replace('\\','',json_encode($data['tags'],JSON_UNESCAPED_UNICODE));
-        $data['ip_address'] = empty($data['ip_address']) ? '0' : str_replace('\\','',json_encode($data['ip_address'],JSON_UNESCAPED_UNICODE));
-        $data['local'] = empty($data['local']) ? '0' : str_replace('\\','',json_encode($data['local'],JSON_UNESCAPED_UNICODE));
+        if (empty($data['type'])) {
+            $data['tags'] = empty($data['tags']) ? '0' : str_replace('\\','',json_encode($data['tags'],JSON_UNESCAPED_UNICODE));
+            $data['ip_address'] = empty($data['ip_address']) ? '0' : str_replace('\\','',json_encode($data['ip_address'],JSON_UNESCAPED_UNICODE));
+            $data['local'] = empty($data['local']) ? '0' : str_replace('\\','',json_encode($data['local'],JSON_UNESCAPED_UNICODE));
+        } else {
+            unset($data['type']);
+        }
         $result = DB::table($this->table)->where($field,$op,$value)->update($data);
         return $result;
     }
