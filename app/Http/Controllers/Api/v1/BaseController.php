@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OAuth;
 use App\Models\Role;
 use App\Models\Auth;
+use App\Models\UserCenter;
 use App\Models\Users;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -96,7 +98,9 @@ class BaseController extends Controller
             route('logSave'),
             route('menu'),
             route('reqRuleSave'),
-            route('emotion')
+            route('emotion'),
+            route('saveCenter'),
+            route('userCenter')
         ];
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
@@ -123,6 +127,17 @@ class BaseController extends Controller
         if (!in_array(asset($url),$common_url)) {
             unset($this->post['token']);
         }
+        $this->getUserCenter();
+    }
+
+    /**
+     * TODO:获取用户个人设置
+     */
+    protected function getUserCenter()
+    {
+        $result = UserCenter::getInstance()->getResult('token',$this->users->remember_token,'=',['user_status','notice_status']);
+        $this->users->notice_status = $result->notice_status;
+        $this->users->user_status = $result->user_status;
     }
 
     /**
@@ -216,7 +231,7 @@ class BaseController extends Controller
                 }
                 $this->post['state'] = Code::WebSocketState[2];
             }catch (Exception $e){
-                act_log('站内信息推送失败：'.$e->getMessage());
+                Log::error("站内信息推送失败：".$e->getMessage());
             }
         }
     }

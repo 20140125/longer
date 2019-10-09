@@ -57,6 +57,17 @@ class Area extends Model
     }
 
     /**
+     * TODO:获取所有记录
+     * @param array $columns
+     * @return Collection
+     */
+    public function getAll($columns=['*'])
+    {
+        $result = DB::table($this->table)->get($columns);
+        return $result;
+    }
+
+    /**
      * TODO:更新数据
      * @param $data
      * @param $filed

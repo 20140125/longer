@@ -7,6 +7,8 @@ use App\Http\Controllers\Utils\Code;
 use App\Models\Area;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AreaController
@@ -64,5 +66,19 @@ class AreaController extends BaseController
             return $this->ajax_return(Code::SUCCESS,'get weather successfully',$result);
         }
         return $this->ajax_return(Code::ERROR,'get weather failed',$result);
+    }
+
+    /**
+     * TODO:城市列表
+     * @return JsonResponse
+     */
+    public function lists()
+    {
+        $result = Cache::get('city');
+        if (empty($result)) {
+            $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
+            Cache::forever('city',$result);
+        }
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 }

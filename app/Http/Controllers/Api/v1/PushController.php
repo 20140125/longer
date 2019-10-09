@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
-use App\Http\Controllers\Utils\RedisClient;
 use App\Jobs\OauthProcess;
 use App\Models\Push;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -38,7 +36,7 @@ class PushController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer|gt:0','limit'=>'required|integer|gt:0']);
-        $result = $this->pushModel->getResultLists($this->post['page'],$this->post['limit'],$this->users,$this->post['state'],$this->post['status']);
+        $result = $this->pushModel->getResultLists($this->post['page'],$this->post['limit'],$this->users,$this->post['state']??'',$this->post['status']??'');
         foreach ($result['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
         }
@@ -74,7 +72,6 @@ class PushController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer','info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
         $this->pushMessage();
-        $this->post['created_at'] = strtotime($this->post['created_at']);
         if ($this->post['username'] == 'all') {
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
             return $this->ajax_return(Code::SUCCESS,'push message update successfully');

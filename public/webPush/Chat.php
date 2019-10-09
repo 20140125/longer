@@ -64,7 +64,7 @@ class Chat
             foreach ($messageLists as $item) {
                 $time[] = $item['time'];
             }
-            array_multisort($time,SORT_ASC,$messageLists);
+                array_multisort($time,SORT_ASC,$messageLists);
             return $messageLists;
         }
         //接受的消息

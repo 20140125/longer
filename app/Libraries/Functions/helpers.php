@@ -94,15 +94,16 @@ if (!function_exists('get_tree'))
      * @param $data
      * @param $pid
      * @param $attr
+     * @param $pidAttr
      * @return array
      */
-    function get_tree($data,$pid,$attr = 'data')
+    function get_tree($data,$pid,$attr = 'data',$pidAttr = 'pid')
     {
         $tree = array();
         foreach ($data as $key=> $item){
             $res = object_to_array($data[$key]);
-            if ($res['pid'] == $pid){
-                $res[$attr] = get_tree($data,$res['id'],$attr);
+            if ($res[$pidAttr] == $pid){
+                $res[$attr] = get_tree($data,$res['id'],$attr,$pidAttr);
                 $tree[] = $res;
             }
         }
@@ -627,7 +628,7 @@ if (!function_exists('act_log'))
             'day' => date('Ymd'),
             'log' =>$info
         );
-        $data['log'] =str_replace('\\','', json_encode($data,JSON_UNESCAPED_UNICODE));
+        $data['log'] =str_replace('\\','', json_encode($info,JSON_UNESCAPED_UNICODE));
         return logModel::getInstance()->addResult($data);
     }
 }

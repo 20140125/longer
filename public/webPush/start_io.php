@@ -134,14 +134,12 @@ $sender_io->on('workerStart', function () {
     $inner_http_worker->listen();
     //定时器 (只有在客户端在线数变化了才广播，减少不必要的客户端通讯)
     Timer::add(2, function () {
-        global $sender_io, $redis, $day,$log_last_count,$push_last_count,$push_data_count,$online_user_count,$oauth_last_count,$times;
+        global $sender_io, $redis, $day,$log_last_count,$push_last_count,$online_user_count,$oauth_last_count,$times;
         $redisUser = $redis->SMEMBERS(RedisKey);
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
-            if ($push_data_count != count($pushData)) {
-                //站内通知推送
-                $sender_io->to($user)->emit('notice', $pushData);
-            }
+            //站内通知推送
+            $sender_io->to($user)->emit('notice', $pushData);
         }
         if ($day[count($day)-1] != date('Ymd')) {
             $day = range(strtotime(date('Ymd',strtotime("-{$times} day"))),strtotime(date('Ymd')),24*60*60);
@@ -171,8 +169,7 @@ $sender_io->on('workerStart', function () {
     function pushData($user)
     {
         global $db;
-        $result = $db->select('*')->from('os_push')
-            ->where("see = 0 and state<> 'successfully' and uid = '{$user}' ")->query();
+        $result = $db->select('*')->from('os_push')->where("uid = '{$user}' ")->orderByDESC(['created_at'])->query();
         return $result;
     }
     /**
