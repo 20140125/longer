@@ -231,7 +231,11 @@ class OauthCallbackController
         if (!empty($oauth)){
             $where[] = array('u_type',1);
             $where[] = array('u_name',$data['username']);
-            UserCenter::getInstance()->updateResult(array('token'=>$data['remember_token'],'type'=>'login'),$where);
+            if (UserCenter::getInstance()->getResult($where)) {
+                UserCenter::getInstance()->updateResult(array('token'=>$data['remember_token'],'type'=>'login'),$where);
+            } else {
+                UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauth->id));
+            }
             $oauthRes =  $this->oauthModel->updateResult($data,$where);
         }else{
             $oauthRes =  $this->oauthModel->addResult($data);
