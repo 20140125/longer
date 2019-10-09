@@ -628,7 +628,7 @@ if (!function_exists('act_log'))
             'day' => date('Ymd'),
             'log' =>$info
         );
-        $data['log'] =str_replace('\\','', json_encode($data,JSON_UNESCAPED_UNICODE));
+        $data['log'] =str_replace('\\','', json_encode($info,JSON_UNESCAPED_UNICODE));
         return logModel::getInstance()->addResult($data);
     }
 }

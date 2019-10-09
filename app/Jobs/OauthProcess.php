@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OauthProcess implements ShouldQueue
 {
@@ -53,7 +54,7 @@ class OauthProcess implements ShouldQueue
             }
             DB::commit();
         }catch (\Exception $exception){
-            act_log('站内通知对列执行错误：'.$exception->getMessage());
+            Log::error('站内通知对列执行错误：'.$exception->getMessage());
             DB::rollBack();
         }
 

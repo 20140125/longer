@@ -135,6 +135,7 @@ class ReqRuleController extends BaseController
                 'info' => $this->post['info'],
                 'uid'  => md5($this->post['username']),
                 'state' => $this->post['state'],
+                'title' => '权限申请',
                 'status' => 1,
                 'created_at' => time()
             );
@@ -212,6 +213,7 @@ class ReqRuleController extends BaseController
                         'uid'  => md5($this->post['username']),
                         'state' => $this->post['state'],
                         'status' => 1,
+                        'title' => '权限通过',
                         'created_at' => time()
                     );
                     Push::getInstance()->addResult($message);

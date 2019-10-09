@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Models\Push;
 use App\Models\UserCenter;
 use App\Models\Users;
 use App\User;
@@ -151,10 +152,27 @@ class UsersController extends BaseController
         }
         //用户修改密码
         $this->validatePost($this->rule(2));
+        $pass = $this->post['password'];
         $this->post['salt'] = get_round_num(8);
         $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
         $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
+            //修改密码站内通知
+            $this->post['info'] = '你的密码修改成功，新密码是：'.$pass;
+            $this->post['username'] = 'admin';
+            $this->post['uid'] = md5($this->post['username']);
+            $this->post['status'] = 1;
+            $this->pushMessage();
+            $message = array(
+                'username' => $this->post['username'],
+                'info' => $this->post['info'],
+                'uid'  => md5($this->post['username']),
+                'state' => $this->post['state'],
+                'title' => '修改密码',
+                'status' => 1,
+                'created_at' => time()
+            );
+            Push::getInstance()->addResult($message);
             return $this->ajax_return(Code::SUCCESS,'update users successfully');
         }
         return $this->ajax_return(Code::ERROR,'update users error');
@@ -226,7 +244,7 @@ class UsersController extends BaseController
                     'email' => 'required|email',
                     'status'   => 'required|integer|between:1,2',
                     'phone_number' => 'required|size:11',
-                    'role_id' => 'required|integer'
+                    'role_id' => 'required|integer|in:1'
                 ];
                 break;
             case 2:

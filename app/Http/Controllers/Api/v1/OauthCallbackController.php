@@ -9,11 +9,13 @@ use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
+use App\Mail\Register;
 use App\Models\OAuth;
 use App\Models\UserCenter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class OauthCallbackController
@@ -234,6 +236,7 @@ class OauthCallbackController
         }else{
             $oauthRes =  $this->oauthModel->addResult($data);
             UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauthRes));
+            Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
         }
         if (!empty($oauthRes)){
             return redirect('/#/admin/index/'.$data['remember_token']);

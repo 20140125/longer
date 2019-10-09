@@ -134,7 +134,7 @@ $sender_io->on('workerStart', function () {
     $inner_http_worker->listen();
     //定时器 (只有在客户端在线数变化了才广播，减少不必要的客户端通讯)
     Timer::add(2, function () {
-        global $sender_io, $redis, $day,$log_last_count,$push_last_count,$push_data_count,$online_user_count,$oauth_last_count,$times;
+        global $sender_io, $redis, $day,$log_last_count,$push_last_count,$online_user_count,$oauth_last_count,$times;
         $redisUser = $redis->SMEMBERS(RedisKey);
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
@@ -169,7 +169,7 @@ $sender_io->on('workerStart', function () {
     function pushData($user)
     {
         global $db;
-        $result = $db->select('*')->from('os_push')->where("uid = '{$user}' ")->orderByASC(['see'])->query();
+        $result = $db->select('*')->from('os_push')->where("uid = '{$user}' ")->orderByDESC(['created_at'])->query();
         return $result;
     }
     /**
