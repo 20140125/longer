@@ -7,3 +7,4 @@ define('DbName','longer');
 define('RedisKey','uidConnectionMap');
 define('BgImg','https://www.fanglonger.com/bg.png');
 define('KFImg','https://www.fanglonger.com/kf.jpg');
+

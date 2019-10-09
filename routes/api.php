@@ -99,7 +99,10 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'category/delete','v1\ApiController@CategoryDelete');
     Route::match(['post','get'],'category/save','v1\ApiController@categorySave');
     Route::match(['post','get'],'category/update','v1\ApiController@CategoryUpdate');
-
+    //聊天记录
+    Route::match(['post','get'],'chat/history','v1\ChatController@history')->name('chatHis');
+    //表情
+    Route::match(['post','get'],'emotion/index','v1\EmotionController@index')->name('emotion');
     /********************************************私有权限********************************************************/
 
     /******************************************第三方登陆**********************************************************/

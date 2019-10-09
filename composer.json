@@ -17,8 +17,10 @@
         "laravel/tinker": "^1.0",
         "php-curl-class/php-curl-class": "@dev",
         "predis/predis": "^1.1",
+        "workerman/gateway-worker": "^3.0.0",
+        "workerman/globaldata": "^1.0",
         "workerman/mysql": "^1.0",
-        "workerman/gateway-worker" : ">=3.0.0"
+        "ext-gd": "*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

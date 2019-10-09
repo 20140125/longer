@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -95,6 +96,7 @@ class BaseController extends Controller
             route('logSave'),
             route('menu'),
             route('reqRuleSave'),
+            route('emotion')
         ];
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
@@ -104,7 +106,7 @@ class BaseController extends Controller
         }
         //token不正确
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
-        if (empty($this->users) || !in_array($this->post['token'],explode('-',$request->header('Authorization')))) {
+        if (empty($this->users) || $this->post['token']!==mb_substr($request->header('Authorization'),32,32)) {
             $this->setCode(Code::Unauthorized,'user token validate failed');
         }
         //用户被禁用

@@ -723,39 +723,36 @@ if (!function_exists('base64_image_content'))
         }
     }
 }
-if (!function_exists('grab_image'))
+if (!function_exists('download_image'))
 {
-    /**
-     * 下载图片保存指定位置
-     * @param $url
-     * @param $dir
-     * @param string $filename
-     * @return bool|string
-     */
-    function GrabImage($url, $dir, $filename='')
+     function download_image($url)
+     {
+         $ch = curl_init();
+         curl_setopt($ch, CURLOPT_URL, $url);
+         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+         $file = curl_exec($ch);
+         dd($file);
+         curl_close($ch);
+         saveAsImage($url, $file);
+     }
+}
+if (!function_exists('save_image'))
+{
+    function saveAsImage($url, $file)
     {
-        if(empty($url)){
-            return false;
+        $filename = pathinfo($url, PATHINFO_BASENAME);
+        $path = public_path('emotion');
+        $fullPath = $path .'/'. $filename;
+        // 如果目录不存在，则创建
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
         }
-        $ext = strrchr($url, '.');
-        if($ext != '.gif' && $ext != ".jpg" && $ext != ".bmp" && $ext!='png'){
-            echo "格式不支持！";
-            return false;
+        if (!file_exists($fullPath)) {
+            $resource = fopen($fullPath, 'a');
+            fwrite($resource, $file);
+            fclose($resource);
         }
-        $url =
-        $dir = realpath($dir);
-        //目录+文件
-        $filename = (empty($filename) ? '/'.time().uniqid().''.$ext : '/'.$filename);
-        $filename = $dir . $filename;
-        //开始捕捉
-        ob_start();
-        readfile($url);
-        $img = ob_get_contents();
-        ob_end_clean();
-        $fp2 = fopen($filename , "a");
-        fwrite($fp2, $img);
-        fclose($fp2);
-        return $filename;
     }
 }
 if (!function_exists('cut_file'))
