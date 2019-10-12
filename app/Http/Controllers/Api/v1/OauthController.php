@@ -27,6 +27,8 @@ class OauthController extends BaseController
         foreach ($result['data'] as &$item){
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
             $item->updated_at = date('Y-m-d H:i:s',$item->updated_at);
+            $item->email = empty($item->email) ? '' :$item->email;
+            $item->code = empty($item->code) ? '' :$item->code;
             $item->oauth_type = strtoupper($item->oauth_type);
             array_push($oauthImageLists,$item->avatar_url);
         }
