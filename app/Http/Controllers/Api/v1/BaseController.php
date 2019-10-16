@@ -141,7 +141,6 @@ class BaseController extends Controller
             $this->users->notice_status = $result->notice_status;
             $this->users->user_status = $result->user_status;
         }
-        $this->setCode(Code::NOT_ALLOW,'Permission denied');
     }
 
     /**
