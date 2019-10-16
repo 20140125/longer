@@ -229,10 +229,10 @@ class OauthCallbackController
     {
         $oauth = $this->oauthModel->getResult($where);
         if (!empty($oauth)){
-            $where[] = array('u_type',1);
-            $where[] = array('u_name',$data['username']);
-            if (UserCenter::getInstance()->getResult($where)) {
-                UserCenter::getInstance()->updateResult(array('token'=>$data['remember_token'],'type'=>'login'),$where);
+            $whereOauth[] = array('u_type',1);
+            $whereOauth[] = array('u_name',$data['username']);
+            if (UserCenter::getInstance()->getResult($whereOauth)) {
+                UserCenter::getInstance()->updateResult(array('token'=>$data['remember_token'],'type'=>'login'),$whereOauth);
             } else {
                 UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauth->id));
             }
