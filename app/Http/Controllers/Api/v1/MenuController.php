@@ -61,6 +61,8 @@ class MenuController extends BaseController
      */
     public function logout()
     {
+        unset($this->users->notice_status);
+        unset($this->users->user_status);
         if (isset($this->users->salt)){
             $this->users->remember_token = md5(md5($this->users->password).time());
             $result = $this->userModel->updateResult(object_to_array($this->users),'id',$this->users->id);
