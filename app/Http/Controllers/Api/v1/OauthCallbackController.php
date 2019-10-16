@@ -243,9 +243,9 @@ class OauthCallbackController
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
         }
         if (!empty($oauthRes)){
-            return redirect('/admin/index/'.$data['remember_token']);
+            return redirect('/#/admin/index/'.$data['remember_token']);
         }
-        return redirect('/login');
+        return redirect('/#/login');
     }
 
     /**
@@ -258,7 +258,7 @@ class OauthCallbackController
         try{
             if (isset($response['code']) && $response['code'] === Code::ERROR) {
                 set_code($response['code']);
-                return redirect('/login');
+                return redirect('/#/login');
             }
         }catch (\Exception $exception){
             echo $exception->getMessage();
