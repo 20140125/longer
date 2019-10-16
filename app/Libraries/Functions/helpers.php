@@ -250,7 +250,6 @@ if (!function_exists('file_lists'))
                     'path' =>filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
                     'size' =>md5($filePath.$file),
                     'auth' => file_chmod($filePath.$file),
-                    'time' => fileatime($filePath.$file)
                 );
                 $time[] = fileatime($filePath.$file);
             }
