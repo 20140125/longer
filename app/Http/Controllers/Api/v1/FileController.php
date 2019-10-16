@@ -5,6 +5,7 @@ use App\Http\Controllers\Utils\Code;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -85,7 +86,7 @@ class FileController extends BaseController
             //修改用户图片
             if (!empty($this->post['rand']) && $this->post['rand']) {
                 //图片格式上传错误
-                if (!in_array($ext,['jpg','png','jpeg','gif'])) {
+                if (!in_array(strtolower($ext),['jpg','png','jpeg','gif'])) {
                     return $this->ajax_return(Code::ERROR,'upload image format error');
                 }
                 //图片大小上传错误
@@ -103,7 +104,7 @@ class FileController extends BaseController
             //存储文件。disk里面的public。总的来说，就是调用disk模块里的public配置
             Storage::disk('public')->put($filename, file_get_contents($path));
             //文件移动
-            Storage::disk('public')->move($this->post['path'].DIRECTORY_SEPARATOR,$filename);
+            $file->move($this->post['path'],$filename);
             //删除文件
             Storage::disk('public')->delete($filename);
             return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('name'=>$filename));
