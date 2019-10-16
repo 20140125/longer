@@ -137,8 +137,11 @@ class BaseController extends Controller
     protected function getUserCenter()
     {
         $result = UserCenter::getInstance()->getResult('token',$this->users->remember_token,'=',['user_status','notice_status']);
-        $this->users->notice_status = $result->notice_status;
-        $this->users->user_status = $result->user_status;
+        if ($result) {
+            $this->users->notice_status = $result->notice_status;
+            $this->users->user_status = $result->user_status;
+        }
+        $this->setCode(Code::NOT_ALLOW,'Permission denied');
     }
 
     /**

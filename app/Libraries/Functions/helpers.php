@@ -232,14 +232,16 @@ if (!function_exists('file_lists'))
     /**
      * todo：获取文件列表
      * @param $filePath
+     * @param $permissionFile
      * @return array
      */
-    function file_lists($filePath)
+    function file_lists($filePath,$permissionFile = array())
     {
         $fileArr = array();
+        $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','public'] :$permissionFile;
         $openDir = opendir($filePath);
         while ($file = readdir($openDir)){
-            if (!in_array($file,['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','public'])){
+            if (!in_array($file,$permissionFile)){
                 $fileArr[] = array(
                     'label'=>$file,
                     'fileType' => filetype($filePath.$file),
