@@ -240,6 +240,7 @@ if (!function_exists('file_lists'))
         $fileArr = array();
         $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','public'] :$permissionFile;
         $openDir = opendir($filePath);
+        $time = array();
         while ($file = readdir($openDir)){
             if (!in_array($file,$permissionFile)){
                 $fileArr[] = array(
@@ -248,8 +249,9 @@ if (!function_exists('file_lists'))
                     'children' =>[],
                     'path' =>filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
                     'size' =>md5($filePath.$file),
-                    'auth' => file_chmod($filePath.$file)
+                    'auth' => file_chmod($filePath.$file),
                 );
+                $time[] = fileatime($filePath.$file);
             }
         }
         foreach ($fileArr as &$item){
@@ -257,6 +259,7 @@ if (!function_exists('file_lists'))
                 $item['children'] = file_lists($item['path']);
             }
         }
+        array_multisort($time,SORT_ASC,$fileArr);
         return $fileArr;
     }
 }
