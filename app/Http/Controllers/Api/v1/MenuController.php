@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Models\UserCenter;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -64,13 +65,17 @@ class MenuController extends BaseController
         unset($this->users->notice_status);
         unset($this->users->user_status);
         if (isset($this->users->salt)){
+            $where[] = array('u_type',2);
             $this->users->remember_token = md5(md5($this->users->password).time());
             $result = $this->userModel->updateResult(object_to_array($this->users),'id',$this->users->id);
         }else{
+            $where[] = array('u_type',1);
             $this->users->remember_token = md5(md5($this->users->remember_token).time());
             $result = $this->oauthModel->updateResult(object_to_array($this->users),'id',$this->users->id);
         }
         if (!empty($result)){
+            $where[] = array('u_name',$this->users->username);
+            UserCenter::getInstance()->updateResult(array('token'=>$this->users->remember_token,'type'=>'logout'),$where);
             return $this->ajax_return(Code::SUCCESS,'logout system successfully');
         }
         return $this->ajax_return(Code::ERROR,'logout system failed');
