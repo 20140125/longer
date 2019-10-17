@@ -158,9 +158,12 @@ class ReqRuleController extends BaseController
             $this->validatePost(['status'=>'required|integer|in:1','id'=>'required|integer|exists:os_req_rule']);
             $getReq = $this->reqRuleModel->getResult('id',$this->post['id']);
             //用户没有申请时长暂定 7 天权限
-            if (empty($getReq->expires)){
+            if (empty($getReq->expires)) {
                 $this->post['expires'] = strtotime('+7 day');
                 $this->post['desc'] = '系统自动生成的申请权限';
+            } else {
+                $this->post['expires'] = strtotime('+30 day');
+                $this->post['desc'] = '重新申请过期权限';
             }
             unset($this->post['act']);
             //开启事务
@@ -257,8 +260,9 @@ class ReqRuleController extends BaseController
             'expires.after'  => 'authorization expires must be a date after '.date('Y-m-d H:i:s')
         ]);
         $this->post['created_at'] = strtotime($this->post['created_at']);
-        $this->post['expires'] = strtotime($this->post['expires']);
+        $this->post['expires'] = $this->post['status'] === 1 ? strtotime($this->post['expires']) : strtotime('-1 day');
         $this->post['href'] = implode('',$this->post['href']);
+        if (!empty($this->post['ruleLists'])) unset($this->post['ruleLists']);
         $result = $this->reqRuleModel->updateResult($this->post,'id',$this->post['id']);
         if ($result) {
             return $this->ajax_return(Code::SUCCESS,'update request authorization successfully');
