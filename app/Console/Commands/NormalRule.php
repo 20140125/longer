@@ -86,8 +86,11 @@ class NormalRule extends Command
                 } catch (\ErrorException $e) {
                     $this->error($e->getMessage());
                 }
+                $this->info(' 站内信发送成功');
                 sleep(0.5);
                 $bar->advance();
+            } else {
+                $this->error(' 暂无记录');
             }
         }
         $bar->finish();

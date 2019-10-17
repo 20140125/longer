@@ -124,7 +124,7 @@ class ExpiresRule extends Command
                     }
                     Push::getInstance()->addResult($message);
                     //过期权限需要重新授权
-                    $item['status'] = 2;
+                    $item->status = 2;
                     $this->reqRuleModel->updateResult(object_to_array($item),'id',$item->id);
                 } catch (\ErrorException $e) {
                     $this->error($e->getMessage());
