@@ -169,7 +169,7 @@ $sender_io->on('workerStart', function () {
     function pushData($user)
     {
         global $db;
-        $result = $db->select('*')->from('os_push')->where("uid = '{$user}' ")->orderByDESC(['created_at'])->query();
+        $result = $db->select('*')->from('os_push')->where("uid = '{$user}' ")->orderByDESC(['created_at'])->limit(10)->query();
         return $result;
     }
     /**
