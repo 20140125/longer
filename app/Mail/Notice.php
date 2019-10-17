@@ -27,7 +27,7 @@ class Notice extends Mailable
     /**
      * @var string $subject
      */
-    public $subject = '新用户注册';
+    public $subject = '申请权限通知';
 
     /**
      * Build the message.
@@ -36,6 +36,12 @@ class Notice extends Mailable
      */
     public function build()
     {
-        return $this->view('email.register')->with(['name'=>$this->request['name'],]);
+        return $this->view('email.notice')
+            ->with([
+                'href'=>$this->request['href'],
+                'rule_name'=>$this->request['rule_name'],
+                'username'=>$this->request['username'],
+                'url'=>config('app.url')."#/admin/index/{$this->request['remember_token']}"
+            ]);
     }
 }
