@@ -22,10 +22,13 @@
  * 主要是处理 onMessage onClose
  */
 use \GatewayWorker\Lib\Gateway;
+
 require_once __DIR__.'/config/db.php';
 date_default_timezone_set("Asia/Shanghai");
 class Events
 {
+    static public $db='';
+    static public $chat;
     /**
      * 有消息时
      * @param $client_id
@@ -40,7 +43,7 @@ class Events
         if(!$message_data) {
             return false;
         }
-        $chat = new Chat();
+        self::$chat = new Chat();
         // 根据类型执行不同的业务
         switch($message_data['type']) {
             // 客户端回应服务端的心跳
@@ -88,11 +91,13 @@ class Events
                 break;
             // 获取聊天记录 message: {type:history, to_client_id:xx, content:xx}
             case 'history':
-                $messageLists = $chat->getChatMsgLists($message_data['from_client_name'],$message_data['to_client_name']);
+                $room_id = $_SESSION['room_id'];
+                $messageLists = self::$chat->getChatMsgLists($message_data['from_client_name'],$message_data['to_client_name'],$room_id);
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
                     'to_client_name' => $message_data['to_client_name'],
+                    'room_id' =>$room_id,
                     'message' => $messageLists
                 );
                 Gateway::sendToCurrentClient(json_encode($new_message));
@@ -119,7 +124,7 @@ class Events
                         'avatar_url' => $message_data['avatar_url']
                     );
                     //保存聊天记录
-                    $chat->setChatMsgLists($client_name,$message_data['to_client_name'],$new_message);
+                    self::$chat->setChatMsgLists($client_name,$message_data['to_client_name'],$room_id,$new_message);
                     //发送到客户端
                     Gateway::sendToClient($message_data['to_client_id'], json_encode($new_message));
                     //发送到当前客户端
@@ -136,10 +141,11 @@ class Events
                     'content'=>nl2br(htmlspecialchars($message_data['content'])),
                     'time'=>date('Y-m-d H:i:s'),
                     'msg_type' => $message_data['msg_type'],
-                    'avatar_url' => $message_data['avatar_url']
+                    'avatar_url' => $message_data['avatar_url'],
+                    'room_id' =>$room_id
                 );
                 //保存聊天记录
-                $chat->setChatMsgLists($client_name,'all',$new_message);
+                self::$chat->setChatMsgLists($client_name,'all',$room_id,$new_message);
                 Gateway::sendToGroup($room_id ,json_encode($new_message));
                 break;
             default:

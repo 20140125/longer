@@ -29,13 +29,14 @@ class Chat
      * TODO：缓存用户聊天记录
      * @param $from
      * @param $to
+     * @param $room_id
      * @param $message
      * @return bool|int
      */
-    public function setChatMsgLists($from,$to,$message)
+    public function setChatMsgLists($from,$to,$room_id,$message)
     {
         $value = str_replace('\\','',json_encode($message,JSON_UNESCAPED_UNICODE));
-        $keyName = $to == 'all' ? 'receive_all' : "receive_{$from}_{$to}";
+        $keyName = $to == 'all' ? 'receive_all_'.$room_id : "receive_{$from}_{$to}";
         $res = $this ->redisClient-> lPush($keyName, $value);
         //消息接受者无法立刻查看时，将消息设置为未读
         if (!$this -> checkUserReadable) {
@@ -47,13 +48,14 @@ class Chat
      * TODO：获取聊天记录
      * @param $from
      * @param $to
+     * @param $room_id
      * @return array
      */
-    public function getChatMsgLists($from, $to)
+    public function getChatMsgLists($from, $to,$room_id)
     {
         //群聊消息
         if ($to == 'all') {
-            $recName = 'receive_all';
+            $recName = 'receive_all_'.$room_id;
             $num = $this->getMsgLen($recName);
             $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
             $messageLists = array();

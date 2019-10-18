@@ -69,7 +69,8 @@ class Config extends Model
      */
     public function addResult($data)
     {
-        $data['created_at'] = $data['updated_at'] = time();
+        $data['created_at'] = time();
+        $data['updated_at'] = time();
         $result = DB::table($this->table)->insertGetId($data);
         return $result;
     }
@@ -105,7 +106,7 @@ class Config extends Model
                 $data['value']['pid'] = $res->id;
                 $configVal = [$data['value']];
             }
-            $data['value'] = str_replace('\\','',json_encode($configVal));
+            $data['value'] = str_replace('\\','',json_encode($configVal,JSON_UNESCAPED_UNICODE));
         }
         unset($data['children']);
         unset($data['act']);
@@ -140,7 +141,7 @@ class Config extends Model
                 array_push($configArr,$item);
             }
         }
-        $res['value'] = str_replace('\\','',json_encode($configArr));
+        $res['value'] = str_replace('\\','',json_encode($configArr,JSON_UNESCAPED_UNICODE));
         $result = DB::table($this->table)->where($field,$value)->update($res);
         return $result;
     }
