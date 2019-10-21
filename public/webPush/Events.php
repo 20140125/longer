@@ -31,12 +31,12 @@ class Events
     static public $chat;
     /**
      * 有消息时
-     * @param $client_id
+     * @param $from_client_id
      * @param $message
      * @return bool
      * @throws Exception
      */
-    public static function onMessage($client_id, $message)
+    public static function onMessage($from_client_id, $message)
     {
         // 客户端传递的是json数据
         $message_data = json_decode($message, true);
@@ -58,34 +58,30 @@ class Events
                 }
                 // 把房间号昵称放到session中
                 $room_id = $message_data['room_id'];
-                $client_name = htmlspecialchars($message_data['client_name']);
+                $from_client_name = htmlspecialchars($message_data['client_name']);
                 $_SESSION['room_id'] = $room_id;
-                $_SESSION['client_name'] = $client_name;
+                $_SESSION['client_name'] = $from_client_name;
                 $_SESSION['client_img'] = $message_data['client_img'];
                 // 获取房间内所有用户列表
                 $clients_list = Gateway::getClientSessionsByGroup($room_id);
                 foreach($clients_list as $tmp_client_id=>$item) {
                     $clients_list[$tmp_client_id] = $item;
                 }
-                $clients_list[$client_id] = $message_data;
-                //群聊图像
-                $arr = array(
-                    'room_id' => $room_id,
-                    'client_name' => 'all',
-                    'client_img' => KFImg
-                );
-                array_push($clients_list,$arr);
+                $clients_list[$from_client_id] = $message_data;
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
-                    'type'=>$message_data['type'],
-                    'client_id'=>$client_id,
-                    'client_name'=>htmlspecialchars($client_name),
+                    'type'=>'login',
+                    'from_client_id'=>$from_client_id,
+                    'from_client_name'=>htmlspecialchars($from_client_name),
+                    'to_client_id' => 'all',
+                    'to_client_name' => 'all',
                     'time'=>date('Y-m-d H:i:s'),
-                    'client_img' => $message_data['client_img']
+                    'client_img' => $message_data['client_img'],
+                    'room_id' =>$room_id
                 );
                 $new_message['client_list'] = $clients_list;
                 Gateway::sendToGroup($room_id, json_encode($new_message));
-                Gateway::joinGroup($client_id, $room_id);
+                Gateway::joinGroup($from_client_id, $room_id);
                 // 给当前用户发送用户列表
                 Gateway::sendToCurrentClient(json_encode($new_message));
                 break;
@@ -109,22 +105,23 @@ class Events
                     throw new \Exception("\$_SESSION['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']}");
                 }
                 $room_id = $_SESSION['room_id'];
-                $client_name = $_SESSION['client_name'];
+                $from_client_name = $_SESSION['client_name'];
                 // 私聊
                 if($message_data['to_client_id'] != 'all') {
                     $new_message = array(
                         'type'=>'say',
-                        'from_client_id'=>$client_id,
-                        'from_client_name' =>$client_name,
+                        'from_client_id'=>$from_client_id,
+                        'from_client_name' =>$from_client_name,
                         'to_client_id'=>$message_data['to_client_id'],
                         'to_client_name'=>$message_data['to_client_name'],
                         'content'=>nl2br(htmlspecialchars($message_data['content'])),
                         'time'=>date('Y-m-d H:i:s'),
                         'msg_type' => $message_data['msg_type'],
-                        'avatar_url' => $message_data['avatar_url']
+                        'avatar_url' => $message_data['avatar_url'],
+                        'room_id' => $room_id
                     );
                     //保存聊天记录
-                    self::$chat->setChatMsgLists($client_name,$message_data['to_client_name'],$room_id,$new_message);
+                    self::$chat->setChatMsgLists($from_client_name,$message_data['to_client_name'],$room_id,$new_message);
                     //发送到客户端
                     Gateway::sendToClient($message_data['to_client_id'], json_encode($new_message));
                     //发送到当前客户端
@@ -134,8 +131,8 @@ class Events
                 //群聊
                 $new_message = array(
                     'type'=>'say',
-                    'from_client_id'=>$client_id,
-                    'from_client_name' =>$client_name,
+                    'from_client_id'=>$from_client_id,
+                    'from_client_name' =>$from_client_name,
                     'to_client_id'=>'all',
                     'to_client_name' => 'all',
                     'content'=>nl2br(htmlspecialchars($message_data['content'])),
@@ -145,7 +142,7 @@ class Events
                     'room_id' =>$room_id
                 );
                 //保存聊天记录
-                self::$chat->setChatMsgLists($client_name,'all',$room_id,$new_message);
+                self::$chat->setChatMsgLists($from_client_name,'all',$room_id,$new_message);
                 Gateway::sendToGroup($room_id ,json_encode($new_message));
                 break;
             default:
