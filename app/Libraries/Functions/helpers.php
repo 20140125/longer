@@ -827,7 +827,7 @@ if (!function_exists('web_push'))
         $post_data = array(
             "type" => "publish",
             "content" => $content,
-            "to" => empty($uid) ? '' : md5($uid),
+            "to" => empty($uid) ? '' : $uid,
         );
         $curl = new Curl();
         $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
