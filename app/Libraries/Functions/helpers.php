@@ -833,6 +833,7 @@ if (!function_exists('web_push'))
         $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
         $curl->setOpt(CURLOPT_SSL_VERIFYHOST,false);
         $curl->post($push_api_url,$post_data);
+        Log::error(json_encode(array($push_api_url,$post_data)));
         if ($curl->error) {
             Log::error($curl->errorCode .":".$curl->errorMessage);
             return false;
