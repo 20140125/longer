@@ -59,7 +59,7 @@ class SendPush extends Command
      */
     protected function getPushLists()
     {
-        $where[] = ['state','=','0'];
+        $where[] = ['see','=','0'];
         $result = $this->pushModel->getCommandPush($where);
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as &$item) {
