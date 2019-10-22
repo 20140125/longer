@@ -81,7 +81,7 @@ class SendPush extends Command
 
                     } else if ($this->redisClient->sIsMember(config('app.redis_user_key'), $item->uid)) {
                         try {
-                            if (web_push($item->info, $item->username)) {
+                            if (web_push($item->info, $item->uid)) {
                                 $item->state = Code::WebSocketState[0];
                                 $this->info("　".$item->username .'　站内实时消息推送成功');
                             } else {
@@ -114,7 +114,7 @@ class SendPush extends Command
 
                         } else if ($this->redisClient->sIsMember(config('app.redis_user_key'), $item->uid)) {
                             try {
-                                if (web_push($item->info, $item->username)) {
+                                if (web_push($item->info, $item->uid)) {
                                     $item->state = Code::WebSocketState[0];
                                     $this->info("　".$item->username .'　站内定时消息推送成功');
                                 } else {
