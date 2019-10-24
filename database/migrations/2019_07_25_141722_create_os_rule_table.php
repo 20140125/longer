@@ -19,6 +19,7 @@ class CreateOsRuleTable extends Migration
             $table->string('href',64)->default('0')->comment('权限地址');
             $table->integer('pid')->default(0)->comment('权限上级');
             $table->string('path')->default('0')->comment('权限路径');
+            $table->tinyInteger('level')->default(0)->comment('权限等级');
             $table->string('level')->default('0')->comment('权限等级');
             $table->tinyInteger('status')->default(1)->comment('权限状态 1 开启 2 关闭');
         });

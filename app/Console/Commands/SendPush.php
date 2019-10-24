@@ -70,6 +70,7 @@ class SendPush extends Command
                         try {
                             if (web_push($item->info)) {
                                 $item->state = Code::WebSocketState[0];
+                                $this->pushModel->updateResult(array('see'=>($item->see + 1)),'id',$item->id);
                                 $this->info("　".$item->username .'　站内实时消息推送所有人成功');
                             } else {
                                 $item->state = Code::WebSocketState[1];
@@ -83,6 +84,7 @@ class SendPush extends Command
                         try {
                             if (web_push($item->info, $item->uid)) {
                                 $item->state = Code::WebSocketState[0];
+                                $this->pushModel->updateResult(array('see'=>($item->see + 1)),'id',$item->id);
                                 $this->info("　".$item->username .'　站内实时消息推送成功');
                             } else {
                                 $item->state = Code::WebSocketState[1];
@@ -103,6 +105,7 @@ class SendPush extends Command
                             try {
                                 if (web_push($item->info)) {
                                     $item->state = Code::WebSocketState[0];
+                                    $this->pushModel->updateResult(array('see'=>($item->see + 1)),'id',$item->id);
                                     $this->info("　".$item->username .'　站内定时消息推送所有人成功');
                                 } else {
                                     $item->state = Code::WebSocketState[1];
@@ -116,6 +119,7 @@ class SendPush extends Command
                             try {
                                 if (web_push($item->info, $item->uid)) {
                                     $item->state = Code::WebSocketState[0];
+                                    $this->pushModel->updateResult(array('see'=>($item->see + 1)),'id',$item->id);
                                     $this->info("　".$item->username .'　站内定时消息推送成功');
                                 } else {
                                     $item->state = Code::WebSocketState[1];

@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Class Rule
+ * Class Auth
  * @author <fl140125@gmail.com>
  * @package App\Models
  */
@@ -92,20 +92,6 @@ class Auth extends Model
         }
         return $result;
     }
-
-     /**
-      * TODO：权限列表
-      * @param $column
-      * @return Collection
-     */
-    public function getAuthList($column = ['*'])
-    {
-        $where[] = array('id','>',0);
-        $result = DB::table($this->table)->where($where)->orderBy('path')->get($column);
-        return $result;
-    }
-
-
     /**
      * TODO：权限分页列表
      * @param array $column
