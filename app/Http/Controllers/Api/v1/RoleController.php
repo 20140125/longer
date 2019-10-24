@@ -24,7 +24,7 @@ class RoleController extends BaseController
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
         }
-        $authLists = $this->authModel->getAuthList(['id as key','name as label']);
+        $authLists = $this->authModel->getAuthLists(['id as key','name as label']);
         return $this->ajax_return(Code::SUCCESS,'successfully',['role'=>$roleLists,'auth'=>$authLists]);
     }
 
