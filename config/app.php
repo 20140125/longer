@@ -150,6 +150,8 @@ return [
     'gitee_secret' => env('GITEE_APPSECRET',''),
     'baidu_appid' => env('BAIDU_APPID',''),
     'baidu_secret' => env('BAIDU_APPSECRET',''),
+    'os_china_appid' => env('OS_CHINA_APPID',''),
+    'os_china_appsecret' => env('OS_CHINA_APPSECRET',''),
     /*
      |--------------------------------------------------------------------------
      | 第三方授权登录

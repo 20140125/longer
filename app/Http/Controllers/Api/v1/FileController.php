@@ -86,14 +86,25 @@ class FileController extends BaseController
             //修改用户图片
             if (!empty($this->post['rand']) && $this->post['rand']) {
                 //图片格式上传错误
-                if (!in_array(strtolower($ext),['jpg','png','jpeg','gif'])) {
-                    return $this->ajax_return(Code::ERROR,'upload image format error');
+                switch (strtolower($ext)) {
+                    case 'jpg':
+                    case 'gif':
+                    case 'png':
+                    case 'jpeg':
+                        //图片大小上传错误
+                        if ($file->getSize()>2*1024*1024) {
+                            return $this->ajax_return(Code::ERROR,'upload image size error');
+                        }
+                        break;
+                    case 'mp4':
+                        if ($file->getSize()>5*1024*1024) {
+                            return $this->ajax_return(Code::ERROR,'upload video size error');
+                        }
+                        break;
+                    default:
+                        return $this->ajax_return(Code::ERROR,'Unsupported file format');
                 }
-                //图片大小上传错误
-                if ($file->getSize()>2*1024*1024) {
-                    return $this->ajax_return(Code::ERROR,'upload image size error');
-                }
-                $filename = md5(date('YmdHis')).uniqid().".".$ext;
+                $filename = date('Ymd')."/".md5(date('YmdHis')).uniqid().".".$ext;
                 Storage::disk('public')->put($filename, file_get_contents($path));
                 return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('src'=>config('app.url').'storage/'.$filename));
             }

@@ -124,6 +124,9 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //Baidu
     Route::get('oauth-login/baidu','v1\OauthLoginController@baidu')->name('baiduLogin');
     Route::get('callback/baidu','v1\OauthCallbackController@baidu')->name('baiduCallback');
+    //osChina
+    Route::get('oauth-login/os_china','v1\OauthLoginController@osChina')->name('osChinaLogin');
+    Route::get('callback/os_china','v1\OauthCallbackController@osChina')->name('osChinaCallback');
     /******************************************第三方登陆**********************************************************/
 
 });
