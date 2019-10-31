@@ -86,7 +86,7 @@ class Config extends Model
     public function updateResult($data,$field,$value,$op='=')
     {
         $data['updated_at'] = time();
-        $data['created_at'] = empty($data['created_at']) ? 0 : strtotime($data['created_at']);
+        $data['created_at'] = empty($data['created_at']) ? time() : strtotime($data['created_at']);
         if (!empty($data['value']) && is_array($data['value'])) {
             $data['created_at'] = strtotime($data['created_at']);
             $data['value']['created_at'] = date('Y-m-d H:i:s');

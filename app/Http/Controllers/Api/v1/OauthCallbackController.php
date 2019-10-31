@@ -244,7 +244,7 @@ class OauthCallbackController
             'access_token' =>(string)$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
-            'oauth_type' => 'baidu',
+            'oauth_type' => 'osChina',
             'role_id' => 2,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
