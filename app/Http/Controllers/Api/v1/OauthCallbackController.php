@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Oauth\BaiDuController;
 use App\Http\Controllers\Oauth\GiteeController;
 use App\Http\Controllers\Oauth\GithubController;
+use App\Http\Controllers\Oauth\OsChinaController;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Utils\Code;
@@ -216,6 +217,43 @@ class OauthCallbackController
         );
         $where[] = array('openid','=',(string)$userInfo['uid']);
         $where[] = array('oauth_type','=','baidu');
+        return $this->oauth($data,$where);
+    }
+
+    /**
+     *  TODO：OsChina授权回调
+     * @param Request $request
+     * @return RedirectResponse|Redirector
+     * @throws \Exception
+     */
+    public function osChina(Request $request)
+    {
+        $appId = config('app.os_china_appid');
+        $appSecret = config('app.os_china_appsecret');
+        $osChinaOAuth = OsChinaController::getInstance($appId,$appSecret);
+        // 1 获取access_token
+        $result = $osChinaOAuth->getAccessToken($request->get('code'));
+        dump($result);
+        $this->throwException($result);
+        // 2 获取用户信息
+        $userInfo = $osChinaOAuth->getUserInfo($result['access_token']);
+        dump($userInfo);
+        $this->throwException($userInfo);
+        $data = array(
+            'username' =>(string)$userInfo['name'],
+            'openid' =>(string)$userInfo['id'],
+            'avatar_url' =>$userInfo['avatar'],
+            'access_token' =>(string)$result['access_token'],
+            'url' =>empty($userInfo['url'])?'':$userInfo['url'],
+            'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
+            'oauth_type' => 'baidu',
+            'role_id' => 2,
+            'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
+            'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
+        );
+        dd($data);
+        $where[] = array('openid','=',(string)$userInfo['id']);
+        $where[] = array('oauth_type','=','osChina');
         return $this->oauth($data,$where);
     }
 

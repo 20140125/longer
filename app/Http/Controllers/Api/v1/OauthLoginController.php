@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Oauth\BaiDuController;
 use App\Http\Controllers\Oauth\GiteeController;
 use App\Http\Controllers\Oauth\GithubController;
+use App\Http\Controllers\Oauth\OsChinaController;
 use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Utils\RedisClient;
 use Illuminate\Http\RedirectResponse;
@@ -97,6 +98,19 @@ class OauthLoginController extends Controller
         $baiDuOauth = BaiDuController::getInstance($appId,$appSecret);
         $url = $baiDuOauth->getAuthUrl();
         $this->redisClient->setValue($baiDuOauth->state,$baiDuOauth->state,['EX' => 60]);
+        return redirect($url);
+    }
+    /**
+     * todo：OsChina跳转到授权登录页面
+     * @return RedirectResponse|Redirector
+     */
+    public function osChina()
+    {
+        $appId = config('app.os_china_appid');
+        $appSecret = config('app.os_china_secret');
+        $osChinaOauth = OsChinaController::getInstance($appId,$appSecret);
+        $url = $osChinaOauth->getAuthUrl();
+        $this->redisClient->setValue($osChinaOauth->state,$osChinaOauth->state,['EX' => 60]);
         return redirect($url);
     }
 }

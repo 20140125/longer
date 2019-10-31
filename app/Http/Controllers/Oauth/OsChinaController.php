@@ -80,11 +80,10 @@ class OsChinaController extends OAuthController
     /**
      * todo：获取access_token
      * @param $code
-     * @param $state
      * @return array|bool|mixed
      * @throws \Exception
      */
-    public function getAccessToken($code,$state)
+    public function getAccessToken($code)
     {
         $arr = [
             'client_id' => $this->appid,
@@ -92,11 +91,10 @@ class OsChinaController extends OAuthController
             'grant_type' => 'authorization_code',
             'code' => $code,
             'redirect_uri' => $this->redirectUri,
-            'state' => $state,
             'dataType' => 'json',
             'callback' => 'json'
         ];
-        $result = $this->curl->post($this->apiUrl.'/action/openapi/token',$arr);
+        $result = $this->curl->post($this->apiUrl.'action/openapi/token',$arr);
         if (!$result){
             return $this->error(Code::ERROR,'request interface failed');
         }
@@ -124,7 +122,55 @@ class OsChinaController extends OAuthController
             'dataType' => 'json',
             'callback' => 'json'
         ];
-        $result = $this->curl->post($this->apiUrl.'/action/openapi/token',$arr);
+        $result = $this->curl->post($this->apiUrl.'action/openapi/token',$arr);
+        if (!$result){
+            return $this->error(Code::ERROR,'request interface failed');
+        }
+        $result = json_decode($result,true);
+        if (isset($result['error'])){
+            return $this->error(Code::ERROR,$result['error_description']);
+        }
+        return $result;
+    }
+
+    /**
+     * TODO:获取用户信息
+     * @param $access_token
+     * @return array|mixed
+     */
+    public function getUserInfo($access_token)
+    {
+        $arr = [
+            'access_token' => $access_token,
+            'dataType' => 'json'
+        ];
+        $result = $this->curl->post($this->apiUrl.'action/openapi/user',$arr);
+        if (!$result){
+            return $this->error(Code::ERROR,'request interface failed');
+        }
+        $result = json_decode($result,true);
+        if (isset($result['error'])){
+            return $this->error(Code::ERROR,$result['error_description']);
+        }
+        return $result;
+    }
+
+    /**
+     * TODO:获取用户详情
+     * @param $access_token
+     * @param $user
+     * @param $friend
+     * @return array|mixed
+     */
+    public function getUserInformation($access_token,$user,$friend)
+    {
+        $arr = [
+            'access_token' => $access_token,
+            'dataType' => 'json',
+            'user' => $user,
+            'friend' => $friend
+        ];
+        $result = $this->curl->post($this->apiUrl.'action/openapi/user_information',$arr);
         if (!$result){
             return $this->error(Code::ERROR,'request interface failed');
         }
