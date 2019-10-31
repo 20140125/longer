@@ -233,11 +233,9 @@ class OauthCallbackController
         $osChinaOAuth = OsChinaController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $osChinaOAuth->getAccessToken($request->get('code'));
-        dump($result);
         $this->throwException($result);
         // 2 获取用户信息
         $userInfo = $osChinaOAuth->getUserInfo($result['access_token']);
-        dump($userInfo);
         $this->throwException($userInfo);
         $data = array(
             'username' =>(string)$userInfo['name'],
@@ -251,7 +249,6 @@ class OauthCallbackController
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
-        dd($data);
         $where[] = array('openid','=',(string)$userInfo['id']);
         $where[] = array('oauth_type','=','osChina');
         return $this->oauth($data,$where);
