@@ -26,6 +26,7 @@ class CreatedOsChatTable extends Migration
             $table->string('avatar_url',128)->default('')->comment('发送者头像');
             $table->string('time',16)->default('0')->comment('发送时间');
             $table->string('type',8)->default('say')->comment('消息体');
+            $table->string('room_id',8)->default('0')->comment('房间ID');
         });
     }
 
