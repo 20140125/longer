@@ -36,8 +36,6 @@ class ChatController extends BaseController
     public function history()
     {
         $this->validatePost(['from_client_name'=>'required|string','to_client_name'=>'string|required']);
-        $result['data'] = $this->chatModel->getResultLists($this->post['from_client_name'],$this->post['to_client_name'],$this->post['page']??1,$this->post['limit']??20);
-        $result['pages'] =  $this->chatModel->getTotalPages($this->post['from_client_name'],$this->post['to_client_name'],$this->post['limit']??20);
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully');
     }
 }

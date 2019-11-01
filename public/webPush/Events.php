@@ -22,6 +22,7 @@
  * 主要是处理 onMessage onClose
  */
 use \GatewayWorker\Lib\Gateway;
+use \Workerman\MySQL\Connection;
 
 require_once __DIR__.'/config/db.php';
 date_default_timezone_set("Asia/Shanghai");
@@ -89,6 +90,9 @@ class Events
             case 'history':
                 $room_id = $_SESSION['room_id'];
                 $messageLists = self::$chat->getChatMsgLists($message_data['from_client_name'],$message_data['to_client_name'],$room_id);
+                if (count($messageLists) == 0) {
+                    $messageLists = self::getMessageListFormDB($message_data['from_client_name'],$message_data['to_client_name'],$room_id);
+                }
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -169,5 +173,23 @@ class Events
             );
             Gateway::sendToGroup($room_id, json_encode($new_message));
         }
+    }
+
+    /**
+     * TODO:数据库获取聊天历史记录
+     * @param $from_client_name
+     * @param $to_client_name
+     * @param $room_id
+     * @return mixed
+     */
+    public static function getMessageListFormDB($from_client_name,$to_client_name,$room_id)
+    {
+        self::$db = new Connection(Host, Port, UserName, Password, DbName);
+        $messageLists = self::$db->select('*')
+            ->from('os_chat')
+            ->where("(from_client_name = '{$from_client_name}' and to_client_name = '{$to_client_name}' or from_client_name = '{$to_client_name}' and to_client_name = '{$from_client_name}')")
+            ->where("room_id = '{$room_id}'")
+            ->query();
+        return $messageLists;
     }
 }
