@@ -60,13 +60,12 @@ class Chat extends Command
         $keys = $this->redisClient->keys("receive_*");
         if (count($keys)<0) $this->info('not exists');
         foreach ($keys as $key) {
-            $this->info($this->redisClient->lLen($key));
             for ($i = 0;$i<=$this->redisClient->lLen($key);$i++) {
-                $this->info($i);
                 $item = json_decode($this->redisClient->rPop($key),true);
+                $item['content'] = htmlspecialchars_decode($item['content']);
                 $this->chatModel->saveResult($item);
-                $this->info('successfully');
             }
+            $this->info('successfully');
         }
     }
 }
