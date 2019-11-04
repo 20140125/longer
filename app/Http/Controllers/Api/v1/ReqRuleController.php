@@ -124,22 +124,24 @@ class ReqRuleController extends BaseController
             } else {
                 $result = $this->reqRuleModel->addResult($req);
             }
-            //推送站内信息
-            $this->post['info'] = $this->post['username'].'申请权限';
-            $this->post['username'] = 'admin';
-            $this->post['uid'] = md5($this->post['username']);
-            $this->post['status'] = 1;
-            $this->pushMessage();
-            $message = array(
-                'username' => $this->post['username'],
-                'info' => $this->post['info'],
-                'uid'  => md5($this->post['username']),
-                'state' => $this->post['state'],
-                'title' => '权限申请',
-                'status' => 1,
-                'created_at' => time()
-            );
-            Push::getInstance()->addResult($message);
+            if ($this->users->username != 'admin') {
+                //推送站内信息
+                $this->post['info'] = $this->post['username'].'申请权限';
+                $this->post['username'] = 'admin';
+                $this->post['uid'] = md5($this->post['username']);
+                $this->post['status'] = 1;
+                $this->pushMessage();
+                $message = array(
+                    'username' => $this->post['username'],
+                    'info' => $this->post['info'],
+                    'uid'  => md5($this->post['username']),
+                    'state' => $this->post['state'],
+                    'title' => '权限申请',
+                    'status' => 1,
+                    'created_at' => time()
+                );
+                Push::getInstance()->addResult($message);
+            }
         }
         if ($result) {
             return $this->ajax_return(Code::SUCCESS,'save request authorization successfully');

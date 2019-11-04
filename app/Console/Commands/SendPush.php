@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Push;
+use App\Models\UserCenter;
 use Illuminate\Console\Command;
 
 class SendPush extends Command
@@ -56,6 +57,7 @@ class SendPush extends Command
 
     /**
      * TODO：获取未推送成功列表
+     * @return bool|void
      */
     protected function getPushLists()
     {
@@ -63,24 +65,15 @@ class SendPush extends Command
         $result = $this->pushModel->getCommandPush($where);
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as &$item) {
+            $userCenter = UserCenter::getInstance()->getResult('u_name',$item->username);
+            if ($userCenter->notice_status == '2') {
+                $this->error("　".$item->username .'　禁用站内信通知');
+                return false;
+            }
             switch ($item->status) {
                 //实时推送
                 case 1:
-                    if ($item->username == 'all') {
-                        try {
-                            if (web_push($item->info)) {
-                                $item->state = Code::WebSocketState[0];
-                                $this->pushModel->updateResult(array('see'=>($item->see + 1)),'id',$item->id);
-                                $this->info("　".$item->username .'　站内实时消息推送所有人成功');
-                            } else {
-                                $item->state = Code::WebSocketState[1];
-                                $this->error("　".$item->username .'　站内实时消息推送所有人失败');
-                            }
-                        } catch (\ErrorException $e) {
-                            $this->error($e->getMessage());
-                        }
-
-                    } else if ($this->redisClient->sIsMember(config('app.redis_user_key'), $item->uid)) {
+                    if ($this->redisClient->sIsMember(config('app.redis_user_key'), $item->uid)) {
                         try {
                             if (web_push($item->info, $item->uid)) {
                                 $item->state = Code::WebSocketState[0];
@@ -101,21 +94,7 @@ class SendPush extends Command
                 //定时推送
                 case 2:
                     if ($item->created_at<=time()) {
-                        if ($item->username == 'all') {
-                            try {
-                                if (web_push($item->info)) {
-                                    $item->state = Code::WebSocketState[0];
-                                    $this->pushModel->updateResult(array('see'=>($item->see + 1)),'id',$item->id);
-                                    $this->info("　".$item->username .'　站内定时消息推送所有人成功');
-                                } else {
-                                    $item->state = Code::WebSocketState[1];
-                                    $this->error("　".$item->username .'　站内定时消息推送所有人失败');
-                                }
-                            } catch (\ErrorException $e) {
-                                $this->error($e->getMessage());
-                            }
-
-                        } else if ($this->redisClient->sIsMember(config('app.redis_user_key'), $item->uid)) {
+                        if ($this->redisClient->sIsMember(config('app.redis_user_key'), $item->uid)) {
                             try {
                                 if (web_push($item->info, $item->uid)) {
                                     $item->state = Code::WebSocketState[0];
@@ -134,7 +113,6 @@ class SendPush extends Command
                         }
                     } else {
                         $this->info('　未到推送时间');
-                        return;
                     }
                     break;
             }

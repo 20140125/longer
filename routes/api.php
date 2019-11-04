@@ -20,6 +20,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'checkLogin','v1\MenuController@check')->name('checkLogin');
     Route::match(['get','post'],'logout','v1\MenuController@logout')->name('apiLogout');
     Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');
+    Route::match(['get','post'],'total','v1\MenuController@getCountData')->name('total');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
@@ -103,7 +104,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'category/save','v1\ApiController@categorySave');
     Route::match(['post','get'],'category/update','v1\ApiController@CategoryUpdate');
     //聊天记录
-    Route::match(['post','get'],'chat/history','v1\ChatController@history')->name('chatHis');
+    Route::match(['post','get'],'chat/index','v1\ChatController@index');
     //表情
     Route::match(['post','get'],'emotion/index','v1\EmotionController@index')->name('emotion');
     /********************************************私有权限********************************************************/

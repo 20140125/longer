@@ -2,8 +2,10 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Models\OAuth;
 use App\Models\UserCenter;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 /**
  * 导航栏
@@ -62,8 +64,6 @@ class MenuController extends BaseController
      */
     public function logout()
     {
-        unset($this->users->notice_status);
-        unset($this->users->user_status);
         if (isset($this->users->salt)){
             $where[] = array('u_type',2);
             $this->users->remember_token = md5(md5($this->users->password).time());
@@ -79,5 +79,17 @@ class MenuController extends BaseController
             return $this->ajax_return(Code::SUCCESS,'logout system successfully');
         }
         return $this->ajax_return(Code::ERROR,'logout system failed');
+    }
+
+    /**
+     * TODO：获取总数
+     * @return JsonResponse
+     */
+    public function getCountData()
+    {
+        $result['oauthUser'] = DB::table('os_oauth')->count();
+        $result['push'] = DB::table('os_push')->count();
+        $result['systemLog'] = DB::table('os_system_log')->count();
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 }

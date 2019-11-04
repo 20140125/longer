@@ -6,6 +6,7 @@ use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Push;
 use App\Models\ReqRule;
+use App\Models\UserCenter;
 use Illuminate\Console\Command;
 /**
  * Class NormalRule
@@ -56,6 +57,10 @@ class NormalRule extends Command
         $this->getNormalRule();
     }
 
+    /**
+     * TODO:同步即将过期权限站内信通知
+     * @return bool|void
+     */
     private function getNormalRule()
     {
         $where[] = ['status',1];
@@ -63,6 +68,11 @@ class NormalRule extends Command
         $result = $this->reqRuleModel->getCommandRule($where);
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as $item) {
+            $userCenter = UserCenter::getInstance()->getResult('u_name',$item->username);
+            if ($userCenter->notice_status == '2') {
+                $this->error("　".$item->username .'　禁用站内信通知');
+                return false;
+            }
             //权限还有要过期提醒用户关注
             if ($item->expires< time() + 3600*24*3) {
                 //告诉用户权限已经过期

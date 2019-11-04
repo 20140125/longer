@@ -33,9 +33,17 @@ class ChatController extends BaseController
      * TODO:获取历史聊天记录
      * @return JsonResponse
      */
-    public function history()
+    public function index()
     {
-        $this->validatePost(['from_client_name'=>'required|string','to_client_name'=>'string|required']);
-        return $this->ajax_return(Code::SUCCESS,'successfully');
+        $this->validatePost(['page'=>'required|integer','limit'=>'integer|required']);
+        $where = [];
+        if (!empty($this->post['from'])) {
+            $where[] = ['from_client_name',$this->post['from']];
+        }
+        if (!empty($this->post['to'])) {
+            $where[] = ['to_client_name',$this->post['to']];
+        }
+        $result = $this->chatModel->getResult($where,$this->post['limit'],$this->post['page']);
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 }
