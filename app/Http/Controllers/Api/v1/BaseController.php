@@ -15,10 +15,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-
 /**
  * TODO:公共类
  * Class BaseController
@@ -48,9 +46,13 @@ class BaseController extends Controller
      */
     protected $post;
     /**
-     * @var bool|Model|Builder|object|null 用户信息
+     * @var $users bool|Model|Builder|object|null 用户信息
      */
     protected $users;
+    /**
+     * @var $config Object 用户基础信息
+     */
+    protected $config;
     /**
      * @var Model|Builder|object|null 角色信息
      */
@@ -128,21 +130,7 @@ class BaseController extends Controller
         if (!in_array(asset($url),$common_url)) {
             unset($this->post['token']);
         }
-        $this->getUserCenter();
     }
-
-    /**
-     * TODO:获取用户个人设置
-     */
-    protected function getUserCenter()
-    {
-        $result = UserCenter::getInstance()->getResult('token',$this->users->remember_token,'=',['user_status','notice_status']);
-        if ($result) {
-            $this->users->notice_status = $result->notice_status;
-            $this->users->user_status = $result->user_status;
-        }
-    }
-
     /**
      * TODO:设置code
      * @param $code

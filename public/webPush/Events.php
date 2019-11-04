@@ -190,6 +190,9 @@ class Events
             ->where("(from_client_name = '{$from_client_name}' and to_client_name = '{$to_client_name}' or from_client_name = '{$to_client_name}' and to_client_name = '{$from_client_name}')")
             ->where("room_id = '{$room_id}'")
             ->query();
+        if (count($messageLists)==0) {
+            self::$db->closeConnection();
+        }
         return $messageLists;
     }
 }

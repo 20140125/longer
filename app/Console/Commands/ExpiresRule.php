@@ -9,6 +9,7 @@ use App\Models\Push;
 use App\Models\ReqRule;
 use App\Models\Role;
 use App\Models\OAuth;
+use App\Models\UserCenter;
 use Illuminate\Console\Command;
 /**
  * Class ExpiresRule
@@ -73,6 +74,10 @@ class ExpiresRule extends Command
         $this->getExpiresRule();
     }
 
+    /**
+     * TODO:同步过期权限站内信通知
+     * @return bool|void
+     */
     private function getExpiresRule()
     {
         $where[] = ['status',1];
@@ -80,6 +85,11 @@ class ExpiresRule extends Command
         $result = $this->reqRuleModel->getCommandRule($where);
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as &$item) {
+            $userCenter = UserCenter::getInstance()->getResult('u_name',$item->username);
+            if ($userCenter->notice_status == '2') {
+                $this->error("　".$item->username .'　禁用站内信通知');
+                return false;
+            }
             //获取当前申请授权用户信息
             $oauth = $this->oauthModel->getResult('id',$item->user_id);
             //获取当前用户的角色信息
@@ -125,6 +135,8 @@ class ExpiresRule extends Command
                     Push::getInstance()->addResult($message);
                     //过期权限需要重新授权
                     $item->status = 2;
+                    $item->expires = 0;
+                    $item->updated_at = time();
                     $this->reqRuleModel->updateResult(object_to_array($item),'id',$item->id);
                 } catch (\ErrorException $e) {
                     $this->error($e->getMessage());
