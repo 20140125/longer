@@ -256,7 +256,7 @@ if (!function_exists('file_lists'))
         }
         foreach ($fileArr as &$item){
             if ($item['fileType'] === 'dir'){
-                $item['children'] = file_lists($item['path']);
+                $item['children'] = file_lists($item['path'],$permissionFile);
             }
         }
         array_multisort($time,SORT_ASC,$fileArr);
