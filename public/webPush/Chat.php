@@ -53,12 +53,12 @@ class Chat
      */
     public function getChatMsgLists($from, $to,$room_id)
     {
+        $messageLists = array();
         //群聊消息
-        if ($to == 'all') {
+        if ($to == 'all' && !empty($room_id)) {
             $recName = 'receive_all_'.$room_id;
             $num = $this->getMsgLen($recName);
             $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
-            $messageLists = array();
             foreach ($recList as $item) {
                 array_push($messageLists,json_decode($item,true));
             }
@@ -67,27 +67,27 @@ class Chat
                 $time[] = $item['time'];
             }
             array_multisort($time,SORT_ASC,$messageLists);
-            return $messageLists;
+        } else if (empty($room_id) && $to!='all') { //私聊信息
+            //接受的消息
+            $recName =  "receive_{$from}_{$to}";
+            $num = $this->getMsgLen($recName);
+            $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
+            //发送的消息
+            $sendName = "receive_{$to}_{$from}";
+            $sendLists = $this ->redisClient-> lRange($sendName, 0, (int)($num));
+            $messageLists = array();
+            foreach ($sendLists as $item) {
+                array_push($messageLists,json_decode($item,true));
+            }
+            foreach ($recList as $item) {
+                array_push($messageLists,json_decode($item,true));
+            }
+            $time = array();
+            foreach ($messageLists as $item) {
+                $time[] = $item['time'];
+            }
+            array_multisort($time,SORT_ASC,$messageLists);
         }
-        //接受的消息
-        $recName =  "receive_{$from}_{$to}";
-        $num = $this->getMsgLen($recName);
-        $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
-        //发送的消息
-        $sendName = "receive_{$to}_{$from}";
-        $sendLists = $this ->redisClient-> lRange($sendName, 0, (int)($num));
-        $messageLists = array();
-        foreach ($sendLists as $item) {
-            array_push($messageLists,json_decode($item,true));
-        }
-        foreach ($recList as $item) {
-            array_push($messageLists,json_decode($item,true));
-        }
-        $time = array();
-        foreach ($messageLists as $item) {
-            $time[] = $item['time'];
-        }
-        array_multisort($time,SORT_ASC,$messageLists);
         return $messageLists;
     }
     /**
