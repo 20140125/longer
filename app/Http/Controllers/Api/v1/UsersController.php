@@ -4,13 +4,8 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Utils\Code;
 use App\Models\Push;
 use App\Models\UserCenter;
-use App\Models\Users;
-use App\User;
-use Curl\Curl;
-use Illuminate\Config\Repository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 
 /**
@@ -21,74 +16,6 @@ use Illuminate\Support\Facades\Validator;
  */
 class UsersController extends BaseController
 {
-    /**
-     * @var Repository|mixed 用户APPID（小程序）
-     */
-    protected $appid;
-    /**
-     * @var Repository|mixed 用户密钥（小程序）
-     */
-    protected $appsecret;
-
-    /**
-     * UsersController constructor.
-     * @param Request $request
-     */
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-        $this->appid = config('app.app_id');
-        $this->appsecret = config('app.app_secret');
-    }
-
-    /**
-     * TODO: 微信获取用户的openid
-     * @return JsonResponse
-     * @throws \ErrorException
-     */
-    public function getOpenId()
-    {
-        $this->validatePost(['code'=>'required|string']);
-        $url = 'https://api.weixin.qq.com/sns/jscode2session?';
-        $data = array(
-            'appid' =>$this->appid,
-            'secret' =>$this->appsecret,
-            'js_code' =>$this->post['code'],
-            'grant_type' =>'authorization_code'
-        );
-        $curl = new Curl();
-        $response = $curl->post($url.http_build_query($data));
-        $parsedData = json_decode(trim($response['data']), true, 512, JSON_OBJECT_AS_ARRAY);
-        if (!empty($parsedData['errcode'])){
-            return $this->ajax_return(Code::ERROR,$parsedData['errmsg']);
-        }
-        $result = Users::getInstance()->getResult('openid',$parsedData['openid']);
-        $data = array(
-            'openid' =>$parsedData['openid'],
-            'exp_time'=>$parsedData['expires_in']+time(),
-            'session_key' =>$parsedData['session_key']
-        );
-        if (empty($result)){
-            Users::getInstance()->addResult($data);
-        }else if ($result->exp_time<time()){
-            Users::getInstance()->updateResult($data,'openid',$parsedData['openid']);
-        }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$parsedData);
-    }
-
-    /**
-     * TODO: 微信登陆信息
-     * @return JsonResponse
-     */
-    public function login()
-    {
-        $result = Users::getInstance()->updateResult($this->post,'openid',$this->post['openid']);
-        if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'login successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'error');
-
-    }
     /**
      * TODO: 管理员信息
      * @return JsonResponse

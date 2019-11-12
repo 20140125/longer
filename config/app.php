@@ -137,6 +137,9 @@ return [
     |--------------------------------------------------------------------------
     */
     'amap_key' => env('AMAP_KEY',''),
+    'program_appid' => env('APPKEY',''),
+    'program_secret' => env('APPSECRET',''),
+
     'aliyun_appid' => env('ALIYUN_APPID',''),
     'aliyun_secret' => env('ALIYUN_APPSECRET',''),
 

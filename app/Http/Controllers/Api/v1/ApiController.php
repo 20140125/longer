@@ -36,15 +36,6 @@ class ApiController extends BaseController
         $this->apiCategoryModel = ApiCategory::getInstance();
         $this->apiLogModel = ApiLog::getInstance();
     }
-    /**
-     * todo：api 分类列表
-     * @return Collection
-     */
-    protected function getCategory()
-    {
-        $result = $this->apiCategoryModel->getResultListsLevel2();
-        return $result;
-    }
     /*********************************************************************api 列表****************************************************************/
     /**
      * api 列表
