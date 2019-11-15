@@ -66,7 +66,7 @@ class SendPush extends Command
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as &$item) {
             $userCenter = UserCenter::getInstance()->getResult('u_name',$item->username);
-            if ($userCenter->notice_status == '2') {
+            if (!empty($userCenter) && $userCenter->notice_status == '2') {
                 $this->error("　".$item->username .'　禁用站内信通知');
                 return false;
             }

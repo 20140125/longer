@@ -88,7 +88,7 @@ class Events
                 break;
             // 获取聊天记录 message: {type:history, to_client_id:xx, content:xx}
             case 'history':
-                $room_id = $_SESSION['room_id'];
+                $room_id = $message_data['room_id'];
                 $messageLists = self::$chat->getChatMsgLists($message_data['from_client_name'],$message_data['to_client_name'],$room_id);
                 if (count($messageLists) == 0) {
                     $messageLists = self::getMessageListFormDB($message_data['from_client_name'],$message_data['to_client_name'],$room_id);
@@ -122,7 +122,7 @@ class Events
                         'time'=>date('Y-m-d H:i:s'),
                         'msg_type' => $message_data['msg_type'],
                         'avatar_url' => $message_data['avatar_url'],
-                        'room_id' => $room_id
+                        'room_id' => ''  //私聊房间号置空。
                     );
                     //保存聊天记录
                     self::$chat->setChatMsgLists($from_client_name,$message_data['to_client_name'],$room_id,$new_message);
