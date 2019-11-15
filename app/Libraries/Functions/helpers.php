@@ -58,7 +58,7 @@ if (!function_exists('get_round_num'))
                 $str = 'qwertyuioplkjhgfdsazxcvbnm';
                 break;
             default:
-                $str = '';
+                $str = time().uniqid();
                 break;
         }
         $char='';
@@ -115,13 +115,13 @@ if (!function_exists('object_to_array'))
     /**
      * 对象转数组
      * @param $obj
-     * @return array
+     * @return array|bool
      */
     function object_to_array($obj) {
         $obj = (array)$obj;
         foreach ($obj as $k => $v) {
             if (gettype($v) == 'resource') {
-                return;
+                return false;
             }
             if (gettype($v) == 'object' || gettype($v) == 'array') {
                 $obj[$k] = (array)object_to_array($v);
@@ -136,11 +136,11 @@ if (!function_exists('array_to_object'))
     /**
      * 数组 转 对象
      * @param array $arr 数组
-     * @return object
+     * @return object|bool
      */
     function array_to_object($arr) {
         if (gettype($arr) != 'array') {
-            return;
+            return false;
         }
         foreach ($arr as $k => $v) {
             if (gettype($v) == 'array' || gettype($v) == 'object') {
@@ -731,6 +731,10 @@ if (!function_exists('base64_image_content'))
 }
 if (!function_exists('download_image'))
 {
+    /**
+     * todo:远程下载图片
+     * @param string $url 图片地址
+     */
      function download_image($url)
      {
          $ch = curl_init();
@@ -738,13 +742,17 @@ if (!function_exists('download_image'))
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
          curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
          $file = curl_exec($ch);
-         dd($file);
          curl_close($ch);
          saveAsImage($url, $file);
      }
 }
 if (!function_exists('save_image'))
 {
+    /**
+     * todo:保存图片到本地
+     * @param string $url 图片远程地址
+     * @param string $file 图片存放本地路径
+     */
     function saveAsImage($url, $file)
     {
         $filename = pathinfo($url, PATHINFO_BASENAME);
@@ -833,7 +841,6 @@ if (!function_exists('web_push'))
         $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
         $curl->setOpt(CURLOPT_SSL_VERIFYHOST,false);
         $curl->post($push_api_url,$post_data);
-        Log::error(json_encode($post_data,JSON_UNESCAPED_UNICODE));
         if ($curl->error) {
             Log::error($curl->errorCode .":".$curl->errorMessage);
             return false;
@@ -868,5 +875,144 @@ if (!function_exists('diff_times'))
         $str.= empty($i) ? '' : $i.($lan == 'zh' ? ' 分 ' : ' minute ');
         $str.= empty($s) ? '' : $s.($lan == 'zh' ? ' 秒 ' : ' second ');
         return $str;
+    }
+}
+if(!function_exists('saveImg')) {
+    /**
+     * TODO：图片拼接
+     * @param array $imgArr 需要拼接的图片数组
+     * @param string $target_image 背景图片大小300*300
+     * @param string $source_img  生成的新的图片地址
+     */
+    function saveImg($imgArr,$target_image,$source_img)
+    {
+        $positionArr = array();
+        switch (count($imgArr)) {
+            case 2:
+                $positionArr = array(
+                    0 => array('x' => 0,'y' => 50,'w' => 74,'h' => 50),
+                    1 => array('x' => 75,'y' => 50,'w' => 74,'h' => 50)
+                );
+                break;
+            case 3:
+                $positionArr = array(
+                    0 => array('x' => 0,'y' => 50,'w' => 49,'h' => 50),
+                    1 => array('x' => 50,'y' => 50,'w' => 49,'h' => 50),
+                    2 => array('x' => 100,'y' => 50,'w' => 49,'h' => 50)
+                );
+                break;
+            case 4:
+                $positionArr = array(
+                    0 => array('x' => 0,'y' => 0,'w' => 74,'h' => 74),
+                    1 => array('x' => 75,'y' => 0,'w' => 74,'h' => 74),
+                    2 => array('x' => 0,'y' => 75,'w' => 74,'h' => 74),
+                    3 => array('x' => 75,'y' => 75,'w' => 74,'h' => 74)
+                );
+                break;
+            case 5:
+                $positionArr = array(
+                    0 => array('x' => 0,'y' => 0,'w' => 49,'h' => 74),
+                    1 => array('x' => 50,'y' => 0 ,'w' => 49,'h' => 74),
+                    2 => array('x' => 100,'y' => 0,'w' => 49,'h' => 74),
+                    3 => array('x' => 25,'y' => 75,'w' => 49,'h' => 74),
+                    4 => array('x' => 75,'y' => 75,'w' => 49,'h' => 74),
+                );
+                break;
+            case 6:
+                $positionArr = array(
+                    0 => array('x' => 0,'y' => 0,'w' => 49,'h' => 74),
+                    1 => array('x' => 50,'y' => 0 ,'w' => 49,'h' => 74),
+                    2 => array('x' => 100,'y' => 0,'w' => 49,'h' => 74),
+                    3 => array('x' => 0,'y' => 75,'w' => 49,'h' => 74),
+                    4 => array('x' => 50,'y' => 75,'w' => 49,'h' => 74),
+                    5 => array('x' => 100,'y' => 75,'w' => 49,'h' => 74),
+                );
+                break;
+            case 7:
+                $positionArr = array(
+                    0 => array('x' => 50,'y' => 100,'w' => 49,'h' => 49),
+                    1 => array('x' => 100,'y' => 50,'w' => 49,'h' => 49),
+                    2 => array('x' => 50,'y' => 50,'w' => 49,'h' => 49),
+                    3 => array('x' => 0,'y' => 50,'w' => 49,'h' => 49),
+                    4 => array('x' => 100,'y' => 0,'w' => 49,'h' => 49),
+                    5 => array('x' => 50,'y' => 0 ,'w' => 49,'h' => 49),
+                    6 => array('x' => 0,'y' => 0,'w' => 49,'h' => 49)
+                );
+                break;
+            case 8:
+                $positionArr = array(
+                    0 => array('x' => 0,'y' => 0,'w' => 49,'h' => 49),
+                    1 => array('x' => 50,'y' => 0 ,'w' => 49,'h' => 49),
+                    2 => array('x' => 100,'y' => 0,'w' => 49,'h' => 49),
+                    3 => array('x' => 0,'y' => 50,'w' => 49,'h' => 49),
+                    4 => array('x' => 50,'y' => 50,'w' => 49,'h' => 49),
+                    5 => array('x' => 100,'y' => 50,'w' => 49,'h' => 49),
+                    6 => array('x' => 25,'y' => 100,'w' => 49,'h' => 49),
+                    7 => array('x' => 75,'y' => 100,'w' => 49,'h' => 49),
+                );
+                break;
+            case 9:
+                $positionArr = array(
+                    0 => array('x' => 0,'y' => 0,'w' => 49,'h' => 49),
+                    1 => array('x' => 50,'y' => 0 ,'w' => 49,'h' => 49),
+                    2 => array('x' => 100,'y' => 0,'w' => 49,'h' => 49),
+                    3 => array('x' => 0,'y' => 50,'w' => 49,'h' => 49),
+                    4 => array('x' => 50,'y' => 50,'w' => 49,'h' => 49),
+                    5 => array('x' => 100,'y' => 50,'w' => 49,'h' => 49),
+                    6 => array('x' => 0,'y' => 100,'w' => 49,'h' => 49),
+                    7 => array('x' => 50,'y' => 100,'w' => 49,'h' => 49),
+                    8 => array('x' => 100,'y' => 100,'w' => 49,'h' => 49),
+                );
+                break;
+        }
+        $target_image = Imagecreatefrompng($target_image);
+        foreach ($positionArr as $key=> $item) {
+            $src_im = ImageShrink($imgArr[$key],$item['w'],$item['h']);
+            imagecopy($target_image,$src_im,$item['x'],$item['y'],0,0,$item['w'],$item['h']);
+        }
+        Imagepng($target_image,$source_img);
+    }
+}
+if (!function_exists('ImageShrink')) {
+    /**
+     * TODO：图片等比缩放
+     * @param string $imgFile 图片资源
+     * @param number $minx 宽
+     * @param number $miny 长
+     * @return false|resource
+     */
+    function ImageShrink($imgFile,$minx,$miny)
+    {
+        //获取大图信息
+        $imageSizeArr = getimagesize($imgFile);
+        $maxx=$imageSizeArr[0];//宽
+        $maxy=$imageSizeArr[1];//长
+        //大图资源
+        $maxim = '';
+        switch ($imageSizeArr['mime']) {
+            case 'image/png':
+                $maxim = Imagecreatefrompng($imgFile);
+                break;
+            case 'image/jpeg':
+                $maxim = Imagecreatefromjpeg($imgFile);
+                break;
+            case 'image/gif':
+                $maxim = Imagecreatefromgif($imgFile);
+                break;
+        }
+        //等比缩放
+        if(($minx/$maxx)>($miny/$maxy)) {
+            $scale=$miny/$maxy;
+        } else {
+            $scale=$minx/$maxx;
+        }
+        //对所求值进行取整
+        $minx=floor($maxx*$scale);
+        $miny=floor($maxy*$scale);
+        //添加小图
+        $minim=imagecreatetruecolor($minx,$miny);
+        //缩放函数
+        imagecopyresampled($minim,$maxim,0,0,0,0,$minx,$miny,$maxx,$maxy);
+        return $minim;
     }
 }
