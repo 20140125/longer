@@ -38,7 +38,7 @@ class Notice extends Mailable
     {
         return $this->view('email.notice')
             ->with([
-                'href'=>$this->request['href'],
+                'href'=>config('app.url').str_replace(['/admin/'],['api/v1/'],$this->request['href']),
                 'rule_name'=>$this->request['rule_name'],
                 'username'=>$this->request['username'],
                 'url'=>config('app.url')."#/admin/index/{$this->request['remember_token']}"

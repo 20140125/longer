@@ -103,7 +103,8 @@ class BaseController extends Controller
             route('emotion'),
             route('saveCenter'),
             route('userCenter'),
-            route('areaLists')
+            route('areaLists'),
+            route('total')
         ];
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
