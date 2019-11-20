@@ -114,17 +114,40 @@ class BaiDuController extends OAuthController
     }
 
     /**
-     * TODO:获取用户信息
+     * TODO:获取用户信息（待废弃）
      * @param $access_token
      * @return array|mixed
      */
-    public function getUserInfo($access_token)
+    public function getUserInfo2($access_token)
     {
         $arr = [
             'access_token' => $access_token,
             'format' => 'json'
         ];
         $result = $this->curl->get($this->apiUrl.'rest/2.0/passport/users/getLoggedInUser?'.http_build_query($arr));
+        if (!$result){
+            return $this->error(Code::ERROR,'request interface failed');
+        }
+        $result = object_to_array($result);
+        if (isset($result['error'])) {
+            return $this->error(Code::ERROR,$result['error_description']);
+        }
+        return $result;
+    }
+
+    /**
+     * TODO:获取用户信息
+     * @param $access_token
+     * @return array|bool|mixed
+     */
+    public function getUserInfo($access_token)
+    {
+        $arr = [
+            'access_token' => $access_token,
+            'format' => 'json',
+            'get_unionid' => '1',
+        ];
+        $result = $this->curl->get($this->apiUrl.'rest/2.0/passport/users/getInfo?'.http_build_query($arr));
         if (!$result){
             return $this->error(Code::ERROR,'request interface failed');
         }

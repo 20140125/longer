@@ -204,8 +204,8 @@ class OauthCallbackController
         $userInfo = $baiDuOauth->getUserInfo($result['access_token']);
         $this->throwException($userInfo);
         $data = array(
-            'username' =>(string)$userInfo['uname'],
-            'openid' =>(string)$userInfo['uid'],
+            'username' =>(string)$userInfo['username'],
+            'openid' =>(string)$userInfo['openid'],
             'avatar_url' =>(string)"https://tb.himg.baidu.com/sys/portrait/item/{$userInfo['portrait']}",
             'access_token' =>(string)$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
@@ -213,9 +213,9 @@ class OauthCallbackController
             'oauth_type' => 'baidu',
             'role_id' => 2,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
-            'remember_token' =>md5(md5($userInfo['uname']).$userInfo['uid'].time()),
+            'remember_token' =>md5(md5($userInfo['username']).$userInfo['openid'].time()),
         );
-        $where[] = array('openid','=',(string)$userInfo['uid']);
+        $where[] = array('openid','=',(string)$userInfo['openid']);
         $where[] = array('oauth_type','=','baidu');
         return $this->oauth($data,$where);
     }
