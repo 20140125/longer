@@ -206,7 +206,7 @@ class OauthCallbackController
         $data = array(
             'username' =>(string)$userInfo['username'],
             'openid' =>(string)$userInfo['openid'],
-            'avatar_url' =>(string)"https://tb.himg.baidu.com/sys/portrait/item/{$userInfo['portrait']}",
+            'avatar_url' =>(string)"http://tb.himg.baidu.com/sys/portrait/item/{$userInfo['portrait']}",
             'access_token' =>(string)$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
