@@ -99,6 +99,10 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'api/index','v1\ApiController@index');
     Route::match(['post','get'],'api/update','v1\ApiController@update');
     Route::match(['post','get'],'api/save','v1\ApiController@save');
+    //API接口
+    Route::match(['get','post'],'apidoc/index','v1\ApiDocController@index');
+    Route::match(['post','get'],'apidoc/update','v1\ApiDocController@update');
+    Route::match(['post','get'],'apidoc/save','v1\ApiDocController@save');
     //API接口分类
     Route::match(['post','get'],'category/index','v1\ApiController@category');
     Route::match(['post','get'],'category/delete','v1\ApiController@CategoryDelete');
