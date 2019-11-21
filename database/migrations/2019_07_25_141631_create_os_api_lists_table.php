@@ -22,7 +22,7 @@ class CreateOsApiListsTable extends Migration
             $table->string('methods',8)->default('0')->comment('请求方法');
             $table->string('request',1024)->default('0')->comment('请求字段说明');
             $table->string('response',1024)->default('0')->comment('返回字段说明');
-            $table->text('response_string')->comment('接口详情');
+            $table->text('response_string')->comment('接口详情 (html)');
             $table->string('remark',256)->default('0')->comment('接口备注说明');
         });
     }
