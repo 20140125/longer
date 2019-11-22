@@ -58,6 +58,16 @@ class ApiDocController extends BaseController
         $this->validatePost(['markdown' =>'required', 'html' =>'required', 'type' =>'required|integer',]);
         $result = $this->apiDocListsModel->addResult($this->post);
         if (!empty($result)){
+            $apiLog = array(
+                'username' => $this->users->username,
+                'api_id' => $result,
+                'updated_at' => time(),
+                'type' => 2,
+                'markdown' => $this->post['markdown'],
+                'json' => '',
+                'desc' => '编辑'.ApiCategory::getInstance()->getResult('id',$this->post['type'])->name
+            );
+            $this->apiLogModel->addResult($apiLog);
             return $this->ajax_return(Code::SUCCESS,'save api doc successfully');
         }
         return $this->ajax_return(Code::ERROR,'save api doc error');
@@ -72,6 +82,16 @@ class ApiDocController extends BaseController
         $this->validatePost(['markdown' =>'required', 'html' =>'required', 'type' =>'required|integer',]);
         $result = $this->apiDocListsModel->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
+            $apiLog = array(
+                'username' => $this->users->username,
+                'api_id' => $this->post['id'],
+                'updated_at' => time(),
+                'type' => 2,
+                'markdown' => $this->post['markdown'],
+                'json' => '',
+                'desc' => '编辑'.ApiCategory::getInstance()->getResult('id',$this->post['type'])->name
+            );
+            $this->apiLogModel->addResult($apiLog);
             return $this->ajax_return(Code::SUCCESS,'update api doc successfully');
         }
         return $this->ajax_return(Code::ERROR,'update api doc error');

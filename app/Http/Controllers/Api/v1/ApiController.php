@@ -69,6 +69,16 @@ class ApiController extends BaseController
         $this->validatePost($this->rules('lists'));
         $result = $this->apiListsModel->addResult($this->post);
         if (!empty($result)){
+            $apiLog = array(
+                'username' => $this->users->username,
+                'api_id' => $result,
+                'updated_at' => time(),
+                'type' => 1,
+                'json' => json_encode($this->post,JSON_UNESCAPED_UNICODE),
+                'markdown' => '',
+                'desc' => '编辑'.$this->post['desc']
+            );
+            $this->apiLogModel->addResult($apiLog);
             return $this->ajax_return(Code::SUCCESS,'save api lists successfully');
         }
         return $this->ajax_return(Code::ERROR,'save api lists error');
@@ -83,6 +93,16 @@ class ApiController extends BaseController
         $this->validatePost($this->rules('lists'));
         $result = $this->apiListsModel->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
+            $apiLog = array(
+                'username' => $this->users->username,
+                'api_id' => $result,
+                'updated_at' => time(),
+                'type' => 1,
+                'json' => json_encode($this->post,JSON_UNESCAPED_UNICODE),
+                'markdown' => '',
+                'desc' => '编辑'.$this->post['desc']
+            );
+            $this->apiLogModel->addResult($apiLog);
             return $this->ajax_return(Code::SUCCESS,'update api lists successfully');
         }
         return $this->ajax_return(Code::ERROR,'update api lists error');
