@@ -18,10 +18,9 @@ class CreateOsApiLogTable extends Migration
             $table->index('api_id');
             $table->string('username',64)->default('0')->comment('执行人');
             $table->integer('api_id')->default(0)->comment('接口ID');
-            $table->string('desc',218)->default('0')->comment('操作描述');
-            $table->text('html')->default('0')->comment('接口详情 (html)');
+            $table->text('type')->default(1)->comment('1 JSON 2markdown');
             $table->text('markdown')->default('0')->comment('接口详情 (markdown)');
-            $table->text('response_string')->default('0')->comment('接口详情 (markdown)');
+            $table->text('json')->default('0')->comment('接口详情 (JSON)');
             $table->integer('updated_at')->default(0)->nullable()->comment('操作时间');
         });
     }
