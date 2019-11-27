@@ -32,6 +32,9 @@ class EmotionController extends BaseController
 
     /**
      * TODO:获取表情
+     * @param integer type 分类
+     * @param integer page
+     * @param integer limit
      * @return JsonResponse
      */
     public function index()

@@ -31,6 +31,10 @@ class ChatController extends BaseController
 
     /**
      * TODO:获取历史聊天记录
+     * @param integer page 当前页
+     * @param integer limit 每页显示记录数
+     * @param string from 来源用户
+     * @param string to 目标用户
      * @return JsonResponse
      */
     public function index()

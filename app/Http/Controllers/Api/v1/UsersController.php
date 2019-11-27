@@ -33,7 +33,7 @@ class UsersController extends BaseController
 
     /**
      * TODO: 管理员保存
-     * @param Request $request
+     * @param Request $request (password:密码，role_id:角色ID，ip_address:IP地址)
      * @return JsonResponse
      */
     public function save(Request $request)
@@ -50,6 +50,12 @@ class UsersController extends BaseController
     }
     /**
      * TODO: 管理员更新
+     * @param string act
+     * @param integer id
+     * @param string username
+     * @param string password
+     * @param string created_at
+     * @param string updated_at
      * @return JsonResponse
      */
     public function update()
@@ -107,6 +113,7 @@ class UsersController extends BaseController
 
     /**
      * TODO:获取个人信息
+     * @param string token
      * @return JsonResponse
      */
     public function center()
@@ -121,6 +128,16 @@ class UsersController extends BaseController
 
     /**
      * TODO:保存个人信息
+     * @param string u_name 用户名
+     * @param integer id
+     * @param array tags 标签
+     * @param integer user_status 用户状态
+     * @param string ip_address IP地址
+     * @param integer u_type 用户类型
+     * @param string desc 描述
+     * @param integer notice_status 通知状态
+     * @param integer uid ID
+     * @param array local 地址
      * @return JsonResponse
      */
     public function saveCenter()
@@ -145,6 +162,7 @@ class UsersController extends BaseController
 
     /**
      * TODO: 删除管理员用户
+     * @param integer id
      * @return JsonResponse
      */
     public function delete()

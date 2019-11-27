@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Routing\Redirector;
 
 /**
- * todo：第三方授权
+ * TODO:：第三方授权
  * Class OauthLoginController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
@@ -33,7 +33,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * todo：QQ跳转到授权登录页面
+     * TODO:：QQ跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
     public function QQ()
@@ -47,7 +47,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * todo：Github跳转到授权登录页面
+     * TODO:：Github跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
     public function gitHub()
@@ -61,7 +61,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * todo：Weibo跳转到授权登录页面
+     * TODO:：Weibo跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
     public function weibo()
@@ -75,7 +75,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * todo：Gitee跳转到授权登录页面
+     * TODO:：Gitee跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
     public function gitee()
@@ -88,7 +88,7 @@ class OauthLoginController extends Controller
         return redirect($url);
     }
     /**
-     * todo：Gitee跳转到授权登录页面
+     * TODO:：Gitee跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
     public function baidu()
@@ -101,7 +101,7 @@ class OauthLoginController extends Controller
         return redirect($url);
     }
     /**
-     * todo：OsChina跳转到授权登录页面
+     * TODO:：OsChina跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
     public function osChina()

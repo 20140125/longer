@@ -41,6 +41,7 @@ class DatabaseController extends BaseController
 
     /**
      * TODO:数据表备份
+     * @param string name 数据库名称
      * @return JsonResponse
      */
     public function backup()
@@ -60,6 +61,7 @@ class DatabaseController extends BaseController
 
     /**
      * TODO：修复数据表
+     * @param string name 数据库名称
      * @return JsonResponse
      */
     public function repair()
@@ -74,6 +76,7 @@ class DatabaseController extends BaseController
 
     /**
      * TODO：优化数据表
+     * @param string name 数据库名称
      * @return JsonResponse
      */
     public function optimize()
@@ -87,6 +90,8 @@ class DatabaseController extends BaseController
     }
     /**
      * TODO：优化数据表
+     * @param string name 数据库名称
+     * @param string common 备注
      * @return JsonResponse
      */
     public function comment()

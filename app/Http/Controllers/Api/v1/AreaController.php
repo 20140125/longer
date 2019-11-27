@@ -39,6 +39,7 @@ class AreaController extends BaseController
     }
     /**
      * TODO:获取城市列表
+     * @param integer parent_id 上级ID
      * @return JsonResponse
      */
     public function index()
@@ -56,6 +57,8 @@ class AreaController extends BaseController
 
     /**
      * TODO:获取天气
+     * @param string code 城市码
+     * @param integer id ID
      * @return JsonResponse
      */
     public function weather()

@@ -17,6 +17,8 @@ class OauthController extends BaseController
 {
     /**
      * TODO：授权列表
+     * @param integer page
+     * @param integer limit
      * @return JsonResponse
      */
     public function index()
@@ -39,6 +41,9 @@ class OauthController extends BaseController
 
     /**
      * TODO：更新授权用户
+     * @param integer id
+     * @param integer status
+     * @param string act 区分修改类型
      * @return JsonResponse
      */
     public function update()
@@ -60,6 +65,10 @@ class OauthController extends BaseController
 
     /**
      * TODO:验证邮箱是否正确
+     * @param string email
+     * @param integer id
+     * @param string username
+     * @param string remember_token
      * @return JsonResponse
      */
     public function email()
@@ -87,6 +96,8 @@ class OauthController extends BaseController
 
     /**
      * TODO:校验验证码是否正确
+     * @param string code 验证码
+     * @param integer id
      * @return JsonResponse
      */
     public function code()
@@ -101,6 +112,7 @@ class OauthController extends BaseController
 
     /**
      * TODO：删除授权用户
+     * @param integer id
      * @return JsonResponse
      */
     public function delete()

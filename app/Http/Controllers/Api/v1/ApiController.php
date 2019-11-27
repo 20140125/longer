@@ -2,12 +2,11 @@
 namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Utils\Code;
 use App\Models\ApiCategory;
+use App\Models\ApiDocLists;
 use App\Models\ApiLists;
 use App\Models\ApiLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * api列表
@@ -25,7 +24,7 @@ class ApiController extends BaseController
     protected $apiCategoryModel,$apiListsModel,$apiLogModel;
 
     /**
-     * todo 构造函数
+     * TODO: 构造函数
      * ApiController constructor.
      * @param Request $request
      */
@@ -38,7 +37,8 @@ class ApiController extends BaseController
     }
     /*********************************************************************api 列表****************************************************************/
     /**
-     * api 列表
+     * TODO:：api接口详情
+     * @param integer type
      * @return JsonResponse
      */
     public function index()
@@ -52,7 +52,7 @@ class ApiController extends BaseController
     }
 
     /**
-     * todo：接口分类
+     * TODO:：接口分类
      * @return JsonResponse
      */
     public function category()
@@ -61,7 +61,15 @@ class ApiController extends BaseController
         return $this->ajax_return(Code::SUCCESS,'successfully', ['category_tree'=>get_tree($result,0,'children'),'category'=>$result]);
     }
     /**
-     * todo：保存API数据
+     * TODO:：保存API数据
+     * @param String desc 接口描述
+     * @param Integer type 分类ID
+     * @param String href 接口地址
+     * @param String method 请求方法
+     * @param String request 请求参数说明
+     * @param String response 返回参数说明
+     * @param String response_string 接口详情
+     * @param String remark 备注
      * @return JsonResponse
      */
     public function save()
@@ -85,7 +93,16 @@ class ApiController extends BaseController
     }
 
     /**
-     * todo 更新API数据
+     * TODO: 更新API数据
+     * @param integer id 接口ID
+     * @param String desc 接口描述
+     * @param Integer type 分类ID
+     * @param String href 接口地址
+     * @param String method 请求方法
+     * @param String request 请求参数说明
+     * @param String response 返回参数说明
+     * @param String response_string 接口详情
+     * @param String remark 备注
      * @return JsonResponse
      */
     public function update()
@@ -110,7 +127,11 @@ class ApiController extends BaseController
     /*********************************************************************api 分类****************************************************************/
 
     /**
-     * todo：保存APICategory数据
+     * TODO:：保存APICategory数据
+     * @param String name 分类名称
+     * @param integer pid 上级ID
+     * @param String path 路径
+     * @param integer level 层级
      * @return JsonResponse
      */
     public function categorySave()
@@ -123,7 +144,12 @@ class ApiController extends BaseController
         return $this->ajax_return(Code::ERROR,'save api category error');
     }
     /**
-     * todo 更新APICategory数据
+     * TODO: 更新APICategory数据
+     * @param integer id 分类ID
+     * @param String name 分类名称
+     * @param integer pid 上级ID
+     * @param String path 路径
+     * @param integer level 层级
      * @return JsonResponse
      */
     public function categoryUpdate()
@@ -138,7 +164,8 @@ class ApiController extends BaseController
     }
 
     /**
-     * todo 删除api分类
+     * TODO: 删除api分类
+     * @param integer id 分类ID
      * @return JsonResponse
      */
     public function CategoryDelete()
@@ -147,6 +174,7 @@ class ApiController extends BaseController
         $result = $this->apiCategoryModel->deleteResult('id',$this->post['id']);
         if (!empty($result)){
             $this->apiListsModel->deleteResult('type',$this->post['id']);
+            ApiDocLists::getInstance()->deleteResult('type',$this->post['id']);
             return $this->ajax_return(Code::SUCCESS,'remove api and api category successfully');
         }
         return $this->ajax_return(Code::ERROR,'remove api and api category errors');

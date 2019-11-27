@@ -48,6 +48,7 @@ class ConfigController extends BaseController
 
     /**
      * TODO：保存配置
+     * @param string name 配置名称
      * @return JsonResponse
      */
     public function save()
@@ -61,6 +62,9 @@ class ConfigController extends BaseController
     }
     /**
      * TODO：更新配置
+     * @param string id
+     * @param string name
+     * @param integer status
      * @return JsonResponse
      */
     public function update()
@@ -80,6 +84,8 @@ class ConfigController extends BaseController
 
     /**
      * TODO：更新配置值
+     * @param integer id
+     * @param string name
      * @return JsonResponse
      */
     public function value()
@@ -94,6 +100,7 @@ class ConfigController extends BaseController
 
     /**
      * TODO：删除配置
+     * @param integer id
      * @return JsonResponse
      */
     public function delete()

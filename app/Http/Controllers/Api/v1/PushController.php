@@ -31,6 +31,8 @@ class PushController extends BaseController
 
     /**
      * TODO:推送列表
+     * @param integer page
+     * @param integer limit
      * @return JsonResponse
      */
     public function index()
@@ -46,6 +48,10 @@ class PushController extends BaseController
 
     /**
      *  TODO：添加站内推送信息
+     * @param string info 推送消息
+     * @param string username 目标用户
+     * @param integer status 推送状态
+     * @param string created_at 推送时间
      * @return JsonResponse
      */
     public function save()
@@ -66,6 +72,11 @@ class PushController extends BaseController
 
     /**
      * TODO：推送站内未执行的推送的消息
+     * @param integer id
+     * @param string info 推送消息
+     * @param string username 目标用户
+     * @param integer status 推送状态
+     * @param string created_at 推送时间
      * @return JsonResponse
      */
     public function update()
@@ -81,6 +92,8 @@ class PushController extends BaseController
     }
     /**
      * TODO：查看站内推送的消息
+     * @param integer id
+     * @param integer see
      * @return JsonResponse
      */
     public function read()
@@ -95,6 +108,7 @@ class PushController extends BaseController
 
     /**
      * TODO：删除记录
+     * @param integer id
      * @return JsonResponse
      */
     public function delete()

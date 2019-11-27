@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * todo 登录
+ * TODO: 登录
  * Class LoginController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
@@ -41,7 +41,7 @@ class LoginController
 
     /**
      * TODO:用户登录
-     * @param Request $request
+     * @param Request $request (username:用户名，password:密码)
      * @return JsonResponse
      */
     public function index(Request $request)
@@ -68,7 +68,7 @@ class LoginController
 
     /**
      * TODO：获取配置
-     * @param Request $request
+     * @param Request $request （name:配置名）
      * @return JsonResponse
      */
     public function config(Request $request)

@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 class AuthController extends BaseController
 {
     /**
-     * todo 权限列表
+     * TODO: 权限列表
      * @return JsonResponse
      */
     public function index()
@@ -24,7 +24,9 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo 权限保存
+     * TODO: 权限保存
+     * @param string name 权限名称
+     * @param string href 权限地址
      * @return JsonResponse
      */
     public function save()
@@ -38,7 +40,10 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo 更新权限
+     * TODO: 更新权限
+     * @param integer id ID
+     * @param string name 权限名称
+     * @param string href 权限地址
      * @return JsonResponse
      */
     public function update()
@@ -61,7 +66,9 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo 删除权限
+     * TODO: 删除权限
+     * @param integer id
+     * @param integer level 权限层级
      * @return JsonResponse
      */
     public function delete()
@@ -70,7 +77,7 @@ class AuthController extends BaseController
         //查看下面是否还有下级权限
         $_child = $this->authModel->getResult('pid',$this->post['id']);
         if (!empty($_child)){
-            return $this->ajax_return(Code::ERROR,'权限下面还存在下级，不能删除！');
+            return $this->ajax_return(Code::ERROR,'Cannot be upgraded');
         }
         $result = $this->authModel->deleteResult('id',$this->post['id']);
         if (!empty($result)){

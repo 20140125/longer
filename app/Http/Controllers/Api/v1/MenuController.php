@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\DB;
 class MenuController extends BaseController
 {
     /**
-     * todo 权限列表
+     * TODO: 权限列表
+     * @param string token 用户标识
      * @return JsonResponse
      */
     public function getMenu()
@@ -37,7 +38,8 @@ class MenuController extends BaseController
         return $this->ajax_return(Code::SUCCESS,'successfully',$authLists);
     }
     /**
-     * todo 用户合法性
+     * TODO: 用户合法性
+     * @param string token 用户标识
      * @return JsonResponse
      */
     public function check()
@@ -59,7 +61,8 @@ class MenuController extends BaseController
         return $this->ajax_return(Code::NOT_ALLOW,'permission denied');
     }
     /**
-     * todo  退出登陆
+     * TODO:  退出登陆
+     * @param string token 用户标识
      * @return JsonResponse
      */
     public function logout()
@@ -83,6 +86,7 @@ class MenuController extends BaseController
 
     /**
      * TODO：获取总数
+     * @param string token 用户标识
      * @return JsonResponse
      */
     public function getCountData()
