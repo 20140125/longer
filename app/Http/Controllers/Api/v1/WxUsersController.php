@@ -8,6 +8,7 @@ use Curl\Curl;
 use Illuminate\Config\Repository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -35,6 +36,9 @@ class WxUsersController
      */
     public function __construct(Request $request)
     {
+        if ($request->isMethod('get')) {
+            $this->setCode(Code::METHOD_ERROR,'method not allow');
+        }
         $this->appid = config('app.program_appid');
         $this->appsecret = config('app.program_secret');
         $this->post = $request->post();
@@ -112,5 +116,45 @@ class WxUsersController
     {
         set_code($code);
         exit(json_encode(array('code'=>$code,'msg'=>$message)));
+    }
+
+    /**
+     * TODO:：文件上传
+     * @param Request $request (file:文件资源,rand:是否随机,path:文件路径)
+     * @return JsonResponse
+     */
+    public function upload(Request $request)
+    {
+        $file = $request->file('file');
+        if ($file->isValid()) {
+            //获取文件的扩展名
+            $ext = $file->getClientOriginalExtension();
+            //获取文件的绝对路径
+            $path = $file->getRealPath();
+            //修改用户图片
+            //图片格式上传错误
+            switch (strtolower($ext)) {
+                case 'jpg':
+                case 'gif':
+                case 'png':
+                case 'jpeg':
+                    //图片大小上传错误
+                    if ($file->getSize()>2*1024*1024) {
+                        return $this->ajax_return(Code::ERROR,'upload image size error');
+                    }
+                    break;
+                case 'mp4':
+                    if ($file->getSize()>5*1024*1024) {
+                        return $this->ajax_return(Code::ERROR,'upload video size error');
+                    }
+                    break;
+                default:
+                    return $this->ajax_return(Code::ERROR,'Unsupported file format');
+            }
+            $filename = date('Ymd')."/".md5(date('YmdHis')).uniqid().".".$ext;
+            Storage::disk('public')->put($filename, file_get_contents($path));
+            return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('src'=>config('app.url').'storage/'.$filename));
+        }
+        return $this->ajax_return(Code::ERROR,'upload file failed');
     }
 }

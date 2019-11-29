@@ -67,16 +67,16 @@ class MenuController extends BaseController
      */
     public function logout()
     {
-        if (isset($this->users->salt)){
+        if (isset($this->users->salt)) {
             $where[] = array('u_type',2);
             $this->users->remember_token = md5(md5($this->users->password).time());
             $result = $this->userModel->updateResult(object_to_array($this->users),'id',$this->users->id);
-        }else{
+        } else {
             $where[] = array('u_type',1);
             $this->users->remember_token = md5(md5($this->users->remember_token).time());
             $result = $this->oauthModel->updateResult(object_to_array($this->users),'id',$this->users->id);
         }
-        if (!empty($result)){
+        if (!empty($result)) {
             $where[] = array('u_name',$this->users->username);
             UserCenter::getInstance()->updateResult(array('token'=>$this->users->remember_token,'type'=>'logout'),$where);
             return $this->ajax_return(Code::SUCCESS,'logout system successfully');

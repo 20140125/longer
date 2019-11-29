@@ -238,7 +238,7 @@ if (!function_exists('file_lists'))
     function file_lists($filePath,$permissionFile = array())
     {
         $fileArr = array();
-        $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','public'] :$permissionFile;
+        $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','public'] : $permissionFile;
         $openDir = opendir($filePath);
         $time = array();
         while ($file = readdir($openDir)){
@@ -251,7 +251,7 @@ if (!function_exists('file_lists'))
                     'size' =>md5($filePath.$file),
                     'auth' => file_chmod($filePath.$file),
                 );
-                $time[] = fileatime($filePath.$file);
+                $time[] = filetype($filePath.$file);
             }
         }
         foreach ($fileArr as &$item){
