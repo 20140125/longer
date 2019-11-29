@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 class RoleController extends BaseController
 {
     /**
-     * todo：角色列表
+     * TODO:：角色列表
      * @return JsonResponse
      */
     public function index()
@@ -29,7 +29,10 @@ class RoleController extends BaseController
     }
 
     /**
-     * todo：角色保存
+     * TODO:：角色保存
+     * @param integer status
+     * @param array auth_ids
+     * @param string role_name
      * @return JsonResponse
      */
     public function save()
@@ -50,7 +53,10 @@ class RoleController extends BaseController
     }
 
     /**
-     * todo：角色更新
+     * TODO:：角色更新
+     * @param string act 用户行为
+     * @param integer status
+     * @param integer id
      * @return JsonResponse
      */
     public function update()
@@ -82,7 +88,8 @@ class RoleController extends BaseController
     }
 
     /**
-     * todo：删除角色
+     * TODO:：删除角色
+     * @param integer id
      * @return JsonResponse
      */
     public function delete()

@@ -7,8 +7,6 @@ use App\Models\ApiLists;
 use App\Models\ApiLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * api列表
@@ -25,7 +23,7 @@ class ApiDocController extends BaseController
     protected $apiDocListsModel,$apiLogModel;
 
     /**
-     * todo 构造函数
+     * TODO: 构造函数
      * ApiDocController constructor.
      * @param Request $request
      */
@@ -38,6 +36,7 @@ class ApiDocController extends BaseController
     /*********************************************************************api 列表****************************************************************/
     /**
      * api 列表
+     * @param integer type 接口ID
      * @return JsonResponse
      */
     public function index()
@@ -50,12 +49,15 @@ class ApiDocController extends BaseController
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
     /**
-     * todo：保存API数据
+     * TODO:：保存API数据
+     * @param integer type 分类ID
+     * @param string html html详情
+     * @param string markdown详情
      * @return JsonResponse
      */
     public function save()
     {
-        $this->validatePost(['markdown' =>'required', 'html' =>'required', 'type' =>'required|integer',]);
+        $this->validatePost(['markdown' =>'required|string', 'html' =>'required|string', 'type' =>'required|integer',]);
         $result = $this->apiDocListsModel->addResult($this->post);
         if (!empty($result)){
             $apiLog = array(
@@ -74,12 +76,16 @@ class ApiDocController extends BaseController
     }
 
     /**
-     * todo 更新API数据
+     * TODO: 更新API数据
+     * @param integer type 分类ID
+     * @param string html html详情
+     * @param string markdown详情
+     * @param integer id 接口ID
      * @return JsonResponse
      */
     public function update()
     {
-        $this->validatePost(['markdown' =>'required', 'html' =>'required', 'type' =>'required|integer',]);
+        $this->validatePost(['markdown' =>'required|string', 'html' =>'required|string', 'type' =>'required|integer','id'=>'required|integer']);
         $result = $this->apiDocListsModel->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)){
             $apiLog = array(

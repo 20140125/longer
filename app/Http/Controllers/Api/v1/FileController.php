@@ -13,7 +13,7 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * todo：save文件管理
+ * TODO:：save文件管理
  * Class FileController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
@@ -21,7 +21,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class FileController extends BaseController
 {
     /**
-     * todo：文件列表
+     * TODO:：文件列表
+     * @param string path [base_path,storage_path,public_path]
+     * @param string basename
      * @return Factory|JsonResponse|View
      */
     public function index()
@@ -32,7 +34,10 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：文件打包
+     * TODO:：文件打包
+     * @param string path 文件路径
+     * @param string resource 打包后文件前缀
+     * @param array docLists 资源列表
      * @return JsonResponse
      */
     public function compression()
@@ -46,7 +51,8 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：文件内容
+     * TODO:：文件内容
+     * @param string path 文件路径
      * @return JsonResponse
      */
     public function read()
@@ -55,7 +61,8 @@ class FileController extends BaseController
         return $this->ajax_return(Code::SUCCESS,'successfully',['content'=>open_file($this->post['path'])]);
     }
     /**
-     * todo：文件解压
+     * TODO:：文件解压
+     * @param string path 文件路径
      * @return JsonResponse
      */
     public function Decompression()
@@ -71,8 +78,8 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：文件上传
-     * @param Request $request
+     * TODO:：文件上传
+     * @param Request $request (file:文件资源,rand:是否随机,path:文件路径)
      * @return JsonResponse
      */
     public function upload(Request $request)
@@ -124,8 +131,8 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：文件下载
-     * @param Request $request
+     * TODO:：文件下载
+     * @param Request $request （token:用户标识，path:文件路径）
      * @param Response $response
      * @return JsonResponse|BinaryFileResponse
      */
@@ -142,7 +149,8 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：文件更新
+     * TODO:：文件更新
+     * @param string path 文件路径
      * @return JsonResponse
      */
     public function update()
@@ -153,7 +161,8 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：文件删除
+     * TODO:：文件删除
+     * @param string path 文件路径
      * @return JsonResponse
      */
     public function delete()
@@ -169,7 +178,8 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：文件新建
+     * TODO:：文件新建
+     * @param string path 文件路径
      * @return JsonResponse
      */
     public function save()
@@ -183,7 +193,9 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：文件重命名
+     * TODO:：文件重命名
+     * @param string oldFile 文件旧名称
+     * @param string newFile 文件新名称
      * @return JsonResponse
      */
     public function rename()
@@ -197,7 +209,9 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：修改文件权限
+     * TODO:：修改文件权限
+     * @param string path 文件路径
+     * @param integer auth 权限值
      * @return JsonResponse
      */
     public function auth()
@@ -211,7 +225,8 @@ class FileController extends BaseController
     }
 
     /**
-     * todo：图片预览
+     * TODO:：图片预览
+     * @param string name 文件名称
      * @return JsonResponse
      */
     public function preview()

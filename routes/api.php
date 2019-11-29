@@ -34,6 +34,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //小程序
     Route::match(['get','post'],'wx/login','v1\WxUsersController@login')->name('wxLogin');
     Route::match(['get','post'],'wx/getOpenid','v1\WxUsersController@getOpenId')->name('getOpenId');
+    Route::match(['get','post'],'wx/upload','v1\WxUsersController@upload');
     //权限
     Route::match(['get','post'],'auth/index','v1\AuthController@index');
     Route::match(['get','post'],'auth/save','v1\AuthController@save');
@@ -112,6 +113,9 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'chat/index','v1\ChatController@index');
     //表情
     Route::match(['post','get'],'emotion/index','v1\EmotionController@index')->name('emotion');
+    //excel导入导出
+    Route::match(['post','get'],'excel/import','v1\ExcelController@import');
+    Route::match(['post','get'],'excel/export','v1\ExcelController@export');
     /********************************************私有权限********************************************************/
 
     /******************************************第三方登陆**********************************************************/

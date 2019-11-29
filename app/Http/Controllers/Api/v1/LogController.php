@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * todo 系统日志管理
+ * TODO: 系统日志管理
  * Class LogController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
@@ -20,7 +20,7 @@ class LogController extends BaseController
     protected $logModel;
 
     /**
-     * todo LogController constructor.
+     * TODO: LogController constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -30,7 +30,9 @@ class LogController extends BaseController
     }
 
     /**
-     * todo 日志列表
+     * TODO: 日志列表
+     * @param integer page
+     * @param integer limit
      * @return JsonResponse
      */
     public function index()
@@ -44,7 +46,7 @@ class LogController extends BaseController
     }
 
     /**
-     * @todo :日志保存
+     * TODO: :日志保存
      * @return JsonResponse
      */
     public function save()
@@ -55,7 +57,8 @@ class LogController extends BaseController
     }
 
     /**
-     * todo 删除日志
+     * TODO: 删除日志
+     * @param integer id
      * @return JsonResponse
      */
     public function delete()

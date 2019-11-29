@@ -60,7 +60,7 @@ class GiteeController extends OAuthController
     }
 
     /**
-     * todo：获取登录页面跳转url
+     * TODO:：获取登录页面跳转url
      * @param string $callback
      * @param int $length
      * @return string
@@ -77,7 +77,7 @@ class GiteeController extends OAuthController
     }
 
     /**
-     * todo：获取access_token
+     * TODO:：获取access_token
      * @param $code
      * @return mixed
      * @throws \Exception
@@ -103,7 +103,7 @@ class GiteeController extends OAuthController
     }
 
     /**
-     * todo：刷新AccessToken续期
+     * TODO:：刷新AccessToken续期
      * @param $refresh_token
      * @return array|mixed
      */
@@ -125,7 +125,7 @@ class GiteeController extends OAuthController
     }
 
     /**
-     * todo：获取用户资料
+     * TODO:：获取用户资料
      * @param $access_token
      * @return mixed
      * @throws \Exception

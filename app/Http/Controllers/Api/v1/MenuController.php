@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\DB;
 class MenuController extends BaseController
 {
     /**
-     * todo 权限列表
+     * TODO: 权限列表
+     * @param string token 用户标识
      * @return JsonResponse
      */
     public function getMenu()
@@ -37,7 +38,8 @@ class MenuController extends BaseController
         return $this->ajax_return(Code::SUCCESS,'successfully',$authLists);
     }
     /**
-     * todo 用户合法性
+     * TODO: 用户合法性
+     * @param string token 用户标识
      * @return JsonResponse
      */
     public function check()
@@ -59,21 +61,22 @@ class MenuController extends BaseController
         return $this->ajax_return(Code::NOT_ALLOW,'permission denied');
     }
     /**
-     * todo  退出登陆
+     * TODO:  退出登陆
+     * @param string token 用户标识
      * @return JsonResponse
      */
     public function logout()
     {
-        if (isset($this->users->salt)){
+        if (isset($this->users->salt)) {
             $where[] = array('u_type',2);
             $this->users->remember_token = md5(md5($this->users->password).time());
             $result = $this->userModel->updateResult(object_to_array($this->users),'id',$this->users->id);
-        }else{
+        } else {
             $where[] = array('u_type',1);
             $this->users->remember_token = md5(md5($this->users->remember_token).time());
             $result = $this->oauthModel->updateResult(object_to_array($this->users),'id',$this->users->id);
         }
-        if (!empty($result)){
+        if (!empty($result)) {
             $where[] = array('u_name',$this->users->username);
             UserCenter::getInstance()->updateResult(array('token'=>$this->users->remember_token,'type'=>'logout'),$where);
             return $this->ajax_return(Code::SUCCESS,'logout system successfully');
@@ -83,6 +86,7 @@ class MenuController extends BaseController
 
     /**
      * TODO：获取总数
+     * @param string token 用户标识
      * @return JsonResponse
      */
     public function getCountData()

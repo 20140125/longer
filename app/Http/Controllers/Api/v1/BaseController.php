@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Models\OAuth;
 use App\Models\Role;
 use App\Models\Auth;
-use App\Models\UserCenter;
 use App\Models\Users;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -71,7 +70,8 @@ class BaseController extends Controller
     protected $backupPath;
 
     /**
-     * TODO:构造函数
+     * BaseController constructor.
+     * * TODO:构造函数
      * BaseController constructor.
      * @param Request $request
      */
@@ -110,16 +110,16 @@ class BaseController extends Controller
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
         //token不正确或为空
         if ($validate->fails() || empty($request->header('Authorization'))) {
-            $this->setCode(Code::Unauthorized,'user login state expired');
+            $this->setCode(Code::Unauthorized,'Token Is Not Provided');
         }
         //token不正确
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
         if (empty($this->users) || $this->post['token']!==mb_substr($request->header('Authorization'),32,32)) {
-            $this->setCode(Code::Unauthorized,'user token validate failed');
+            $this->setCode(Code::Unauthorized,'Token Is Expired');
         }
         //用户被禁用
         if ($this->users->status!==1){
-            $this->setCode(Code::Unauthorized,'user disabled');
+            $this->setCode(Code::Unauthorized,'Token Is Invalid');
         }
         //用户不属于超级管理员
         $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids']);

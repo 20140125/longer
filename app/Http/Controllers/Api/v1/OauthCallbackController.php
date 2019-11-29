@@ -36,7 +36,7 @@ class OauthCallbackController
 
     /**
      * OauthCallbackController constructor.
-     * @param Request $request
+     * @param Request $request (code:第三方授权返回code，state:自定义标识)
      */
     public function __construct(Request $request)
     {
@@ -53,7 +53,7 @@ class OauthCallbackController
 
     /**
      * TODO：QQ授权登录回调地址
-     * @param Request $request
+     * @param Request $request （code）
      * @return RedirectResponse|Redirector
      * @throws \Exception
      */
@@ -87,7 +87,7 @@ class OauthCallbackController
 
     /**
      * TODO：gitHub授权回调
-     * @param Request $request
+     * @param Request $request （code，state）
      * @return RedirectResponse|Redirector
      * @throws \Exception
      */
@@ -121,7 +121,7 @@ class OauthCallbackController
 
     /**
      * TODO：Weibo授权回调
-     * @param Request $request
+     * @param Request $request （code）
      * @return RedirectResponse|Redirector
      * @throws \Exception
      */
@@ -155,7 +155,7 @@ class OauthCallbackController
 
     /**
      * TODO：Weibo授权回调
-     * @param Request $request
+     * @param Request $request （code）
      * @return RedirectResponse|Redirector
      * @throws \Exception
      */
@@ -189,7 +189,7 @@ class OauthCallbackController
 
     /**
      * TODO：Baidu授权回调
-     * @param Request $request
+     * @param Request $request （code）
      * @return RedirectResponse|Redirector
      */
     public function baidu(Request $request)
@@ -222,7 +222,7 @@ class OauthCallbackController
 
     /**
      *  TODO：OsChina授权回调
-     * @param Request $request
+     * @param Request $request （code）
      * @return RedirectResponse|Redirector
      * @throws \Exception
      */

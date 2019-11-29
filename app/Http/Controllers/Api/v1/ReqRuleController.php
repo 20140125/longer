@@ -37,6 +37,8 @@ class ReqRuleController extends BaseController
 
     /**
      * TODO：用户请求权限列表
+     * @param integer page
+     * @param integer limit
      * @return JsonResponse
      */
     public function index()
@@ -55,6 +57,7 @@ class ReqRuleController extends BaseController
 
     /**
      * TODO：根据角色获取权限
+     * @param integer user_id
      * @return JsonResponse
      */
     public function getAuth()
@@ -90,6 +93,8 @@ class ReqRuleController extends BaseController
 
     /**
      * TODO：保存用户请求权限
+     * @param string username
+     * @param array href
      * @return JsonResponse
      */
     public function save()
@@ -151,6 +156,13 @@ class ReqRuleController extends BaseController
 
     /**
      * TODO：更新请求授权信息
+     * @param string act 用户行为
+     * @param integer status 状态
+     * @param integer id
+     * @param string username 用户名
+     * @param array href 授权集合
+     * @param integer expires 过期时间
+     * @param string created_at 添加时间
      * @return JsonResponse
      */
     public function update()
@@ -274,6 +286,7 @@ class ReqRuleController extends BaseController
 
     /**
      * TODO：删除申请授权记录
+     * @param integer id
      * @return JsonResponse
      */
     public function delete()
