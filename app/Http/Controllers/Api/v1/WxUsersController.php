@@ -2,8 +2,6 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
-use App\Http\Controllers\Utils\crypt\WXBizDataCrypt;
-use App\Models\OAuth;
 use Curl\Curl;
 use Illuminate\Config\Repository;
 use Illuminate\Http\JsonResponse;
@@ -40,7 +38,7 @@ class WxUsersController
             $this->setCode(Code::METHOD_ERROR,'method not allow');
         }
         $this->appid = config('app.program_appid');
-        $this->appsecret = config('app.program_secret');
+            $this->appsecret = config('app.program_secret');
         $this->post = $request->post();
     }
 
