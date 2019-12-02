@@ -6,7 +6,7 @@
 
 use Workerman\Worker;
 // composer 的 autoload 文件
-include  '../../vendor/autoload.php';
+require_once  '../../vendor/autoload.php';
 
 if(strpos(strtolower(PHP_OS), 'win') === 0) {
     exit("start.php not support windows, please use start_for_win.bat\n");

@@ -4,8 +4,8 @@ use Workerman\Lib\Timer;
 use Workerman\Worker;
 use PHPSocketIO\SocketIO;
 use Workerman\MySQL\Connection;
-include  '../../vendor/autoload.php';
-include  __DIR__.'/config/db.php';
+require_once  '../../vendor/autoload.php';
+require_once  __DIR__.'/config/db.php';
 //日志今天的总量
 $log_last_count = 0;
 //通知今天的总量

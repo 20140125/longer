@@ -14,7 +14,7 @@
 use \Workerman\Worker;
 use \GatewayWorker\BusinessWorker;
 
-include   '../../vendor/autoload.php';
+require_once   '../../vendor/autoload.php';
 
 // bussinessWorker 进程
 $worker = new BusinessWorker();

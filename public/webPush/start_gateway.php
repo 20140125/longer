@@ -14,7 +14,7 @@
 use \Workerman\Worker;
 use \GatewayWorker\Gateway;
 
-include   '../../vendor/autoload.php';
+require_once   '../../vendor/autoload.php';
 
 // gateway 进程
 if(in_array(PHP_OS,['WINNT','Darwin'])) {
