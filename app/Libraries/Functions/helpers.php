@@ -706,8 +706,8 @@ if (!function_exists('base64_image_content'))
     /**
      * [将Base64图片转换为本地图片并保存]
      * @param $base64_image_content
-     * @param $path
-     * @param $id
+     * @param string $path 图片路径
+     * @param string $id 图片名称
      * @return array|bool
      */
     function base64_image_content($base64_image_content,$path,$id)
@@ -722,7 +722,7 @@ if (!function_exists('base64_image_content'))
             }
             $new_file = $new_file.$id.".png";
             if (file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64_image_content)))){
-                $qrcode = $mainSiteUrl.'/Uploads/qrcode/'.date("Ymd").'/'.$id.".png";
+                $qrcode = $mainSiteUrl.'/storage/public/'.date("Ymd").'/'.$id.".png";
                 return $qrcode;
             }else{
                 return false;
@@ -730,6 +730,34 @@ if (!function_exists('base64_image_content'))
         }else{
             return false;
         }
+    }
+}
+if(!function_exists('imgBase64Encode'))
+{
+    /**
+     * 图片base64编码
+     * @param string $img
+     * @param bool $imgHtmlCode
+     * @return string
+     */
+    function imgBase64Encode($img = '', $imgHtmlCode = true)
+    {
+        //如果是本地文件
+        if(strpos($img,'http') === false && !file_exists($img)){
+            return $img;
+        }
+        //获取文件内容
+        $file_content = file_get_contents($img);
+        if($file_content === false){
+            return $img;
+        }
+        $imageInfo = getimagesize($img);
+        $prefiex = '';
+        if($imgHtmlCode){
+            $prefiex = 'data:' . $imageInfo['mime'] . ';base64,';
+        }
+        $base64 = $prefiex.chunk_split(base64_encode($file_content));
+        return $base64;
     }
 }
 if (!function_exists('download_image'))
