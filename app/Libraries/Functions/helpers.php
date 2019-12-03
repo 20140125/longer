@@ -625,9 +625,13 @@ if (!function_exists('act_log'))
      */
     function act_log($info)
     {
+        $url = config('app.url').'api'.$info['href'];
+        if (!empty(strpos($info['href'],'api'))) {
+            $url = config('app.url').str_replace(config('app.url'),'',$info['href']);
+        }
         $data = array(
             'username' =>$info['username'],
-            'url' =>$info['href'],
+            'url' =>  $url,
             'ip_address' =>request()->getClientIp(),
             'created_at' =>time(),
             'day' => date('Ymd'),

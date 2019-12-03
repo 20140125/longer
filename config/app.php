@@ -155,6 +155,7 @@ return [
     'baidu_secret' => env('BAIDU_APPSECRET',''),
     'os_china_appid' => env('OS_CHINA_APPID',''),
     'os_china_appsecret' => env('OS_CHINA_APPSECRET',''),
+    'database' => env('DB_DATABASE',''),
     /*
      |--------------------------------------------------------------------------
      | 第三方授权登录
