@@ -118,7 +118,7 @@ class ExpiresRule extends Command
                 //告诉用户权限已经过期
                 $message = array(
                     'username' => $item->username,
-                    'info' => '您有权限('.$item->href.')已经过期,过期时长('.diff_times(time(),$item->expires).')，如有需要请前往个人中心续期~！',
+                    'info' => '您有权限('.config('app.url').str_replace('admin/','api/v1/',$item->href).')已经过期,过期时长('.diff_times(time(),$item->expires).')，如有需要请前往个人中心续期~！',
                     'uid'  => md5($item->username),
                     'state' => Code::WebSocketState[1],
                     'status' => 1,

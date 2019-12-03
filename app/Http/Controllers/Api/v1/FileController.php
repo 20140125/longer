@@ -231,8 +231,7 @@ class FileController extends BaseController
      */
     public function preview()
     {
-        $this->validatePost(['name'=>'required|string']);
-        $url = config('app.url').DIRECTORY_SEPARATOR.'storage/'.$this->post['name'];
-        return $this->ajax_return(Code::SUCCESS,'Get the file address successfully', ['src'=>$url]);
+        $this->validatePost(['path'=>'required|string']);
+        return $this->ajax_return(Code::SUCCESS,'Get the file address successfully', ['src'=>imgBase64Encode($this->post['path'])]);
     }
 }
