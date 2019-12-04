@@ -151,6 +151,12 @@ class WxUsersController
             }
             $filename = date('Ymd')."/".md5(date('YmdHis')).uniqid().".".$ext;
             Storage::disk('public')->put($filename, file_get_contents($path));
+            $info = array(
+                'username' => 'tourist',
+                'href' => '/v1/wx/upload',
+                'msg' => 'upload file '.$file->getFilename().' successfully'
+            );
+            act_log($info);
             return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('src'=>config('app.url').'storage/'.$filename));
         }
         return $this->ajax_return(Code::ERROR,'upload file failed');
