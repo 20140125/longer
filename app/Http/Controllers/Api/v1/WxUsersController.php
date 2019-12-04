@@ -123,6 +123,10 @@ class WxUsersController
      */
     public function upload(Request $request)
     {
+        if (!in_array($request->getClientIp(),['203.205.141.49'])) {
+            set_code(Code::NOT_ALLOW);
+            return $this->ajax_return(Code::NOT_ALLOW,'Permission denied');
+        }
         $file = $request->file('file');
         if ($file->isValid()) {
             //获取文件的扩展名
