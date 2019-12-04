@@ -169,7 +169,7 @@ class FileController extends BaseController
     public function delete()
     {
         $this->validatePost(['path'=>'required|string']);
-        if (!is_file($this->post['path'])) {
+        if (!is_file($this->post['path']) || !is_dir($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         //服务器上面需要 777 权限才能删除文件
