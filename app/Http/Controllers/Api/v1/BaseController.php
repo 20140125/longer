@@ -82,7 +82,7 @@ class BaseController extends Controller
         if (strstr($url,'?')){
             $url = substr($url,0,find_str($request->getRequestUri(),'?',2));
         }
-        if ($request->isMethod('get') && asset($url)!==route('downloadFile')){
+        if ($request->isMethod('get') && !in_array(asset($url),[route('downloadFile')])){
             $this->setCode(Code::METHOD_ERROR,'Method Not Allowed');
         }
         $this->post = $request->post();
@@ -104,8 +104,10 @@ class BaseController extends Controller
             route('saveCenter'),
             route('userCenter'),
             route('areaLists'),
-            route('total')
+            route('total'),
+            route('export')
         ];
+        $this->post['token'] = $this->post['token'] ? $this->post['token'] : $request->get('token');
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
         //token不正确或为空

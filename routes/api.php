@@ -115,7 +115,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'emotion/index','v1\EmotionController@index')->name('emotion');
     //excel导入导出
     Route::match(['post','get'],'excel/import','v1\ExcelController@import');
-    Route::match(['post','get'],'excel/export','v1\ExcelController@export');
+    Route::match(['post','get'],'excel/export','v1\ExcelController@export')->name('export');
     //组件
     Route::match(['post','get'],'components/table','v1\TableComponentController@table');
     Route::match(['post','get'],'components/actions','v1\TableComponentController@action');
