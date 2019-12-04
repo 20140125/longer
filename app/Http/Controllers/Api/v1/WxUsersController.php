@@ -154,7 +154,7 @@ class WxUsersController
             $info = array(
                 'username' => 'tourist',
                 'href' => '/v1/wx/upload',
-                'msg' => 'upload file '.$file->getFilename().' successfully'
+                'msg' => 'upload file '.$file->getClientOriginalName().' successfully'
             );
             act_log($info);
             return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('src'=>config('app.url').'storage/'.$filename));

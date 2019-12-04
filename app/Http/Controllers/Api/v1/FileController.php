@@ -90,6 +90,11 @@ class FileController extends BaseController
             $ext = $file->getClientOriginalExtension();
             //获取文件的绝对路径
             $path = $file->getRealPath();
+            $info = array(
+                'username' => $this->users->username,
+                'href' => '/v1/file/upload',
+                'msg' => 'upload file '.$file->getClientOriginalName().' successfully'
+            );
             //修改用户图片
             if (!empty($this->post['rand']) && $this->post['rand']) {
                 //图片格式上传错误
@@ -113,6 +118,7 @@ class FileController extends BaseController
                 }
                 $filename = date('Ymd')."/".md5(date('YmdHis')).uniqid().".".$ext;
                 Storage::disk('public')->put($filename, file_get_contents($path));
+                act_log($info);
                 return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('src'=>config('app.url').'storage/'.$filename));
             }
             //文件管理
@@ -125,6 +131,7 @@ class FileController extends BaseController
             $file->move($this->post['path'],$filename);
             //删除文件
             Storage::disk('public')->delete($filename);
+            act_log($info);
             return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('name'=>$filename));
         }
         return $this->ajax_return(Code::ERROR,'upload file failed');
