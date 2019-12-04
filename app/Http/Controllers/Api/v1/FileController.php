@@ -138,24 +138,6 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件下载
-     * @param Request $request （token:用户标识，path:文件路径）
-     * @param Response $response
-     * @return JsonResponse|BinaryFileResponse
-     */
-    public function download(Request $request,Response $response)
-    {
-        $username = $this->userModel->getResult('remember_token',$request->get('token'));
-        if (empty($username)){
-            return $this->ajax_return(Code::NOT_FOUND,'permission denied');
-        }
-        if (is_file($request->get('path'))){
-            return $response::download($request->get('path'),basename($request->get('path')));
-        }
-        return $this->ajax_return(Code::NOT_FOUND,'permission denied');
-    }
-
-    /**
      * TODO:：文件更新
      * @param string path 文件路径
      * @return JsonResponse

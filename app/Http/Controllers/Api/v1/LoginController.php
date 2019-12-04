@@ -8,7 +8,9 @@ use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * TODO: 登录
@@ -82,5 +84,22 @@ class LoginController
         }
         $result = $this->configModel->getResult('name',$this->post['name'],'=',['value']);
         return ajax_return(Code::SUCCESS,'successfully',json_decode($result->value,true));
+    }
+    /**
+     * TODO:：文件下载
+     * @param Request $request （token:用户标识，path:文件路径）
+     * @param Response $response
+     * @return JsonResponse|BinaryFileResponse
+     */
+    public function download(Request $request,Response $response)
+    {
+        $username = $this->userModel->getResult('remember_token',$request->get('token'));
+        if (empty($username)){
+            return ajax_return(Code::NOT_FOUND,'permission denied');
+        }
+        if (is_file($request->get('path'))){
+            return $response::download($request->get('path'),basename($request->get('path')));
+        }
+        return ajax_return(Code::NOT_FOUND,'permission denied');
     }
 }
