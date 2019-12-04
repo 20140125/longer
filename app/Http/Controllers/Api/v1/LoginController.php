@@ -2,7 +2,6 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
-use App\Http\Controllers\Utils\Rsa;
 use App\Models\Config;
 use App\Models\UserCenter;
 use App\Models\Users;

@@ -55,7 +55,7 @@ class TableComponentController extends BaseController
                         'tips'    => 'Please input time - Please input time'
                     ]
                 ),
-                'searchOption' => (Object)['table'=>'','lan'=>'en']
+                'searchOption' => (Object)['table'=>$this->post['table'],'lan'=>'en']
             ]
         );
     }
