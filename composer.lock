@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cdb9a54ef99fe9670b35227399c902c4",
+    "content-hash": "9c1ee5e292d51153d1e261571791f0dd",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -3527,6 +3527,36 @@
             "time": "2019-09-10T21:37:39+00:00"
         },
         {
+            "name": "workerman/channel",
+            "version": "v1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/Channel.git",
+                "reference": "0836a9a413c6e8425ee36307d95e2e49cc380f50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/Channel/zipball/0836a9a413c6e8425ee36307d95e2e49cc380f50",
+                "reference": "0836a9a413c6e8425ee36307d95e2e49cc380f50",
+                "shasum": ""
+            },
+            "require": {
+                "workerman/workerman": ">=3.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Channel\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "time": "2018-07-02T02:42:37+00:00"
+        },
+        {
             "name": "workerman/gateway-worker",
             "version": "v3.0.13",
             "source": {
@@ -3627,6 +3657,40 @@
                 "pdo_mysql"
             ],
             "time": "2019-08-02T10:43:09+00:00"
+        },
+        {
+            "name": "workerman/phpsocket.io",
+            "version": "v1.1.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/phpsocket.io.git",
+                "reference": "a80074f20c2e19b8cb3351ff718ae28e7df6bbea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/phpsocket.io/zipball/a80074f20c2e19b8cb3351ff718ae28e7df6bbea",
+                "reference": "a80074f20c2e19b8cb3351ff718ae28e7df6bbea",
+                "shasum": ""
+            },
+            "require": {
+                "workerman/channel": ">=1.0.0",
+                "workerman/workerman": ">=3.5.16"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPSocketIO\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "Socket.io"
+            ],
+            "time": "2018-11-22T08:30:21+00:00"
         },
         {
             "name": "workerman/workerman",
