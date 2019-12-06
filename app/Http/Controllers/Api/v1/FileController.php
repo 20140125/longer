@@ -5,12 +5,8 @@ use App\Http\Controllers\Utils\Code;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * TODO:：save文件管理
