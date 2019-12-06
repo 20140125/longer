@@ -22,7 +22,8 @@
         "predis/predis": "^1.1",
         "workerman/gateway-worker": "^3.0.0",
         "workerman/globaldata": "^1.0",
-        "workerman/mysql": "^1.0"
+        "workerman/mysql": "^1.0",
+        "workerman/phpsocket.io": "^1.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
