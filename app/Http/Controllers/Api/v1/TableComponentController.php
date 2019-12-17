@@ -21,7 +21,7 @@ class TableComponentController extends BaseController
     {
         $this->validatePost(['table'=>'required|string']);
         $tables = $this->tablesName();
-        $data = DB::select(sprintf("SELECT * FROM %s LIMIT 10",$this->post['table']));
+        $data = DB::select(sprintf("SELECT * FROM %s ORDER BY id DESC LIMIT 10",$this->post['table']));
         return $this->ajax_return(Code::SUCCESS,'successfully',
             [
                 'data'=>$data,

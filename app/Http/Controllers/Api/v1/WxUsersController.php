@@ -123,17 +123,12 @@ class WxUsersController
      */
     public function upload(Request $request)
     {
-//        if (!in_array($request->getClientIp(),['203.205.141.49'])) {
-//            set_code(Code::NOT_ALLOW);
-//            return $this->ajax_return(Code::NOT_ALLOW,'Permission denied');
-//        }
         $file = $request->file('file');
         if ($file->isValid()) {
             //获取文件的扩展名
             $ext = $file->getClientOriginalExtension();
             //获取文件的绝对路径
             $path = $file->getRealPath();
-            //修改用户图片
             //图片格式上传错误
             switch (strtolower($ext)) {
                 case 'jpg':
@@ -161,7 +156,7 @@ class WxUsersController
                 'msg' => 'upload file '.$file->getClientOriginalName().' successfully'
             );
             act_log($info);
-            return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('src'=>config('app.url').'storage/'.$filename));
+            return $this->ajax_return(Code::SUCCESS,'upload file '.$file->getClientOriginalName().' successfully',array('src'=>config('app.url').'storage/'.$filename));
         }
         return $this->ajax_return(Code::ERROR,'upload file failed');
     }
