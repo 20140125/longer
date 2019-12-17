@@ -80,8 +80,7 @@ class QQController extends OAuthController
             'scope' => $scope,
             'display' => ''
         ];
-        $result = $this->apiUrl.'oauth2.0/authorize?'.http_build_query($arr);
-        return $result;
+        return $this->apiUrl.'oauth2.0/authorize?'.http_build_query($arr);
     }
 
     /**
