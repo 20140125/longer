@@ -57,7 +57,7 @@ class FileController extends BaseController
     public function read()
     {
         $this->validatePost(['path'=>'required|string']);
-        if (!is_file($this->post['path'])) {
+        if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',['content'=>open_file($this->post['path'])]);
@@ -70,7 +70,7 @@ class FileController extends BaseController
     public function Decompression()
     {
         $this->validatePost(['path'=>'required|string']);
-        if (!is_file($this->post['path'])) {
+        if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         $bool = unzip($this->post['path'],$this->post['resource']);
@@ -150,7 +150,7 @@ class FileController extends BaseController
     public function update()
     {
         $this->validatePost(['path'=>'required|string']);
-        if (!is_file($this->post['path'])) {
+        if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         write_file($this->post['path'],$this->post['content']??'');
@@ -165,7 +165,7 @@ class FileController extends BaseController
     public function delete()
     {
         $this->validatePost(['path'=>'required|string']);
-        if (!is_file($this->post['path']) || !is_dir($this->post['path'])) {
+        if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         //服务器上面需要 777 权限才能删除文件
@@ -185,7 +185,7 @@ class FileController extends BaseController
     public function save()
     {
         $this->validatePost(['path'=>'required|string']);
-        if (!is_file($this->post['path'])) {
+        if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         $bool = save_file($this->post['path']);
@@ -220,7 +220,7 @@ class FileController extends BaseController
     public function auth()
     {
         $this->validatePost(['path'=>'required|string','auth'=>'required|integer|max:666']);
-        if (!is_file($this->post['path'])) {
+        if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         chmod($this->post['path'],octdec((int)"0".$this->post['auth']));
@@ -238,7 +238,7 @@ class FileController extends BaseController
     public function preview()
     {
         $this->validatePost(['path'=>'required|string']);
-        if (!is_file($this->post['path'])) {
+        if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         return $this->ajax_return(Code::SUCCESS,'Get the file address successfully', ['src'=>imgBase64Encode($this->post['path'])]);
