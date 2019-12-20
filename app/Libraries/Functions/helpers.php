@@ -257,6 +257,7 @@ if (!function_exists('file_lists'))
                 'css',
                 'js',
                 'static',
+                'favicon.ico',
             ] : $permissionFile;
         $openDir = opendir($filePath);
         $time = array();
