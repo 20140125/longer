@@ -238,16 +238,16 @@ if (!function_exists('file_lists'))
     function file_lists($filePath,$permissionFile = array())
     {
         $fileArr = array();
-        $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','public','excel'] : $permissionFile;
+        $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml'] : $permissionFile;
         $openDir = opendir($filePath);
         $time = array();
         while ($file = readdir($openDir)){
-            if (!in_array($file,$permissionFile)){
+            if (!in_array($file,$permissionFile) && str_replace('/','\\',$filePath.$file)!=public_path('storage')){
                 $fileArr[] = array(
                     'label'=>$file,
-                    'fileType' => filetype($filePath.$file),
+                    'fileType' =>filetype($filePath.$file),
                     'children' =>[],
-                    'path' =>filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
+                    'path' => filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
                     'size' =>md5($filePath.$file),
                     'auth' => file_chmod($filePath.$file),
                 );
