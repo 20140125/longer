@@ -238,7 +238,26 @@ if (!function_exists('file_lists'))
     function file_lists($filePath,$permissionFile = array())
     {
         $fileArr = array();
-        $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','db.php'] : $permissionFile;
+        $permissionFile = count($permissionFile)<=0 ?
+            [
+                '.',
+                '..',
+                'vendor',
+                '.gitattributes',
+                '.git',
+                '.gitignore',
+                '.env',
+                '.idea',
+                '.editorconfig',
+                '.DS_Store',
+                'node_modules',
+                '.styleci.yml',
+                'db.php',
+                'rsa',
+                'css',
+                'js',
+                'static',
+            ] : $permissionFile;
         $openDir = opendir($filePath);
         $time = array();
         while ($file = readdir($openDir)){
