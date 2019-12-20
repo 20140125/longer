@@ -238,7 +238,7 @@ if (!function_exists('file_lists'))
     function file_lists($filePath,$permissionFile = array())
     {
         $fileArr = array();
-        $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.env.example','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml'] : $permissionFile;
+        $permissionFile = count($permissionFile)<=0 ? ['.','..','vendor','.gitattributes','.git','.gitignore','.env','.idea','.editorconfig','.DS_Store','node_modules','.styleci.yml','db.php'] : $permissionFile;
         $openDir = opendir($filePath);
         $time = array();
         while ($file = readdir($openDir)){
@@ -291,7 +291,7 @@ if (!function_exists('open_file'))
      */
     function open_file($filepath)
     {
-        $fileObj = new SplFileObject(str_replace(public_path(),'',$filepath),'r');
+        $fileObj = new SplFileObject($filepath,'r');
         static $fileInfo = '';
         while ($fileObj->valid()){
             $fileInfo.= $fileObj->fgets();
