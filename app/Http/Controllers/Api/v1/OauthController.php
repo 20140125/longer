@@ -56,6 +56,7 @@ class OauthController extends BaseController
             $this->post['created_at'] = strtotime($this->post['created_at']);
             $this->post['oauth_type'] = strtolower($this->post['oauth_type']);
         }
+        unset($this->post['url']);
         $result = $this->oauthModel->updateResult($this->post,'id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'update oauth successfully');
@@ -107,7 +108,10 @@ class OauthController extends BaseController
         if ($result->code === $this->post['code']) {
             return $this->ajax_return(Code::SUCCESS,'verify code successfully');
         }
-        return $this->ajax_return(Code::SUCCESS,'verify code successfully');
+        $this->post['code'] = 0;
+        $this->post['email'] = 0;
+        $this->oauthModel->updateResult($this->post,'id',$this->post['id']);
+        return $this->ajax_return(Code::ERROR,'verify code failed');
     }
 
     /**
