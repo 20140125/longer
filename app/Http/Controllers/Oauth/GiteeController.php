@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
-use phpDocumentor\Reflection\DocBlock\Tags\See;
 
 /**
  * Class GiteeController
