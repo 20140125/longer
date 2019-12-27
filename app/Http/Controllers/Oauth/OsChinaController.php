@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 /**
  * Class OsChinaController
