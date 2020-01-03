@@ -69,7 +69,6 @@ class UserCenter extends Model
         } else {
             unset($data['type']);
         }
-        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
 }

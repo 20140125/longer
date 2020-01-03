@@ -2,9 +2,18 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Oauth\BaiDuController;
+use App\Http\Controllers\Oauth\GiteeController;
+use App\Http\Controllers\Oauth\GithubController;
+use App\Http\Controllers\Oauth\OsChinaController;
+use App\Http\Controllers\Oauth\QQController;
+use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Utils\Code;
 use App\Mail\Oauth;
+use App\Models\Users;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -25,17 +34,13 @@ class OauthController extends BaseController
     {
         $this->validatePost(['page'=>'required|integer|gt:0','limit'=>'required|integer']);
         $result = $this->oauthModel->getResultLists($this->post['page'],$this->post['limit'],$this->users);
-        $oauthImageLists = [];
         foreach ($result['data'] as &$item){
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
             $item->updated_at = date('Y-m-d H:i:s',$item->updated_at);
             $item->email = empty($item->email) ? '' :$item->email;
             $item->code = empty($item->code) ? '' :$item->code;
             $item->oauth_type = strtoupper($item->oauth_type);
-            array_push($oauthImageLists,$item->avatar_url);
         }
-        $result['avatar_url_lists'] = $oauthImageLists;
-        $result['roleLists'] = $this->roleModel->getResult2('1',['id','role_name']);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
@@ -48,20 +53,78 @@ class OauthController extends BaseController
      */
     public function update()
     {
-        if (!empty($this->post['act'])) {
-            $this->validatePost(['id'=>'required|integer','status'=>'required|integer|in:1,2']);
-            unset($this->post['act']);
-        } else {
-            $this->validatePost(['username'=>'required|string','avatar_url'=>'required|url','role_id'=>'required|integer','status'=>'required|integer|in:1,2']);
-            $this->post['created_at'] = strtotime($this->post['created_at']);
-            $this->post['oauth_type'] = strtolower($this->post['oauth_type']);
-        }
-        unset($this->post['url']);
+        $this->validatePost(['username'=>'required|string','avatar_url'=>'required|url']);
+        $this->post['created_at'] = strtotime($this->post['created_at']);
+        $this->post['oauth_type'] = strtolower($this->post['oauth_type']);
+        $this->post['url'] = empty($this->post['url']) ? config('app.url') : $this->post['url'];
         $result = $this->oauthModel->updateResult($this->post,'id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'update oauth successfully');
         }
         return $this->ajax_return(Code::ERROR,'update oauth failed');
+    }
+
+    /**
+     * TODO:账户绑定
+     * @return JsonResponse
+     */
+    public function oauthBind()
+    {
+        $this->validatePost(['oauth_type'=>'required|string','remember_token'=>'required|string|size:32']);
+        $result = Users::getInstance()->getResult('remember_token',$this->post['remember_token']);
+        //授权账户登录没有绑定账户
+        if (empty($result)) {
+            return $this->ajax_return(Code::SUCCESS,'successfully',['local'=>'/admin/user/bind']);
+        }
+        $this->redisClient->setValue('users',json_encode($this->users),['EX' => 60]);
+        switch (strtoupper($this->post['oauth_type'])) {
+            case 'QQ':
+                $appId = config('app.qq_appid');
+                $appSecret = config('app.qq_secret');
+                $QQOauth = QQController::getInstance($appId,$appSecret);
+                $url = $QQOauth->getAuthUrl(16);
+                $this->redisClient->setValue($QQOauth->state,$QQOauth->state,['EX' => 60]);
+                break;
+            case 'GITHUB':
+                $appId = config('app.github_appid');
+                $appSecret = config('app.github_secret');
+                $gitHubOAuth = GithubController::getInstance($appId,$appSecret);
+                $url = $gitHubOAuth->getAuthUrl(16);
+                $this->redisClient->setValue($gitHubOAuth->state,$gitHubOAuth->state,['EX' => 60]);
+                break;
+            case 'GITEE':
+                $appId = config('app.gitee_appid');
+                $appSecret = config('app.gitee_secret');
+                $giteeOAuth =GiteeController::getInstance($appId,$appSecret);
+                $url = $giteeOAuth->getAuthUrl(16);
+                $this->redisClient->setValue($giteeOAuth->state,$giteeOAuth->state,['EX' => 60]);
+                break;
+            case 'WEIBO':
+                $appId = config('app.weibo_appid');
+                $appSecret = config('app.weibo_secret');
+                $weiboOAuth = WeiBoController::getInstance($appId,$appSecret);
+                $url = $weiboOAuth->getAuthUrl(16);
+                $this->redisClient->setValue($weiboOAuth->state,$weiboOAuth->state,['EX' => 60]);
+                break;
+            case 'BAIDU':
+                $appId = config('app.baidu_appid');
+                $appSecret = config('app.baidu_secret');
+                $baiDuOauth = BaiDuController::getInstance($appId,$appSecret);
+                $url = $baiDuOauth->getAuthUrl(16);
+                $this->redisClient->setValue($baiDuOauth->state,$baiDuOauth->state,['EX' => 60]);
+                break;
+            case 'OSCHINA':
+                $appId = config('app.os_china_appid');
+                $appSecret = config('app.os_china_secret');
+                $osChinaOauth = OsChinaController::getInstance($appId,$appSecret);
+                $url = $osChinaOauth->getAuthUrl(16);
+                $this->redisClient->setValue($osChinaOauth->state,$osChinaOauth->state,['EX' => 60]);
+                break;
+            default:
+                $url = config('app.url');
+            break;
+        }
+        return $this->ajax_return(Code::SUCCESS,'successfully',['oauth_url'=>$url]);
     }
 
     /**

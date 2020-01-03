@@ -32,7 +32,7 @@ class OAuthController extends Controller
     public function getState($length = 32)
     {
         $this->state = md5(get_round_num($length).time().uniqid());
-        return $this->state;
+        return substr($this->state,0,$length);
     }
     /**
      * TODO:：校验标识是否正确

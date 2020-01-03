@@ -60,12 +60,12 @@ class GithubController extends OAuthController
 
     /**
      * TODO:：获取github授权页面
-     * @param string $callback
      * @param int $length
+     * @param string $callback
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl($callback = '', $length = 32, $scope = 'user:email')
+    public function getAuthUrl($length = 32,$callback = '', $scope = 'user:email')
     {
         $arr = [
             'client_id' => $this->appid,

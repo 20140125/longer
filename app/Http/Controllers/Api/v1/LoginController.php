@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Models\Config;
+use App\Models\OAuth;
 use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
@@ -50,7 +51,7 @@ class LoginController
         if ($request->isMethod('get')){
             return ajax_return(Code::METHOD_ERROR,'method not allow');
         }
-        $validate = Validator::make($this->post, ['username' =>'required|between:4,16|string','password' =>'required|between:6,16|string']);
+        $validate = Validator::make($this->post, ['email' =>'required|between:8,32|email','password' =>'required|between:6,32|string']);
         if ($validate->fails()){
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
@@ -61,9 +62,6 @@ class LoginController
         if ($result === Code::NOT_ALLOW){
             return ajax_return(Code::NOT_ALLOW,'users not allow login system');
         }
-        $where[] = array('u_type',2);
-        $where[] = array('u_name',$result['username']);
-        UserCenter::getInstance()->updateResult(array('token'=>$result['token'],'type'=>'login'),$where);
         return ajax_return(Code::SUCCESS,'login successfully',$result);
     }
 
@@ -94,11 +92,14 @@ class LoginController
     {
         $username = $this->userModel->getResult('remember_token',$request->get('token'));
         if (empty($username)){
+            set_code(Code::NOT_FOUND);
             return ajax_return(Code::NOT_FOUND,'permission denied');
         }
-        if (is_file($request->get('path'))){
+        if (file_exists($request->get('path'))){
+            set_code(Code::NOT_FOUND);
             return $response::download($request->get('path'),basename($request->get('path')));
         }
+        set_code(Code::NOT_FOUND);
         return ajax_return(Code::NOT_FOUND,'permission denied');
     }
 }

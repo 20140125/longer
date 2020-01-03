@@ -17,7 +17,6 @@ class CreateOsUserCenterTable extends Migration
             $table->bigIncrements('id');
             $table->integer('uid')->default(0)->comment('用户ID');
             $table->string('u_name',64)->default('0')->comment('用户名');
-            $table->tinyInteger('u_type')->default(1)->comment('用户类型 1 授权用户 2 管理员');
             $table->string('tags',128)->default('0')->comment('标签');
             $table->string('local',64)->default('0')->comment('居住地址');
             $table->string('ip_address',32)->default('0')->comment('IP地址');

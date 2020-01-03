@@ -27,6 +27,7 @@ class CreateOsUsersTable extends Migration
             $table->string('salt',8)->default('0')->comment('盐值');
             $table->string('remember_token',32)->default('0')->comment('登录token');
             $table->char('phone_number',11)->default('0')->comment('手机号码');
+            $table->string('avatar_url',256)->default('0')->comment('用户头像');
         });
     }
 
