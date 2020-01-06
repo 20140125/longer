@@ -53,9 +53,7 @@ class OauthCallbackController
             exit(redirect('/#/login'));
         }
         $this->redisClient = new RedisClient();
-        Log::error($this->redisClient->getValue($request->get('state')));
         if ($this->redisClient->getValue($request->get('state')) == false) {
-            Log::error("58 ====".json_encode($request->all()));
             exit(redirect('/#/login'));
         }
         if ($this->redisClient->getValue('users')) {
