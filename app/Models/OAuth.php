@@ -58,11 +58,11 @@ class OAuth extends Model
 
     /**
      * TODO：获取授权列表
-     * @param $where
+     * @param array $where
      * @param array $column
      * @return Collection
      */
-    public function getOauthLists($where,$column = ['*'])
+    public function getOauthLists($where=[],$column = ['*'])
     {
         return DB::table($this->table)->where($where)->get($column);
     }

@@ -12,8 +12,6 @@ use App\Http\Controllers\Utils\Code;
 use App\Mail\Oauth;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -59,6 +57,12 @@ class OauthController extends BaseController
         $this->post['url'] = empty($this->post['url']) ? config('app.url') : $this->post['url'];
         $result = $this->oauthModel->updateResult($this->post,'id',$this->post['id']);
         if ($result){
+            //修改用户表
+            $users = $this->userModel->getResult('id',$this->post['uid']);
+            if (!empty($users)) {
+                $users->avatar_url = $this->post['avatar_url'];
+                $this->userModel->updateResult(object_to_array($users),'id',$this->post['uid']);
+            }
             return $this->ajax_return(Code::SUCCESS,'update oauth successfully');
         }
         return $this->ajax_return(Code::ERROR,'update oauth failed');

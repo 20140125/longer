@@ -69,6 +69,7 @@ class Users extends Model
         $this->updateResult($request,'id',$result->id); //修改用户标识
         $admin['token'] = $request['remember_token'];
         $admin['username'] = $result->username;
+        $admin['role_id'] = md5($result->role_id);
         $where[] = array('u_name',$result->username);
         UserCenter::getInstance()->updateResult(array('token'=>$admin['token'],'type'=>'login'),$where);     //修改用户中心标识
         OAuth::getInstance()->updateResult(array('remember_token'=>$admin['token']),'uid',$result->id); //修改用户授权标识
@@ -77,9 +78,12 @@ class Users extends Model
 
     /**
      * TODO:  获取管理员列表
-     * @return Collection
+     * @param $user
+     * @param int $page
+     * @param int $limit
+     * @return mixed
      */
-    public function  getResultList($user)
+    public function  getResultList($user,$page=1,$limit=15)
     {
         $where = [];
         if (!in_array($user->username,['admin'])){
@@ -87,6 +91,8 @@ class Users extends Model
             $where[] = ['os_users.id',$id];
         }
         $result['data'] = DB::table($this->table)->join('os_role',$this->table.'.role_id','=','os_role.id')
+            ->offset($limit*($page-1))->limit($limit)
+            ->orderByDesc('updated_at')
             ->where($where)
             ->get(['os_users.*','os_role.id as role_id']);
         $result['total'] = DB::table($this->table)->where($where)->count();

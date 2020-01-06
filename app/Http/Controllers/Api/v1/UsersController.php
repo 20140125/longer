@@ -91,42 +91,36 @@ class UsersController extends BaseController
         $password = $this->userModel->getResult('id',$this->post['id'])->password;
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $this->post['updated_at'] = time();
-        //用户没有修改密码
         if ($password == $this->post['password']){
+            //用户没有修改密码
             $this->validatePost($this->rule(1));
-            unset($this->post['password']);
-            $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
-            if (!empty($result)){
-                return $this->ajax_return(Code::SUCCESS,'update users successfully');
-            }
+        } else {
+            //用户修改密码
+            $this->post['salt'] = get_round_num(8);
+            $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
+            $this->validatePost($this->rule(2));
+        }
+        $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
+        if (empty($result)){
             return $this->ajax_return(Code::ERROR,'update users error');
         }
-        //用户修改密码
-        $this->validatePost($this->rule(2));
-        $pass = $this->post['password'];
-        $this->post['salt'] = get_round_num(8);
-        $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
-        $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
-        if (!empty($result)){
-            //修改密码站内通知
-            $this->post['info'] = '你的密码修改成功，新密码是：'.$pass;
-            $this->post['username'] = 'admin';
-            $this->post['uid'] = md5($this->post['username']);
-            $this->post['status'] = 1;
-            $this->pushMessage();
-            $message = array(
-                'username' => $this->post['username'],
-                'info' => $this->post['info'],
-                'uid'  => md5($this->post['username']),
-                'state' => $this->post['state'],
-                'title' => '修改密码',
-                'status' => 1,
-                'created_at' => time()
-            );
-            Push::getInstance()->addResult($message);
-            return $this->ajax_return(Code::SUCCESS,'update users successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'update users error');
+        //修改密码站内通知
+        $this->post['info'] = '你的密码修改成功，新密码是：'.$this->post['password'];
+        $this->post['username'] = 'admin';
+        $this->post['uid'] = md5($this->post['username']);
+        $this->post['status'] = 1;
+        $this->pushMessage();
+        $message = array(
+            'username' => $this->post['username'],
+            'info' => $this->post['info'],
+            'uid'  => md5($this->post['username']),
+            'state' => $this->post['state'],
+            'title' => '修改密码',
+            'status' => 1,
+            'created_at' => time()
+        );
+        Push::getInstance()->addResult($message);
+        return $this->ajax_return(Code::SUCCESS,'update users successfully');
     }
 
     /**
@@ -203,7 +197,7 @@ class UsersController extends BaseController
             case 1:
                 $rule = [
                     'username' => 'required|max:16|string',
-                    'email' => 'required|email|unique:os_users',
+                    'email' => 'required|email',
                     'status'   => 'required|integer|in:1,2',
                     'phone_number' => 'required|size:11',
                     'role_id' => 'required|integer|in:1'
@@ -212,7 +206,7 @@ class UsersController extends BaseController
             case 2:
                 $rule= [
                     'username' => 'required|max:16|string',
-                    'email' => 'required|email|unique:os_users',
+                    'email' => 'required|email',
                     'password' => 'required|string|between:6,32',
                     'salt' => 'required|string|size:8',
                     'status'   => 'required|integer|in:1,2',

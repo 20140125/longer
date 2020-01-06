@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\ExpiresRule',
         'App\Console\Commands\NormalRule',
         'App\Console\Commands\SendPush',
-        'App\Console\Commands\Chat'
+        'App\Console\Commands\Chat',
+        'App\Console\Commands\SyncOauthToUsers'
 
     ];
 
