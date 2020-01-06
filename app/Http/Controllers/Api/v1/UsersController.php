@@ -43,6 +43,7 @@ class UsersController extends BaseController
         $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
         $this->post['ip_address'] = $request->ip();
         $this->post['avatar_url'] = empty($this->post['avatar_url']) ? '0' : $this->post['avatar_url'];
+        $this->post['uuid'] = md5($this->post['username']).uniqid();
         $result = $this->userModel->addResult($this->post);
         if ($result){
             if (!empty($this->post['avatar_url'])) {
