@@ -71,11 +71,11 @@ class MenuController extends BaseController
     {
         $remember_token = md5(md5($this->users->remember_token).time());
         //授权列表
-        OAuth::getInstance()->updateResult(['remember_token'=>$remember_token],'uid',$this->users->id);
+        OAuth::getInstance()->updateResult(['remember_token'=>$remember_token],'remember_token',$this->users->remember_token);
         //用户表
-        Users::getInstance()->updateResult(['remember_token'=>$remember_token],'id',$this->users->id);
+        Users::getInstance()->updateResult(['remember_token'=>$remember_token],'remember_token',$this->users->remember_token);
         //用户信息表
-        UserCenter::getInstance()->updateResult(array('token'=>$remember_token,'type'=>'logout'),'uid',$this->users->id);
+        UserCenter::getInstance()->updateResult(array('token'=>$remember_token,'type'=>'logout'),'token',$this->users->remember_token);
         return $this->ajax_return(Code::SUCCESS,'logout system successfully');
     }
 
