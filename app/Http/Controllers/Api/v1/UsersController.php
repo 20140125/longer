@@ -200,7 +200,7 @@ class UsersController extends BaseController
                     'email' => 'required|email',
                     'status'   => 'required|integer|in:1,2',
                     'phone_number' => 'required|size:11',
-                    'role_id' => 'required|integer|in:1'
+                    'role_id' => 'required|integer'
                 ];
                 break;
             case 2:
