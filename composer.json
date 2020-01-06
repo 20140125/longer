@@ -23,7 +23,8 @@
         "workerman/gateway-worker": "^3.0.0",
         "workerman/globaldata": "^1.0",
         "workerman/mysql": "^1.0",
-        "workerman/phpsocket.io": "^1.1"
+        "workerman/phpsocket.io": "^1.1",
+        "ext-curl": "*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

@@ -66,7 +66,7 @@ class Push extends Model
             $where[] = ['status',$status];
         }
         if (!in_array($user->username,['admin'])){
-            $where[] = ['uid',md5($user->username)];
+            $where[] = ['uid',empty($user->uuid) ? '' : $user->uuid];
         }
         $result['data'] = DB::table($this->table)->where($where)->orderByDesc('id')->offset($limit*($page-1))->limit($limit)->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
