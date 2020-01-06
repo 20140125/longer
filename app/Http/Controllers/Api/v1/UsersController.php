@@ -106,7 +106,6 @@ class UsersController extends BaseController
         }
         //修改密码站内通知
         $this->post['info'] = '你的密码修改成功，新密码是：'.$this->post['password'];
-        $this->post['username'] = 'admin';
         $this->post['uid'] = md5($this->post['username']);
         $this->post['status'] = 1;
         $this->pushMessage();
