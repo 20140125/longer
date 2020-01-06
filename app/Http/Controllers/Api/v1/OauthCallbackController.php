@@ -194,7 +194,7 @@ class OauthCallbackController
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'weibo',
             'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
+            'role_id' => empty($this->users) ? 2 : $this->users->role_id,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
@@ -228,7 +228,7 @@ class OauthCallbackController
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'baidu',
             'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
+            'role_id' => empty($this->users) ? 2 : $this->users->role_id,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['username']).$userInfo['openid'].time()),
         );
@@ -263,7 +263,7 @@ class OauthCallbackController
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'osChina',
             'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
+            'role_id' => empty($this->users) ? 2 : $this->users->role_id,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
