@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class QQController
@@ -80,6 +81,7 @@ class QQController extends OAuthController
             'scope' => $scope,
             'display' => ''
         ];
+        Log::info(json_encode($arr));
         return $this->apiUrl.'oauth2.0/authorize?'.http_build_query($arr);
     }
 
