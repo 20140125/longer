@@ -65,12 +65,12 @@ class QQController extends OAuthController
 
     /**
      * TODO:：获取登录页面跳转转URL
-     * @param string $callback
      * @param int $length
+     * @param string $callback
      * @param string $scope
-     * @return mixed
+     * @return string
      */
-    public function getAuthUrl($callback = '',$length = 16,$scope = 'get_user_info')
+    public function getAuthUrl($length = 32,$callback = '',$scope = 'get_user_info')
     {
         $arr = [
             'response_type' => 'code',

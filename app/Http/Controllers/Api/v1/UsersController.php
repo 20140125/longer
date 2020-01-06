@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Models\OAuth;
 use App\Models\Push;
 use App\Models\UserCenter;
 use Illuminate\Http\JsonResponse;
@@ -22,8 +23,8 @@ class UsersController extends BaseController
      */
     public function index()
     {
-        $result['userLists'] = $this->userModel->getResultList();
-        foreach ($result['userLists'] as &$item){
+        $result = $this->userModel->getResultList($this->users);
+        foreach ($result['data'] as &$item){
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
         }
@@ -40,13 +41,30 @@ class UsersController extends BaseController
     {
         $this->validatePost($this->rule(3));
         $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
-        $this->post['role_id'] = $this->roleModel->getResult('id',$this->post['role_id'])->id;
         $this->post['ip_address'] = $request->ip();
+        $this->post['avatar_url'] = empty($this->post['avatar_url']) ? '0' : $this->post['avatar_url'];
         $result = $this->userModel->addResult($this->post);
         if ($result){
+            if (!empty($this->post['avatar_url'])) {
+                OAuth::getInstance()->updateResult(['uid'=>$result],'remember_token',$this->post['remember_token']);
+            }
             return $this->ajax_return(Code::SUCCESS,'add user successfully');
         }
         return $this->ajax_return(Code::ERROR,'add user error');
+    }
+
+    /**
+     * TODO：获取绑定用户信息
+     * @return JsonResponse
+     */
+    public function getBindInfo()
+    {
+        $this->validatePost(['remember_token'=>'required|string|size:32']);
+        $result = $this->userModel->getResult('remember_token',$this->post['remember_token']);
+        if (!empty($result)) {
+            return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        }
+        return $this->ajax_return(Code::ERROR,'No bound account information');
     }
     /**
      * TODO: 管理员更新
@@ -73,42 +91,36 @@ class UsersController extends BaseController
         $password = $this->userModel->getResult('id',$this->post['id'])->password;
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $this->post['updated_at'] = time();
-        //用户没有修改密码
         if ($password == $this->post['password']){
+            //用户没有修改密码
             $this->validatePost($this->rule(1));
-            unset($this->post['password']);
-            $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
-            if (!empty($result)){
-                return $this->ajax_return(Code::SUCCESS,'update users successfully');
-            }
+        } else {
+            //用户修改密码
+            $this->post['salt'] = get_round_num(8);
+            $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
+            $this->validatePost($this->rule(2));
+        }
+        $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
+        if (empty($result)){
             return $this->ajax_return(Code::ERROR,'update users error');
         }
-        //用户修改密码
-        $this->validatePost($this->rule(2));
-        $pass = $this->post['password'];
-        $this->post['salt'] = get_round_num(8);
-        $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
-        $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
-        if (!empty($result)){
-            //修改密码站内通知
-            $this->post['info'] = '你的密码修改成功，新密码是：'.$pass;
-            $this->post['username'] = 'admin';
-            $this->post['uid'] = md5($this->post['username']);
-            $this->post['status'] = 1;
-            $this->pushMessage();
-            $message = array(
-                'username' => $this->post['username'],
-                'info' => $this->post['info'],
-                'uid'  => md5($this->post['username']),
-                'state' => $this->post['state'],
-                'title' => '修改密码',
-                'status' => 1,
-                'created_at' => time()
-            );
-            Push::getInstance()->addResult($message);
-            return $this->ajax_return(Code::SUCCESS,'update users successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'update users error');
+        //修改密码站内通知
+        $this->post['info'] = '你的密码修改成功，新密码是：'.$this->post['password'];
+        $this->post['username'] = 'admin';
+        $this->post['uid'] = md5($this->post['username']);
+        $this->post['status'] = 1;
+        $this->pushMessage();
+        $message = array(
+            'username' => $this->post['username'],
+            'info' => $this->post['info'],
+            'uid'  => md5($this->post['username']),
+            'state' => $this->post['state'],
+            'title' => '修改密码',
+            'status' => 1,
+            'created_at' => time()
+        );
+        Push::getInstance()->addResult($message);
+        return $this->ajax_return(Code::SUCCESS,'update users successfully');
     }
 
     /**
@@ -144,7 +156,7 @@ class UsersController extends BaseController
     {
         $this->validatePost(
             [
-                'u_name'=>'required|string','u_type'=>'required|integer',
+                'u_name'=>'required|string',
                 'id'=>'required|integer','desc'=>'required|string|max:128',
                 'tags'=>'required|Array|max:128','notice_status'=>'required|integer|in:1,2',
                 'user_status'=>'required|integer|in:1,2','uid'=>'required|integer',
@@ -152,7 +164,6 @@ class UsersController extends BaseController
             ]
         );
         unset($this->post['email']);
-        unset($this->post['avatarUrl']);
         $result = UserCenter::getInstance()->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)) {
             return $this->ajax_return(Code::SUCCESS,'update user information successfully');
@@ -185,18 +196,18 @@ class UsersController extends BaseController
         switch ($status){
             case 1:
                 $rule = [
-                    'username' => 'required|between:4,16|string',
+                    'username' => 'required|max:16|string',
                     'email' => 'required|email',
-                    'status'   => 'required|integer|between:1,2',
+                    'status'   => 'required|integer|in:1,2',
                     'phone_number' => 'required|size:11',
                     'role_id' => 'required|integer|in:1'
                 ];
                 break;
             case 2:
                 $rule= [
-                    'username' => 'required|between:4,16|string',
+                    'username' => 'required|max:16|string',
                     'email' => 'required|email',
-                    'password' => 'required|string|between:6,16',
+                    'password' => 'required|string|between:6,32',
                     'salt' => 'required|string|size:8',
                     'status'   => 'required|integer|in:1,2',
                     'phone_number' => 'required|size:11',
@@ -205,9 +216,9 @@ class UsersController extends BaseController
                 break;
             case 3:
                 $rule= [
-                    'username' => 'required|between:4,16|string|unique:os_users',
-                    'email' => 'required|email',
-                    'password' => 'required|string|between:6,16',
+                    'username' => 'required|max:16|string|unique:os_users',
+                    'email' => 'required|email|unique:os_users',
+                    'password' => 'required|string|between:6,32',
                     'status'   => 'required|integer|in:1,2',
                     'role_id' => 'required|integer',
                     'salt' => 'required|string|size:8',
@@ -217,7 +228,7 @@ class UsersController extends BaseController
                 break;
             case 4:
                 $rule = [
-                    'status'   => 'required|string|between:1,2',
+                    'status'   => 'required|string|in:1,2',
                     'id' => 'required|integer|gt:1'
                 ];
                 break;

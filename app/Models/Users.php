@@ -51,7 +51,7 @@ class Users extends Model
      */
     public function loginRes($data)
     {
-        $result = $this->getResult( 'username',$data['username']);
+        $result = $this->getResult( 'email',$data['email']);
         if (empty($result)){
             return Code::ERROR;
         }
@@ -66,20 +66,36 @@ class Users extends Model
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($data['password']).$request['salt']);
         $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
-        $this->updateResult($request,'id',$result->id);
+        $this->updateResult($request,'id',$result->id); //修改用户标识
         $admin['token'] = $request['remember_token'];
         $admin['username'] = $result->username;
+        $admin['role_id'] = md5($result->role_id);
+        $where[] = array('u_name',$result->username);
+        UserCenter::getInstance()->updateResult(array('token'=>$admin['token'],'type'=>'login'),$where);     //修改用户中心标识
+        OAuth::getInstance()->updateResult(array('remember_token'=>$admin['token']),'uid',$result->id); //修改用户授权标识
         return $admin;
     }
 
     /**
      * TODO:  获取管理员列表
-     * @return Collection
+     * @param $user
+     * @param int $page
+     * @param int $limit
+     * @return mixed
      */
-    public function  getResultList()
+    public function  getResultList($user,$page=1,$limit=15)
     {
-        $result = DB::table($this->table)->join('os_role',$this->table.'.role_id','=','os_role.id')
+        $where = [];
+        if (!in_array($user->username,['admin'])){
+            $id = empty($user->oauth_type) ? $user->id : $user->uid;
+            $where[] = ['os_users.id',$id];
+        }
+        $result['data'] = DB::table($this->table)->join('os_role',$this->table.'.role_id','=','os_role.id')
+            ->offset($limit*($page-1))->limit($limit)
+            ->orderByDesc('updated_at')
+            ->where($where)
             ->get(['os_users.*','os_role.id as role_id']);
+        $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
 
@@ -94,8 +110,7 @@ class Users extends Model
      */
     public function getResult($field, $value='',$op='=', $column = ['*'])
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->first($column);
     }
     /**
      * TODO:  添加记录
@@ -104,8 +119,7 @@ class Users extends Model
      */
     public function addResult($data)
     {
-        $result = DB::table($this->table)->insertGetId($data);
-        return $result;
+        return DB::table($this->table)->insertGetId($data);
     }
 
     /**
@@ -118,8 +132,7 @@ class Users extends Model
      */
     public function updateResult($data,$field,$value,$op='=')
     {
-        $result = DB::table($this->table)->where($field,$value,$op)->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$value,$op)->update($data);
     }
 
     /**
@@ -131,7 +144,6 @@ class Users extends Model
      */
     public function deleteResult($field,$value,$op='=')
     {
-        $result = DB::table($this->table)->where($field,$value,$op)->delete();
-        return $result;
+        return DB::table($this->table)->where($field,$value,$op)->delete();
     }
 }

@@ -49,10 +49,7 @@ class OAuth extends Model
     {
         $where = [];
         if (!in_array($user->username,['admin'])){
-            if (!in_array($user->username,['admin'])){
-                $where[] = ['username',$user->username];
-                $where[] = ['id',$user->id];
-            }
+            $where[] = ['uid',$user->id];
         }
         $result['data'] = DB::table($this->table)->limit($limit)->where($where)->orderBy('updated_at','desc')->offset($limit*($page-1))->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
@@ -61,11 +58,11 @@ class OAuth extends Model
 
     /**
      * TODO：获取授权列表
-     * @param $where
+     * @param array $where
      * @param array $column
      * @return Collection
      */
-    public function getOauthLists($where,$column = ['*'])
+    public function getOauthLists($where=[],$column = ['*'])
     {
         return DB::table($this->table)->where($where)->get($column);
     }

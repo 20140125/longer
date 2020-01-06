@@ -63,7 +63,7 @@ class BaiDuController extends OAuthController
      * @param int $length
      * @return string
      */
-    public function getAuthUrl($callback = '', $length = 32)
+    public function getAuthUrl($length = 32,$callback = '')
     {
         /**
          * display desc

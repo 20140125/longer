@@ -31,6 +31,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'user/save','v1\UsersController@save');
     Route::match(['get','post'],'user/center','v1\UsersController@center')->name('userCenter');
     Route::match(['get','post'],'center/save','v1\UsersController@saveCenter')->name('saveCenter');
+    Route::match(['get','post'],'user/bind','v1\UsersController@getBindInfo')->name('getBindInfo');
     Route::match(['get','post'],'user/delete','v1\UsersController@delete');
     //小程序
     Route::match(['get','post'],'wx/login','v1\WxUsersController@login')->name('wxLogin');
@@ -47,6 +48,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'oauth/update','v1\OauthController@update');
     Route::match(['get','post'],'oauth/delete','v1\OauthController@delete');
     Route::match(['get','post'],'oauth/verifyCode','v1\OauthController@code');
+    Route::match(['get','post'],'oauth/bind','v1\OauthController@oauthBind');
     //请求授权
     Route::match(['get','post'],'req-rule/index','v1\ReqRuleController@index');
     Route::match(['get','post'],'req-rule/save','v1\ReqRuleController@save')->name('reqRuleSave');
