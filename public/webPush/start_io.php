@@ -206,7 +206,7 @@ $sender_io->on('workerStart', function () {
         global $db, $day,$times;
         $push = $db->select("FROM_UNIXTIME(created_at,'%Y%m%d') as day,count(*) as total")->from('os_push')
             ->where("created_at>=" .strtotime(date('Y-m-d 23:59:59',strtotime("-{$times} day"))))
-            ->groupBy(["created_at"])->query();
+            ->groupBy(["FROM_UNIXTIME(created_at,'%Y%m%d')"])->query();
         $pushDay = $pushTotal = array();
         foreach ($push as $value) {
             array_push($pushDay, intval($value['day']));
@@ -231,7 +231,7 @@ $sender_io->on('workerStart', function () {
         global $db, $day,$times;
         $oauth = $db->select("FROM_UNIXTIME(created_at,'%Y%m%d') as day,count(*) as total")->from('os_oauth')
             ->where("created_at>=" .strtotime(date('Y-m-d 23:59:59',strtotime("-{$times} day"))))
-            ->groupBy(["created_at"])->query();
+            ->groupBy(["FROM_UNIXTIME(created_at,'%Y%m%d')"])->query();
         $oauthDay = $oauthTotal = array();
         foreach ($oauth as $value) {
             array_push($oauthDay, intval($value['day']));
