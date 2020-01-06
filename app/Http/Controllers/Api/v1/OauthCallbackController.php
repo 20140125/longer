@@ -49,14 +49,16 @@ class OauthCallbackController
      */
     public function __construct(Request $request)
     {
+        Log::error("52 ====".json_encode($request->all()));
         if (empty($request->get('code')) || empty($request->get('state'))){
+            Log::error("54 ====".json_encode($request->all()));
             exit(redirect('/#/login'));
         }
         $this->redisClient = new RedisClient();
         if ($this->redisClient->getValue($request->get('state')) == false) {
+            Log::error("58 ====".json_encode($request->all()));
             exit(redirect('/#/login'));
         }
-        Log::error(json_encode($request->all()));
         if ($this->redisClient->getValue('users')) {
             $this->users = json_decode($this->redisClient->getValue('users'));
         }
