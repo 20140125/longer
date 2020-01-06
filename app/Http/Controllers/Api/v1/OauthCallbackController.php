@@ -53,9 +53,7 @@ class OauthCallbackController
             exit(redirect('/#/login'));
         }
         $this->redisClient = new RedisClient();
-        Log::error($this->redisClient->getValue($request->get('state')));
         if ($this->redisClient->getValue($request->get('state')) == false) {
-            Log::error("58 ====".json_encode($request->all()));
             exit(redirect('/#/login'));
         }
         if ($this->redisClient->getValue('users')) {
@@ -90,8 +88,6 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'qq',
-            'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
             'expires' =>time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['nickname']).$QQOauth->openid.time()),
         );
@@ -125,8 +121,6 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'github',
-            'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['login']).$userInfo['id'].time()),
         );
@@ -160,8 +154,6 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'gitee',
-            'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
@@ -195,8 +187,6 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'weibo',
-            'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
@@ -229,8 +219,6 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'baidu',
-            'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['username']).$userInfo['openid'].time()),
         );
@@ -264,8 +252,6 @@ class OauthCallbackController
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
             'oauth_type' => 'osChina',
-            'uid' => empty($this->users) ? 0 : $this->users->id,
-            'role_id' => 2,
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
@@ -291,6 +277,10 @@ class OauthCallbackController
             } else {
                 UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauth->id));
             }
+            if (!empty($this->users)) {
+                $data['uid'] = $this->users->id;
+                $data['role_id'] = $this->users->role_id;
+            }
             $oauthRes =  $this->oauthModel->updateResult($data,$where);
             if (!empty($oauthRes)){
                 if (strlen($this->state) == 32) {
@@ -302,6 +292,8 @@ class OauthCallbackController
             return redirect('/#/login')->send();
         }
         //授权用户第一次登陆跳转到绑定页
+        $data['uid'] = 0;
+        $data['role_id'] = 2;
         $oauthRes =  $this->oauthModel->addResult($data);
         if (!empty($oauthRes)){
             UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauthRes));
