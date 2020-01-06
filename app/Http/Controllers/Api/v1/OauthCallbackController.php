@@ -16,6 +16,7 @@ use App\Models\UserCenter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -55,6 +56,7 @@ class OauthCallbackController
         if ($this->redisClient->getValue($request->get('state')) == false) {
             exit(redirect('/#/login'));
         }
+        Log::error(json_encode($request->all()));
         if ($this->redisClient->getValue('users')) {
             $this->users = json_decode($this->redisClient->getValue('users'));
         }
