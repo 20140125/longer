@@ -13,6 +13,7 @@ use App\Http\Controllers\Utils\RedisClient;
 use App\Mail\Register;
 use App\Models\OAuth;
 use App\Models\UserCenter;
+use App\Models\Users;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -271,9 +272,10 @@ class OauthCallbackController
         $oauth = $this->oauthModel->getResult($where);
         //授权用户存在直接跳转到欢迎页
         if (!empty($oauth)){
-            $whereOauth[] = array('uid',$oauth->id);
+            $whereOauth[] = array('uid',$oauth->uid);
             if (UserCenter::getInstance()->getResult($whereOauth)) {
                 UserCenter::getInstance()->updateResult(array('token'=>$data['remember_token'],'type'=>'login'),$whereOauth);
+                Users::getInstance()->updateResult(array('remember_token'=>$data['remember_token']),'id',$oauth->uid);
             } else {
                 UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauth->id));
             }
