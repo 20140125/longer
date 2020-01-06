@@ -55,7 +55,8 @@ class MenuController extends BaseController
                     'socket'=>config('app.socket_url'),
                     'avatar_url' => $this->users->username == 'admin' ? config('app.avatar_url') : $this->users->avatar_url,
                     'websocket'=>config('app.websocket'),
-                    'role_id' => md5($this->users->role_id)
+                    'role_id' => md5($this->users->role_id),
+                    'uuid' => empty($this->users->uuid) ? '' :$this->users->uuid
                 ]
             );
         }
