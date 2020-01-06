@@ -42,7 +42,7 @@ class PushController extends BaseController
         foreach ($result['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
         }
-        $result['oauth'] = $this->oauthModel->getOauthLists([],['username']);
+        $result['oauth'] = $this->userModel->getAll();
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 

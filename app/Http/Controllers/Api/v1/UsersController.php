@@ -23,7 +23,7 @@ class UsersController extends BaseController
      */
     public function index()
     {
-        $result = $this->userModel->getResultList($this->users);
+        $result = $this->userModel->getResultList($this->users,$this->post['page'],$this->post['limit']);
         foreach ($result['data'] as &$item){
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);

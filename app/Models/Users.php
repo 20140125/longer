@@ -91,12 +91,20 @@ class Users extends Model
             $where[] = ['os_users.id',$id];
         }
         $result['data'] = DB::table($this->table)->join('os_role',$this->table.'.role_id','=','os_role.id')
-            ->offset($limit*($page-1))->limit($limit)
+            ->limit($limit)->offset($limit*($page-1))
             ->orderByDesc('updated_at')
             ->where($where)
             ->get(['os_users.*','os_role.id as role_id']);
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAll()
+    {
+        return DB::table($this->table)->get(['uuid','username']);
     }
 
 
