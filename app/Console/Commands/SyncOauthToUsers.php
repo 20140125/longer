@@ -66,7 +66,7 @@ class SyncOauthToUsers extends Command
             if (!empty($users)) {
                 $users->avatar_url = $oauth->avatar_url;
                 $users->remember_token = $oauth->remember_token;
-                $users->email = $oauth->email;
+                $users->email = empty($oauth->email) ? '' : $oauth->email;
                 $users->username = $oauth->username;
                 $this->usersModel->updateResult(object_to_array($users), 'id', $oauth->uid);
                 $this->info('修改用户[' . $oauth->username . ']信息成功');
