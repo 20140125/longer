@@ -76,7 +76,7 @@ class SyncOauthToUsers extends Command
                     'username' => $oauth->username,
                     'avatar_url' => $oauth->avatar_url,
                     'remember_token' => $oauth->remember_token,
-                    'email' => $oauth->email,
+                    'email' => empty($oauth->email) ? '' : $oauth->email,
                     'salt' => $salt,
                     'password' => md5(md5('123456789') . $salt),
                     'role_id' => $oauth->role_id,
