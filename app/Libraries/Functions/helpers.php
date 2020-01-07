@@ -46,7 +46,7 @@ if (!function_exists('get_round_num'))
                 $str = '0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM';
                 break;
             case 'number':
-                $str = '0123456789';
+                $str = '123456789';
                 break;
             case 'str':
                 $str = 'qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM';
