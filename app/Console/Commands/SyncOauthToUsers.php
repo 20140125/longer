@@ -64,8 +64,7 @@ class SyncOauthToUsers extends Command
             //同步用户数据
             $users = $this->usersModel->getResult('id', $oauth->uid);
             if (!empty($users)) {
-                $users->remember_token = $oauth->remember_token;
-                $this->usersModel->updateResult(object_to_array($users), 'id', $oauth->uid);
+                $this->usersModel->updateResult(['remember_token' => $oauth->remember_token], 'id', $oauth->uid);
                 $this->info('修改用户[' . $oauth->username . ']信息成功');
             } else {
                 $salt = get_round_num(8);
@@ -101,9 +100,7 @@ class SyncOauthToUsers extends Command
             //同步用户基础信息数据
             $userCenter = $this->userCenterModel->getResult('uid',$user->id);
             if (!empty($userCenter)) {
-                $userCenter->token = $user->remember_token;
-                $userCenter->u_name = $user->username;
-                $this->userCenterModel->updateResult(object_to_array($userCenter),'uid',$user->id);
+                $this->userCenterModel->updateResult(['token'=>$user->remember_token,'u_name'=>$user->username],'uid',$user->id);
                 $this->info('修改用户['.$user->username.']基础信息成功');
             } else {
                 $arr = [
