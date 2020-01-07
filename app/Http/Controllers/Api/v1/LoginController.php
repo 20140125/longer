@@ -157,7 +157,7 @@ class LoginController
             }
             return ajax_return(Code::ERROR,'please enter the correct email address');
         }catch (\Exception $exception){
-            return ajax_return(Code::ERROR,'please enter the correct email address');
+            return ajax_return(Code::ERROR,$exception->getMessage());
         }
     }
 
