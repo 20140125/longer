@@ -71,7 +71,7 @@ class LoginController
                 }
                 $result = $this->userModel->loginRes($this->post);
                 break;
-            case 'email':
+            case 'mail':
                 $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email','verify_code' =>'required|size:8|string']);
                 if ($validate->fails()){
                     return ajax_return(Code::ERROR,$validate->errors()->first());
