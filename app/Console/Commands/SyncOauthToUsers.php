@@ -64,10 +64,7 @@ class SyncOauthToUsers extends Command
             //同步用户数据
             $users = $this->usersModel->getResult('id', $oauth->uid);
             if (!empty($users)) {
-                $users->avatar_url = $oauth->avatar_url;
                 $users->remember_token = $oauth->remember_token;
-                $users->email = empty($oauth->email) ? '' : $oauth->email;
-                $users->username = $oauth->username;
                 $this->usersModel->updateResult(object_to_array($users), 'id', $oauth->uid);
                 $this->info('修改用户[' . $oauth->username . ']信息成功');
             } else {
@@ -84,7 +81,8 @@ class SyncOauthToUsers extends Command
                     'created_at' => time(),
                     'updated_at' => time(),
                     'status' => $oauth->status,
-                    'phone_number' => ''
+                    'phone_number' => '',
+                    'uuid' => md5($oauth->username).uniqid()
                 ];
                 $uid = $this->usersModel->addResult($arr);
                 $this->oAuthModel->updateResult(['uid' => $uid], 'id', $oauth->id);
