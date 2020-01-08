@@ -72,8 +72,7 @@ class Auth extends Model
         if (!empty($level)){
             $where[] = ['level','<',$level];
         }
-        $result = DB::table($this->table)->orderBy('path','asc')->where($where)->get();
-        return $result;
+        return DB::table($this->table)->orderBy('path','asc')->where($where)->get();
     }
 
     /**
@@ -95,12 +94,16 @@ class Auth extends Model
     /**
      * TODO：权限分页列表
      * @param array $column
+     * @param string $id
      * @return Collection
      */
-    public function getAuthLists($column = ['*'])
+    public function getAuthLists($column = ['*'],$id='')
     {
-        $result = DB::table($this->table)->get($column);
-        return $result;
+        $where=[];
+        if (!empty($id) || $id == 0) {
+            $where[] = ['pid',$id];
+        }
+        return DB::table($this->table)->where($where)->get($column);
     }
 
     /**
@@ -118,8 +121,7 @@ class Auth extends Model
             $data['path'] = $parent_result->path.'-'.$id;
             $data['level'] = substr_count($data['path'],'-');
         }
-        $result = DB::table($this->table)->where('id',$id)->update($data);
-        return $result;
+        return DB::table($this->table)->where('id',$id)->update($data);
     }
 
     /**
@@ -142,8 +144,7 @@ class Auth extends Model
             $data['level'] = substr_count($data['path'],'-');
         }
         unset($data['__child']);
-        $result = DB::table($this->table)->where($field,$op,$data['id'])->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$data['id'])->update($data);
     }
 
     /**
@@ -155,8 +156,7 @@ class Auth extends Model
      */
     public function deleteResult($field,$value,$op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->delete();
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->delete();
     }
 
 }

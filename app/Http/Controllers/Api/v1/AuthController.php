@@ -18,7 +18,13 @@ class AuthController extends BaseController
      */
     public function index()
     {
-        $result['authLists'] = $this->authModel->getAuthLists();
+        $result['authLists'] = $this->authModel->getAuthLists(['*'],$this->post['id']);
+        foreach ($result['authLists'] as &$item){
+            $item->hasChildren = false;
+            if ($this->authModel->getResult('pid',$item->id)) {
+                $item->hasChildren = true;
+            }
+        }
         $result['selectAuth'] = $this->authModel->getResult2('1',2);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
