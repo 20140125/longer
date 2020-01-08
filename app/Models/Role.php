@@ -48,8 +48,7 @@ class Role extends Model
      */
     public function getResult($field, $value,$op='=', $column = ['*'])
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->first($column);
     }
 
     /**
@@ -64,7 +63,29 @@ class Role extends Model
         if (!empty($status)){
             $where[] = array('status','=',$status);
         }
-        $result = DB::table($this->table)->where($where)->get($column);
+        return DB::table($this->table)->where($where)->get($column);
+    }
+
+    /**
+     *  TODO: 获取角色列表
+     * @param $user
+     * @param $page
+     * @param $limit
+     * @param int $status
+     * @param array $column
+     * @return Collection
+     */
+    public function getResultLists($user,$page,$limit,$status = 0,$column = ['*'])
+    {
+        $where=[];
+        if (!empty($status)){
+            $where[] = array('status','=',$status);
+        }
+        if (!in_array($user->role_id,[1])){
+            $where[] = ['id',$user->role_id];
+        }
+        $result['data'] = DB::table($this->table)->offset($limit*($page-1))->limit($limit)->where($where)->get($column);
+        $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
 
@@ -75,8 +96,7 @@ class Role extends Model
      */
     public function addResult($data)
     {
-        $result = DB::table($this->table)->insertGetId($data);
-        return $result;
+        return DB::table($this->table)->insertGetId($data);
     }
 
     /**
@@ -89,8 +109,7 @@ class Role extends Model
      */
     public function updateResult($data,$field,$value,$op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
 
     /**
@@ -102,7 +121,6 @@ class Role extends Model
      */
     public function deleteResult($field,$value,$op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->delete();
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->delete();
     }
 }

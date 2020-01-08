@@ -48,7 +48,7 @@ class OAuth extends Model
     public function getResultLists($page,$limit,$user)
     {
         $where = [];
-        if (!in_array($user->username,['admin'])){
+        if (!in_array($user->role_id,[1])){
             $where[] = ['uid',$user->id];
         }
         $result['data'] = DB::table($this->table)->limit($limit)->where($where)->orderBy('updated_at','desc')->offset($limit*($page-1))->get();
