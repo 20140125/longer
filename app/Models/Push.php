@@ -65,7 +65,7 @@ class Push extends Model
         if (!empty($status)) {
             $where[] = ['status',$status];
         }
-        if (!in_array($user->username,['admin'])){
+        if (!in_array($user->role_id,[1])){
             $where[] = ['uid',empty($user->uuid) ? '' : $user->uuid];
         }
         $result['data'] = DB::table($this->table)->where($where)->orderByDesc('id')->offset($limit*($page-1))->limit($limit)->get();

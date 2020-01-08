@@ -87,7 +87,7 @@ class Users extends Model
     public function  getResultList($user,$page=1,$limit=15)
     {
         $where = [];
-        if (!in_array($user->username,['admin'])){
+        if (!in_array($user->role_id,[1])){
             $id = empty($user->oauth_type) ? $user->id : $user->uid;
             $where[] = ['os_users.id',$id];
         }

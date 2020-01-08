@@ -80,7 +80,7 @@ class ReqRule extends Model
     public function getResultLists($page,$limit,$user)
     {
         $where = [];
-        if (!in_array($user->username,['admin'])){
+        if (!in_array($user->role_id,[1])){
             $where[] = ['user_id',$user->id];
         }
         $result['data'] = DB::table($this->table)->limit($limit)->where($where)->offset($limit*($page-1))->orderBy('expires')->get();

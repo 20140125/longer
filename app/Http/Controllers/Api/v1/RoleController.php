@@ -19,8 +19,8 @@ class RoleController extends BaseController
      */
     public function index()
     {
-        $roleLists = $this->roleModel->getResult2();
-        foreach ($roleLists as &$item){
+        $roleLists = $this->roleModel->getResultLists($this->users,$this->post['page'],$this->post['limit']);
+        foreach ($roleLists['data'] as &$item){
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
         }
