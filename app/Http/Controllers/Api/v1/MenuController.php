@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Models\OAuth;
+use App\Models\TimeLine;
 use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
@@ -90,6 +91,7 @@ class MenuController extends BaseController
         $result['oauthUser'] = DB::table('os_oauth')->count();
         $result['push'] = DB::table('os_push')->count();
         $result['systemLog'] = DB::table('os_system_log')->count();
+        $result['timeline'] = TimeLine::getInstance()->getResultLists(1,15);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 }

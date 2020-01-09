@@ -41,13 +41,13 @@ class Auth extends Model
 
     /**
      * TODO：查询一条记录
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param string|int $value
      * @param string $op
      * @param array $column
-     * @return Model|Builder|null|object
+     * @return Model|Builder|Collection|object|null
      */
-    public function getResult($field, $value, $op='=',$column = ['*'])
+    public function getResult(string $field, $value, string $op='=',array $column = ['*'])
     {
         switch ($op){
             case 'in':
@@ -66,7 +66,7 @@ class Auth extends Model
      * @param int $level
      * @return Collection
      */
-    public function getResult2($status='1',$level=0)
+    public function getResult2(string $status='1',int $level=0)
     {
         $where['status'] = $status;
         if (!empty($level)){
@@ -80,7 +80,7 @@ class Auth extends Model
      * @param array $ids
      * @return Collection
      */
-    public function getAuthTree($ids = [])
+    public function getAuthTree(array $ids = [])
     {
         $where['status'] = 1;
         $where[] = ['level','<',2];
@@ -97,10 +97,10 @@ class Auth extends Model
      * @param string $id
      * @return Collection
      */
-    public function getAuthLists($column = ['*'],$id='')
+    public function getAuthLists(array $column = ['*'],string $id='')
     {
         $where=[];
-        if (!empty($id) || $id == 0) {
+        if (!empty($id) || (int)$id == 0) {
             $where[] = ['pid',$id];
         }
         return DB::table($this->table)->where($where)->get($column);
@@ -108,10 +108,10 @@ class Auth extends Model
 
     /**
      * TODO 添加记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
         $id = DB::table($this->table)->insertGetId($data);
         $parent_result = $this->getResult('id',$data['pid']);
@@ -126,13 +126,13 @@ class Auth extends Model
 
     /**
      * TODO 更新一条数据
-     * @param $data
-     * @param $field
-     * @param $value
+     * @param array $data
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult($data,$field,$value,$op='=')
+    public function updateResult(array $data,string $field,int $value,string $op='=')
     {
         $parent_result = $this->getResult($field,$value,$op);
         if (!empty($parent_result) && !empty($data['path'])){
@@ -149,12 +149,12 @@ class Auth extends Model
 
     /**
      * TODO 删除一条数据
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function deleteResult($field,$value,$op='=')
+    public function deleteResult(string $field,int $value,string $op='=')
     {
         return DB::table($this->table)->where($field,$op,$value)->delete();
     }

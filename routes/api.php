@@ -123,6 +123,10 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //组件
     Route::match(['post','get'],'components/table','v1\TableComponentController@table');
     Route::match(['post','get'],'components/actions','v1\TableComponentController@action');
+    //组件
+    Route::match(['post','get'],'timeline/index','v1\TimeLineController@index');
+    Route::match(['post','get'],'timeline/save','v1\TimeLineController@save');
+    Route::match(['post','get'],'timeline/update','v1\TimeLineController@update');
     /********************************************私有权限********************************************************/
 
     /******************************************第三方登陆**********************************************************/

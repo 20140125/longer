@@ -78,10 +78,10 @@ class Database extends Model
     }
     /**
      * TODO:创建数据表SQL
-     * @param $tableName
+     * @param string $tableName
      * @return string
      */
-    public  function createTable($tableName)
+    public  function createTable(string $tableName)
     {
         $result = DB::select(sprintf("SHOW CREATE TABLE %s", $tableName));
         $sql = $this->start_line;
@@ -97,10 +97,10 @@ class Database extends Model
 
     /**
      * TODO:数据表数据SQL
-     * @param $tableName
+     * @param string $tableName
      * @return bool|string
      */
-    public function sourceTable($tableName)
+    public function sourceTable(string $tableName)
     {
         $result = DB::select(sprintf("SELECT * FROM %s", $tableName));
         $sql=";\n-- ----------------------------\n-- Records of $tableName\n-- ----------------------------\n";
@@ -124,33 +124,30 @@ class Database extends Model
 
     /**
      * TODO:数据表修复
-     * @param $tableName
+     * @param string $tableName
      * @return array
      */
-    public function repairTable($tableName)
+    public function repairTable(string $tableName)
     {
-        $result = DB::select(sprintf("REPAIR TABLE %s", $tableName));
-        return $result;
+        return DB::select(sprintf("REPAIR TABLE %s", $tableName));
     }
     /**
      * TODO:数据表优化
-     * @param $tableName
+     * @param string $tableName
      * @return array
      */
-    public function optimizeTable($tableName)
+    public function optimizeTable(string $tableName)
     {
-        $result = DB::select(sprintf("OPTIMIZE TABLE %s", $tableName));
-        return $result;
+        return DB::select(sprintf("OPTIMIZE TABLE %s", $tableName));
     }
     /**
      * TODO:修改数据表注释
-     * @param $tableName
-     * @param $comment
+     * @param string $tableName
+     * @param string $comment
      * @return array
      */
-    public function commentTable($tableName,$comment)
+    public function commentTable(string $tableName,string $comment)
     {
-        $result = DB::select(sprintf("ALTER TABLE %s COMMENT '%s'", $tableName,$comment));
-        return $result;
+        return DB::select(sprintf("ALTER TABLE %s COMMENT '%s'", $tableName,$comment));
     }
 }

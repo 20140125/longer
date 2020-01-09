@@ -37,14 +37,15 @@ class Log extends Model
         }
         return self::$instance;
     }
+
     /**
      * TODO:日志列表
-     * @param $page
-     * @param $limit
-     * @param $ctime
-     * @return Collection
+     * @param int $page
+     * @param int $limit
+     * @param string $ctime
+     * @return mixed
      */
-    public function getLists($page,$limit,$ctime)
+    public function getLists(int $page,int $limit,string $ctime)
     {
         $where =[];
         if (!empty($ctime)){
@@ -56,22 +57,22 @@ class Log extends Model
     }
     /**
      * TODO:添加记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
-        $result = DB::table($this->table)->insertGetId($data);
-        return $result;
+        return DB::table($this->table)->insertGetId($data);
     }
+
     /**
      * TODO:删除一条数据
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int|array $value
      * @param string $op
      * @return int
      */
-    public function deleteResult($field,$value,$op='in')
+    public function deleteResult(string $field,$value,string $op='in')
     {
         $result = 0;
         switch ($op){

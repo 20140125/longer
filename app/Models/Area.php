@@ -33,13 +33,13 @@ class Area extends Model
 
     /**
      * TODO:获取数据
-     * @param $filed
-     * @param $value
-     * @param $op
+     * @param string $filed
+     * @param int $value
+     * @param string $op
      * @param array $columns
      * @return Model|Builder|object|null
      */
-    public function getResult($filed,$value,$op='=',$columns=['*'])
+    public function getResult(string $filed,int $value,string $op='=',array $columns=['*'])
     {
         return DB::table($this->table)->where($filed,$op,$value)->first($columns);
     }
@@ -50,10 +50,9 @@ class Area extends Model
      * @param array $columns
      * @return Collection
      */
-    public function getResultLists($pid = 1,$columns=['*'])
+    public function getResultLists(int $pid = 1,array $columns=['*'])
     {
-        $result = DB::table($this->table)->where('parent_id',$pid)->get($columns);
-        return $result;
+        return DB::table($this->table)->where('parent_id',$pid)->get($columns);
     }
 
     /**
@@ -61,21 +60,20 @@ class Area extends Model
      * @param array $columns
      * @return Collection
      */
-    public function getAll($columns=['*'])
+    public function getAll(array $columns=['*'])
     {
-        $result = DB::table($this->table)->get($columns);
-        return $result;
+        return DB::table($this->table)->get($columns);
     }
 
     /**
      * TODO:更新数据
-     * @param $data
-     * @param $filed
-     * @param $value
+     * @param array $data
+     * @param string $filed
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult($data,$filed,$value,$op='=')
+    public function updateResult(array $data,string $filed,int $value,string $op='=')
     {
         return DB::table($this->table)->where($filed,$op,$value)->update($data);
     }
