@@ -30,12 +30,12 @@ class Emotion extends Model
 
     /**
      * TODO:获取表情
-     * @param $type
-     * @param $page
-     * @param $limit
-     * @return Collection
+     * @param int $type
+     * @param int $page
+     * @param int $limit
+     * @return mixed
      */
-    public function getListByType($type,$page,$limit)
+    public function getListByType(int $type,int $page,int $limit)
     {
         $result['data'] = DB::table($this->table)->where('type',$type)->offset($limit*($page-1))->limit($limit)->get();
         $result['pages'] = ceil(DB::table($this->table)->where('type',$type)->count()/$limit);

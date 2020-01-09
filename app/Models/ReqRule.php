@@ -51,13 +51,13 @@ class ReqRule extends Model
 
     /**
      * TODO：查询记录
-     * @param $field
-     * @param string $value
+     * @param array|string $field
+     * @param int $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value='', $op='=',$column = ['*'])
+    public function getResult($field, int $value=0, string $op='=',array $column = ['*'])
     {
         switch ($op){
             case 'in':
@@ -72,12 +72,12 @@ class ReqRule extends Model
 
     /**
      * TODO：请求授权列表
-     * @param $page
-     * @param $limit
+     * @param int $page
+     * @param int $limit
      * @param $user
      * @return mixed
      */
-    public function getResultLists($page,$limit,$user)
+    public function getResultLists(int $page,int $limit,$user)
     {
         $where = [];
         if (!in_array($user->role_id,[1])){
@@ -90,42 +90,39 @@ class ReqRule extends Model
 
     /**
      * TODO 添加记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
         $data['created_at'] = time();
-        $result = DB::table($this->table)->insert($data);
-        return $result;
+        return DB::table($this->table)->insert($data);
     }
 
     /**
      * TODO 更新一条数据
-     * @param $data
-     * @param $field
-     * @param string $value
+     * @param array $data
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult($data,$field,$value='',$op='=')
+    public function updateResult(array $data,string $field,int $value=0,string $op='=')
     {
         $data['updated_at'] = time();
-        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
 
     /**
      * TODO 删除一条数据
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function deleteResult($field,$value,$op='=')
+    public function deleteResult(string $field,int $value,string $op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->delete();
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->delete();
     }
 
 }

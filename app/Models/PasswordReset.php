@@ -40,53 +40,49 @@ class PasswordReset extends Model
 
     /**
      * TODO: 查询一条记录
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param string $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value,$op='=', $column = ['*'])
+    public function getResult(string $field, string $value,string $op='=', array $column = ['*'])
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->first($column);
     }
 
     /**
      * TODO: 添加记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
-        $result = DB::table($this->table)->insertGetId($data);
-        return $result;
+        return DB::table($this->table)->insertGetId($data);
     }
 
     /**
      * TODO: 更新一条数据
-     * @param $data
-     * @param $field
-     * @param $value
+     * @param array $data
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult($data,$field,$value,$op='=')
+    public function updateResult(array $data,string $field,int $value,$op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
 
     /**
      * TODO: 删除一条数据
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function deleteResult($field,$value,$op='=')
+    public function deleteResult(string $field,int $value,string $op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->delete();
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->delete();
     }
 }
