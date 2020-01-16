@@ -38,7 +38,7 @@ class PushController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer|gt:0','limit'=>'required|integer|gt:0']);
-        $result = $this->pushModel->getResultLists($this->post['page'],$this->post['limit'],$this->users,$this->post['state']??'',$this->post['status']??'');
+        $result = $this->pushModel->getResultLists($this->post['page'],$this->post['limit'],$this->users,$this->post['state']??0,$this->post['status']??0);
         foreach ($result['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
         }
