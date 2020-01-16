@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * Class Push
@@ -52,11 +53,11 @@ class Push extends Model
      * @param int $page
      * @param int $limit
      * @param $user
-     * @param int $state
-     * @param string $status
+     * @param string $state
+     * @param int $status
      * @return mixed
      */
-    public function getResultLists(int $page,int $limit,$user,int $state=0,string $status='')
+    public function getResultLists(int $page,int $limit,$user,string $state='',int $status=0)
     {
         $where = [];
         if (!empty($state)) {
