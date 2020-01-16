@@ -53,10 +53,10 @@ class Push extends Model
      * @param int $limit
      * @param $user
      * @param int $state
-     * @param string $status
+     * @param int $status
      * @return mixed
      */
-    public function getResultLists(int $page,int $limit,$user,int $state=0,string $status='')
+    public function getResultLists(int $page,int $limit,$user,int $state=0,int $status=0)
     {
         $where = [];
         if (!empty($state)) {
