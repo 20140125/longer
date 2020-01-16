@@ -133,8 +133,8 @@ class UsersController extends BaseController
         $result = UserCenter::getInstance()->getResult('token',$this->users->remember_token);
         $result->email = $this->users->email;
         $result->tags = empty($result->tags) ? array() : json_decode($result->tags,true);
-        $result->ip_address = json_decode($result->ip_address,true);
-        $result->local = json_decode($result->local,true);
+        $result->ip_address = empty($result->ip_address) ? array() :json_decode($result->ip_address,true);
+        $result->local = empty($result->local) ? array() : json_decode($result->local,true);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
