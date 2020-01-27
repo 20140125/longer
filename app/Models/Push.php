@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * Class Push
@@ -40,23 +41,23 @@ class Push extends Model
 
     /**
      * TODO：获取列表
-     * @param $where
+     * @param array $where
      * @return Collection
      */
-    public function getCommandPush($where)
+    public function getCommandPush(array $where)
     {
         return DB::table($this->table)->where($where)->get();
     }
     /**
      * TODO:推送列表
-     * @param $page
-     * @param $limit
+     * @param int $page
+     * @param int $limit
      * @param $user
      * @param string $state
-     * @param string $status
+     * @param int $status
      * @return mixed
      */
-    public function getResultLists($page,$limit,$user,$state='',$status='')
+    public function getResultLists(int $page,int $limit,$user,string $state='',int $status=0)
     {
         $where = [];
         if (!empty($state)) {
@@ -65,8 +66,8 @@ class Push extends Model
         if (!empty($status)) {
             $where[] = ['status',$status];
         }
-        if (!in_array($user->username,['admin'])){
-            $where[] = ['uid',md5($user->username)];
+        if (!in_array($user->role_id,[1])){
+            $where[] = ['uid',empty($user->uuid) ? '' : $user->uuid];
         }
         $result['data'] = DB::table($this->table)->where($where)->orderByDesc('id')->offset($limit*($page-1))->limit($limit)->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
@@ -75,50 +76,47 @@ class Push extends Model
 
     /**
      * TODO: 查询一条记录
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value,$op='=', $column = ['*'])
+    public function getResult(string $field, int $value,string $op='=', array $column = ['*'])
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->first($column);
     }
     /**
      * TODO: 添加记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
-        $result = DB::table($this->table)->insertGetId($data);
-        return $result;
+        return DB::table($this->table)->insertGetId($data);
     }
+
     /**
      * TODO: 更新一条数据
-     * @param $data
-     * @param $field
-     * @param $value
+     * @param array $data
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult($data,$field,$value,$op='=')
+    public function updateResult(array $data,string $field,int $value,$op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
 
     /**
      * TODO: 删除一条数据
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @return int
      */
-    public function deleteResult($field,$value)
+    public function deleteResult(string $field,int $value)
     {
-        $result = DB::table($this->table)->where($field,$value)->delete();
-        return $result;
+        return DB::table($this->table)->where($field,$value)->delete();
     }
 }

@@ -3,7 +3,9 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Models\OAuth;
+use App\Models\TimeLine;
 use App\Models\UserCenter;
+use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -52,8 +54,10 @@ class MenuController extends BaseController
                     'token'=>$this->users->remember_token,
                     'username'=>$this->users->username,
                     'socket'=>config('app.socket_url'),
-                    'avatar_url' => $this->users->username == 'admin' ? config('app.avatar_url') :$this->users->avatar_url,
-                    'websocket'=>config('app.websocket')
+                    'avatar_url' => $this->users->username == 'admin' ? config('app.avatar_url') : $this->users->avatar_url,
+                    'websocket'=>config('app.websocket'),
+                    'role_id' => md5($this->users->role_id),
+                    'uuid' => empty($this->users->uuid) ? '' :$this->users->uuid
                 ]
             );
         }
@@ -67,21 +71,14 @@ class MenuController extends BaseController
      */
     public function logout()
     {
-        if (isset($this->users->salt)) {
-            $where[] = array('u_type',2);
-            $this->users->remember_token = md5(md5($this->users->password).time());
-            $result = $this->userModel->updateResult(object_to_array($this->users),'id',$this->users->id);
-        } else {
-            $where[] = array('u_type',1);
-            $this->users->remember_token = md5(md5($this->users->remember_token).time());
-            $result = $this->oauthModel->updateResult(object_to_array($this->users),'id',$this->users->id);
-        }
-        if (!empty($result)) {
-            $where[] = array('u_name',$this->users->username);
-            UserCenter::getInstance()->updateResult(array('token'=>$this->users->remember_token,'type'=>'logout'),$where);
-            return $this->ajax_return(Code::SUCCESS,'logout system successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'logout system failed');
+        $remember_token = md5(md5($this->users->remember_token).time());
+        //授权列表
+        OAuth::getInstance()->updateResult(['remember_token'=>$remember_token],'remember_token',$this->users->remember_token);
+        //用户表
+        Users::getInstance()->updateResult(['remember_token'=>$remember_token],'remember_token',$this->users->remember_token);
+        //用户信息表
+        UserCenter::getInstance()->updateResult(array('token'=>$remember_token,'type'=>'logout'),'token',$this->users->remember_token);
+        return $this->ajax_return(Code::SUCCESS,'logout system successfully');
     }
 
     /**
@@ -94,6 +91,7 @@ class MenuController extends BaseController
         $result['oauthUser'] = DB::table('os_oauth')->count();
         $result['push'] = DB::table('os_push')->count();
         $result['systemLog'] = DB::table('os_system_log')->count();
+        $result['timeline'] = TimeLine::getInstance()->getResultLists(1,15);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 }

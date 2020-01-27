@@ -17,7 +17,7 @@ $push_data_count = 0;
 //在线人数
 $online_user_count = 0;
 //时间跨度
-$times = 30;
+$times = 15;
 // PHPSocketIO服务  // window/苹果系统
 if(in_array(PHP_OS,['WINNT','Darwin'])) {
     $sender_io = new SocketIO(2120);
@@ -169,8 +169,7 @@ $sender_io->on('workerStart', function () {
     function pushData($user)
     {
         global $db;
-        $result = $db->select('*')->from('os_push')->where("uid = '{$user}' ")->orderByDESC(['created_at'])->limit(10)->query();
-        return $result;
+        return $db->select('*')->from('os_push')->where("uid = '{$user}' ")->orderByDESC(['created_at'])->limit(10)->query();
     }
     /**
      * TODO:获取日志信息
@@ -180,7 +179,8 @@ $sender_io->on('workerStart', function () {
     {
         global $db, $day,$times;
         $log = $db->select("day,count(*) as total")->from('os_system_log')
-            ->where("day>=" . date('Ymd', strtotime("-{$times} day")))->groupBy(['day'])->query();
+            ->where("day>=" . date('Ymd', strtotime("-{$times} day")))
+            ->groupBy(['day'])->query();
         $logDay = $logTotal = array();
         foreach ($log as $value) {
             array_push($logDay, intval($value['day']));
@@ -205,8 +205,8 @@ $sender_io->on('workerStart', function () {
     {
         global $db, $day,$times;
         $push = $db->select("FROM_UNIXTIME(created_at,'%Y%m%d') as day,count(*) as total")->from('os_push')
-            ->where("created_at>=" .strtotime(date('Y-m-d 00:00:00',strtotime("-{$times} day"))))
-            ->groupBy(["from_unixtime(created_at,'%Y%m%d')"])->query();
+            ->where("created_at>=" .strtotime(date('Y-m-d 23:59:59',strtotime("-{$times} day"))))
+            ->groupBy(["FROM_UNIXTIME(created_at,'%Y%m%d')"])->query();
         $pushDay = $pushTotal = array();
         foreach ($push as $value) {
             array_push($pushDay, intval($value['day']));
@@ -230,8 +230,8 @@ $sender_io->on('workerStart', function () {
     {
         global $db, $day,$times;
         $oauth = $db->select("FROM_UNIXTIME(created_at,'%Y%m%d') as day,count(*) as total")->from('os_oauth')
-            ->where("created_at>=" .strtotime(date('Y-m-d 00:00:00',strtotime("-{$times} day"))))
-            ->groupBy(["from_unixtime(created_at,'%Y%m%d')"])->query();
+            ->where("created_at>=" .strtotime(date('Y-m-d 23:59:59',strtotime("-{$times} day"))))
+            ->groupBy(["FROM_UNIXTIME(created_at,'%Y%m%d')"])->query();
         $oauthDay = $oauthTotal = array();
         foreach ($oauth as $value) {
             array_push($oauthDay, intval($value['day']));

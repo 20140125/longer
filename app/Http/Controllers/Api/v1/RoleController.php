@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -19,12 +20,13 @@ class RoleController extends BaseController
      */
     public function index()
     {
-        $roleLists = $this->roleModel->getResult2();
-        foreach ($roleLists as &$item){
+        $this->validatePost(['page'=>'required|integer|gt:0','limit'=>'required|integer|gt:0']);
+        $roleLists = $this->roleModel->getResultLists($this->users,$this->post['page'],$this->post['limit']);
+        foreach ($roleLists['data'] as &$item){
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
         }
-        $authLists = $this->authModel->getAuthLists(['id as key','name as label']);
+        $authLists = DB::table('os_rule')->get(['id as key','name as label']);
         return $this->ajax_return(Code::SUCCESS,'successfully',['role'=>$roleLists,'auth'=>$authLists]);
     }
 

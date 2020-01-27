@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\Utils\RedisClient;
+use App\Models\Users;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -37,14 +38,14 @@ class OauthProcess implements ShouldQueue
         DB::beginTransaction();
         $redisClient = new RedisClient();
         try{
-            $oauthRes = DB::table('os_oauth')->get(['username']);
+            $oauthRes = Users::getInstance()->getAll();
             $redisUser = $redisClient->sMembers(config('app.redis_user_key'));
             foreach ($oauthRes as $item) {
-                if (in_array(md5($item->username),$redisUser)) {
+                if (in_array($item->uuid,$redisUser)) {
                     $this->post['state'] = 'successfully';
                 }
                 $this->post['state'] = 'offline';
-                $this->post['uid'] = md5($item->username);
+                $this->post['uid'] = $item->uuid;
                 $this->post['username'] = $item->username;
                 $this->post['created_at'] = $created_at;
                 $rs = DB::table('os_push')->where(array('created_at'=>$created_at,'uid'=>$this->post['uid']))->first();

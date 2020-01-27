@@ -35,13 +35,13 @@ class Chat extends Model
 
     /**
      * TODO:获取聊天记录
-     * @param $where
-     * @param $limit
-     * @param $page
+     * @param array $where
+     * @param int $limit
+     * @param int $page
      * @param array $columns
      * @return mixed
      */
-    public function getResult($where,$limit,$page,$columns=['*'])
+    public function getResult(array $where,int $limit,int $page,array $columns=['*'])
     {
         $result['data'] = DB::table($this->table)->limit($limit)->offset($limit*($page-1))->where($where)->get($columns);
         $result['total'] = DB::table($this->table)->where($where)->count();
@@ -49,10 +49,10 @@ class Chat extends Model
     }
     /**
      * TODO:保存聊天记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function saveResult($data)
+    public function saveResult(array $data)
     {
         return DB::table($this->table)->insert($data);
     }

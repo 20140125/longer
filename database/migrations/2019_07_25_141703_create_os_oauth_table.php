@@ -33,6 +33,8 @@ class CreateOsOauthTable extends Migration
             $table->string('email',64)->default(0)->comment('授权用户邮箱,便于收取通知');
             $table->char('code',8)->default(0)->comment('验证码');
             $table->tinyInteger('status')->default(1)->comment('允许登录 1 是 2 否');
+            $table->integer('uid')->default(0)->comment('用户ID');
+            $table->index('uid');
         });
     }
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
-use phpDocumentor\Reflection\DocBlock\Tags\See;
 
 /**
  * Class GiteeController
@@ -61,11 +60,11 @@ class GiteeController extends OAuthController
 
     /**
      * TODO:：获取登录页面跳转url
-     * @param string $callback
      * @param int $length
+     * @param string $callback
      * @return string
      */
-    public function getAuthUrl($callback = '', $length = 32)
+    public function getAuthUrl($length = 32,$callback = '')
     {
         $arr = array(
             'client_id'			=>	$this->appid,

@@ -40,16 +40,15 @@ class Role extends Model
     }
     /**
      * TODO: 查询一条记录
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param string|int $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value,$op='=', $column = ['*'])
+    public function getResult(string $field, $value,string $op='=', array $column = ['*'])
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->first($column);
     }
 
     /**
@@ -58,51 +57,70 @@ class Role extends Model
      * @param array $column
      * @return Collection
      */
-    public function getResult2($status = 0,$column = ['*'])
+    public function getResult2(int $status = 0,array $column = ['*'])
     {
         $where=[];
         if (!empty($status)){
             $where[] = array('status','=',$status);
         }
-        $result = DB::table($this->table)->where($where)->get($column);
+        return DB::table($this->table)->where($where)->get($column);
+    }
+
+    /**
+     * TODO: 获取角色列表
+     * @param $user
+     * @param int $page
+     * @param int $limit
+     * @param int $status
+     * @param array $column
+     * @return mixed
+     */
+    public function getResultLists($user,int $page,int $limit,int $status = 0,array $column = ['*'])
+    {
+        $where=[];
+        if (!empty($status)){
+            $where[] = array('status','=',$status);
+        }
+        if (!in_array($user->role_id,[1])){
+            $where[] = ['id',$user->role_id];
+        }
+        $result['data'] = DB::table($this->table)->offset($limit*($page-1))->limit($limit)->where($where)->get($column);
+        $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
 
     /**
      * TODO: 添加记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
-        $result = DB::table($this->table)->insertGetId($data);
-        return $result;
+        return DB::table($this->table)->insertGetId($data);
     }
 
     /**
      * TODO: 更新一条数据
-     * @param $data
-     * @param $field
-     * @param $value
+     * @param array $data
+     * @param string|int $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult($data,$field,$value,$op='=')
+    public function updateResult(array $data, $field,int $value,string $op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
 
     /**
      * TODO: 删除一条数据
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function deleteResult($field,$value,$op='=')
+    public function deleteResult(string $field,int $value,string $op='=')
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->delete();
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->delete();
     }
 }

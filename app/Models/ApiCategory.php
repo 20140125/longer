@@ -37,18 +37,18 @@ class ApiCategory extends Model
     {
         // TODO: Implement __clone() method.
     }
+
     /**
      * TODO:查询一条记录
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param string $value
      * @param string $op
      * @param array $column
-     * @return Model|Builder|null|object
+     * @return Model|Builder|object|null
      */
-    public function getResult($field, $value,$op='=', $column = ['*'])
+    public function getResult(string $field, string $value,string $op='=', array $column = ['*'])
     {
-        $result = DB::table($this->table)->where($field,$op,$value)-> first($column);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)-> first($column);
     }
 
     /**
@@ -57,16 +57,15 @@ class ApiCategory extends Model
      */
     public function getResultListsLevel2()
     {
-        $result = DB::table($this->table)->orderBy('path')->get(['name','id','pid','level']);
-        return $result;
+        return DB::table($this->table)->orderBy('path')->get(['name','id','pid','level']);
     }
 
     /**
      * TODO:添加记录
-     * @param $data
+     * @param array $data
      * @return int
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
         $id = DB::table($this->table)->insertGetId($data);
         $parent_result = $this->getResult('id',$data['pid']);
@@ -76,19 +75,18 @@ class ApiCategory extends Model
             $data['path'] = $parent_result->path.'-'.$id;
             $data['level'] = substr_count($data['path'],'-');
         }
-        $result = DB::table($this->table)->where('id',$id)->update($data);
-        return $result;
+        return DB::table($this->table)->where('id',$id)->update($data);
     }
 
     /**
      * TODO:更新一条数据
-     * @param $data
-     * @param $field
-     * @param $value
+     * @param array $data
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult($data,$field,$value,$op='=')
+    public function updateResult(array $data,string $field,int $value,string $op='=')
     {
         $parent_result = $this->getResult($field,$value,$op);
         if (!empty($parent_result) && !empty($data['path'])) {
@@ -99,19 +97,17 @@ class ApiCategory extends Model
             }
             $data['level'] = substr_count($data['path'],'-');
         }
-        $result = DB::table($this->table)->where($field,$op,$data['id'])->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$data['id'])->update($data);
     }
 
     /**
      * TODO:删除一条数据
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @return int
      */
-    public function deleteResult($field,$value)
+    public function deleteResult(string $field,int $value)
     {
-        $result = DB::table($this->table)->where($field,$value)->delete();
-        return $result;
+        return DB::table($this->table)->where($field,$value)->delete();
     }
 }

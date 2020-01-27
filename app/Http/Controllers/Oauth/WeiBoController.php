@@ -59,12 +59,12 @@ class WeiBoController extends OAuthController
 
     /**
      * TODO:：获取授权登录URL
-     * @param string $callback
      * @param int $length
+     * @param string $callback
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl($callback = '',$length = 32,$scope = 'all,email')
+    public function getAuthUrl($length = 32,$callback = '',$scope = 'all,email')
     {
         $this->redirectUri = empty($callback) ? $this->redirectUri :$callback;
         $arr = [

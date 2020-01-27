@@ -22,6 +22,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');
     Route::match(['get','post'],'total','v1\MenuController@getCountData')->name('total');
     Route::match(['get','post'],'file/download','v1\LoginController@download')->name('downloadFile');
+    Route::match(['get','post'],'sendEmail','v1\LoginController@email')->name('sendEmail');
+    Route::match(['get','post'],'checkCode','v1\LoginController@code')->name('checkCode');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
@@ -31,6 +33,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'user/save','v1\UsersController@save');
     Route::match(['get','post'],'user/center','v1\UsersController@center')->name('userCenter');
     Route::match(['get','post'],'center/save','v1\UsersController@saveCenter')->name('saveCenter');
+    Route::match(['get','post'],'user/bind','v1\UsersController@getBindInfo')->name('getBindInfo');
     Route::match(['get','post'],'user/delete','v1\UsersController@delete');
     //小程序
     Route::match(['get','post'],'wx/login','v1\WxUsersController@login')->name('wxLogin');
@@ -47,6 +50,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'oauth/update','v1\OauthController@update');
     Route::match(['get','post'],'oauth/delete','v1\OauthController@delete');
     Route::match(['get','post'],'oauth/verifyCode','v1\OauthController@code');
+    Route::match(['get','post'],'oauth/bind','v1\OauthController@oauthBind');
     //请求授权
     Route::match(['get','post'],'req-rule/index','v1\ReqRuleController@index');
     Route::match(['get','post'],'req-rule/save','v1\ReqRuleController@save')->name('reqRuleSave');
@@ -119,6 +123,10 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //组件
     Route::match(['post','get'],'components/table','v1\TableComponentController@table');
     Route::match(['post','get'],'components/actions','v1\TableComponentController@action');
+    //组件
+    Route::match(['post','get'],'timeline/index','v1\TimeLineController@index');
+    Route::match(['post','get'],'timeline/save','v1\TimeLineController@save');
+    Route::match(['post','get'],'timeline/update','v1\TimeLineController@update');
     /********************************************私有权限********************************************************/
 
     /******************************************第三方登陆**********************************************************/

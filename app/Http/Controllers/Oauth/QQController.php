@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class QQController
@@ -65,12 +66,12 @@ class QQController extends OAuthController
 
     /**
      * TODO:：获取登录页面跳转转URL
-     * @param string $callback
      * @param int $length
+     * @param string $callback
      * @param string $scope
-     * @return mixed
+     * @return string
      */
-    public function getAuthUrl($callback = '',$length = 16,$scope = 'get_user_info')
+    public function getAuthUrl($length = 32,$callback = '',$scope = 'get_user_info')
     {
         $arr = [
             'response_type' => 'code',
@@ -80,8 +81,7 @@ class QQController extends OAuthController
             'scope' => $scope,
             'display' => ''
         ];
-        $result = $this->apiUrl.'oauth2.0/authorize?'.http_build_query($arr);
-        return $result;
+        return $this->apiUrl.'oauth2.0/authorize?'.http_build_query($arr);
     }
 
     /**

@@ -33,11 +33,11 @@ class BaseController extends Controller
      */
     protected $roleModel;
     /**
-     * @var Auth $authModel
+     * @var Auth $authModel 权限模型
      */
     protected $authModel;
     /**
-     * @var OAuth $oauthModel
+     * @var OAuth $oauthModel 授权模型
      */
     protected $oauthModel;
     /**

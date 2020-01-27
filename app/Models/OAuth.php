@@ -40,19 +40,16 @@ class OAuth extends Model
 
     /**
      * TODO:获取授权列表
-     * @param $page
-     * @param $limit
+     * @param int $page
+     * @param int $limit
      * @param $user
      * @return mixed
      */
-    public function getResultLists($page,$limit,$user)
+    public function getResultLists(int $page,int $limit,$user)
     {
         $where = [];
-        if (!in_array($user->username,['admin'])){
-            if (!in_array($user->username,['admin'])){
-                $where[] = ['username',$user->username];
-                $where[] = ['id',$user->id];
-            }
+        if (!in_array($user->role_id,[1])){
+            $where[] = ['uid',$user->id];
         }
         $result['data'] = DB::table($this->table)->limit($limit)->where($where)->orderBy('updated_at','desc')->offset($limit*($page-1))->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
@@ -61,74 +58,58 @@ class OAuth extends Model
 
     /**
      * TODO：获取授权列表
-     * @param $where
+     * @param array $where
      * @param array $column
      * @return Collection
      */
-    public function getOauthLists($where,$column = ['*'])
+    public function getOauthLists($where=[],$column = ['*'])
     {
         return DB::table($this->table)->where($where)->get($column);
     }
-
-    /**
-     * TODO:授权图表
-     * @return mixed
-     */
-    public function oauthChart()
-    {
-        $result['oauth_type'] = DB::table($this->table)->groupBy('oauth_type')
-            ->select(DB::raw('oauth_type,count(oauth_type) as count'))
-            ->get();
-        return $result;
-    }
     /**
      * TODO:查询一条记录
-     * @param $field
-     * @param $value
+     * @param string|array $field
+     * @param string|int $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value='',$op='=', $column = ['*'])
+    public function getResult($field, $value='',string $op='=', $column = ['*'])
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->first($column);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->first($column);
     }
     /**
      * TODO:添加记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
         $data['created_at'] = time();
-        $result = DB::table($this->table)->insertGetId($data);
-        return $result;
+        return DB::table($this->table)->insertGetId($data);
     }
     /**
      * TODO:更新一条数据
-     * @param $data
-     * @param $field
-     * @param $value
+     * @param array $data
+     * @param string $field
+     * @param string|int $value
      * @param string $op
      * @return int
      */
-    public function updateResult($data,$field,$value=null,$op='=')
+    public function updateResult(array $data,string $field, $value='',string $op='=')
     {
         $data['updated_at'] = time();
-        $result = DB::table($this->table)->where($field,$op,$value)->update($data);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
 
     /**
      * TODO:删除一条数据
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @return int
      */
-    public function deleteResult($field,$value)
+    public function deleteResult(string $field,int $value)
     {
-        $result = DB::table($this->table)->whereIn($field,$value)->delete();
-        return $result;
+        return DB::table($this->table)->whereIn($field,$value)->delete();
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -36,39 +36,37 @@ class ApiLog extends Model
     {
         // TODO: Implement __clone() method.
     }
+
     /**
      * TODO: 查询记录
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param int $value
      * @param string $op
      * @param array $column
-     * @return Model|Builder|null|object
+     * @return Collection
      */
-    public function getResult($field, $value,$op='=', $column = ['*'])
+    public function getResult(string $field, int $value,string $op='=',array $column = ['*'])
     {
-        $result = DB::table($this->table)->where($field,$op,$value)->orderBy('id','desc')->limit(10)->get($column);
-        return $result;
+        return DB::table($this->table)->where($field,$op,$value)->orderBy('id','desc')->limit(10)->get($column);
     }
     /**
      * TODO: 添加记录
-     * @param $data
+     * @param array $data
      * @return bool
      */
-    public function addResult($data)
+    public function addResult(array $data)
     {
-        $result = DB::table($this->table)->insertGetId($data);
-        return $result;
+        return DB::table($this->table)->insertGetId($data);
     }
 
     /**
-     * TODO: 删除api日志
-     * @param $filed
-     * @param $value
+     *  TODO: 删除api日志
+     * @param string $filed
+     * @param int $value
      * @return int
      */
-    public function deleteResult($filed,$value)
+    public function deleteResult(string $filed,int $value)
     {
-        $result = DB::table($this->table)->where($filed,$value)->delete();
-        return $result;
+        return DB::table($this->table)->where($filed,$value)->delete();
     }
 }

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 /**
  * Class OsChinaController
@@ -62,11 +60,11 @@ class OsChinaController extends OAuthController
 
     /**
      * TODO:：获取github授权页面
-     * @param string $callback
      * @param int $length
+     * @param string $callback
      * @return string
      */
-    public function getAuthUrl($callback = '', $length = 32)
+    public function getAuthUrl($length = 32,$callback = '')
     {
         $arr = [
             'client_id' => $this->appid,
