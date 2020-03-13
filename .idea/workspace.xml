@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -160,11 +158,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/../vue-app" />
       <recent name="$PROJECT_DIR$/../vue-app/src/assets" />
       <recent name="$PROJECT_DIR$/../vue-app/src" />
       <recent name="$PROJECT_DIR$/../molocv" />
-      <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -241,7 +239,7 @@
       <workItem from="1583293882738" duration="27813000" />
       <workItem from="1583490796793" duration="150000" />
       <workItem from="1583491801907" duration="13819000" />
-      <workItem from="1583977102576" duration="3512000" />
+      <workItem from="1583977102576" duration="3666000" />
     </task>
     <servers />
   </component>
@@ -276,10 +274,10 @@
     </state>
     <state x="426" y="0" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1581908210376" />
     <state x="568" y="51" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1575650717365" />
-    <state x="352" y="149" key="SettingsEditor" timestamp="1583304236526">
+    <state x="352" y="149" key="SettingsEditor" timestamp="1584071331342">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="352" y="149" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1583304236526" />
+    <state x="352" y="149" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1584071331342" />
     <state x="469" y="179" key="SettingsEditor/0.0.1920.1080@0.0.1920.1080" timestamp="1575650186771" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1583891549597">
       <screen x="0" y="23" width="1440" height="810" />
