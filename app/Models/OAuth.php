@@ -91,12 +91,12 @@ class OAuth extends Model
     /**
      * TODO:更新一条数据
      * @param array $data
-     * @param string $field
+     * @param $field
      * @param string|int $value
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field, $value='',string $op='=')
+    public function updateResult(array $data, $field='', $value='',string $op='=')
     {
         $data['updated_at'] = time();
         return DB::table($this->table)->where($field,$op,$value)->update($data);
