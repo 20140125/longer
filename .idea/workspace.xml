@@ -153,15 +153,15 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/storage/logs/laravel-2019-09-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/.env&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/laravel-2019-12-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/workers.log&#10;true&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Lib/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/workerman.log" />
     <property name="ignore_missing_gitignore" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/public" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
       <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
       <recent name="$PROJECT_DIR$/../vue-app" />
       <recent name="$PROJECT_DIR$/../vue-app/src/assets" />
       <recent name="$PROJECT_DIR$/../vue-app/src" />
@@ -253,7 +253,7 @@
       <workItem from="1585889273685" duration="781000" />
       <workItem from="1585901101070" duration="2875000" />
       <workItem from="1586146872774" duration="4268000" />
-      <workItem from="1586329088311" duration="8149000" />
+      <workItem from="1586329088311" duration="9641000" />
     </task>
     <servers />
   </component>
