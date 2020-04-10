@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="" />
+    <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -151,18 +153,18 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/storage/logs/laravel-2019-09-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/.env&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/laravel-2019-12-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/workers.log&#10;true&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Lib/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/workerman.log" />
     <property name="ignore_missing_gitignore" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/../vue-app" />
       <recent name="$PROJECT_DIR$/../vue-app/src/assets" />
       <recent name="$PROJECT_DIR$/../vue-app/src" />
-      <recent name="$PROJECT_DIR$/../molocv" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -239,7 +241,19 @@
       <workItem from="1583293882738" duration="27813000" />
       <workItem from="1583490796793" duration="150000" />
       <workItem from="1583491801907" duration="13819000" />
-      <workItem from="1583977102576" duration="3666000" />
+      <workItem from="1583977102576" duration="4606000" />
+      <workItem from="1584079140884" duration="223000" />
+      <workItem from="1584091095869" duration="369000" />
+      <workItem from="1584319993238" duration="1065000" />
+      <workItem from="1584323876172" duration="14843000" />
+      <workItem from="1584599811970" duration="24036000" />
+      <workItem from="1585709162299" duration="2586000" />
+      <workItem from="1585729058271" duration="21272000" />
+      <workItem from="1585889239730" duration="22000" />
+      <workItem from="1585889273685" duration="781000" />
+      <workItem from="1585901101070" duration="2875000" />
+      <workItem from="1586146872774" duration="4268000" />
+      <workItem from="1586329088311" duration="8149000" />
     </task>
     <servers />
   </component>
@@ -260,31 +274,37 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581908215687">
+    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585721291254">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1581908215687" />
-    <state x="486" y="230" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1583141018416">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1585721291254" />
+    <state x="648" y="276" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1586329118742">
+      <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="486" y="230" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1440.900@0.0.1440.900" timestamp="1583141018416" />
-    <state x="648" y="276" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1575645064199" />
+    <state x="486" y="230" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1440.900@0.0.1440.900" timestamp="1585889254060" />
+    <state x="648" y="276" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1586329118742" />
     <state x="426" y="0" key="CommitChangelistDialog2" timestamp="1581908210376">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="426" y="0" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1581908210376" />
-    <state x="568" y="51" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1575650717365" />
+    <state x="308" y="192" key="IDE.errors.dialog" timestamp="1585709033611">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="308" y="192" key="IDE.errors.dialog/0.0.1440.900@0.0.1440.900" timestamp="1585709033611" />
+    <state x="477" y="94" key="RollbackChangesDialog" timestamp="1585617851412">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="477" y="94" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1585617851412" />
     <state x="352" y="149" key="SettingsEditor" timestamp="1584071331342">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="352" y="149" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1584071331342" />
-    <state x="469" y="179" key="SettingsEditor/0.0.1920.1080@0.0.1920.1080" timestamp="1575650186771" />
-    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1583891549597">
+    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1585910755239">
       <screen x="0" y="23" width="1440" height="810" />
     </state>
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1440.900@0.0.1440.900" timestamp="1580623934813" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.798@0.23.1440.798" timestamp="1581908660540" />
-    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.810@0.23.1440.810" timestamp="1583891549597" />
+    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.810@0.23.1440.810" timestamp="1585910755239" />
     <state x="502" y="369" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581908212962">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -297,9 +317,9 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1582868106561" />
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1582625466815">
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1585813664565">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1582625466815" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1585813664565" />
   </component>
 </project>
