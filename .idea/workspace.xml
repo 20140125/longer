@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Console/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/AreaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/v1/AreaController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Utils/Amap.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Utils/Amap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Log.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Log.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,15 +154,15 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/storage/logs/laravel-2019-09-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/.env&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/laravel-2019-12-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/workers.log&#10;true&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Lib/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/workerman.log" />
     <property name="ignore_missing_gitignore" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/public" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
       <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
       <recent name="$PROJECT_DIR$/../vue-app" />
       <recent name="$PROJECT_DIR$/../vue-app/src/assets" />
       <recent name="$PROJECT_DIR$/../vue-app/src" />
@@ -242,7 +246,7 @@
       <workItem from="1587031914397" duration="72000" />
       <workItem from="1587032000568" duration="1370000" />
       <workItem from="1587349463947" duration="65000" />
-      <workItem from="1587349540251" duration="30880000" />
+      <workItem from="1587349540251" duration="38796000" />
     </task>
     <servers />
   </component>

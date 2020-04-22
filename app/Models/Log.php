@@ -45,15 +45,19 @@ class Log extends Model
      * @param string $ctime
      * @return mixed
      */
-    public function getLists(int $page,int $limit,string $ctime)
+    public function getLists(int $page = 0,int $limit = 0,string $ctime = '')
     {
-        $where =[];
-        if (!empty($ctime)){
-            $where[] = ['created_at','<=',$ctime];
+        if (empty($page) || empty($limit)) {
+            return DB::table($this->table)->where('day',$ctime)->get();
+        } else {
+            $where =[];
+            if (!empty($ctime)){
+                $where[] = ['created_at','<=',$ctime];
+            }
+            $result['data'] =  DB::table($this->table)->where($where)->limit($limit)->offset($limit*($page-1))->orderBy('id','desc')->get();
+            $result['total'] = DB::table($this->table)->where($where)->count();
+            return $result;
         }
-        $result['data'] =  DB::table($this->table)->where($where)->limit($limit)->offset($limit*($page-1))->orderBy('id','desc')->get();
-        $result['total'] = DB::table($this->table)->where($where)->count();
-        return $result;
     }
     /**
      * TODO:添加记录

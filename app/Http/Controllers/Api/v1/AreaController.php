@@ -29,7 +29,6 @@ class AreaController extends BaseController
     /**
      * AreaController constructor.
      * @param Request $request
-     * @throws \ErrorException
      */
     public function __construct(Request $request)
     {
