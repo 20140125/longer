@@ -11,9 +11,7 @@
   </component>
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
-    <execution>
-      <executable />
-    </execution>
+    <execution />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -143,7 +141,6 @@
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -153,31 +150,19 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/storage/logs/laravel-2019-09-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/.env&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/laravel-2019-12-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/workers.log&#10;true&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Lib/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/workerman.log" />
     <property name="ignore_missing_gitignore" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/../businessmgr/src/components/WxPayPreferential" />
+      <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/../vue-app" />
       <recent name="$PROJECT_DIR$/../vue-app/src/assets" />
       <recent name="$PROJECT_DIR$/../vue-app/src" />
     </key>
-  </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration>$USER_HOME$/.subversion</configuration>
@@ -253,44 +238,48 @@
       <workItem from="1585889273685" duration="781000" />
       <workItem from="1585901101070" duration="2875000" />
       <workItem from="1586146872774" duration="4268000" />
-      <workItem from="1586329088311" duration="10121000" />
+      <workItem from="1586329088311" duration="25895000" />
+      <workItem from="1587031914397" duration="72000" />
+      <workItem from="1587032000568" duration="1370000" />
+      <workItem from="1587349463947" duration="65000" />
+      <workItem from="1587349540251" duration="30880000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585721291254">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1585721291254" />
-    <state x="648" y="276" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1586329118742">
+    <state x="648" y="276" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1587031779271">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="486" y="230" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1440.900@0.0.1440.900" timestamp="1585889254060" />
-    <state x="648" y="276" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1586329118742" />
+    <state x="648" y="276" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1587031779271" />
     <state x="426" y="0" key="CommitChangelistDialog2" timestamp="1581908210376">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="426" y="0" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1581908210376" />
-    <state x="308" y="192" key="IDE.errors.dialog" timestamp="1585709033611">
+    <state x="308" y="192" key="IDE.errors.dialog" timestamp="1587349678356">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="308" y="192" key="IDE.errors.dialog/0.0.1440.900@0.0.1440.900" timestamp="1585709033611" />
+    <state x="308" y="192" key="IDE.errors.dialog/0.0.1440.900@0.0.1440.900" timestamp="1587349678356" />
+    <state x="411" y="230" key="IDE.errors.dialog/0.0.1920.1080@0.0.1920.1080" timestamp="1587032010648" />
     <state x="477" y="94" key="RollbackChangesDialog" timestamp="1585617851412">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -299,12 +288,15 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="352" y="149" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1584071331342" />
-    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1585910755239">
-      <screen x="0" y="23" width="1440" height="810" />
+    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587520968474">
+      <screen x="0" y="23" width="1440" height="808" />
     </state>
-    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1440.900@0.0.1440.900" timestamp="1580623934813" />
+    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1440.900@0.0.1440.900" timestamp="1587467757277" />
+    <state x="133" y="103" width="1654" height="934" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1586922246115" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.798@0.23.1440.798" timestamp="1581908660540" />
+    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.808@0.23.1440.808" timestamp="1587520968474" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.810@0.23.1440.810" timestamp="1585910755239" />
+    <state x="133" y="103" width="1654" height="934" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1920.1057@0.23.1920.1057" timestamp="1586869303642" />
     <state x="502" y="369" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581908212962">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
