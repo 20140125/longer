@@ -45,13 +45,15 @@ class SyncLocal extends Command
     /**
      * todo:获取日志列表
      */
-    protected function getLogLists()
+    protected function getLogLists($date)
     {
-        $result = $this->logModel->getLists(0,0,date('Ymd'));
-        foreach ($result as $item) {
-            $localObj =  json_decode($this->amapUtils->getAddress($item->ip_address),true);
-            $item->local = $localObj['province'].','.$localObj['city'];
-            $this->logModel->addResult(object_to_array($item));
+        foreach ($date as $row) {
+            $result = $this->logModel->getLists(0,0,date('Ymd',$row));
+            foreach ($result as $item) {
+                $localObj =  json_decode($this->amapUtils->getAddress($item->ip_address),true);
+                $item->local = $localObj['province'].','.$localObj['city'];
+                $this->logModel->addResult(object_to_array($item));
+            }
         }
     }
     /**
@@ -59,6 +61,7 @@ class SyncLocal extends Command
      **/
     public function handle()
     {
-        $this->getLogLists();
+        $date = range(strtotime('20191203'),strtotime(date('Ymd')),24*60*60);
+        $this->getLogLists($date);
     }
 }
