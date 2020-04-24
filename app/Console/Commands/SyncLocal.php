@@ -50,10 +50,9 @@ class SyncLocal extends Command
         $result = $this->logModel->getLists(0,0,date('Ymd'));
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as $item) {
-            $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
             if (empty($item->local)) {
-                $item->local = $localObj['province'].','.$localObj['city'];
-                $this->logModel->updateResult(['local'=>$item->local],['id'=>$item->id]);
+                $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
+                $this->logModel->updateResult(['local'=>$localObj['province'].','.$localObj['city']],['id'=>$item->id]);
             }
             sleep(0.5);
             $bar->advance();
