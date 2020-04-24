@@ -68,6 +68,16 @@ class Log extends Model
     {
         return DB::table($this->table)->insertGetId($data);
     }
+    /**
+     * TODO:添加记录
+     * @param array $data
+     * @param $where
+     * @return bool
+     */
+    public function updateResult(array $data,$where)
+    {
+        return DB::table($this->table)->where($where)->update($data);
+    }
 
     /**
      * TODO:删除一条数据

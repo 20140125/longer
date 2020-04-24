@@ -52,7 +52,7 @@ class SyncLocal extends Command
             foreach ($result as $item) {
                 $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
                 $item->local = $localObj['province'].','.$localObj['city'];
-                $this->logModel->addResult(object_to_array($item));
+                $this->logModel->updateResult(['local'=>$item->local],['id'=>$item->id]);
             }
         }
     }
