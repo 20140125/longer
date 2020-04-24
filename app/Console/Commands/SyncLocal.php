@@ -44,17 +44,24 @@ class SyncLocal extends Command
 
     /**
      * todo:获取日志列表
+     * @param $date
      */
     protected function getLogLists($date)
     {
+        $bar = $this->output->createProgressBar(count($date));
         foreach ($date as $row) {
             $result = $this->logModel->getLists(0,0,date('Ymd',$row));
             foreach ($result as $item) {
                 $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
                 $item->local = $localObj['province'].','.$localObj['city'];
                 $this->logModel->updateResult(['local'=>$item->local],['id'=>$item->id]);
+                sleep(0.5);
+                $this->info('当天日志同步成功');
+                $bar->advance();
             }
         }
+        $this->info('所有日志同步成功');
+        $bar->finish();
     }
     /**
      * Execute the console command.
