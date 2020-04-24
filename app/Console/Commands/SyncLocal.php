@@ -50,7 +50,7 @@ class SyncLocal extends Command
         foreach ($date as $row) {
             $result = $this->logModel->getLists(0,0,date('Ymd',$row));
             foreach ($result as $item) {
-                $localObj =  json_decode($this->amapUtils->getAddress($item->ip_address),true);
+                $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
                 $item->local = $localObj['province'].','.$localObj['city'];
                 $this->logModel->addResult(object_to_array($item));
             }
