@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/public/webPush/config/db.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/webPush/config/db.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +148,7 @@
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="add_unversioned_files" value="$PROJECT_DIR$/storage/logs/laravel-2019-09-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/.env&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/laravel-2019-12-07.log&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/storage/logs/workers.log&#10;true&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/gateway-worker/src/Lib/Gateway.php&#10;/Applications/XAMPP/xamppfiles/htdocs/longer/vendor/workerman/workerman.log" />
+    <property name="add_unversioned_files" value="true" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../businessmgr" />
     <property name="nodejs_package_manager_path" value="yarn" />
@@ -242,7 +242,7 @@
       <workItem from="1587031914397" duration="72000" />
       <workItem from="1587032000568" duration="1370000" />
       <workItem from="1587349463947" duration="65000" />
-      <workItem from="1587349540251" duration="52565000" />
+      <workItem from="1587349540251" duration="52972000" />
     </task>
     <servers />
   </component>
