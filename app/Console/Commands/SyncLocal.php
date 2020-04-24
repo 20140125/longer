@@ -44,23 +44,21 @@ class SyncLocal extends Command
 
     /**
      * todo:获取日志列表
-     * @param $date
      */
-    protected function getLogLists($date)
+    protected function getLogLists()
     {
-        $bar = $this->output->createProgressBar(count($date));
-        foreach ($date as $row) {
-            $result = $this->logModel->getLists(0,0,date('Ymd',$row));
-            foreach ($result as $item) {
-                $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
-                $item->local = $localObj['province'].','.$localObj['city'];
+        $result = $this->logModel->getLists(0,0,date('Ymd'));
+        $bar = $this->output->createProgressBar(count($result));
+        foreach ($result as $item) {
+            $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
+            $item->local = $localObj['province'].','.$localObj['city'];
+            if (empty($item->local)) {
                 $this->logModel->updateResult(['local'=>$item->local],['id'=>$item->id]);
-                sleep(0.5);
-                $this->info('当天日志同步成功');
-                $bar->advance();
             }
+            sleep(0.5);
+            $bar->advance();
         }
-        $this->info('所有日志同步成功');
+        $this->info('system log sync success');
         $bar->finish();
     }
     /**
@@ -68,7 +66,6 @@ class SyncLocal extends Command
      **/
     public function handle()
     {
-        $date = range(strtotime('20191203'),strtotime(date('Ymd')),24*60*60);
-        $this->getLogLists($date);
+        $this->getLogLists();
     }
 }
