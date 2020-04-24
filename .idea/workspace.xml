@@ -242,7 +242,7 @@
       <workItem from="1587031914397" duration="72000" />
       <workItem from="1587032000568" duration="1370000" />
       <workItem from="1587349463947" duration="65000" />
-      <workItem from="1587349540251" duration="58201000" />
+      <workItem from="1587349540251" duration="58909000" />
     </task>
     <servers />
   </component>
@@ -262,10 +262,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1587622134352">
+    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1587723156851">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1587622134352" />
+    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1587723156851" />
     <state x="648" y="276" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1587031779271">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
