@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ca1055f7-0e96-4c0c-bcc1-5f36a3392266" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/webPush/config/db.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/webPush/config/db.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,7 +237,7 @@
       <workItem from="1587374981055" duration="89000" />
       <workItem from="1587887587411" duration="461000" />
       <workItem from="1587888447137" duration="537000" />
-      <workItem from="1587889160898" duration="3789000" />
+      <workItem from="1587889160898" duration="4723000" />
     </task>
     <servers />
   </component>
