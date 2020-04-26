@@ -71,7 +71,7 @@ class Area extends Model
      */
     public function getListsGroupByParentId()
     {
-        return DB::table($this->table)->where('parent_id','>',0)->groupBy(['parent_id','id'])->get(['parent_id','id','name']);
+        return DB::table($this->table)->where('parent_id','>',0)->groupBy(['parent_id','id','name'])->get(['parent_id','id','name']);
 
     }
 
