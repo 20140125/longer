@@ -52,7 +52,7 @@ class SyncWeather extends Command
             $result = $this->areaModel->getResultLists($row->parent_id);
             foreach ($result as $item) {
                 $weatherObj = object_to_array($this->amapUtils->getWeather($item->code));
-                $item->info = $weatherObj['info'] == 'OK' ? json_encode($weatherObj['item']['lives'][0],JSON_UNESCAPED_UNICODE) : '';
+                $item->info = $weatherObj['info'] == 'OK' ? json_encode($weatherObj['lives'][0],JSON_UNESCAPED_UNICODE) : '';
                 $this->areaModel->updateResult(object_to_array($item),'id',$item->id);
                 $bar->advance();
                 $this->info('当前同步城市是：'.$this->areaModel->getResult('id',$item->parent_id,'=',['name'])->name);
