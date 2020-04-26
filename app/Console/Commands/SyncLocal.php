@@ -20,7 +20,7 @@ class SyncLocal extends Command
      *
      * @var string
      */
-    protected $description = 'sync local from ip address';
+    protected $description = 'sync local from amap to ip address';
     /**
      * @var Log $logModel
      */

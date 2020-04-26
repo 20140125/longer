@@ -19,7 +19,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\SendPush',
         'App\Console\Commands\Chat',
         'App\Console\Commands\SyncOauthToUsers',
-        'App\Console\Commands\SyncLocal'
+        'App\Console\Commands\SyncLocal',
+        'App\Console\Commands\SyncWeather'
 
     ];
 
