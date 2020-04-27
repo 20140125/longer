@@ -49,7 +49,7 @@ class SyncWeather extends Command
         $bar = $this->output->createProgressBar(count($this->areaModel->getAll(['id'])));
         $groupResult = $this->areaModel->getListsGroupByParentId();
         foreach ($groupResult as $row) {
-            $this->info("当前同步省份是".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
+            $this->info("当前同步省份是：".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
             $result = $this->areaModel->getResultLists($row->id);
             foreach ($result as $item) {
                 $weatherObj = object_to_array($this->amapUtils->getWeather($item->code));
