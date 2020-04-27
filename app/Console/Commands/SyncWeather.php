@@ -61,7 +61,7 @@ class SyncWeather extends Command
             }
         }
         $bar->advance();
-        $this->info('同步所有城市天气成功');
+        $this->info('同步所有城市天气成功'.date('Y-m-d H:i:s',time()));
         $bar->finish();
 
     }
