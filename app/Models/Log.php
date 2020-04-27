@@ -48,7 +48,7 @@ class Log extends Model
     public function getLists(int $page = 0,int $limit = 0,string $ctime = '')
     {
         if (empty($page) || empty($limit)) {
-            return DB::table($this->table)->where('day',$ctime)->get();
+            return DB::table($this->table)->where('day',$ctime)->where('local','!=',Null)->get();
         } else {
             $where =[];
             if (!empty($ctime)){
