@@ -49,18 +49,16 @@ class SyncWeather extends Command
         $bar = $this->output->createProgressBar(count($this->areaModel->getAll(['id'])));
         $groupResult = $this->areaModel->getListsGroupByParentId();
         foreach ($groupResult as $row) {
-            $result = $this->areaModel->getResultLists($row->parent_id);
+            $this->info("当前同步省份是".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
+            $result = $this->areaModel->getResultLists($row->id);
             foreach ($result as $item) {
                 $weatherObj = object_to_array($this->amapUtils->getWeather($item->code));
                 $item->info = $weatherObj['info'] == 'OK' ? json_encode($weatherObj['lives'][0],JSON_UNESCAPED_UNICODE) : '';
                 $this->areaModel->updateResult(object_to_array($item),'id',$item->id);
                 $bar->advance();
-                $this->info('当前同步城市是：'.$this->areaModel->getResult('id',$item->id,'=',['name'])->name);
+                $this->info("当前同步城市是：".$this->areaModel->getResult('id',$item->id,'=',['name'])->name);
                 sleep(1);
             }
-            $bar->advance();
-            $this->info('当前同步省份是：'.$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
-            sleep(1);
         }
         $bar->advance();
         $this->info('同步所有城市天气成功');
