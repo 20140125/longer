@@ -68,7 +68,6 @@ class Events
                 foreach($clients_list as $tmp_client_id=>$item) {
                     $clients_list[$tmp_client_id] = $item;
                 }
-                $clients_list[$from_client_id] = $message_data;
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
                     'type'=>'login',
@@ -128,8 +127,6 @@ class Events
                     self::$chat->setChatMsgLists($from_client_name,$message_data['to_client_name'],$room_id,$new_message);
                     //发送到客户端
                     Gateway::sendToClient($message_data['to_client_id'], json_encode($new_message));
-                    //发送到当前客户端
-                    Gateway::sendToCurrentClient(json_encode($new_message));
                     break;
                 }
                 //群聊
@@ -145,8 +142,13 @@ class Events
                     'avatar_url' => $message_data['avatar_url'],
                     'room_id' =>$room_id
                 );
+                //高德地图API调用
+                if ($room_id === '1203') {
+
+                }
                 //保存聊天记录
                 self::$chat->setChatMsgLists($from_client_name,'all',$room_id,$new_message);
+                //添加到当前组
                 Gateway::sendToGroup($room_id ,json_encode($new_message));
                 break;
             default:

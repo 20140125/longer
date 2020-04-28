@@ -143,7 +143,7 @@ class Auth extends Model
             }
             $data['level'] = substr_count($data['path'],'-');
         }
-        unset($data['__child']);
+        unset($data['hasChildren']);
         return DB::table($this->table)->where($field,$op,$data['id'])->update($data);
     }
 
