@@ -63,12 +63,15 @@ class Events
                 $_SESSION['room_id'] = $room_id;
                 $_SESSION['client_name'] = $from_client_name;
                 $_SESSION['client_img'] = $message_data['client_img'];
-                // 获取房间内所有用户列表
-                $clients_list = Gateway::getClientSessionsByGroup($room_id);
-                foreach($clients_list as $tmp_client_id=>$item) {
-                    $clients_list[$tmp_client_id] = $item;
+                //添加用户到redis
+                if (!self::$chat->sIsMember(chatKey,$message_data['uid'])) {
+                    self::$chat->sAdd(chatKey, $message_data['uid']);
                 }
-                $clients_list[$from_client_id] = $message_data;
+                //保存用户ID
+                $_SESSION['uid'] = $message_data['uid'];
+                // 获取在线用户
+                $redisUser = self::$chat->sMembers(chatKey);
+                $clients_list = self::getUserLists($redisUser);
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
                     'type'=>'login',
@@ -78,9 +81,10 @@ class Events
                     'to_client_name' => 'all',
                     'time'=>date('Y-m-d H:i:s'),
                     'client_img' => $message_data['client_img'],
-                    'room_id' =>$room_id
+                    'client_list' => $clients_list,
+                    'room_id' =>$room_id,
+                    'uid' => $message_data['uid']
                 );
-                $new_message['client_list'] = $clients_list;
                 Gateway::sendToGroup($room_id, json_encode($new_message));
                 Gateway::joinGroup($from_client_id, $room_id);
                 //将client_id与uid绑定，以便通过Gateway::sendToUid($uid)发送数据，通过Gateway::isUidOnline($uid)用户是否在线。
@@ -97,7 +101,8 @@ class Events
                     'from_client_name' => $message_data['from_client_name'],
                     'to_client_name' => $message_data['to_client_name'],
                     'room_id' =>$room_id,
-                    'message' => $messageLists
+                    'message' => $messageLists,
+                    'uid' => $message_data['uid']
                 );
                 Gateway::sendToCurrentClient(json_encode($new_message));
                 break;
@@ -121,14 +126,15 @@ class Events
                         'time'=>date('Y-m-d H:i:s'),
                         'msg_type' => $message_data['msg_type'],
                         'avatar_url' => $message_data['avatar_url'],
+                        'uid' => $message_data['uid'], //接收人的uid
                         'room_id' => ''  //私聊房间号置空。
                     );
                     //保存聊天记录
                     self::$chat->setChatMsgLists($from_client_name,$message_data['to_client_name'],$room_id,$new_message);
                     //发送到客户端
-                    Gateway::sendToClient($message_data['to_client_id'], json_encode($new_message));
-//                    //发送到当前客户端
-//                    Gateway::sendToCurrentClient(json_encode($new_message));
+//                    Gateway::sendToClient($message_data['to_client_id'], json_encode($new_message));
+                    //通过uid发送消息
+                    Gateway::sendToUid($message_data['uid'],json_encode($new_message));
                     break;
                 }
                 //群聊
@@ -142,6 +148,7 @@ class Events
                     'time'=>date('Y-m-d H:i:s'),
                     'msg_type' => $message_data['msg_type'],
                     'avatar_url' => $message_data['avatar_url'],
+                    'uid' => $message_data['uid'], //发送人的uid
                     'room_id' =>$room_id
                 );
                 //保存聊天记录
@@ -162,9 +169,11 @@ class Events
      */
     public static function onClose($client_id)
     {
+        self::$chat = new Chat();
         // 从房间的客户端列表中删除
         if(isset($_SESSION['room_id'])) {
             $room_id = $_SESSION['room_id'];
+            self::$chat->sRem(chatKey,$client_id);
             $new_message = array(
                 'type'=>'logout',
                 'from_client_id'=>$client_id,
@@ -173,5 +182,32 @@ class Events
             );
             Gateway::sendToGroup($room_id, json_encode($new_message));
         }
+    }
+
+    /**
+     * todo:获取管理员列表
+     * @param $redisUser
+     * @return array
+     */
+    public static function getUserLists($redisUser)
+    {
+        self::$db = new Connection(Host, Port, UserName, Password, DbName);
+        $users = self::$db->from('os_users')->select('username as client_name,avatar_url as client_img,uuid as uid')->query();
+        $arr = [];
+        $sortArr = [];
+        foreach ($users as $key=> $item) {
+            $users[$key]['online'] = false;
+            foreach ($redisUser as $redis) {
+                if ($redis == $users[$key]['uid']) {
+                    $users[$key]['online'] = true;
+                }
+            }
+            $sortArr[$users[$key]['uid']] = $users[$key]['online'];
+            $users[$key]['type'] = 'login';
+            $users[$key]['room_id'] = '1200';
+            $arr[$users[$key]['uid']] = $users[$key];
+        }
+        array_multisort($sortArr,SORT_DESC,$arr);
+        return $arr;
     }
 }

@@ -159,4 +159,26 @@ class Chat
     {
         return $this->redisClient->SMEMBERS($key);
     }
+
+    /**
+     * TODO:添加数据到集合
+     * @param string $string
+     * @param $uid
+     * @return bool|int
+     */
+    public function sAdd(string $string, $uid)
+    {
+        return $this->redisClient->sAdd($string,$uid);
+    }
+
+    /**
+     * todo:删除集合数据
+     * @param string $string
+     * @param $uid
+     * @return int
+     */
+    public function sRem(string $string,$uid)
+    {
+        return $this->redisClient->sRem($string,$uid);
+    }
 }
