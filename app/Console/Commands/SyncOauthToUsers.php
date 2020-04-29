@@ -15,7 +15,7 @@ class SyncOauthToUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:syncOauth';
+    protected $signature = 'longer:sync_oauth';
 
     /**
      * The console command description.

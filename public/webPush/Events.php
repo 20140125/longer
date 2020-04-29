@@ -64,13 +64,13 @@ class Events
                 $_SESSION['client_name'] = $from_client_name;
                 $_SESSION['client_img'] = $message_data['client_img'];
                 //添加用户到redis
-                if (!self::$chat->sIsMember(chatKey,$message_data['uid'])) {
-                    self::$chat->sAdd(chatKey, $message_data['uid']);
+                if (!self::$chat->sIsMember(RedisKey,$message_data['uid'])) {
+                    self::$chat->sAdd(RedisKey, $message_data['uid']);
                 }
                 //保存用户ID
                 $_SESSION['uid'] = $message_data['uid'];
                 // 获取在线用户
-                $redisUser = self::$chat->sMembers(chatKey);
+                $redisUser = self::$chat->sMembers(RedisKey);
                 $clients_list = self::getUserLists($redisUser);
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
@@ -173,7 +173,7 @@ class Events
         // 从房间的客户端列表中删除
         if(isset($_SESSION['room_id'])) {
             $room_id = $_SESSION['room_id'];
-            self::$chat->sRem(chatKey,$client_id);
+            self::$chat->sRem(RedisKey,$client_id);
             $new_message = array(
                 'type'=>'logout',
                 'from_client_id'=>$client_id,

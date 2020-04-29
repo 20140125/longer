@@ -111,6 +111,16 @@ class RedisClient
     }
 
     /**
+     * TODO:删除指定的键。如果键不存在，则将其忽略。
+     * @param $key
+     * @return int
+     */
+    public function del($key)
+    {
+        return $this->redisClient->del($key);
+    }
+
+    /**
      * TODO:数据添加（列表头部 Redis 列表(List)）
      * @param $key
      * @param $value
