@@ -191,10 +191,9 @@ class Events
      */
     public static function getUserLists($redisUser)
     {
-        self::$db = new Connection(Host, Port, UserName, Password, DbName);
-        $users = self::$db->from('os_users')->select('username as client_name,avatar_url as client_img,uuid as uid')->query();
-        $arr = [];
-        $sortArr = [];
+        self::$chat = new Chat();
+        $arr = [];$sortArr = [];
+        $users = json_decode(self::$chat->sMembers(chatKey)[0],true);
         foreach ($users as $key=> $item) {
             $users[$key]['online'] = false;
             foreach ($redisUser as $redis) {

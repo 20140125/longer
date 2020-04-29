@@ -49,6 +49,6 @@ class SyncUsersCount extends Command
         if ($this->redisUtils->sMembers(config('app.chat_user_key'))) {
             $this->redisUtils->del(config('app.chat_user_key'));
         }
-        return $this->redisUtils->sAdd(config('app.chat_user_key'),json_encode($users));
+        return $this->redisUtils->sAdd(config('app.chat_user_key'),json_encode($users,JSON_UNESCAPED_UNICODE));
     }
 }
