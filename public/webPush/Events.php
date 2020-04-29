@@ -68,6 +68,7 @@ class Events
                 foreach($clients_list as $tmp_client_id=>$item) {
                     $clients_list[$tmp_client_id] = $item;
                 }
+                $clients_list[$from_client_id] = $message_data;
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
                     'type'=>'login',
@@ -82,6 +83,8 @@ class Events
                 $new_message['client_list'] = $clients_list;
                 Gateway::sendToGroup($room_id, json_encode($new_message));
                 Gateway::joinGroup($from_client_id, $room_id);
+                //将client_id与uid绑定，以便通过Gateway::sendToUid($uid)发送数据，通过Gateway::isUidOnline($uid)用户是否在线。
+                Gateway::bindUid($from_client_id,$message_data['uid']);
                 // 给当前用户发送用户列表
                 Gateway::sendToCurrentClient(json_encode($new_message));
                 break;
@@ -89,9 +92,6 @@ class Events
             case 'history':
                 $room_id = $message_data['room_id'];
                 $messageLists = self::$chat->getChatMsgLists($message_data['from_client_name'],$message_data['to_client_name'],$room_id);
-                if (count($messageLists) == 0) {
-                    $messageLists = self::getMessageListFormDB($message_data['from_client_name'],$message_data['to_client_name'],$room_id);
-                }
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -127,8 +127,8 @@ class Events
                     self::$chat->setChatMsgLists($from_client_name,$message_data['to_client_name'],$room_id,$new_message);
                     //发送到客户端
                     Gateway::sendToClient($message_data['to_client_id'], json_encode($new_message));
-                    //发送到当前客户端
-                    Gateway::sendToCurrentClient(json_encode($new_message));
+//                    //发送到当前客户端
+//                    Gateway::sendToCurrentClient(json_encode($new_message));
                     break;
                 }
                 //群聊
@@ -173,26 +173,5 @@ class Events
             );
             Gateway::sendToGroup($room_id, json_encode($new_message));
         }
-    }
-
-    /**
-     * TODO:数据库获取聊天历史记录
-     * @param $from_client_name
-     * @param $to_client_name
-     * @param $room_id
-     * @return mixed
-     */
-    public static function getMessageListFormDB($from_client_name,$to_client_name,$room_id)
-    {
-        self::$db = new Connection(Host, Port, UserName, Password, DbName);
-        $messageLists = self::$db->select('*')
-            ->from('os_chat')
-            ->where("(from_client_name = '{$from_client_name}' and to_client_name = '{$to_client_name}' or from_client_name = '{$to_client_name}' and to_client_name = '{$from_client_name}')")
-            ->where("room_id = '{$room_id}'")
-            ->query();
-        if (count($messageLists)==0) {
-            self::$db->closeConnection();
-        }
-        return $messageLists;
     }
 }

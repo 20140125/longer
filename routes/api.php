@@ -51,6 +51,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'oauth/delete','v1\OauthController@delete');
     Route::match(['get','post'],'oauth/verifyCode','v1\OauthController@code');
     Route::match(['get','post'],'oauth/bind','v1\OauthController@oauthBind');
+    Route::match(['post','get'],'oauth/chat','v1\OauthController@getChatOAuthLists')->name('chat');
+
     //请求授权
     Route::match(['get','post'],'req-rule/index','v1\ReqRuleController@index');
     Route::match(['get','post'],'req-rule/save','v1\ReqRuleController@save')->name('reqRuleSave');
@@ -113,8 +115,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'category/delete','v1\ApiController@CategoryDelete');
     Route::match(['post','get'],'category/save','v1\ApiController@categorySave');
     Route::match(['post','get'],'category/update','v1\ApiController@CategoryUpdate');
-    //聊天记录
-    Route::match(['post','get'],'chat/index','v1\ChatController@index');
     //表情
     Route::match(['post','get'],'emotion/index','v1\EmotionController@index')->name('emotion');
     //excel导入导出
