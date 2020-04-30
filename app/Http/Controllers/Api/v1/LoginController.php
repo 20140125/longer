@@ -88,6 +88,9 @@ class LoginController
         if ($result === Code::NOT_ALLOW){
             return ajax_return(Code::NOT_ALLOW,'users not allow login system');
         }
+        if ($result === Code::VERIFY_CODE){
+            return ajax_return(Code::ERROR,'verify code error');
+        }
         return ajax_return(Code::SUCCESS,'login successfully',$result);
     }
 
@@ -98,7 +101,7 @@ class LoginController
     protected function emailLogin()
     {
         if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
-            return ajax_return(Code::ERROR,'verify code error');
+            return Code::VERIFY_CODE;
         }
         $result = $this->userModel->getResult('email',$this->post['email']);
         if (!empty($result)) {
@@ -112,7 +115,7 @@ class LoginController
             return $admin;
         }
         //注册
-        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>config('app.url').'default.png');
+        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>config('app.url').'default.jpg');
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($request['salt']).$request['salt']);
         $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
@@ -121,9 +124,10 @@ class LoginController
         $request['created_at'] = time();
         $request['uuid'] = md5($request['password']).uniqid();
         $request['username'] = $this->post['email'];
-        $request['status'] = 2;
+        $request['status'] = 1;  //允许访问
         $result = $this->userModel->addResult($request);
         UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$result,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
+        $request['token'] = $request['remember_token'];
         return $request;
     }
     /**

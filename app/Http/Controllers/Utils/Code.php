@@ -21,6 +21,8 @@ class Code
     const Unauthorized = 401;
     //页面不存在
     const NOT_FOUND = 404;
+    //邮箱验证失败码
+    const VERIFY_CODE = 202;
     // 站内信息推送的状态 (成功 失败 离线)
     const WebSocketState = array( 'successfully', 'failed', 'offline');
     /**
