@@ -65,6 +65,7 @@ class Chat
             $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
             //发送的消息
             $sendName = "receive_{$to}_{$from}";
+            $num = $this->getMsgLen($sendName);
             $sendLists = $this ->redisClient-> lRange($sendName, 0, (int)($num));
             $messageLists = array();
             foreach ($sendLists as $item) {
