@@ -123,7 +123,7 @@ class LoginController
         $request['phone_number'] = 0;
         $request['created_at'] = time();
         $request['uuid'] = md5($request['password']).uniqid();
-        $request['username'] = $this->post['email'];
+        $request['username'] = implode("@",$this->post['email'])[0];
         $request['status'] = 1;  //允许访问
         $result = $this->userModel->addResult($request);
         UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$result,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
