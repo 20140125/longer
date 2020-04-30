@@ -28,8 +28,9 @@ require_once __DIR__.'/config/db.php';
 date_default_timezone_set("Asia/Shanghai");
 class Events
 {
-    static public $db='';
-    static public $chat;
+    static protected $db='';
+    static protected $chat;
+    static protected $redisUsers;
     /**
      * 有消息时
      * @param $from_client_id
@@ -63,15 +64,14 @@ class Events
                 $_SESSION['room_id'] = $room_id;
                 $_SESSION['client_name'] = $from_client_name;
                 $_SESSION['client_img'] = $message_data['client_img'];
+                $_SESSION['uid'] = $message_data['uid'];
                 //添加用户到redis
                 if (!self::$chat->sIsMember(RedisKey,$message_data['uid'])) {
                     self::$chat->sAdd(RedisKey, $message_data['uid']);
                 }
-                //保存用户ID
-                $_SESSION['uid'] = $message_data['uid'];
                 // 获取在线用户
-                $redisUser = self::$chat->sMembers(RedisKey);
-                $clients_list = self::getUserLists($redisUser);
+                self::$redisUsers = self::$chat->sMembers(RedisKey);
+                $clients_list = self::getUserLists(self::$redisUsers);
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
                     'type'=>'login',
@@ -104,6 +104,9 @@ class Events
                     'message' => $messageLists,
                     'uid' => $message_data['uid']
                 );
+                //清空未读状态
+                self::$chat->delUnreadMsg($message_data['to_client_name'], self::getClientUid($message_data['from_client_name']));
+                //发送消息到当前客户端
                 Gateway::sendToCurrentClient(json_encode($new_message));
                 break;
             // 客户端发言 message: {type:say, to_client_id:xx, content:xx}
@@ -118,9 +121,9 @@ class Events
                 if($message_data['to_client_id'] != 'all') {
                     $new_message = array(
                         'type'=>'say',
-                        'from_client_id'=>$from_client_id,
+                        'from_client_id'=>$from_client_id, //发送人
                         'from_client_name' =>$from_client_name,
-                        'to_client_id'=>$message_data['to_client_id'],
+                        'to_client_id'=>$message_data['to_client_id'], //接收人
                         'to_client_name'=>$message_data['to_client_name'],
                         'content'=>nl2br(htmlspecialchars($message_data['content'])),
                         'time'=>date('Y-m-d H:i:s'),
@@ -129,6 +132,10 @@ class Events
                         'uid' => $message_data['uid'], //接收人的uid
                         'room_id' => ''  //私聊房间号置空。
                     );
+                    //设置未读消息数
+                    if (!in_array($message_data['uid'],self::$redisUsers)) {
+                        self::$chat->setUnreadMsgLists($from_client_name,$message_data['to_client_id']);
+                    }
                     //保存聊天记录
                     self::$chat->setChatMsgLists($from_client_name,$message_data['to_client_name'],$room_id,$new_message);
                     //发送到客户端
@@ -173,12 +180,13 @@ class Events
         // 从房间的客户端列表中删除
         if(isset($_SESSION['room_id'])) {
             $room_id = $_SESSION['room_id'];
-            self::$chat->sRem(RedisKey,$client_id);
+            self::$chat->sRem(RedisKey,$_SESSION['uid']);
             $new_message = array(
                 'type'=>'logout',
                 'from_client_id'=>$client_id,
                 'from_client_name'=>$_SESSION['client_name'],
-                'time'=>date('Y-m-d H:i:s')
+                'time'=>date('Y-m-d H:i:s'),
+                'uid' => $_SESSION['uid'],
             );
             Gateway::sendToGroup($room_id, json_encode($new_message));
         }
@@ -195,12 +203,25 @@ class Events
         $arr = [];$sortArr = [];
         $users = json_decode(self::$chat->sMembers(chatKey)[0],true);
         foreach ($users as $key=> $item) {
-            $users[$key]['online'] = false;
+            $users[$key]['online'] = false; //是否在线
+            $users[$key]['unreadCount'] = 0; //所有的未读消息数
+            $users[$key]['total'] = 0;
             foreach ($redisUser as $redis) {
                 if ($redis == $users[$key]['uid']) {
                     $users[$key]['online'] = true;
                 }
             }
+            $unreadMsg = self::$chat->getUnreadMsgAllCount($users[$key]['uid']);
+            //单条用户展示未读消息数
+            $unreadArr = array();
+            if (count($unreadMsg)>0) {
+                foreach ($unreadMsg as $from => $total) {
+                    $unreadArr[] = ['form' => $from, 'total' => $total];
+                    $users[$key]['unreadCount']+= $total;
+                }
+            }
+            //未读消息数
+            $users[$key]['unread'] = count($unreadMsg)>0 ? $unreadArr : 0;
             $sortArr[$users[$key]['uid']] = $users[$key]['online'];
             $users[$key]['type'] = 'login';
             $users[$key]['room_id'] = '1200';
@@ -208,5 +229,23 @@ class Events
         }
         array_multisort($sortArr,SORT_DESC,$arr);
         return $arr;
+    }
+
+    /**
+     * TODO:通过客户端名称获取客户端ID
+     * @param $client_name
+     * @return mixed|Exception
+     */
+    public static function getClientUid($client_name)
+    {
+        try {
+            self::$db = new connection(Host,Port,UserName,Password,DbName);
+            $result = self::$db->from('os_users')->where("username='$client_name'")->select('uuid')->query();
+            return $result[0]['uuid'];
+        } catch (\Exception $exception){
+            self::$db->closeConnection();
+            echo $exception;
+        }
+        return false;
     }
 }

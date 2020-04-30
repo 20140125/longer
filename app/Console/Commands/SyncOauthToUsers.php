@@ -68,8 +68,9 @@ class SyncOauthToUsers extends Command
                 $this->info('修改用户[' . $oauth->username . ']信息成功');
             } else {
                 $salt = get_round_num(8);
+                $rand_str = get_xing_lists(); //避免用户名重复
                 $arr = [
-                    'username' => $oauth->username,
+                    'username' => $oauth->username == $users->name ? $oauth->username.'_'.$rand_str[rand(0,count($rand_str))] : $oauth->username,
                     'avatar_url' => $oauth->avatar_url,
                     'remember_token' => $oauth->remember_token,
                     'email' => empty($oauth->email) ? '' : $oauth->email,
@@ -93,7 +94,7 @@ class SyncOauthToUsers extends Command
     /**
      * TODO:将用户同步到用户中心
      */
-    public function SyncUserToUserCenter()
+    protected function SyncUserToUserCenter()
     {
         $users = DB::table('os_users')->get();
         foreach ($users as $user) {
