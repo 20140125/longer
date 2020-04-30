@@ -134,8 +134,6 @@ class FileController extends BaseController
             Storage::disk('public')->put($filename, file_get_contents($path));
             //文件移动
             $file->move($this->post['path'],$filename);
-            //删除文件
-            Storage::disk('public')->delete($filename);
             act_log($info);
             return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('name'=>$filename));
         }

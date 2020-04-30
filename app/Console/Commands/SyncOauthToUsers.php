@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Api\CommonController;
 use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SyncOauthToUsers extends Command
@@ -52,6 +52,9 @@ class SyncOauthToUsers extends Command
         $this->SyncOauthToUsers();
         sleep(1);
         $this->SyncUserToUserCenter();
+        //更新用户画像
+        $commonContr = new CommonController();
+        $commonContr->updateUserAvatarUrl();
     }
 
     /**

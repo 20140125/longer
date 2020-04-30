@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Config;
@@ -95,6 +96,20 @@ class LoginController
     }
 
     /**
+     * todo:获取用户画像
+     * @return int
+     */
+    public function getRandomUsersAvatarUrl()
+    {
+        $users = json_decode($this->redisClient->sMembers(chatKey)[0],true);
+        $avatarUrl = [];
+        foreach ($users as $user) {
+            $avatarUrl[] = $user['client_img'];
+        }
+        return $avatarUrl[rand(0,count($avatarUrl))];
+    }
+
+    /**
      * TODO：邮箱登录
      * @return JsonResponse|int|array
      */
@@ -115,7 +130,7 @@ class LoginController
             return $admin;
         }
         //注册
-        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>config('app.url').'default.jpg');
+        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($request['salt']).$request['salt']);
         $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
@@ -128,6 +143,9 @@ class LoginController
         $result = $this->userModel->addResult($request);
         UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$result,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
         $request['token'] = $request['remember_token'];
+        //更新用户画像
+        $commonContr = new CommonController();
+        $commonContr->updateUserAvatarUrl();
         return $request;
     }
     /**

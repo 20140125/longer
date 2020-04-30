@@ -41,25 +41,6 @@ class OauthController extends BaseController
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
-
-    /**
-     * todo:获取授权用户列表
-     * @return JsonResponse
-     */
-    public function getChatOAuthLists()
-    {
-        $this->validatePost(['username'=>'required|string']);
-        $where[] = ['username','<>',$this->post['username']];
-        $result = $this->userModel->getAll($where,['username as client_name','avatar_url as client_img','uuid as uid']);
-        $arr = [];
-        foreach ($result as  &$item) {
-            $item->type = '';
-            $item->room_id = '1200';
-            $arr[$item->uid] = $item;
-        }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$arr);
-    }
-
     /**
      * TODO：更新授权用户
      * @param integer id

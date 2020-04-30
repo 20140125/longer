@@ -20,9 +20,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\Chat',
         'App\Console\Commands\SyncOauthToUsers',
         'App\Console\Commands\SyncLocal',
-        'App\Console\Commands\SyncWeather',
-        'App\Console\Commands\SyncUsersCount'
-
+        'App\Console\Commands\SyncWeather'
     ];
 
     /**
