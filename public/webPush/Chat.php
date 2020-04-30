@@ -50,13 +50,13 @@ class Chat
             $recName = 'receive_all_'.$room_id;
             $num = $this->getMsgLen($recName);
             $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
+            $time = array();
             foreach ($recList as $item) {
                 array_push($messageLists,json_decode($item,true));
-            }
-            $time = array();
-            foreach ($messageLists as $item) {
                 $time[] = $item['time'];
             }
+            // foreach ($messageLists as $item) {
+            // }
             array_multisort($time,SORT_ASC,$messageLists);
         } else if (empty($room_id) && $to!='all') { //私聊信息
             //接受的消息
@@ -68,16 +68,20 @@ class Chat
             $num = $this->getMsgLen($sendName);
             $sendLists = $this ->redisClient-> lRange($sendName, 0, (int)($num));
             $messageLists = array();
+            $time = array();
             foreach ($sendLists as $item) {
                 array_push($messageLists,json_decode($item,true));
+                $time[] = $item['time'];
+
             }
             foreach ($recList as $item) {
                 array_push($messageLists,json_decode($item,true));
-            }
-            $time = array();
-            foreach ($messageLists as $item) {
                 $time[] = $item['time'];
+
             }
+            // foreach ($messageLists as $item) {
+            //     $time[] = $item['time'];
+            // }
             array_multisort($time,SORT_ASC,$messageLists);
         }
         return $messageLists;
