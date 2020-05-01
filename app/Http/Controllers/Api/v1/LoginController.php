@@ -106,7 +106,7 @@ class LoginController
         foreach ($users as $user) {
             $avatarUrl[] = $user['client_img'];
         }
-        return $avatarUrl[rand(0,count($avatarUrl))];
+        return $avatarUrl[rand(1,count($avatarUrl))]; //排除第一张图片
     }
 
     /**
