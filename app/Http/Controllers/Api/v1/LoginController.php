@@ -101,7 +101,7 @@ class LoginController
      */
     public function getRandomUsersAvatarUrl()
     {
-        $users = json_decode($this->redisClient->sMembers(chatKey)[0],true);
+        $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0],true);
         $avatarUrl = [];
         foreach ($users as $user) {
             $avatarUrl[] = $user['client_img'];
