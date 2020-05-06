@@ -99,7 +99,7 @@ class LoginController
      * todo:获取用户画像
      * @return int
      */
-    public function getRandomUsersAvatarUrl()
+    private function getRandomUsersAvatarUrl()
     {
         $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0],true);
         $avatarUrl = [];
@@ -113,7 +113,7 @@ class LoginController
      * TODO：邮箱登录
      * @return JsonResponse|int|array
      */
-    protected function emailLogin()
+    private function emailLogin()
     {
         if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
             return Code::VERIFY_CODE;
@@ -216,11 +216,11 @@ class LoginController
      * @param $data
      * @return bool|Model|Builder|int|object|null
      */
-    protected function verifyMailAndCode($data) {
+    private function verifyMailAndCode($data) {
         $result = DB::table('os_send_email')->where(['email'=>$this->post['email']])->where('updated_at','>=',date('Y-m-d H:i:s',strtotime('-10 minutes')))->first();
         if (!empty($result)) {
             unset($data['created_at']);
-            $result = DB::table('os_send_email')->where(['code'=>$this->post['verify_code'],'email'=>$this->post['email']])->update($data);
+            $result = DB::table('os_send_email')->where(['code'=>$result->verify_code,'email'=>$this->post['email']])->update($data);
         } else {
             $result = DB::table('os_send_email')->insert($data);
         }
@@ -253,15 +253,13 @@ class LoginController
     public function download(Request $request,Response $response)
     {
         $username = $this->userModel->getResult('remember_token',$request->get('token'));
+        set_code(Code::NOT_FOUND);
         if (empty($username)){
-            set_code(Code::NOT_FOUND);
             return ajax_return(Code::NOT_FOUND,'permission denied');
         }
         if (file_exists($request->get('path'))){
-            set_code(Code::NOT_FOUND);
             return $response::download($request->get('path'),basename($request->get('path')));
         }
-        set_code(Code::NOT_FOUND);
         return ajax_return(Code::NOT_FOUND,'permission denied');
     }
 }
