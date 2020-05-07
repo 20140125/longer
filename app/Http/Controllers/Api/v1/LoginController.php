@@ -54,12 +54,16 @@ class LoginController
     /**
      * TODO:用户登录
      * @param Request $request (username:用户名，password:密码，verify_code:验证码，loginType:登录类型)
+     * @param string username
+     * @param string password
+     * @param integer verify_code
+     * @param string loginType
      * @return JsonResponse
      */
     public function index(Request $request)
     {
         if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allow');
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
         }
         if (empty($this->post['loginType'])) {
             return ajax_return(Code::ERROR,'require params missing');
@@ -150,11 +154,15 @@ class LoginController
     }
     /**
      * TODO:获取邮箱验证码
+     * @param Request $request
      * @param string email
      * @return JsonResponse
      */
-    public function email()
+    public function email(Request $request)
     {
+        if ($request->isMethod('get')){
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        }
         $validate = Validator::make($this->post,['email'=>'required|string|email']);
         if ($validate->fails()) {
             return ajax_return(Code::ERROR,$validate->errors()->first());
@@ -185,12 +193,16 @@ class LoginController
 
     /**
      * TODO:校验验证码是否正确
+     * @param Request $request
      * @param string code 验证码
      * @param integer id
      * @return JsonResponse
      */
-    public function code()
+    public function code(Request $request)
     {
+        if ($request->isMethod('get')){
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        }
         $validate = Validator::make($this->post,['email'=>'required|string|email','verify_code'=>'required|string|size:8']);
         if ($validate->fails()) {
             return ajax_return(Code::ERROR,$validate->errors()->first());
@@ -216,7 +228,8 @@ class LoginController
      * @param $data
      * @return bool|Model|Builder|int|object|null
      */
-    private function verifyMailAndCode($data) {
+    private function verifyMailAndCode($data)
+    {
         $result = DB::table('os_send_email')->where(['email'=>$this->post['email']])->where('updated_at','>=',date('Y-m-d H:i:s',strtotime('-10 minutes')))->first();
         if (!empty($result)) {
             unset($data['created_at']);
@@ -235,7 +248,7 @@ class LoginController
     public function config(Request $request)
     {
         if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allow');
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
         }
         $validate = Validator::make($this->post,['name'=>'required|string']);
         if ($validate->fails()){

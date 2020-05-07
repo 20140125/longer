@@ -25,7 +25,7 @@ class AuthController extends BaseController
                 $item->hasChildren = true;
             }
         }
-        $result['selectAuth'] = $this->authModel->getResult2('1',2);
+        $result['selectAuth'] = $this->authModel->getResult2('0',2);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 

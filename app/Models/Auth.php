@@ -68,9 +68,12 @@ class Auth extends Model
      */
     public function getResult2(string $status='1',int $level=0)
     {
-        $where['status'] = $status;
+        $where = [];
         if (!empty($level)){
             $where[] = ['level','<',$level];
+        }
+        if (!empty($status)) {
+            $where[] = ['status','=',$status];
         }
         return DB::table($this->table)->orderBy('path','asc')->where($where)->get();
     }

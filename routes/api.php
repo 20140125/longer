@@ -17,13 +17,13 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     /********************************************共有权限********************************************************/
     Route::match(['get','post'],'login','v1\LoginController@index')->name('apiLogin');
     Route::match(['get','post'],'config','v1\LoginController@config')->name('getConfig');
+    Route::match(['get','post'],'file/download','v1\LoginController@download')->name('downloadFile');
+    Route::match(['get','post'],'sendEmail','v1\LoginController@email')->name('sendEmail');
+    Route::match(['get','post'],'checkCode','v1\LoginController@code')->name('checkCode');
     Route::match(['get','post'],'checkLogin','v1\MenuController@check')->name('checkLogin');
     Route::match(['get','post'],'logout','v1\MenuController@logout')->name('apiLogout');
     Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');
     Route::match(['get','post'],'total','v1\MenuController@getCountData')->name('total');
-    Route::match(['get','post'],'file/download','v1\LoginController@download')->name('downloadFile');
-    Route::match(['get','post'],'sendEmail','v1\LoginController@email')->name('sendEmail');
-    Route::match(['get','post'],'checkCode','v1\LoginController@code')->name('checkCode');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
