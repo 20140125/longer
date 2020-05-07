@@ -69,8 +69,8 @@ class SyncOauthToUsers extends Command
             $users = $this->usersModel->getResult('id', $oauth->uid);
             if (!empty($users)) {
                 $this->usersModel->updateResult(['remember_token' => $oauth->remember_token], 'id', $oauth->uid);
-                $this->info('修改用户[' . $oauth->username . ']信息成功');
                 $bar->advance();
+                $this->info('修改用户[' . $oauth->username . ']信息成功');
             } else {
                 $salt = get_round_num(8);
                 $rand_str = get_xing_lists(); //避免用户名重复
@@ -92,8 +92,8 @@ class SyncOauthToUsers extends Command
                 ];
                 $uid = $this->usersModel->addResult($arr);
                 $this->oAuthModel->updateResult(['uid' => $uid], 'id', $oauth->id);
-                $this->info('添加用户[' . $oauth->username . ']信息成功');
                 $bar->advance();
+                $this->info('添加用户[' . $oauth->username . ']信息成功');
             }
         }
         $bar->finish();
@@ -111,8 +111,8 @@ class SyncOauthToUsers extends Command
             $userCenter = $this->userCenterModel->getResult('uid',$user->id);
             if (!empty($userCenter)) {
                 $this->userCenterModel->updateResult(['token'=>$user->remember_token,'u_name'=>$user->username],'uid',$user->id);
-                $this->info('修改用户['.$user->username.']基础信息成功');
                 $bar->advance();
+                $this->info('修改用户['.$user->username.']基础信息成功');
             } else {
                 $arr = [
                     'u_name' => $user->username,
@@ -122,8 +122,8 @@ class SyncOauthToUsers extends Command
                     'user_status' => 1,
                 ];
                 $this->userCenterModel->addResult($arr);
-                $this->info('添加用户['.$user->username.']基础信息成功');
                 $bar->advance();
+                $this->info('添加用户['.$user->username.']基础信息成功');
             }
         }
         $bar->finish();
