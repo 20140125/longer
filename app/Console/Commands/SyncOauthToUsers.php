@@ -75,7 +75,7 @@ class SyncOauthToUsers extends Command
                 $salt = get_round_num(8);
                 $rand_str = get_xing_lists(); //避免用户名重复
                 $arr = [
-                    'username' => $oauth->username == $users->username ? $oauth->username.'_'.$rand_str[rand(0,count($rand_str))] : $oauth->username,
+                    'username' => $oauth->username.'_'.$rand_str[rand(0,count($rand_str))],
                     'avatar_url' => $oauth->avatar_url,
                     'remember_token' => $oauth->remember_token,
                     'email' => empty($oauth->email) ? '' : $oauth->email,
