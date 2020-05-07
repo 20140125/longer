@@ -877,7 +877,6 @@ if (!function_exists('web_push'))
      * @param $content
      * @param string $uid
      * @return bool
-     * @throws ErrorException
      */
     function web_push($content,$uid='')
     {
@@ -885,7 +884,7 @@ if (!function_exists('web_push'))
         $push_api_url = config('app.push_url');
         $post_data = array(
             "type" => "publish",
-            "content" => $content,
+            "content" => htmlspecialchars($content),
             "to" => empty($uid) ? '' : $uid,
         );
         $curl = new Curl();
