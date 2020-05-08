@@ -53,10 +53,8 @@ class Chat
             $time = array();
             foreach ($recList as $item) {
                 array_push($messageLists,json_decode($item,true));
-                $time[] = $item['time'];
+                $time[] = json_decode($item,true)['time'];
             }
-            // foreach ($messageLists as $item) {
-            // }
             array_multisort($time,SORT_ASC,$messageLists);
         } else if (empty($room_id) && $to!='all') { //私聊信息
             //接受的消息
