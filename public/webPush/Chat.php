@@ -71,17 +71,14 @@ class Chat
             $time = array();
             foreach ($sendLists as $item) {
                 array_push($messageLists,json_decode($item,true));
-                $time[] = $item['time'];
+                $time[] = json_decode($item,true)['time'];
 
             }
             foreach ($recList as $item) {
                 array_push($messageLists,json_decode($item,true));
-                $time[] = $item['time'];
+                $time[] = json_decode($item,true)['time'];
 
             }
-            // foreach ($messageLists as $item) {
-            //     $time[] = $item['time'];
-            // }
             array_multisort($time,SORT_ASC,$messageLists);
         }
         return $messageLists;
