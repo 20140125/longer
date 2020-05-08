@@ -61,12 +61,12 @@ class Auth extends Model
     }
 
     /**
-     * TODO：查询一级显示的分类
+     * TODO：根据层级查询分类
      * @param string $status
      * @param int $level
      * @return Collection
      */
-    public function getResult2(string $status='1',int $level=0)
+    public function getResultListsByStatusAndLevel(string $status='1',int $level=0)
     {
         $where = [];
         if (!empty($level)){
