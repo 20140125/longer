@@ -20,7 +20,7 @@ $online_user_count = 0;
 $times = 15;
 // PHPSocketIO服务  // window/苹果系统
 if(in_array(PHP_OS,['WINNT','Darwin'])) {
-    $sender_io = new SocketIO(2120);
+    $sender_io = new SocketIO(2120); //接收消息推送端口
 } else {
     $context = array(
         'ssl' => array(
