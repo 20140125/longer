@@ -158,7 +158,7 @@
     <property name="ignore_missing_gitignore" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/public" />
     <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="settings.editor.selected.configurable" value="MTConfigurable" />
+    <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
@@ -237,6 +237,8 @@
       <workItem from="1587887587411" duration="461000" />
       <workItem from="1587888447137" duration="537000" />
       <workItem from="1587889160898" duration="8806000" />
+      <workItem from="1589421882529" duration="42000" />
+      <workItem from="1589422139989" duration="2261000" />
     </task>
     <servers />
   </component>
@@ -256,32 +258,36 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581908215687">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="552" y="160" key="#Plugins" timestamp="1589422172944">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="160" key="#Plugins/0.0.1920.1040@0.0.1920.1040" timestamp="1589422172944" />
+    <state x="245" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1589423135896">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1581908215687" />
-    <state x="648" y="266" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1587888456669">
+    <state x="245" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589423135896" />
+    <state x="648" y="266" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1589421891858">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="486" y="230" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1440.900@0.0.1440.900" timestamp="1583141018416" />
-    <state x="648" y="266" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587888456669" />
+    <state x="648" y="266" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589421891858" />
     <state x="426" y="0" key="CommitChangelistDialog2" timestamp="1581908210376">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="426" y="0" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1581908210376" />
-    <state x="540" y="253" key="IDE.errors.dialog" timestamp="1587897706002">
+    <state x="540" y="253" key="IDE.errors.dialog" timestamp="1589422265918">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="540" y="253" key="IDE.errors.dialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587897706002" />
-    <state x="475" y="235" key="SettingsEditor" timestamp="1587897632312">
+    <state x="540" y="253" key="IDE.errors.dialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589422265918" />
+    <state x="475" y="235" key="SettingsEditor" timestamp="1589425496338">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="352" y="149" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1584071331342" />
-    <state x="475" y="235" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1587897632312" />
+    <state x="475" y="235" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1589425496338" />
     <state x="133" y="99" width="1654" height="899" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587888712796">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1440.900@0.0.1440.900" timestamp="1580623934813" />
     <state x="133" y="99" width="1654" height="899" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587888712796" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.798@0.23.1440.798" timestamp="1581908660540" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1440.810@0.23.1440.810" timestamp="1583891549597" />
@@ -298,9 +304,10 @@
     </state>
     <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1582868106561" />
     <state x="513" y="243" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587898026313" />
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1582625466815">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="513" y="226" width="894" height="782" key="search.everywhere.popup" timestamp="1589423595659">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1582625466815" />
+    <state x="513" y="226" width="894" height="782" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1589423595659" />
   </component>
 </project>
