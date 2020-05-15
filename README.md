@@ -14,6 +14,6 @@ linux 下启动长链接脚本
 windows 下启动长链接脚本
     进入 public/webPush  点击 start_for_win.bat 允许即可
 
+```
 界面展示
    ![聊天界面](/public/QQ截图20200515171624.jpg)
-```
