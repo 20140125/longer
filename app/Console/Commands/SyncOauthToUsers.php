@@ -55,6 +55,7 @@ class SyncOauthToUsers extends Command
         //更新用户画像
         $commonContr = new CommonController();
         $commonContr->updateUserAvatarUrl();
+        $this->info('同步用户画像成功');
     }
 
     /**
