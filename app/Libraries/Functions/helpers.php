@@ -233,9 +233,10 @@ if (!function_exists('file_lists'))
      * todo：获取文件列表
      * @param $filePath
      * @param $permissionFile
+     * @param string $sort
      * @return array
      */
-    function file_lists($filePath,$permissionFile = array())
+    function file_lists($filePath,$permissionFile = array(),$sort='type')
     {
         $fileArr = array();
         $permissionFile = count($permissionFile)<=0 ?
@@ -260,6 +261,7 @@ if (!function_exists('file_lists'))
                 'favicon.ico',
             ] : $permissionFile;
         $openDir = opendir($filePath);
+        $type = array();
         $time = array();
         while ($file = readdir($openDir)){
             if (!in_array($file,$permissionFile) && str_replace('/','\\',$filePath.$file)!=public_path('storage')){
@@ -271,7 +273,9 @@ if (!function_exists('file_lists'))
                     'size' =>md5($filePath.$file),
                     'auth' => file_chmod($filePath.$file),
                 );
-                $time[] = filetype($filePath.$file);
+                $type[] = filetype($filePath.$file);
+                $time[] = fileatime($filePath.$file);
+
             }
         }
         foreach ($fileArr as &$item){
@@ -279,7 +283,11 @@ if (!function_exists('file_lists'))
                 $item['children'] = file_lists($item['path'],$permissionFile);
             }
         }
-        array_multisort($time,SORT_ASC,$fileArr);
+        if ($sort === 'type') {
+            array_multisort($type,SORT_ASC,$fileArr);
+        } else if ($sort === 'time') {
+            array_multisort($time,SORT_ASC,$fileArr);
+        }
         return $fileArr;
     }
 }
@@ -772,12 +780,11 @@ if(!function_exists('imgBase64Encode'))
             return $img;
         }
         $imageInfo = getimagesize($img);
-        $prefiex = '';
+        $prefix = '';
         if($imgHtmlCode){
-            $prefiex = 'data:' . $imageInfo['mime'] . ';base64,';
+            $prefix = 'data:' . $imageInfo['mime'] . ';base64,';
         }
-        $base64 = $prefiex.chunk_split(base64_encode($file_content));
-        return $base64;
+        return $prefix.chunk_split(base64_encode($file_content));
     }
 }
 if (!function_exists('download_image'))
@@ -877,7 +884,6 @@ if (!function_exists('web_push'))
      * @param $content
      * @param string $uid
      * @return bool
-     * @throws ErrorException
      */
     function web_push($content,$uid='')
     {
@@ -885,7 +891,7 @@ if (!function_exists('web_push'))
         $push_api_url = config('app.push_url');
         $post_data = array(
             "type" => "publish",
-            "content" => $content,
+            "content" => htmlspecialchars($content),
             "to" => empty($uid) ? '' : $uid,
         );
         $curl = new Curl();

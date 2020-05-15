@@ -5,3 +5,4 @@ define('UserName','root');
 define('Password','');
 define('DbName','longer');
 define('RedisKey','uidConnectionMap');
+define('chatKey','uidChatMap'); //在线用户数

@@ -105,7 +105,9 @@ class BaseController extends Controller
             route('userCenter'),
             route('areaLists'),
             route('total'),
-            route('export')
+            route('export'),
+            route('chat'),
+            route('uploadFile')
         ];
         $this->post['token'] = $this->post['token'] ? $this->post['token'] : $request->get('token');
         //判断必填字段是否为空

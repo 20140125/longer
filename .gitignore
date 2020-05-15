@@ -16,7 +16,9 @@ public_html/hot
 
 storage/*.key
 .env
+public/webPush/config/db.php
 Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+storage/app/excel/

@@ -66,6 +66,16 @@ class Area extends Model
     }
 
     /**
+     * TODO:获取城市分组
+     * @return Collection
+     */
+    public function getListsGroupByParentId()
+    {
+        return DB::table($this->table)->where('parent_id','>',0)->groupBy(['parent_id','id','name','code'])->get(['parent_id','id','name','code']);
+
+    }
+
+    /**
      * TODO:更新数据
      * @param array $data
      * @param string $filed

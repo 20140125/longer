@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Config;
@@ -53,12 +54,16 @@ class LoginController
     /**
      * TODO:用户登录
      * @param Request $request (username:用户名，password:密码，verify_code:验证码，loginType:登录类型)
+     * @param string username
+     * @param string password
+     * @param integer verify_code
+     * @param string loginType
      * @return JsonResponse
      */
     public function index(Request $request)
     {
         if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allow');
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
         }
         if (empty($this->post['loginType'])) {
             return ajax_return(Code::ERROR,'require params missing');
@@ -88,17 +93,34 @@ class LoginController
         if ($result === Code::NOT_ALLOW){
             return ajax_return(Code::NOT_ALLOW,'users not allow login system');
         }
+        if ($result === Code::VERIFY_CODE){
+            return ajax_return(Code::ERROR,'verify code error');
+        }
         return ajax_return(Code::SUCCESS,'login successfully',$result);
+    }
+
+    /**
+     * todo:获取用户画像
+     * @return int
+     */
+    private function getRandomUsersAvatarUrl()
+    {
+        $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0],true);
+        $avatarUrl = [];
+        foreach ($users as $user) {
+            $avatarUrl[] = $user['client_img'];
+        }
+        return $avatarUrl[rand(1,count($avatarUrl))]; //排除第一张图片
     }
 
     /**
      * TODO：邮箱登录
      * @return JsonResponse|int|array
      */
-    protected function emailLogin()
+    private function emailLogin()
     {
         if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
-            return ajax_return(Code::ERROR,'verify code error');
+            return Code::VERIFY_CODE;
         }
         $result = $this->userModel->getResult('email',$this->post['email']);
         if (!empty($result)) {
@@ -112,7 +134,7 @@ class LoginController
             return $admin;
         }
         //注册
-        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>config('app.url').'default.png');
+        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($request['salt']).$request['salt']);
         $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
@@ -120,19 +142,27 @@ class LoginController
         $request['phone_number'] = 0;
         $request['created_at'] = time();
         $request['uuid'] = md5($request['password']).uniqid();
-        $request['username'] = $this->post['email'];
-        $request['status'] = 2;
+        $request['username'] = explode("@",$this->post['email'])[0];
+        $request['status'] = 1;  //允许访问
         $result = $this->userModel->addResult($request);
         UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$result,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
+        $request['token'] = $request['remember_token'];
+        //更新用户画像
+        $commonContr = new CommonController();
+        $commonContr->updateUserAvatarUrl();
         return $request;
     }
     /**
      * TODO:获取邮箱验证码
+     * @param Request $request
      * @param string email
      * @return JsonResponse
      */
-    public function email()
+    public function email(Request $request)
     {
+        if ($request->isMethod('get')){
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        }
         $validate = Validator::make($this->post,['email'=>'required|string|email']);
         if ($validate->fails()) {
             return ajax_return(Code::ERROR,$validate->errors()->first());
@@ -163,12 +193,16 @@ class LoginController
 
     /**
      * TODO:校验验证码是否正确
+     * @param Request $request
      * @param string code 验证码
      * @param integer id
      * @return JsonResponse
      */
-    public function code()
+    public function code(Request $request)
     {
+        if ($request->isMethod('get')){
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        }
         $validate = Validator::make($this->post,['email'=>'required|string|email','verify_code'=>'required|string|size:8']);
         if ($validate->fails()) {
             return ajax_return(Code::ERROR,$validate->errors()->first());
@@ -194,11 +228,12 @@ class LoginController
      * @param $data
      * @return bool|Model|Builder|int|object|null
      */
-    protected function verifyMailAndCode($data) {
+    private function verifyMailAndCode($data)
+    {
         $result = DB::table('os_send_email')->where(['email'=>$this->post['email']])->where('updated_at','>=',date('Y-m-d H:i:s',strtotime('-10 minutes')))->first();
         if (!empty($result)) {
             unset($data['created_at']);
-            $result = DB::table('os_send_email')->where(['code'=>$this->post['verify_code'],'email'=>$this->post['email']])->update($data);
+            $result = DB::table('os_send_email')->where(['code'=>$result->verify_code,'email'=>$this->post['email']])->update($data);
         } else {
             $result = DB::table('os_send_email')->insert($data);
         }
@@ -213,7 +248,7 @@ class LoginController
     public function config(Request $request)
     {
         if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allow');
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
         }
         $validate = Validator::make($this->post,['name'=>'required|string']);
         if ($validate->fails()){
@@ -231,15 +266,13 @@ class LoginController
     public function download(Request $request,Response $response)
     {
         $username = $this->userModel->getResult('remember_token',$request->get('token'));
+        set_code(Code::NOT_FOUND);
         if (empty($username)){
-            set_code(Code::NOT_FOUND);
             return ajax_return(Code::NOT_FOUND,'permission denied');
         }
         if (file_exists($request->get('path'))){
-            set_code(Code::NOT_FOUND);
             return $response::download($request->get('path'),basename($request->get('path')));
         }
-        set_code(Code::NOT_FOUND);
         return ajax_return(Code::NOT_FOUND,'permission denied');
     }
 }

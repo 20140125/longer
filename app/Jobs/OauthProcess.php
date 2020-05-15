@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Users;
 use Illuminate\Bus\Queueable;
@@ -42,9 +43,9 @@ class OauthProcess implements ShouldQueue
             $redisUser = $redisClient->sMembers(config('app.redis_user_key'));
             foreach ($oauthRes as $item) {
                 if (in_array($item->uuid,$redisUser)) {
-                    $this->post['state'] = 'successfully';
+                    $this->post['state'] = Code::WebSocketState[0];
                 }
-                $this->post['state'] = 'offline';
+                $this->post['state'] = Code::WebSocketState[2];
                 $this->post['uid'] = $item->uuid;
                 $this->post['username'] = $item->username;
                 $this->post['created_at'] = $created_at;

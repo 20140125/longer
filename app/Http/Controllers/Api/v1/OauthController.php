@@ -41,7 +41,6 @@ class OauthController extends BaseController
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
-
     /**
      * TODO：更新授权用户
      * @param integer id

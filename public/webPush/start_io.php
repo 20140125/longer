@@ -20,7 +20,7 @@ $online_user_count = 0;
 $times = 15;
 // PHPSocketIO服务  // window/苹果系统
 if(in_array(PHP_OS,['WINNT','Darwin'])) {
-    $sender_io = new SocketIO(2120);
+    $sender_io = new SocketIO(2120); //接收消息推送端口
 } else {
     $context = array(
         'ssl' => array(
@@ -46,11 +46,7 @@ $sender_io->on('connection', function($socket) {
     $socket->on('login', function ($uid)use($socket) {
         global $redis,$online_user_count;
         $socket->uid = $uid;
-        //判断值是否存在redis里面
-        if ($redis->sIsMember('uidConnectionMap',$uid)) {
-            return ;
-        }
-        $redis->sAdd('uidConnectionMap',$uid);
+        //在线用户存在Events.php文件中
         $redisUser = $redis->SMEMBERS(RedisKey);
         $online_user_count = count($redisUser);
         // 将这个连接加入到uid分组，方便针对uid推送数据

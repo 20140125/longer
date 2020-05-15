@@ -17,13 +17,13 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     /********************************************共有权限********************************************************/
     Route::match(['get','post'],'login','v1\LoginController@index')->name('apiLogin');
     Route::match(['get','post'],'config','v1\LoginController@config')->name('getConfig');
+    Route::match(['get','post'],'file/download','v1\LoginController@download')->name('downloadFile');
+    Route::match(['get','post'],'sendEmail','v1\LoginController@email')->name('sendEmail');
+    Route::match(['get','post'],'checkCode','v1\LoginController@code')->name('checkCode');
     Route::match(['get','post'],'checkLogin','v1\MenuController@check')->name('checkLogin');
     Route::match(['get','post'],'logout','v1\MenuController@logout')->name('apiLogout');
     Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');
     Route::match(['get','post'],'total','v1\MenuController@getCountData')->name('total');
-    Route::match(['get','post'],'file/download','v1\LoginController@download')->name('downloadFile');
-    Route::match(['get','post'],'sendEmail','v1\LoginController@email')->name('sendEmail');
-    Route::match(['get','post'],'checkCode','v1\LoginController@code')->name('checkCode');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
@@ -51,6 +51,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'oauth/delete','v1\OauthController@delete');
     Route::match(['get','post'],'oauth/verifyCode','v1\OauthController@code');
     Route::match(['get','post'],'oauth/bind','v1\OauthController@oauthBind');
+    Route::match(['post','get'],'oauth/chat','v1\OauthController@getChatOAuthLists')->name('chat');
+
     //请求授权
     Route::match(['get','post'],'req-rule/index','v1\ReqRuleController@index');
     Route::match(['get','post'],'req-rule/save','v1\ReqRuleController@save')->name('reqRuleSave');
@@ -76,7 +78,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'file/chmod','v1\FileController@auth');
     Route::match(['get','post'],'file/zip','v1\FileController@compression');
     Route::match(['get','post'],'file/unzip','v1\FileController@Decompression');
-    Route::match(['get','post'],'file/upload','v1\FileController@upload');
+    Route::match(['get','post'],'file/upload','v1\FileController@upload')->name('uploadFile');
     Route::match(['get','post'],'file/delete','v1\FileController@delete');
     Route::match(['get','post'],'image/preview','v1\FileController@preview');
     //角色
@@ -113,8 +115,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'category/delete','v1\ApiController@CategoryDelete');
     Route::match(['post','get'],'category/save','v1\ApiController@categorySave');
     Route::match(['post','get'],'category/update','v1\ApiController@CategoryUpdate');
-    //聊天记录
-    Route::match(['post','get'],'chat/index','v1\ChatController@index');
     //表情
     Route::match(['post','get'],'emotion/index','v1\EmotionController@index')->name('emotion');
     //excel导入导出
@@ -123,7 +123,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //组件
     Route::match(['post','get'],'components/table','v1\TableComponentController@table');
     Route::match(['post','get'],'components/actions','v1\TableComponentController@action');
-    //组件
+    //时间线
     Route::match(['post','get'],'timeline/index','v1\TimeLineController@index');
     Route::match(['post','get'],'timeline/save','v1\TimeLineController@save');
     Route::match(['post','get'],'timeline/update','v1\TimeLineController@update');

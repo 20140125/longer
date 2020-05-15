@@ -61,16 +61,19 @@ class Auth extends Model
     }
 
     /**
-     * TODO：查询一级显示的分类
+     * TODO：根据层级查询分类
      * @param string $status
      * @param int $level
      * @return Collection
      */
-    public function getResult2(string $status='1',int $level=0)
+    public function getResultListsByStatusAndLevel(string $status='1',int $level=0)
     {
-        $where['status'] = $status;
+        $where = [];
         if (!empty($level)){
             $where[] = ['level','<',$level];
+        }
+        if (!empty($status)) {
+            $where[] = ['status','=',$status];
         }
         return DB::table($this->table)->orderBy('path','asc')->where($where)->get();
     }
@@ -143,7 +146,7 @@ class Auth extends Model
             }
             $data['level'] = substr_count($data['path'],'-');
         }
-        unset($data['__child']);
+        unset($data['hasChildren']);
         return DB::table($this->table)->where($field,$op,$data['id'])->update($data);
     }
 

@@ -29,7 +29,6 @@ class AreaController extends BaseController
     /**
      * AreaController constructor.
      * @param Request $request
-     * @throws \ErrorException
      */
     public function __construct(Request $request)
     {
@@ -66,7 +65,9 @@ class AreaController extends BaseController
         $this->validatePost(['code'=>'required|string|exists:os_china_area','id'=>'required|integer|exists:os_china_area']);
         $result = $this->amapControl->getWeather($this->post['code']);
         if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'get weather successfully',$result);
+            $info =  $result['info'] == 'OK' ? json_encode($result['lives'][0],JSON_UNESCAPED_UNICODE) : [];
+            $this->areaModel->updateResult(object_to_array(['info'=>$info]),'code',$this->post['code']);
+            return $this->ajax_return(Code::SUCCESS,'get weather successfully',json_decode($info,true));
         }
         return $this->ajax_return(Code::ERROR,'get weather failed',$result);
     }

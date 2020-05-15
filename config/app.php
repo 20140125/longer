@@ -56,6 +56,7 @@ return [
     'socket_url' =>env('WORKER_SOCKET_URL','http://127.0.0.1:2120/'),
     'push_url' =>env('WORKER_PUSH_URL','http://127.0.0.1:2121/'),
     'redis_user_key' =>env('WORKER_REDIS_USER_KEY',''),
+    'chat_user_key' =>env('CHAT_REDIS_USER_KEY',''),
     'rsa_public' =>env('RSA_PUBLIC_KEY_PATH',''),
     'rsa_private' =>env('RSA_PRIVATE_KEY_PATH',''),
     'redis_host' => env('REDIS_HOST','127.0.0.1'),

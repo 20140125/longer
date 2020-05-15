@@ -101,11 +101,13 @@ class Users extends Model
     }
 
     /**
+     * @param array $where
+     * @param string[] $column
      * @return Collection
      */
-    public function getAll()
+    public function getAll($where=[],$column=['uuid','username'])
     {
-        return DB::table($this->table)->get(['uuid','username']);
+        return DB::table($this->table)->where($where)->get($column);
     }
 
 

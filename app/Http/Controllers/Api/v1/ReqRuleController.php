@@ -75,8 +75,8 @@ class ReqRuleController extends BaseController
     private function setAuth($userId)
     {
         //获取所有权限
-        $ruleLists = $this->authModel->getAuthLists(['name','href','level']);
-        //获取登录角色
+        $ruleLists = $this->authModel->getResultListsByStatusAndLevel('0',0);
+        //获取待授权角色
         $where[] = ['id',$userId];
         $users = $this->oauthModel->getResult($where);
         //角色权限

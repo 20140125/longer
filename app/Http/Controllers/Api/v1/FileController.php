@@ -25,7 +25,7 @@ class FileController extends BaseController
     public function index()
     {
         $this->validatePost(['path'=>'required|string','basename'=>'required|string']);
-        $fileLists = file_lists(file_path($this->post['path'],$this->post['basename']));
+        $fileLists = file_lists(file_path($this->post['path'],$this->post['basename']),[],$this->post['sort'] ?? 'type');
         return $this->ajax_return(Code::SUCCESS,'successfully',$fileLists);
     }
 
@@ -130,12 +130,8 @@ class FileController extends BaseController
             $this->validatePost(['path'=>'required|string']);
             //获取文件名
             $filename = $file->getClientOriginalName();
-            //存储文件。disk里面的public。总的来说，就是调用disk模块里的public配置
-            Storage::disk('public')->put($filename, file_get_contents($path));
             //文件移动
             $file->move($this->post['path'],$filename);
-            //删除文件
-            Storage::disk('public')->delete($filename);
             act_log($info);
             return $this->ajax_return(Code::SUCCESS,'upload file successfully',array('name'=>$filename));
         }

@@ -25,7 +25,7 @@ class AuthController extends BaseController
                 $item->hasChildren = true;
             }
         }
-        $result['selectAuth'] = $this->authModel->getResult2('1',2);
+        $result['selectAuth'] = $this->authModel->getResultListsByStatusAndLevel('0',2);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
@@ -83,7 +83,7 @@ class AuthController extends BaseController
         //查看下面是否还有下级权限
         $_child = $this->authModel->getResult('pid',$this->post['id']);
         if (!empty($_child)){
-            return $this->ajax_return(Code::ERROR,'Cannot be upgraded');
+            return $this->ajax_return(Code::ERROR,'Cannot be delete');
         }
         $result = $this->authModel->deleteResult('id',$this->post['id']);
         if (!empty($result)){

@@ -37,7 +37,6 @@ class Amap
 
     /**
      * @return Amap
-     * @throws \ErrorException
      */
     static public function getInstance()
     {
