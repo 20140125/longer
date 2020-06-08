@@ -259,6 +259,7 @@ if (!function_exists('file_lists'))
                 'js',
                 'static',
                 'favicon.ico',
+                '20200515171624.jpg','20200515174304.jpg','20200515174358.jpg'
             ] : $permissionFile;
         $openDir = opendir($filePath);
         $type = array();
