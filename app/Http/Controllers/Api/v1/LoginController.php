@@ -12,6 +12,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -233,7 +234,7 @@ class LoginController
         $result = DB::table('os_send_email')->where(['email'=>$this->post['email']])->where('updated_at','>=',date('Y-m-d H:i:s',strtotime('-10 minutes')))->first();
         if (!empty($result)) {
             unset($data['created_at']);
-            $result = DB::table('os_send_email')->where(['code'=>$result->verify_code,'email'=>$this->post['email']])->update($data);
+            $result = DB::table('os_send_email')->where(['code'=>$result->code,'email'=>$this->post['email']])->update($data);
         } else {
             $result = DB::table('os_send_email')->insert($data);
         }

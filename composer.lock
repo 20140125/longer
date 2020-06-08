@@ -5535,5 +5535,6 @@
         "ext-redis": "*",
         "ext-curl": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
