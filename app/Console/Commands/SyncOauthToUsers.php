@@ -111,7 +111,7 @@ class SyncOauthToUsers extends Command
             //同步用户基础信息数据
             $userCenter = $this->userCenterModel->getResult('uid',$user->id);
             if (!empty($userCenter)) {
-                $this->userCenterModel->updateResult(['token'=>$user->remember_token,'u_name'=>$user->username],'uid',$user->id);
+                $this->userCenterModel->updateResult(['token'=>$user->remember_token,'u_name'=>$user->username,'type'=>'sync'],'uid',$user->id);
                 $bar->advance();
                 $this->info('修改用户['.$user->username.']基础信息成功');
             } else {

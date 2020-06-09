@@ -61,9 +61,9 @@ class UserCenter extends Model
     public function updateResult(array $data, $field,$value=null,$op='=')
     {
         if (empty($data['type'])) {
-            $data['tags'] = empty($data['tags']) ? '0' : str_replace('\\','',json_encode($data['tags'],JSON_UNESCAPED_UNICODE));
-            $data['ip_address'] = empty($data['ip_address']) ? '0' : str_replace('\\','',json_encode($data['ip_address'],JSON_UNESCAPED_UNICODE));
-            $data['local'] = empty($data['local']) ? '0' : str_replace('\\','',json_encode($data['local'],JSON_UNESCAPED_UNICODE));
+            $data['tags'] = (empty($data['tags']) || !isset($data['tags'])) ? '0' : str_replace('\\','',json_encode($data['tags'],JSON_UNESCAPED_UNICODE));
+            $data['ip_address'] = (empty($data['ip_address']) || !isset($data['ip_address'])) ? '0' : str_replace('\\','',json_encode($data['ip_address'],JSON_UNESCAPED_UNICODE));
+            $data['local'] = (empty($data['local']) || !isset($data['local'])) ? '0' : str_replace('\\','',json_encode($data['local'],JSON_UNESCAPED_UNICODE));
         } else {
             unset($data['type']);
         }
