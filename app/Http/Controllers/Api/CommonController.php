@@ -62,7 +62,7 @@ class CommonController
      */
     public function getCityCode ()
     {
-        $address = Amap::getInstance()->getAddress(get_server_ip());
+        $address = (array)Amap::getInstance()->getAddress(get_server_ip());
         return ($address['adcode'] && $address['adcode']!=='[ ]') ? $address['adcode'] : '110000';
     }
 }
