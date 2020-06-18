@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Utils\Amap;
 use App\Http\Controllers\Utils\RedisClient;
+use App\Models\Area;
 use App\Models\Users;
 /**
  * TODO: 通用
@@ -20,6 +22,19 @@ class CommonController
      * @var Users $usersModel
      */
     protected $usersModel;
+
+    protected static $instance;
+
+    /**
+     * @return static
+     */
+    public static function getInstance ()
+    {
+        if (!self::$instance instanceof self) {
+            self::$instance = new static();
+        }
+        return self::$instance;
+    }
 
     /**
      * CommonController constructor.
@@ -40,5 +55,14 @@ class CommonController
             $this->redisUtils->del(config('app.chat_user_key'));
         }
         return $this->redisUtils->sAdd(config('app.chat_user_key'),json_encode($users,JSON_UNESCAPED_UNICODE));
+    }
+    /**
+     * todo:获取当前城市code
+     * @return mixed|string
+     */
+    public function getCityCode ()
+    {
+        $address = Amap::getInstance()->getAddress(get_server_ip());
+        return ($address['adcode'] && $address['adcode']!=='[ ]') ? $address['adcode'] : '110000';
     }
 }

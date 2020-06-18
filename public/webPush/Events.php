@@ -83,7 +83,8 @@ class Events
                     'client_img' => $message_data['client_img'],
                     'client_list' => $clients_list,
                     'room_id' =>$room_id,
-                    'uid' => $message_data['uid']
+                    'uid' => $message_data['uid'],
+                    'weather' => self::getWeather($message_data['adcode'])
                 );
                 Gateway::sendToGroup($room_id, json_encode($new_message));
                 Gateway::joinGroup($from_client_id, $room_id);
@@ -242,6 +243,29 @@ class Events
             self::$db = new connection(Host,Port,UserName,Password,DbName);
             $result = self::$db->from('os_users')->where("username='$client_name'")->select('uuid')->query();
             return $result[0]['uuid'];
+        } catch (\Exception $exception){
+            self::$db->closeConnection();
+            echo $exception;
+        }
+        return false;
+    }
+
+    /**
+     * todo:获取当前城市天气
+     * @param $adcode
+     * @return bool|mixed|string
+     */
+    public static function getWeather($adcode)
+    {
+        try {
+            self::$chat = new Chat();
+            if (!self::$chat->getValue($adcode)) {
+                self::$db = new connection(Host,Port,UserName,Password,DbName);
+                $result = self::$db->from('os_china_area')->where("code='$adcode'")->select('info')->query();
+                self::$chat->setValue($adcode,$result[0]['info'],['EX'=>3600]);
+                return $result[0]['info'];
+            }
+            return self::$chat->getValue($adcode);
         } catch (\Exception $exception){
             self::$db->closeConnection();
             echo $exception;

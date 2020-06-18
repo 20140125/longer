@@ -53,8 +53,7 @@ class SyncOauthToUsers extends Command
         sleep(1);
         $this->SyncUserToUserCenter();
         //更新用户画像
-        $commonContr = new CommonController();
-        $commonContr->updateUserAvatarUrl();
+        CommonController::getInstance()->updateUserAvatarUrl();
         $this->info('同步用户画像成功');
     }
 
@@ -84,7 +83,7 @@ class SyncOauthToUsers extends Command
                     'salt' => $salt,
                     'password' => md5(md5('123456789') . $salt),
                     'role_id' => $oauth->role_id,
-                    'ip_address' => request()->ip(),
+                    'ip_address' => get_server_ip(),
                     'created_at' => time(),
                     'updated_at' => time(),
                     'status' => $oauth->status,

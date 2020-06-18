@@ -171,6 +171,26 @@ class Chat
     {
         return $this->redisClient->sAdd($string,$uid);
     }
+    /**
+     * TODO：数据存储 （Redis 字符串(String)）
+     * @param $key
+     * @param $value
+     * @param int $timeout
+     * @return bool
+     */
+    public function setValue($key,$value,$timeout = 0)
+    {
+        return $this->redisClient->set($key,$value,$timeout);
+    }
+    /**
+     * TODO:数据获取（Redis 字符串(String)）
+     * @param $key
+     * @return bool|string
+     */
+    public function getValue($key)
+    {
+        return $this->redisClient->get($key);
+    }
 
     /**
      * todo:删除集合数据

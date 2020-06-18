@@ -12,7 +12,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -135,7 +134,7 @@ class LoginController
             return $admin;
         }
         //注册
-        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
+        $request = array('ip_address' =>get_server_ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($request['salt']).$request['salt']);
         $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
@@ -149,8 +148,7 @@ class LoginController
         UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$result,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
         $request['token'] = $request['remember_token'];
         //更新用户画像
-        $commonContr = new CommonController();
-        $commonContr->updateUserAvatarUrl();
+        CommonController::getInstance()->updateUserAvatarUrl();
         return $request;
     }
     /**

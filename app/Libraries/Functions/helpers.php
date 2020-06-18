@@ -341,8 +341,7 @@ if (!function_exists('write_file'))
     function write_file($filepath,$content)
     {
         $file = new SplFileObject($filepath,'w');
-        $written = $file->fwrite($content);
-        return $written;
+        return $file->fwrite($content);
     }
 }
 if (!function_exists('file_rename')){
@@ -377,8 +376,7 @@ if (!function_exists('save_file')){
             return true;
         }
         $fileObj = new SplFileObject($filepath,'a');
-        $written = $fileObj->fwrite(basename($filepath));
-        return $written;
+        return $fileObj->fwrite(basename($filepath));
     }
 }
 
@@ -632,7 +630,6 @@ if(!function_exists('get_location_by_ip'))
      * 依据ip获地址信息 (高德地图)
      * @param string $ip
      * @return mixed
-     * @throws ErrorException
      */
     function get_location_by_ip($ip='')
     {
@@ -643,6 +640,43 @@ if(!function_exists('get_location_by_ip'))
         $result = (new Curl())->get('http://restapi.amap.com/v3/ip', $data);
         $result = json_decode($result, true);
         return $result;
+    }
+}
+if (!function_exists('get_server_ip'))
+{
+    /**获取服务器ip地址
+     * @return array|false|string
+     */
+    function get_server_ip()
+    {
+        $preg = "/\A((([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\.){3}(([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\Z/";
+        //获取windows Mac
+        if(in_array(PHP_OS,['WINNT','Darwin']))
+        {
+            exec("ipconfig", $out, $stats);
+            if (!empty($out)) {
+                foreach ($out AS $row) {
+                    if (strstr($row, "IP") && strstr($row, ":") && !strstr($row, "IPv6")) {
+                        $tmpIp = explode(":", $row);
+                        if (preg_match($preg, trim($tmpIp[1]))) {
+                            return trim($tmpIp[1]);
+                        }
+                    }
+                }
+            }
+        } else {
+            //获取操作系统为linux类型的本机IP真实地址
+            $result = shell_exec("/sbin/ifconfig");
+            if (preg_match_all("/inet (\d+\.\d+\.\d+\.\d+)/", $result, $match) !== 0)
+            {
+                foreach ($match [0] as $k => $v) {
+                    if ($match [1] [$k] != "127.0.0.1") {
+                        return $match [1] [$k];
+                    }
+                }
+            }
+        }
+        return '127.0.0.1';
     }
 }
 if (!function_exists('act_log'))
