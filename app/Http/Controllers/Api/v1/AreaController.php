@@ -67,6 +67,7 @@ class AreaController extends BaseController
         if (!empty($result)){
             $info =  $result['info'] == 'OK' ? json_encode($result['lives'][0],JSON_UNESCAPED_UNICODE) : [];
             $this->areaModel->updateResult(object_to_array(['info'=>$info]),'code',$this->post['code']);
+            $this->redisClient->setValue($this->post['code'],$info,['EX'=>3600]);
             return $this->ajax_return(Code::SUCCESS,'get weather successfully',json_decode($info,true));
         }
         return $this->ajax_return(Code::ERROR,'get weather failed',$result);

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
 use App\Models\OAuth;
 use App\Models\TimeLine;
@@ -58,7 +59,8 @@ class MenuController extends BaseController
                     'websocket'=>config('app.websocket'),
                     'role_id' => md5($this->users->role_id),
                     'uuid' => empty($this->users->uuid) ? '' :$this->users->uuid,
-                    'local' => config('app.url')
+                    'local' => config('app.url'),
+                    'adcode' => in_array(get_server_ip(),['10.97.227.81']) ? '440305' : CommonController::getInstance()->getCityCode(),
                 ]
             );
         }
