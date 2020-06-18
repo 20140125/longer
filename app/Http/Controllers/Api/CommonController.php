@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Utils\Amap;
 use App\Http\Controllers\Utils\RedisClient;
-use App\Models\Area;
 use App\Models\Users;
+use Illuminate\Support\Facades\Log;
+
 /**
  * TODO: 通用
  * Class CommonController
@@ -56,13 +57,19 @@ class CommonController
         }
         return $this->redisUtils->sAdd(config('app.chat_user_key'),json_encode($users,JSON_UNESCAPED_UNICODE));
     }
+
     /**
      * todo:获取当前城市code
      * @return mixed|string
      */
     public function getCityCode ()
     {
-        $address = (array)Amap::getInstance()->getAddress(get_server_ip());
-        return ($address['adcode'] && $address['adcode']!=='[ ]') ? $address['adcode'] : '110000';
+        try {
+            $address = (array)Amap::getInstance()->getAddress(get_server_ip());
+            Log::error(json_encode($address));
+            return ($address['adcode'] && $address['adcode']!=='[ ]') ? $address['adcode'] : '110000';
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+        }
     }
 }
