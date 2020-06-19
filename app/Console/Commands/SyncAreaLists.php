@@ -4,33 +4,34 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\Utils\RedisClient;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Class Chat
  * @author <fl140125@gmail.com>
  * @package App\Console\Commands
  */
-class Chat extends Command
+class SyncAreaLists extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'longer:chat';
+    protected $signature = 'longer:sync_area';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Sync chat history';
+    protected $description = 'Sync area lists';
     /**
      * @var RedisClient
      */
     protected $redisClient;
 
-    protected $chatModel;
+    protected $areaModel;
 
     /**
      * Create a new command instance.
@@ -41,7 +42,7 @@ class Chat extends Command
     {
         parent::__construct();
         $this->redisClient = new RedisClient();
-        $this->chatModel = \App\Models\Chat::getInstance();
+        $this->areaModel = \App\Models\Area::getInstance();
     }
 
     /**
@@ -57,15 +58,11 @@ class Chat extends Command
      */
     protected function getRedisChatMessageLists()
     {
-        $keys = $this->redisClient->keys("receive_*");
-        if (count($keys)<0) $this->info('not exists');
-        foreach ($keys as $key) {
-            for ($i = 0;$i<=$this->redisClient->lLen($key);$i++) {
-                $item = json_decode($this->redisClient->rPop($key),true);
-                $item['content'] = htmlspecialchars_decode($item['content']);
-                $this->chatModel->saveResult($item);
-            }
-            $this->info('successfully');
+        $result = Cache::get('city');
+        if (empty($result)) {
+            $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
+            Cache::put('city',$result,7200);
+            $this->info('城市列表已经同步到Cache');
         }
     }
 }
