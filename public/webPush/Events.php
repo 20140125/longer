@@ -261,9 +261,9 @@ class Events
             self::$chat = new Chat();
             if (!self::$chat->getValue($adcode)) {
                 self::$db = new connection(Host,Port,UserName,Password,DbName);
-                $result = self::$db->from('os_china_area')->where("code='$adcode'")->select('info')->query();
-                self::$chat->setValue($adcode,$result[0]['info'],['EX'=>3600]);
-                return $result[0]['info'];
+                $result = self::$db->from('os_china_area')->where("code='$adcode'")->select('info,forecast')->query();
+                self::$chat->setValue($adcode,$result,['EX'=>3600]);
+                return $result;
             }
             return self::$chat->getValue($adcode);
         } catch (\Exception $exception){

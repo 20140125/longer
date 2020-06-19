@@ -50,8 +50,9 @@ class SyncWeather extends Command
         $groupResult = $this->areaModel->getListsGroupByParentId();
         foreach ($groupResult as $row) {
             $this->info("当前同步省份是：".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
-            $weatherObj = object_to_array($this->amapUtils->getWeather($row->code));
+            $weatherObj = object_to_array($this->amapUtils->getWeather($row->code,'all'));
             $row->info = $weatherObj['info'] == 'OK' ? json_encode($weatherObj['lives'][0],JSON_UNESCAPED_UNICODE) : '';
+            $row->forecast = $weatherObj['info'] == 'OK' ? json_encode($weatherObj['forecast'],JSON_UNESCAPED_UNICODE) : '';
             $this->areaModel->updateResult(object_to_array($row),'id',$row->id);
             $result = $this->areaModel->getResultLists($row->id);
             foreach ($result as $item) {
