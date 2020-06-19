@@ -69,7 +69,6 @@ class SyncWeather extends Command
                             $cityWeather = object_to_array($this->amapUtils->getWeather($item->code,'all'));
                             if (!empty($cityWeather)) {
                                 $cityForecast = $cityWeather['info'] == 'OK' ? $cityWeather['forecasts'][0] : '';
-                                $this->info(json_encode($cityForecast));
                                 $cityInfo =  [
                                     'city' => !empty($cityForecast['city']) ? $cityForecast['city'] : '',
                                     'adcode' => !empty($cityForecast['adcode']) ? $cityForecast['adcode'] : '',
