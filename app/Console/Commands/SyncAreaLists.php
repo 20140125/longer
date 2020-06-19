@@ -58,10 +58,10 @@ class SyncAreaLists extends Command
      */
     protected function getRedisChatMessageLists()
     {
-        $result = Cache::get('city');
+        $result = $this->redisClient->getValue('city');
         if (empty($result)) {
             $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
-            Cache::put('city',$result,7200);
+            $this->redisClient->setValue('city',$result,['EX'=>7200]);
             $this->info('城市列表已经同步到Cache');
         }
     }
