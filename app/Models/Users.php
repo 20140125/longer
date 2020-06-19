@@ -62,7 +62,7 @@ class Users extends Model
         if ($result->status == 2){
             return Code::NOT_ALLOW;
         }
-        $request = array('ip_address' =>get_server_ip(), 'updated_at' =>time());
+        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time());
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($data['password']).$request['salt']);
         $request['remember_token'] = md5 (md5($request['password']).$request['salt']);

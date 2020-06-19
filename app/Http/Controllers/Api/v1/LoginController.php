@@ -134,7 +134,7 @@ class LoginController
             return $admin;
         }
         //注册
-        $request = array('ip_address' =>get_server_ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
+        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
         $request['salt'] = get_round_num(8);
         $request['password'] = md5 (md5($request['salt']).$request['salt']);
         $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
