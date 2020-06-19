@@ -107,7 +107,8 @@ class BaseController extends Controller
             route('total'),
             route('export'),
             route('chat'),
-            route('uploadFile')
+            route('uploadFile'),
+            route('getCityName')
         ];
         $this->post['token'] = $this->post['token'] ? $this->post['token'] : $request->get('token');
         //判断必填字段是否为空

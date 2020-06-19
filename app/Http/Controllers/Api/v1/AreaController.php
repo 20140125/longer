@@ -105,7 +105,7 @@ class AreaController extends BaseController
         $result = Cache::get('city');
         if (empty($result)) {
             $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
-            Cache::forever('city',$result);
+            Cache::put('city',$result,3600);
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }

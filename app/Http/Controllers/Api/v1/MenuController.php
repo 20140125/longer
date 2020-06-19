@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
+use App\Models\Area;
 use App\Models\OAuth;
 use App\Models\TimeLine;
 use App\Models\UserCenter;
@@ -49,6 +50,9 @@ class MenuController extends BaseController
     {
         $role = $this->roleModel->getResult('id',$this->users->role_id);
         if (!empty($role)){
+            $adcode = in_array(get_server_ip(),['10.97.227.81']) ? '440305' : CommonController::getInstance()->getCityCode();
+            $area = Area::getInstance()->getResult('code',$adcode,'=',['name','parent_id']);
+            $province = Area::getInstance()->getResult('id',$area->parent_id,'=',['name']);
             return $this->ajax_return(Code::SUCCESS,'permission',
                 [
                     'auth'=>$role->auth_url,
@@ -60,12 +64,25 @@ class MenuController extends BaseController
                     'role_id' => md5($this->users->role_id),
                     'uuid' => empty($this->users->uuid) ? '' :$this->users->uuid,
                     'local' => config('app.url'),
-                    'adcode' => in_array(get_server_ip(),['10.97.227.81']) ? '440305' : CommonController::getInstance()->getCityCode(),
+                    'adcode' => $adcode,
+                    'city' => !empty($province->name) ? $province->name.$area->name : $area->name
                 ]
             );
         }
         set_code(Code::NOT_ALLOW);
         return $this->ajax_return(Code::NOT_ALLOW,'permission denied');
+    }
+
+    /**
+     * todo:获取城市名称
+     * @return mixed|string
+     */
+    public function getCityName ()
+    {
+        $this->validatePost(['adcode'=>'required']);
+        $area = Area::getInstance()->getResult('code',$this->post['adcode'] ?? '440305','=',['name','parent_id']);
+        $province = Area::getInstance()->getResult('id',$area->parent_id,'=',['name']);
+        return $this->ajax_return(Code::SUCCESS,'successfully',['city'=>!empty($province->name) ? $province->name.$area->name : $area->name]);
     }
     /**
      * TODO:  退出登陆

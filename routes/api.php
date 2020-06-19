@@ -24,6 +24,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'logout','v1\MenuController@logout')->name('apiLogout');
     Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');
     Route::match(['get','post'],'total','v1\MenuController@getCountData')->name('total');
+    Route::match(['get','post'],'getCityName','v1\MenuController@getCityName')->name('getCityName');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/

@@ -51,7 +51,7 @@ class SyncWeather extends Command
         $cityMap = range(2,35);
         try {
             foreach ($groupResult as $row) {
-                $this->info("当前同步省份是：".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
+                $this->info("当前同步地区是：".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
                 $provinceWeather = object_to_array($this->amapUtils->getWeather($row->code,'all'));
                 if (!empty($provinceWeather)){
                     $provinceForecast = $provinceWeather['info'] == 'OK' ? $provinceWeather['forecasts'][0] : '';
@@ -78,7 +78,7 @@ class SyncWeather extends Command
                                 ];
                                 $this->areaModel->updateResult(['info'=>json_encode($cityInfo,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($cityForecast,JSON_UNESCAPED_UNICODE)],'id',$item->id);
                                 $bar->advance();
-                                $this->info("当前同步城市是：".$this->areaModel->getResult('id',$item->id,'=',['name'])->name);
+                                $this->info("当前同步地区是：".$this->areaModel->getResult('id',$item->id,'=',['name'])->name);
                                 sleep(0.5);
                             }
                         } else {
@@ -87,7 +87,7 @@ class SyncWeather extends Command
                                 $cityInfo = $cityWeather['info'] == 'OK' ? json_encode($cityWeather['lives'][0],JSON_UNESCAPED_UNICODE) : '';
                                 $this->areaModel->updateResult(['info'=>$cityInfo,'forecast'=>$cityInfo],'id',$item->id);
                                 $bar->advance();
-                                $this->info("当前同步城市是：".$this->areaModel->getResult('id',$item->id,'=',['name'])->name);
+                                $this->info("当前同步地区是：".$this->areaModel->getResult('id',$item->id,'=',['name'])->name);
                                 sleep(0.5);
                             }
                         }
