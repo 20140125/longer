@@ -65,7 +65,7 @@ class CommonController
     public function getCityCode ()
     {
         try {
-            $address = object_to_array(Amap::getInstance()->getAddress(request()->ip()));
+            $address = object_to_array(Amap::getInstance()->getAddress(request()->ip() == '127.0.0.1' ? get_server_ip() : request()->ip()));
             return ($address['adcode'] && $address['adcode']!=='[ ]') ? $address['adcode'] : '110000';
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());

@@ -7,6 +7,7 @@ use App\Http\Controllers\Utils\Code;
 use App\Models\Area;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -102,10 +103,24 @@ class AreaController extends BaseController
      */
     public function lists()
     {
-        $result = $this->redisClient->getValue('city');
+        if (!empty($this->post['type'])) {
+            $cacheVal = 'city_weather';
+            $fields = ['code','info','parent_id','id','name'];
+            $ex = true;
+        } else {
+            $cacheVal = 'city_center';
+            $fields = ['name','id','parent_id'];
+            $ex = false;
+        }
+        $result = Cache::get($cacheVal);
         if (empty($result)) {
-            $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
-            $this->redisClient->setValue('city',json_encode($result,JSON_UNESCAPED_UNICODE),['EX'=>7200]);
+            $result = get_tree($this->areaModel->getAll($fields),1,'children','parent_id');
+            if ($ex) {
+                Cache::put($cacheVal,json_encode($result,JSON_UNESCAPED_UNICODE),Carbon::now()->addMinutes(120));
+            } else {
+                Cache::forever($cacheVal,json_encode($result,JSON_UNESCAPED_UNICODE));
+            }
+            return $this->ajax_return(Code::SUCCESS,'successfully',$result);
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',json_decode($result,true));
     }
