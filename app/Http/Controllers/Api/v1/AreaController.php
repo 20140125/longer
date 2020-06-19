@@ -66,7 +66,7 @@ class AreaController extends BaseController
             $this->validatePost(['code'=>'required|string|exists:os_china_area','id'=>'required|integer|exists:os_china_area']);
             $result = object_to_array($this->amapControl->getWeather($this->post['code'],'all'));
             if (!empty($result)){
-                $forecast = $result['info'] == 'OK' ? $result['forecast'][0] : '';
+                $forecast = $result['info'] == 'OK' ? $result['forecasts'][0] : '';
                 $info =  [
                     'city' => $forecast['city'],
                     'adcode' => $forecast['adcode'],
@@ -75,7 +75,7 @@ class AreaController extends BaseController
                     'casts' => $forecast['casts'] ? $forecast['casts'][0] : ''
                 ];
                 $this->areaModel->updateResult(['info'=>json_encode($info),'forecast'=>json_encode($forecast)],'code',$this->post['code']);
-                $this->redisClient->setValue($this->post['code'],$info,['EX'=>3600]);
+                $this->redisClient->setValue($this->post['code'],['info'=>json_encode($info),'forecast'=>json_encode($forecast)],['EX'=>3600]);
                 return $this->ajax_return(Code::SUCCESS,'get weather successfully',$info);
             }
             return $this->ajax_return(Code::ERROR,'get weather failed',$result);
