@@ -102,10 +102,10 @@ class AreaController extends BaseController
      */
     public function lists()
     {
-        $result = Cache::get('city');
+        $result = $this->redisClient->getValue('city');
         if (empty($result)) {
             $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
-            Cache::put('city',$result,7200);
+            $this->redisClient->setValue('city',$result,['EX'=>7200]);
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
