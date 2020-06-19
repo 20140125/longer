@@ -55,10 +55,10 @@ class SyncWeather extends Command
             if (!empty($provinceWeather)){
                 $provinceForecast = $provinceWeather['info'] == 'OK' ? $provinceWeather['forecasts'][0] : '';
                 $provinceInfo =  [
-                    'city' => $provinceForecast['city'],
-                    'adcode' => $provinceForecast['adcode'],
-                    'province' => $provinceForecast['province'],
-                    'reporttime' => $provinceForecast['reporttime'],
+                    'city' => $provinceForecast['city'] ? $provinceForecast['city'] : '',
+                    'adcode' => $provinceForecast['adcode'] ? $provinceForecast['adcode'] : '',
+                    'province' => $provinceForecast['province'] ? $provinceForecast['province'] : '',
+                    'reporttime' => $provinceForecast['reporttime'] ? $provinceForecast['reporttime'] : '',
                     'casts' => $provinceForecast['casts'] ? $provinceForecast['casts'][0] : ''
                 ];
                 $this->areaModel->updateResult(['info'=>json_encode($provinceInfo,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($provinceForecast,JSON_UNESCAPED_UNICODE)],'id',$row->id);
@@ -69,10 +69,10 @@ class SyncWeather extends Command
                         if (!empty($cityWeather)) {
                             $cityForecast = $cityWeather['info'] == 'OK' ? $cityWeather['forecasts'][0] : '';
                             $cityInfo =  [
-                                'city' => $cityForecast['city'],
-                                'adcode' => $cityForecast['adcode'],
-                                'province' => $cityForecast['province'],
-                                'reporttime' => $cityForecast['reporttime'],
+                                'city' => $cityForecast['city'] ? $cityForecast['city'] : '',
+                                'adcode' => $cityForecast['adcode'] ? $cityForecast['adcode'] : '',
+                                'province' => $cityForecast['province'] ? $cityForecast['province'] : '',
+                                'reporttime' => $cityForecast['reporttime'] ? $cityForecast['reporttime'] : '',
                                 'casts' => $cityForecast['casts'] ? $cityForecast['casts'][0] : ''
                             ];
                             $this->areaModel->updateResult(['info'=>json_encode($cityInfo,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($cityForecast,JSON_UNESCAPED_UNICODE)],'id',$item->id);

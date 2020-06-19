@@ -70,11 +70,11 @@ class AreaController extends BaseController
                 if (!empty($result)){
                     $forecast = $province['info'] == 'OK' ? $province['forecasts'][0] : '';
                     $info =  [
-                        'city' => $province['city'],
-                        'adcode' => $province['adcode'],
-                        'province' => $province['province'],
-                        'reporttime' => $province['reporttime'],
-                        'casts' => $province['casts'] ? $province['casts'][0] : ''
+                        'city' => $forecast['city'] ? $forecast['city'] : '',
+                        'adcode' => $forecast['adcode'] ? $forecast['adcode'] : '',
+                        'province' => $forecast['province'] ? $forecast['province'] : '',
+                        'reporttime' => $forecast['reporttime'] ? $forecast['reporttime'] : '',
+                        'casts' => $forecast['casts'] ? $forecast['casts'][0] : ''
                     ];
                     $this->areaModel->updateResult(['info'=>json_encode($info,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($forecast,JSON_UNESCAPED_UNICODE)],'code',$this->post['code']);
                     $this->redisClient->setValue($this->post['code'],json_encode(['info'=>$info,'forecast'=>$forecast],JSON_UNESCAPED_UNICODE),['EX'=>3600]);
