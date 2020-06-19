@@ -262,8 +262,14 @@ class Events
             if (!self::$chat->getValue($adcode)) {
                 self::$db = new connection(Host,Port,UserName,Password,DbName);
                 $result = self::$db->from('os_china_area')->where("code='$adcode'")->select('info,forecast')->query();
-                self::$chat->setValue($adcode,$result,['EX'=>3600]);
-                return $result;
+                $redisValue = json_encode(
+                    [
+                        'info'=>$result[0]['info'] ? json_decode($result[0]['info'],true) : '',
+                        'forecast'=>$result[0]['forecast'] ? json_decode($result[0]['forecast'],true) : ''
+                    ],
+                    JSON_UNESCAPED_UNICODE);
+                self::$chat->setValue($adcode,$redisValue,['EX'=>3600]);
+                return $redisValue;
             }
             return self::$chat->getValue($adcode);
         } catch (\Exception $exception){
