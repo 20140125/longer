@@ -51,7 +51,7 @@ class SyncWeather extends Command
         foreach ($groupResult as $row) {
             $this->info("当前同步省份是：".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
             $provinceWeather = object_to_array($this->amapUtils->getWeather($row->code,'all'));
-            $provinceForecast = $provinceWeather['info'] == 'OK' ? $provinceWeather['forecast'][0] : '';
+            $provinceForecast = $provinceWeather['info'] == 'OK' ? $provinceWeather['forecasts'][0] : '';
             $provinceInfo =  [
                 'city' => $provinceForecast['city'],
                 'adcode' => $provinceForecast['adcode'],
