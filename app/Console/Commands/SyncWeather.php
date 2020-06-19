@@ -50,15 +50,28 @@ class SyncWeather extends Command
         $groupResult = $this->areaModel->getListsGroupByParentId();
         foreach ($groupResult as $row) {
             $this->info("当前同步省份是：".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
-            $weatherObj = object_to_array($this->amapUtils->getWeather($row->code,'all'));
-            $row->info = $weatherObj['info'] == 'OK' ? json_encode($weatherObj['lives'][0],JSON_UNESCAPED_UNICODE) : '';
-            $row->forecast = $weatherObj['info'] == 'OK' ? json_encode($weatherObj['forecast'],JSON_UNESCAPED_UNICODE) : '';
-            $this->areaModel->updateResult(object_to_array($row),'id',$row->id);
+            $provinceWeather = object_to_array($this->amapUtils->getWeather($row->code,'all'));
+            $provinceForecast = $provinceWeather['info'] == 'OK' ? $provinceWeather['forecast'][0] : '';
+            $provinceInfo =  [
+                'city' => $provinceForecast['city'],
+                'adcode' => $provinceForecast['adcode'],
+                'province' => $provinceForecast['province'],
+                'reporttime' => $provinceForecast['reporttime'],
+                'casts' => $provinceForecast['casts'] ? $provinceForecast['casts'][0] : ''
+            ];
+            $this->areaModel->updateResult(['info'=>json_encode($provinceInfo),'forecast'=>json_encode($provinceForecast)],'id',$row->id);
             $result = $this->areaModel->getResultLists($row->id);
             foreach ($result as $item) {
-                $weatherObj = object_to_array($this->amapUtils->getWeather($item->code));
-                $item->info = $weatherObj['info'] == 'OK' ? json_encode($weatherObj['lives'][0],JSON_UNESCAPED_UNICODE) : '';
-                $this->areaModel->updateResult(object_to_array($item),'id',$item->id);
+                $cityWeather = object_to_array($this->amapUtils->getWeather($item->code));
+                $cityForecast = $cityWeather['info'] == 'OK' ? $cityWeather['forecast'][0] : '';
+                $cityInfo =  [
+                    'city' => $cityForecast['city'],
+                    'adcode' => $cityForecast['adcode'],
+                    'province' => $cityForecast['province'],
+                    'reporttime' => $cityForecast['reporttime'],
+                    'casts' => $cityForecast['casts'] ? $cityForecast['casts'][0] : ''
+                ];
+                $this->areaModel->updateResult(['info'=>json_encode($cityInfo),'forecast'=>json_encode($cityForecast)],'id',$item->id);
                 $bar->advance();
                 $this->info("当前同步城市是：".$this->areaModel->getResult('id',$item->id,'=',['name'])->name);
                 sleep(1);
