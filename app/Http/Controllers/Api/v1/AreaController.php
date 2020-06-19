@@ -63,22 +63,34 @@ class AreaController extends BaseController
     public function weather()
     {
         try {
-            $this->validatePost(['code'=>'required|string|exists:os_china_area','id'=>'required|integer|exists:os_china_area']);
-            $result = object_to_array($this->amapControl->getWeather($this->post['code'],'all'));
-            if (!empty($result)){
-                $forecast = $result['info'] == 'OK' ? $result['forecasts'][0] : '';
-                $info =  [
-                    'city' => $forecast['city'],
-                    'adcode' => $forecast['adcode'],
-                    'province' => $forecast['province'],
-                    'reporttime' => $forecast['reporttime'],
-                    'casts' => $forecast['casts'] ? $forecast['casts'][0] : ''
-                ];
-                $this->areaModel->updateResult(['info'=>json_encode($info,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($forecast,JSON_UNESCAPED_UNICODE)],'code',$this->post['code']);
-                $this->redisClient->setValue($this->post['code'],json_encode(['info'=>$info,'forecast'=>$forecast],JSON_UNESCAPED_UNICODE),['EX'=>3600]);
-                return $this->ajax_return(Code::SUCCESS,'get weather successfully',$info);
+            $this->validatePost(['code'=>'required|string|exists:os_china_area','id'=>'required|integer|exists:os_china_area','parent_id'=>'required']);
+            $cityMap = range(1,35);
+            if (in_array($this->post['parent_id'],$cityMap)) {
+                $province = object_to_array($this->amapControl->getWeather($this->post['code'],'all'));
+                if (!empty($result)){
+                    $forecast = $province['info'] == 'OK' ? $province['forecasts'][0] : '';
+                    $info =  [
+                        'city' => $province['city'],
+                        'adcode' => $province['adcode'],
+                        'province' => $province['province'],
+                        'reporttime' => $province['reporttime'],
+                        'casts' => $province['casts'] ? $province['casts'][0] : ''
+                    ];
+                    $this->areaModel->updateResult(['info'=>json_encode($info,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($forecast,JSON_UNESCAPED_UNICODE)],'code',$this->post['code']);
+                    $this->redisClient->setValue($this->post['code'],json_encode(['info'=>$info,'forecast'=>$forecast],JSON_UNESCAPED_UNICODE),['EX'=>3600]);
+                    return $this->ajax_return(Code::SUCCESS,'get weather successfully');
+                }
+                return $this->ajax_return(Code::ERROR,'get weather failed');
+            } else {
+                $city = object_to_array($this->amapControl->getWeather($this->post['code']));
+                if (!empty($city)) {
+                    $info = $city['info'] == 'OK' ? json_encode($city['lives'][0],JSON_UNESCAPED_UNICODE) : '';
+                    $this->areaModel->updateResult(['info'=>json_encode($info,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($info,JSON_UNESCAPED_UNICODE)],'code',$this->post['code']);
+                    $this->redisClient->setValue($this->post['code'],json_encode(['info'=>$info,'forecast'=>$info],JSON_UNESCAPED_UNICODE),['EX'=>3600]);
+                    return $this->ajax_return(Code::SUCCESS,'get weather successfully');
+                }
+                return $this->ajax_return(Code::ERROR,'get weather failed');
             }
-            return $this->ajax_return(Code::ERROR,'get weather failed',$result);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
         }
