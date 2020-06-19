@@ -61,7 +61,7 @@ class SyncAreaLists extends Command
         $result = $this->redisClient->getValue('city');
         if (empty($result)) {
             $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
-            $this->redisClient->setValue('city',$result,['EX'=>7200]);
+            $this->redisClient->setValue('city',json_encode($result,JSON_UNESCAPED_UNICODE),['EX'=>7200]);
             $this->info('城市列表已经同步到Cache');
         }
     }
