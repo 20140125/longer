@@ -63,7 +63,7 @@ class SyncWeather extends Command
             $result = $this->areaModel->getResultLists($row->id);
             foreach ($result as $item) {
                 $cityWeather = object_to_array($this->amapUtils->getWeather($item->code));
-                $cityForecast = $cityWeather['info'] == 'OK' ? $cityWeather['forecast'][0] : '';
+                $cityForecast = $cityWeather['info'] == 'OK' ? $cityWeather['forecasts'][0] : '';
                 $cityInfo =  [
                     'city' => $cityForecast['city'],
                     'adcode' => $cityForecast['adcode'],
