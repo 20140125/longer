@@ -59,7 +59,7 @@ class SyncWeather extends Command
                 'reporttime' => $provinceForecast['reporttime'],
                 'casts' => $provinceForecast['casts'] ? $provinceForecast['casts'][0] : ''
             ];
-            $this->areaModel->updateResult(['info'=>json_encode($provinceInfo),'forecast'=>json_encode($provinceForecast)],'id',$row->id);
+            $this->areaModel->updateResult(['info'=>json_encode($provinceInfo,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($provinceForecast,JSON_UNESCAPED_UNICODE)],'id',$row->id);
             $result = $this->areaModel->getResultLists($row->id);
             foreach ($result as $item) {
                 $cityWeather = object_to_array($this->amapUtils->getWeather($item->code));
@@ -71,7 +71,7 @@ class SyncWeather extends Command
                     'reporttime' => $cityForecast['reporttime'],
                     'casts' => $cityForecast['casts'] ? $cityForecast['casts'][0] : ''
                 ];
-                $this->areaModel->updateResult(['info'=>json_encode($cityInfo),'forecast'=>json_encode($cityForecast)],'id',$item->id);
+                $this->areaModel->updateResult(['info'=>json_encode($cityInfo,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($cityForecast,JSON_UNESCAPED_UNICODE)],'id',$item->id);
                 $bar->advance();
                 $this->info("当前同步城市是：".$this->areaModel->getResult('id',$item->id,'=',['name'])->name);
                 sleep(1);
