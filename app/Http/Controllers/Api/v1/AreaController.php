@@ -64,7 +64,7 @@ class AreaController extends BaseController
     {
         try {
             $this->validatePost(['code'=>'required|string|exists:os_china_area','id'=>'required|integer|exists:os_china_area']);
-            $result = object_to_array($this->amapControl->getWeather($this->post['code']));
+            $result = object_to_array($this->amapControl->getWeather($this->post['code'],'all'));
             if (!empty($result)){
                 $info =  $result['info'] == 'OK' ? json_encode($result['lives'][0],JSON_UNESCAPED_UNICODE) : [];
                 $forecast = $result['info'] == 'OK' ? json_encode($result['forecast'],JSON_UNESCAPED_UNICODE) : '';
