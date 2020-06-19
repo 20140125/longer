@@ -105,8 +105,8 @@ class AreaController extends BaseController
         $result = $this->redisClient->getValue('city');
         if (empty($result)) {
             $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
-            $this->redisClient->setValue('city',$result,['EX'=>7200]);
+            $this->redisClient->setValue('city',json_encode($result,JSON_UNESCAPED_UNICODE),['EX'=>7200]);
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajax_return(Code::SUCCESS,'successfully',json_decode($result,true));
     }
 }
