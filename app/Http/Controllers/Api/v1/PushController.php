@@ -66,6 +66,7 @@ class PushController extends BaseController
             $this->pushModel->addResult($this->post);
             return $this->ajax_return(Code::SUCCESS,'push message save successfully');
         }
+        $this->post['username'] = ($this->pushModel->getResult('uid',$this->post['uid'],'=',['username']))->username;
         $this->pushModel->addResult($this->post);
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
@@ -87,6 +88,7 @@ class PushController extends BaseController
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
             return $this->ajax_return(Code::SUCCESS,'push message update successfully');
         }
+        $this->post['username'] = ($this->pushModel->getResult('uid',$this->post['uid'],'=',['username']))->username;
         $this->pushModel->updateResult($this->post,'id',$this->post['id']);
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
