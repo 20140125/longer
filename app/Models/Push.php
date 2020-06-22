@@ -77,12 +77,12 @@ class Push extends Model
     /**
      * TODO: 查询一条记录
      * @param string $field
-     * @param int $value
+     * @param string  $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult(string $field, int $value,string $op='=', array $column = ['*'])
+    public function getResult(string $field, string $value,string $op='=', array $column = ['*'])
     {
         return DB::table($this->table)->where($field,$op,$value)->first($column);
     }

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\Utils\RedisClient;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -50,18 +51,18 @@ class SyncAreaLists extends Command
      */
     public function handle()
     {
-        $this->getRedisChatMessageLists();
+        $this->syncCityWeather();
     }
 
     /**
-     * TODO:同步Redis聊天记录到数据库
+     * TODO:同步城市天气
      */
-    protected function getRedisChatMessageLists()
+    protected function syncCityWeather()
     {
-        $result = $this->redisClient->getValue('city');
+        $result = Cache::get('city_weather');
         if (empty($result)) {
-            $result = get_tree($this->areaModel->getAll(),1,'children','parent_id');
-            $this->redisClient->setValue('city',json_encode($result,JSON_UNESCAPED_UNICODE),['EX'=>7200]);
+            $result = get_tree($this->areaModel->getAll(['code','info','parent_id','id','name']),1,'children','parent_id');
+            Cache::put('city_weather',json_encode($result,JSON_UNESCAPED_UNICODE),Carbon::now()->addMinutes(120));
             $this->info('城市列表已经同步到Cache');
         }
     }

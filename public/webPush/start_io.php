@@ -4,6 +4,8 @@ use Workerman\Lib\Timer;
 use Workerman\Worker;
 use PHPSocketIO\SocketIO;
 use Workerman\MySQL\Connection;
+use Workerman\Protocols\Http\Request;
+use Workerman\Connection\TcpConnection;
 require_once  '../../vendor/autoload.php';
 require_once  __DIR__.'/config/db.php';
 //日志今天的总量
@@ -86,7 +88,6 @@ $sender_io->on('connection', function($socket) {
         $redis->sREM(RedisKey,$socket->uid);
     });
 });
-
 // 当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据
 $sender_io->on('workerStart', function () {
     // 监听一个http端口
@@ -104,27 +105,28 @@ $sender_io->on('workerStart', function () {
         $inner_http_worker->transport = 'ssl';
     }
     // 当http客户端发来数据时触发
-    $inner_http_worker->onMessage = function ($connection) {
-        $_POST = $_POST ? $_POST : $_GET;
-        switch (@$_POST['type']) {
+    $inner_http_worker->onMessage = function(TcpConnection $http_connection, Request $request){
+        $post = $request->post();
+        $post = $post ? $post : $request->get();
+        switch (@$post['type']) {
             case 'publish':
                 global $sender_io, $redis;
-                $to = @$_POST['to'];
-                $_POST['content'] = trim(htmlspecialchars(@$_POST['content']));
+                $to = @$post['to'];
+                $post['content'] = trim(htmlspecialchars(@$post['content']));
                 // http接口返回，如果用户离线socket返回fail
                 if ($to && !$redis->sIsMember(RedisKey, $to)) {
-                    return $connection->send('offline');
+                    return $http_connection->send('offline');
                 }
                 if ($to) {
                     //向uid所在socket组发送数据
-                    $sender_io->to($to)->emit('new_msg', $_POST['content']);
+                    $sender_io->to($to)->emit('new_msg', $post['content']);
                 } else {
                     // 向所有uid推送数据
-                    $sender_io->emit('new_msg', @$_POST['content']);
+                    $sender_io->emit('new_msg', @$post['content']);
                 }
-                return $connection->send('successfully');
+                return $http_connection->send('successfully');
         }
-        return $connection->send('failed');
+        return $http_connection->send('failed');
     };
     // 执行监听
     $inner_http_worker->listen();
