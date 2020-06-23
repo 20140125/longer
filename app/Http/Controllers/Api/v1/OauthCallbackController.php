@@ -286,6 +286,7 @@ class OauthCallbackController
             $oauthRes =  $this->oauthModel->updateResult($data,$where);
             if (!empty($oauthRes)){
                 if (strlen($this->state) == 32) {
+                    $this->redisClient->setValue($data['username'],$data['remember_token'],['EX'=>60]);
                     return redirect('/#/admin/index/'.$data['remember_token'])->send();
                 }
                 //授权列表 (账户绑定成功)
@@ -303,6 +304,7 @@ class OauthCallbackController
             Artisan::call("longer:sync_oauth");
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             if (strlen($this->state) == 32) {
+                $this->redisClient->setValue($data['username'],$data['remember_token'],['EX'=>60]);
                 return redirect('/#/admin/user/bind'.$data['remember_token'])->send();
             }
             //授权列表 (账户绑定成功)
