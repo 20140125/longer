@@ -149,6 +149,7 @@ class LoginController
             $admin['username'] = $result->username;
             $admin['role_id'] = md5($result->role_id);
             $admin['uuid'] = $result->uuid;
+            $admin['avatar_url'] = $result->avatar_url;
             return $admin;
         }
         //注册
