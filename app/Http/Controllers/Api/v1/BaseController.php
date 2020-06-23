@@ -109,22 +109,21 @@ class BaseController extends Controller
             route('chat'),
             route('uploadFile'),
             route('getCityName'),
-            route('userUpdate')
         ];
         $this->post['token'] = $this->post['token'] ?? ($request->get('token') ?? $this->redisClient->getValue('oauth_register'));
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
-        //用户注册后台添加headers Authorization
-        $Authorization = md5(time()).$this->redisClient->getValue('oauth_register').md5(time()) ?? $request->header('Authorization');
-        //token不正确或为空
-        if ($validate->fails() || empty($Authorization)) {
-            $this->setCode(Code::Unauthorized,'Token Is Not Provided');
-        }
-        Log::error($this->post['token']."=============".mb_substr($Authorization,32,32));
-        //token不正确
-        $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
-        if (empty($this->users) || $this->post['token']!==mb_substr($Authorization,32,32)) {
-            $this->setCode(Code::Unauthorized,'Token Is Expired');
+        //用户注册不验证headers
+        if (!$this->redisClient->getValue('oauth_register')) {
+            //token不正确或为空
+            if ($validate->fails() || empty($request->header('Authorization'))) {
+                $this->setCode(Code::Unauthorized,'Token Is Not Provided');
+            }
+            //token不正确
+            $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
+            if (empty($this->users) || $this->post['token']!==mb_substr($request->header('Authorization'),32,32)) {
+                $this->setCode(Code::Unauthorized,'Token Is Expired');
+            }
         }
         //用户被禁用
         if ($this->users->status!==1){
