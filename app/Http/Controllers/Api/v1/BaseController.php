@@ -111,10 +111,12 @@ class BaseController extends Controller
             route('getCityName'),
         ];
         $this->post['token'] = $this->post['token'] ?? ($request->get('token') ?? $this->redisClient->getValue('oauth_register'));
+        Log::error($this->post['token']);
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
        //获取用户信息
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
+        Log::error(json_encode( $this->users,JSON_UNESCAPED_UNICODE));
         //用户注册不验证headers
         if (!$this->redisClient->getValue('oauth_register')) {
             //token不正确或为空
