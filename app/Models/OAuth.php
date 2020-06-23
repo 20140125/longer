@@ -106,10 +106,11 @@ class OAuth extends Model
      * TODO:删除一条数据
      * @param string $field
      * @param int $value
+     * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,int $value)
+    public function deleteResult(string $field,int $value,string $op='=')
     {
-        return DB::table($this->table)->whereIn($field,$value)->delete();
+        return DB::table($this->table)->where($field,$op,$value)->delete();
     }
 }
