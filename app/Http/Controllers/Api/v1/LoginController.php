@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
+use App\Models\Area;
 use App\Models\Config;
+use App\Models\Role;
 use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Database\Eloquent\Model;
@@ -96,7 +98,25 @@ class LoginController
         if ($result === Code::VERIFY_CODE){
             return ajax_return(Code::ERROR,'verify code error');
         }
-        return ajax_return(Code::SUCCESS,'login successfully',$result);
+        return ajax_return(Code::SUCCESS,'login successfully',$this->setUserInfo($result));
+    }
+    /**
+     * todo:设置用户信息
+     * @param $users
+     * @return array
+     */
+    private function setUserInfo ($users)
+    {
+        return [
+            'token'=>$users['token'],
+            'username'=>$users['username'],
+            'socket'=>config('app.socket_url'),
+            'avatar_url' => $users['username'] == 'admin' ? config('app.avatar_url') : $users['avatar_url'],
+            'websocket'=>config('app.websocket'),
+            'role_id' => md5($users['role_id']),
+            'uuid' => empty($users['uuid']) ? '' :$users['uuid'],
+            'local' => config('app.url'),
+        ];
     }
 
     /**

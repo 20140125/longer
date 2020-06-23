@@ -71,6 +71,7 @@ class Users extends Model
         $admin['username'] = $result->username;
         $admin['role_id'] = md5($result->role_id);
         $admin['uuid'] = $result->uuid;
+        $admin['avatar_url'] = $result->avatar_url;
         $where[] = array('u_name',$result->username);
         UserCenter::getInstance()->updateResult(array('token'=>$admin['token'],'type'=>'login'),$where);     //修改用户中心标识
         OAuth::getInstance()->updateResult(array('remember_token'=>$admin['token']),'uid',$result->id); //修改用户授权标识
