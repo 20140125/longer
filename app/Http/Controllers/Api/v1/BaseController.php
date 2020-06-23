@@ -108,7 +108,8 @@ class BaseController extends Controller
             route('export'),
             route('chat'),
             route('uploadFile'),
-            route('getCityName')
+            route('getCityName'),
+            route('userUpdate')
         ];
         $this->post['token'] = $this->post['token'] ?? ($request->get('token') ?? $this->redisClient->getValue('oauth_register'));
         //判断必填字段是否为空
@@ -119,6 +120,7 @@ class BaseController extends Controller
         if ($validate->fails() || empty($Authorization)) {
             $this->setCode(Code::Unauthorized,'Token Is Not Provided');
         }
+        Log::error($this->post['token']."=============".mb_substr($Authorization,32,32));
         //token不正确
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
         if (empty($this->users) || $this->post['token']!==mb_substr($Authorization,32,32)) {

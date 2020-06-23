@@ -30,7 +30,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     /********************************************私有权限********************************************************/
     //管理员
     Route::match(['get','post'],'user/index','v1\UsersController@index');
-    Route::match(['get','post'],'user/update','v1\UsersController@update');
+    Route::match(['get','post'],'user/update','v1\UsersController@update')->name('userUpdate');
     Route::match(['get','post'],'user/save','v1\UsersController@save');
     Route::match(['get','post'],'user/center','v1\UsersController@center')->name('userCenter');
     Route::match(['get','post'],'center/save','v1\UsersController@saveCenter')->name('saveCenter');
