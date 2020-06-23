@@ -110,7 +110,8 @@ class BaseController extends Controller
             route('uploadFile'),
             route('getCityName')
         ];
-        $this->post['token'] = $this->post['token'] ? $this->post['token'] : $request->get('token');
+        $this->post['token'] = $this->post['token'] ?? ($request->get('token') ?? $this->redisClient->getValue('oauth_register'));
+        Log::error($this->post['token']);
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
         //token不正确或为空
