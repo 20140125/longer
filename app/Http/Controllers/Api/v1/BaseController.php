@@ -115,7 +115,7 @@ class BaseController extends Controller
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
         //token不正确或为空
-        if ($validate->fails() || empty($request->header('Authorization'))) {
+        if (!$this->redisClient->getValue('oauth_register') && ($validate->fails() || empty($request->header('Authorization')))) {
             $this->setCode(Code::Unauthorized,'Token Is Not Provided');
         }
         //token不正确
