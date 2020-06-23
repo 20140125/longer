@@ -90,7 +90,7 @@ class UsersController extends BaseController
             return $this->ajax_return(Code::ERROR,'update users status error');
         }
         $password = $this->userModel->getResult('id',$this->post['id'])->password;
-        $this->post['created_at'] = strtotime($this->post['created_at']);
+        $this->post['created_at'] = gettype($this->post['created_at']) === 'string' ? strtotime($this->post['created_at']) : $this->post['created_at'];
         $this->post['updated_at'] = time();
         if ($password == $this->post['password']){
             //用户没有修改密码
