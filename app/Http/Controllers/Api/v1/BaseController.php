@@ -115,7 +115,7 @@ class BaseController extends Controller
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
        //获取用户信息
         $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
-        //用户注册不验证headers
+        //用户第三方授权注册不验证headers
         if (!$this->redisClient->getValue('oauth_register')) {
             //token不正确或为空
             if ($validate->fails() || empty($request->header('Authorization'))) {
