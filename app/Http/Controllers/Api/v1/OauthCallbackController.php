@@ -305,7 +305,7 @@ class OauthCallbackController
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register',$data['remember_token'],['EX'=>60]);
-                return redirect('/#/admin/user/bind'.$data['remember_token'])->send();
+                return redirect('/#/admin/user/bind/'.$data['remember_token'])->send();
             }
             //授权列表 (账户绑定成功)
             return redirect('/#/admin/oauth/index')->send();

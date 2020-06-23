@@ -115,7 +115,6 @@ class BaseController extends Controller
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
         //用户注册后台添加headers Authorization
         $Authorization = md5(time()).$this->redisClient->getValue('oauth_register').md5(time()) ?? $request->header('Authorization');
-        Log::error($Authorization);
         //token不正确或为空
         if ($validate->fails() || empty($Authorization)) {
             $this->setCode(Code::Unauthorized,'Token Is Not Provided');
