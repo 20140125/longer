@@ -53,7 +53,7 @@ class OauthCallbackController
         if (empty($request->get('code')) || empty($request->get('state'))){
             exit(redirect('/#/login'));
         }
-        $this->redisClient = new RedisClient();
+        $this->redisClient = RedisClient::getInstance();
         if ($this->redisClient->getValue($request->get('state')) == false) {
             exit(redirect('/#/login'));
         }

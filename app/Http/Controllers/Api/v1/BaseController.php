@@ -91,7 +91,7 @@ class BaseController extends Controller
         $this->authModel = Auth::getInstance();
         $this->oauthModel = OAuth::getInstance();
         $this->rsaUtils = Rsa::getInstance();
-        $this->redisClient = new RedisClient();
+        $this->redisClient = RedisClient::getInstance();
         $this->backupPath = base_path('database/migrations');
         //公用权限
         $common_url = [

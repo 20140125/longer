@@ -43,7 +43,7 @@ class CommonController
     public function __construct()
     {
         $this->usersModel = Users::getInstance();
-        $this->redisUtils = new RedisClient();
+        $this->redisUtils = RedisClient::getInstance();
     }
     /**
      * TODO:更新用户画像

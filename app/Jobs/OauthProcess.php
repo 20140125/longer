@@ -17,7 +17,14 @@ class OauthProcess implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * @var $post
+     */
     protected $post;
+    /**
+     * @var RedisClient $redisClient
+     */
+    protected $redisClient;
     /**
      * Create a new job instance.
      * @param $post
@@ -26,6 +33,7 @@ class OauthProcess implements ShouldQueue
     public function __construct($post)
     {
         $this->post = $post;
+        $this->redisClient = RedisClient::getInstance();
     }
 
     /**
@@ -37,10 +45,9 @@ class OauthProcess implements ShouldQueue
     {
         $created_at = (isset($this->post['id']) || !empty($this->post['id'])) ? strtotime($this->post['created_at']) : $this->post['created_at'];
         DB::beginTransaction();
-        $redisClient = new RedisClient();
         try{
             $oauthRes = Users::getInstance()->getAll();
-            $redisUser = $redisClient->sMembers(config('app.redis_user_key'));
+            $redisUser = $this->redisClient->sMembers(config('app.redis_user_key'));
             foreach ($oauthRes as $item) {
                 if (in_array($item->uuid,$redisUser)) {
                     $this->post['state'] = Code::WebSocketState[0];

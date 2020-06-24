@@ -64,7 +64,7 @@ class ExpiresRule extends Command
         $this->roleModel = Role::getInstance();
         $this->oauthModel = OAuth::getInstance();
         $this->authModel = Auth::getInstance();
-        $this->redisClient = new RedisClient();
+        $this->redisClient = RedisClient::getInstance();
     }
     /**
      * Execute the console command.

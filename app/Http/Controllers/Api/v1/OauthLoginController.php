@@ -29,7 +29,7 @@ class OauthLoginController extends Controller
      */
     public function __construct()
     {
-        $this->redisClient = new RedisClient();
+        $this->redisClient = RedisClient::getInstance();
     }
 
     /**

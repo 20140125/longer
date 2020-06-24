@@ -41,7 +41,7 @@ class SendPush extends Command
     {
         parent::__construct();
         date_default_timezone_set("Asia/Shanghai");
-        $this->redisClient = new RedisClient();
+        $this->redisClient = RedisClient::getInstance();
         $this->pushModel = Push::getInstance();
     }
 

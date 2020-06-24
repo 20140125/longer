@@ -26,6 +26,21 @@ class RedisClient
      */
     protected $redisClient;
     /**
+     * @var static $instance
+     */
+    protected static $instance;
+
+    /**
+     * @return static
+     */
+    static public function getInstance()
+    {
+        if (!self::$instance instanceof self){
+            return self::$instance = new static();
+        }
+        return self::$instance;
+    }
+    /**
      * RedisClient constructor.
      */
     public function __construct()

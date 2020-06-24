@@ -42,7 +42,7 @@ class SyncAreaLists extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->redisClient = new RedisClient();
+        $this->redisClient = RedisClient::getInstance();
         $this->areaModel = \App\Models\Area::getInstance();
     }
 

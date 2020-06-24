@@ -46,7 +46,7 @@ class LoginController
     {
         $this->userModel = Users::getInstance();
         $this->configModel = Config::getInstance();
-        $this->redisClient = new RedisClient();
+        $this->redisClient = RedisClient::getInstance();
         $this->post = $request->post();
         date_default_timezone_set("Asia/Shanghai");
     }
