@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Http\Controllers\Utils\Rsa;
@@ -68,6 +69,10 @@ class BaseController extends Controller
      * @var string $backupPath 备份地址
      */
     protected $backupPath;
+    /**
+     * @var CommonController $commonControl
+     */
+    protected $commonControl;
 
     /**
      * BaseController constructor.
@@ -92,6 +97,7 @@ class BaseController extends Controller
         $this->oauthModel = OAuth::getInstance();
         $this->rsaUtils = Rsa::getInstance();
         $this->redisClient = RedisClient::getInstance();
+        $this->commonControl = CommonController::getInstance();
         $this->backupPath = base_path('database/migrations');
         //公用权限
         $common_url = [

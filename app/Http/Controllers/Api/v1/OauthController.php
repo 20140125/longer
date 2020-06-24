@@ -50,7 +50,7 @@ class OauthController extends BaseController
      */
     public function update()
     {
-        $this->validatePost(['username'=>'required|string','avatar_url'=>'required|url']);
+        $this->validatePost(['username'=>'required|string','avatar_url'=>'required|url','email'=>'required|string|email']);
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $this->post['oauth_type'] = strtolower($this->post['oauth_type']);
         $this->post['url'] = empty($this->post['url']) ? config('app.url') : $this->post['url'];
@@ -66,7 +66,6 @@ class OauthController extends BaseController
         }
         return $this->ajax_return(Code::ERROR,'update oauth failed');
     }
-
     /**
      * TODO:账户绑定
      * @return JsonResponse
@@ -129,7 +128,6 @@ class OauthController extends BaseController
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',['oauth_url'=>$url]);
     }
-
     /**
      * TODO:验证邮箱是否正确
      * @param string email
@@ -140,25 +138,16 @@ class OauthController extends BaseController
      */
     public function email()
     {
-        $this->validatePost(['email'=>'required|string|email|unique:os_oauth', 'id=>required|integer', 'username'=>'required|string', 'remember_token'=>'required|string']);
-        $this->post['verify_code'] = get_round_num(6,'number');
-        try{
-            Mail::to($this->post['email'])->send(new Oauth($this->post));
-            if (!Mail::failures()) {
-                $data = array(
-                    'email' => $this->post['email'],
-                    'code'  => $this->post['verify_code']
-                );
-                $result = $this->oauthModel->updateResult($data,'id',$this->post['id']);
-                if ($result){
-                    return $this->ajax_return(Code::SUCCESS,'email send successfully');
-                }
-                return $this->ajax_return(Code::ERROR,'email send failed');
-            }
-            return $this->ajax_return(Code::ERROR,'please enter the correct email address');
-        }catch (\Exception $exception){
-            return $this->ajax_return(Code::ERROR,'please enter the correct email address');
+        $this->validatePost(['email'=>'required|string|email']);
+        $hasEmail = $this->oauthModel->getResult('email',$this->post['email'],'=',['email']);
+        if ($hasEmail) {
+            return ajax_return(Code::ERROR,'email already exists');
         }
+        $result = $this->commonControl->sendMail($this->post);
+        if ($result){
+            return $this->ajax_return(Code::SUCCESS,'email send successfully');
+        }
+        return $this->ajax_return(Code::ERROR,'email send failed');
     }
 
     /**
@@ -169,15 +158,21 @@ class OauthController extends BaseController
      */
     public function code()
     {
-        $this->validatePost(['code'=>'required|string','id=>required|integer']);
-        $result = $this->oauthModel->getResult('id',$this->post['id']);
-        if ($result->code === $this->post['code']) {
-            return $this->ajax_return(Code::SUCCESS,'verify code successfully');
+        $this->validatePost(['code'=>'required|string','email'=>'required|string|email']);
+        if ($this->post['code'] === $this->redisClient->getValue($this->post['email'])) {
+            $data = array(
+                'email' => $this->post['email'],
+                'code'  => $this->post['code'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            );
+            $result = $this->commonControl->verifyMailAndCode($this->post,$data);
+            if ($result){
+                return ajax_return(Code::SUCCESS,'code verify successfully');
+            }
+            return ajax_return(Code::ERROR,'code verify failed');
         }
-        $this->post['code'] = 0;
-        $this->post['email'] = 0;
-        $this->oauthModel->updateResult($this->post,'id',$this->post['id']);
-        return $this->ajax_return(Code::ERROR,'verify code failed');
+        return ajax_return(Code::ERROR,'code not exists');
     }
 
     /**

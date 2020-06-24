@@ -7,12 +7,8 @@ use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Config;
 use App\Models\UserCenter;
 use App\Models\Users;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -38,6 +34,10 @@ class LoginController
      */
     protected $redisClient;
     /**
+     * @var CommonController $commonControl
+     */
+    protected $commonControl;
+    /**
      * @var array $post
      */
     protected $post;
@@ -47,6 +47,7 @@ class LoginController
         $this->userModel = Users::getInstance();
         $this->configModel = Config::getInstance();
         $this->redisClient = RedisClient::getInstance();
+        $this->commonControl = CommonController::getInstance();
         $this->post = $request->post();
         date_default_timezone_set("Asia/Shanghai");
     }
@@ -185,28 +186,11 @@ class LoginController
         if ($validate->fails()) {
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $this->post['verify_code'] = get_round_num(8,'number');
-        //验证码保存到redis，10分钟有效
-        $this->redisClient->setValue($this->post['email'],$this->post['verify_code'],['EX'=>600]);
-        try{
-            Mail::to($this->post['email'])->send(new \App\Mail\Login($this->post));
-            if (!Mail::failures()) {
-                $data = array(
-                    'email' => $this->post['email'],
-                    'code'  => $this->post['verify_code'],
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s')
-                );
-                $result = $this->verifyMailAndCode($data);
-                if ($result){
-                    return ajax_return(Code::SUCCESS,'email send successfully');
-                }
-                return ajax_return(Code::ERROR,'email send failed');
-            }
-            return ajax_return(Code::ERROR,'please enter the correct email address');
-        }catch (\Exception $exception){
-            return ajax_return(Code::ERROR,$exception->getMessage());
+        $result = $this->commonControl->sendMail($this->post);
+        if ($result){
+            return ajax_return(Code::SUCCESS,'email send successfully');
         }
+        return ajax_return(Code::ERROR,'email send failed');
     }
 
     /**
@@ -234,30 +218,12 @@ class LoginController
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         );
-        $result = $this->verifyMailAndCode($data);
+        $result = $this->commonControl->verifyMailAndCode($this->post,$data);
         if ($result){
             return ajax_return(Code::SUCCESS,'code verify successfully');
         }
         return ajax_return(Code::ERROR,'code verify failed');
     }
-
-    /**
-     * TODO:邮箱和邮箱验证码验证
-     * @param $data
-     * @return bool|Model|Builder|int|object|null
-     */
-    private function verifyMailAndCode($data)
-    {
-        $result = DB::table('os_send_email')->where(['email'=>$this->post['email']])->where('updated_at','>=',date('Y-m-d H:i:s',strtotime('-10 minutes')))->first();
-        if (!empty($result)) {
-            unset($data['created_at']);
-            $result = DB::table('os_send_email')->where(['code'=>$result->code,'email'=>$this->post['email']])->update($data);
-        } else {
-            $result = DB::table('os_send_email')->insert($data);
-        }
-        return $result;
-    }
-
     /**
      * TODO：获取配置
      * @param Request $request （name:配置名）
