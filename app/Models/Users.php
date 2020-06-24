@@ -114,13 +114,13 @@ class Users extends Model
 
     /**
      * TODO:  查询一条记录
-     * @param string $field
+     * @param $field
      * @param string|int $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult(string $field, $value='',string $op='=', array $column = ['*'])
+    public function getResult($field, $value='',string $op='=', array $column = ['*'])
     {
         return DB::table($this->table)->where($field,$op,$value)->first($column);
     }
@@ -137,24 +137,24 @@ class Users extends Model
     /**
      * TODO:  更新一条数据
      * @param array $data
-     * @param string $field
+     * @param  $field
      * @param string|int $value
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,$value,string $op='=')
+    public function updateResult(array $data, $field,$value,string $op='=')
     {
         return DB::table($this->table)->where($field,$value,$op)->update($data);
     }
 
     /**
      * TODO:  删除一条数据
-     * @param string $field
+     * @param $field
      * @param int $value
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,int $value,string $op='=')
+    public function deleteResult($field,int $value,string $op='=')
     {
         return DB::table($this->table)->where($field,$value,$op)->delete();
     }
