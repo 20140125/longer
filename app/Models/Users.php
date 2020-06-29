@@ -142,7 +142,7 @@ class Users extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data, $field,$value,string $op='=')
+    public function updateResult(array $data, $field,$value=null,string $op='=')
     {
         return DB::table($this->table)->where($field,$value,$op)->update($data);
     }

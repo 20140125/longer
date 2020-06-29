@@ -15,7 +15,7 @@ class SendPush extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:webPush';
+    protected $signature = 'longer:web_push';
 
     /**
      * The console command description.

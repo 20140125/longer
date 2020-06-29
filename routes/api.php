@@ -25,6 +25,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');
     Route::match(['get','post'],'total','v1\MenuController@getCountData')->name('total');
     Route::match(['get','post'],'getCityName','v1\MenuController@getCityName')->name('getCityName');
+    Route::match(['get','post'],'confirmMail','v1\ResetPasswordController@sendMail')->name('confirmMail');
+    Route::match(['get','post'],'resetPass','v1\ResetPasswordController@resetPass')->name('resetPass');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
