@@ -19,7 +19,7 @@ windows 下启动长链接脚本
 
 1：该项目为前后端分离项目
 
-2：public目录下面的文件时vue-app项目打包后的文件，项目下载需要同时下载[vue-app](https://gitee.com/f_longer/longer)
+2：public目录下面的文件时vue-app项目打包后的文件，项目下载需要同时下载[vue-app](https://gitee.com/f_longer/vue-app)
 修改配置文件中的域名为自己的域名才能运行
 
 界面展示
