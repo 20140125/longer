@@ -252,7 +252,7 @@ class OauthCallbackController
             'access_token' =>(string)$result['access_token'],
             'url' =>empty($userInfo['url'])?'':$userInfo['url'],
             'refresh_token' =>empty($result['refresh_token'])?0:$result['refresh_token'],
-            'oauth_type' => 'osChina',
+            'oauth_type' => 'os_china',
             'expires' =>empty($result['expires_in'])?0:time()+$result['expires_in'],
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
@@ -279,6 +279,12 @@ class OauthCallbackController
             } else {
                 UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauth->id));
             }
+            $info = [
+                'href' => '/v1/oauth-login/'.$data['oauth_type'],
+                'msg' => 'oauth login successfully',
+                'username' => $data['username']
+            ];
+            act_log($info);
             if (!empty($this->users)) {
                 $data['uid'] = $this->users->id;
                 $data['role_id'] = $this->users->role_id;
@@ -302,6 +308,12 @@ class OauthCallbackController
             //同步用户画像
             Artisan::call("longer:sync_oauth");
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
+            $info = [
+                'href' => '/v1/oauth-login/'.$data['oauth_type'],
+                'msg' => 'oauth register successfully',
+                'username' => $data['username']
+            ];
+            act_log($info);
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register',$data['remember_token'],['EX'=>60]);
                 return redirect('/#/admin/user/bind/'.$data['remember_token'])->send();

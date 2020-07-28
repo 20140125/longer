@@ -10,6 +10,7 @@ use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * 导航栏
@@ -50,7 +51,7 @@ class MenuController extends BaseController
     {
         $role = $this->roleModel->getResult('id',$this->users->role_id);
         if (!empty($role)){
-            $adcode = in_array(get_server_ip(),['10.97.227.81']) ? '440305' : CommonController::getInstance()->getCityCode();
+            $adcode = in_array(get_server_ip(),['10.97.227.81','10.97.227.46']) ? '440305' : CommonController::getInstance()->getCityCode(); //公司网络限制，访问不了高德地图的接口
             $area = Area::getInstance()->getResult('code',$adcode,'=',['name','parent_id']);
             $province = Area::getInstance()->getResult('id',$area->parent_id,'=',['name']);
             return $this->ajax_return(Code::SUCCESS,'permission',
