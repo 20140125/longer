@@ -9,6 +9,7 @@ use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -53,6 +54,19 @@ class LoginController
     }
 
     /**
+     * todo:验证码上报
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function setVerifyCode (Request $request)
+    {
+        if ($request->isMethod('get')){
+            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        }
+        $this->redisClient->setValue($this->post['verify_code'],strtoupper($this->post['verify_code']),['EX'=>120]);
+        return ajax_return(Code::SUCCESS,'successfully');
+    }
+    /**
      * TODO:用户登录
      * @param Request $request (username:用户名，password:密码，verify_code:验证码，loginType:登录类型)
      * @param string username
@@ -71,9 +85,13 @@ class LoginController
         }
         switch ($this->post['loginType']) {
             case 'password':
-                $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email','password' =>'required|between:6,32|string']);
+                $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email','password' =>'required|between:6,32|string','verify_code'=>'required|size:6|string']);
                 if ($validate->fails()){
                     return ajax_return(Code::ERROR,$validate->errors()->first());
+                }
+                //不区分大小写
+                if (true != $this->redisClient->getValue($this->post['verify_code']) && strtoupper($this->post['verify_code'])!= $this->redisClient->getValue($this->post['verify_code'])) {
+                    return ajax_return(Code::ERROR,'verify code validate error');
                 }
                 $result = $this->userModel->loginRes($this->post);
                 break;

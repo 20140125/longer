@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(function () {
     /********************************************共有权限********************************************************/
+    Route::match(['get','post'],'report/verifyCode','v1\LoginController@setVerifyCode')->name('reportCode');
     Route::match(['get','post'],'login','v1\LoginController@index')->name('apiLogin');
     Route::match(['get','post'],'config','v1\LoginController@config')->name('getConfig');
     Route::match(['get','post'],'file/download','v1\LoginController@download')->name('downloadFile');

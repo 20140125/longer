@@ -46,7 +46,6 @@ class WxUsersController
      * TODO: 微信获取用户的openid
      * @param string code 微信code
      * @return JsonResponse
-     * @throws \ErrorException
      */
     public function getOpenId()
     {
