@@ -89,10 +89,12 @@ class LoginController
                 if ($validate->fails()){
                     return ajax_return(Code::ERROR,$validate->errors()->first());
                 }
-                //不区分大小写
+                //不区分大小写(图片验证码)
                 if (true != $this->redisClient->getValue($this->post['verify_code']) && strtoupper($this->post['verify_code'])!= $this->redisClient->getValue($this->post['verify_code'])) {
                     return ajax_return(Code::ERROR,'verify code validate error');
                 }
+                //删除redis缓存的验证码 (防止恶意访问接口)
+                $this->redisClient->del($this->post['verify_code']);
                 $result = $this->userModel->loginRes($this->post);
                 break;
             case 'mail':
@@ -187,6 +189,8 @@ class LoginController
         $request['token'] = $request['remember_token'];
         //更新用户画像
         CommonController::getInstance()->updateUserAvatarUrl();
+        //删除redis缓存的验证码，防止恶意登录
+        $this->redisClient->del($this->post['email']);
         return $request;
     }
     /**

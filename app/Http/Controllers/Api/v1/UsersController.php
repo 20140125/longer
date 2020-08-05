@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
 use App\Models\OAuth;
 use App\Models\Push;
@@ -49,6 +50,8 @@ class UsersController extends BaseController
             if (!empty($this->post['avatar_url'])) {
                 OAuth::getInstance()->updateResult(['uid'=>$result],'remember_token',$this->post['remember_token']);
             }
+            //更新用户画像
+            CommonController::getInstance()->updateUserAvatarUrl();
             return $this->ajax_return(Code::SUCCESS,'add user successfully');
         }
         return $this->ajax_return(Code::ERROR,'add user error');
@@ -85,6 +88,8 @@ class UsersController extends BaseController
             unset($this->post['act']);
             $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
             if (!empty($result)){
+                //更新用户画像
+                CommonController::getInstance()->updateUserAvatarUrl();
                 return $this->ajax_return(Code::SUCCESS,'update users status successfully');
             }
             return $this->ajax_return(Code::ERROR,'update users status error');
@@ -120,6 +125,8 @@ class UsersController extends BaseController
             'created_at' => time()
         );
         Push::getInstance()->addResult($message);
+        //更新用户画像
+        CommonController::getInstance()->updateUserAvatarUrl();
         return $this->ajax_return(Code::SUCCESS,'update users successfully');
     }
 
