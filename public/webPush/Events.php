@@ -96,17 +96,19 @@ class Events
             // 获取聊天记录 message: {type:history, to_client_id:xx, content:xx}
             case 'history':
                 $room_id = $message_data['room_id'];
-                $messageLists = self::$chat->getChatMsgLists($message_data['from_client_name'],$message_data['to_client_name'],$room_id);
+                $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$room_id);
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
+                    'from_client_id' => $message_data['from_client_id'],
                     'to_client_name' => $message_data['to_client_name'],
+                    'to_client_id' => $message_data['to_client_id'],
                     'room_id' =>$room_id,
                     'message' => $messageLists,
                     'uid' => $message_data['uid']
                 );
                 //清空未读状态
-                self::$chat->delUnreadMsg($message_data['to_client_name'], self::getClientUid($message_data['from_client_name']));
+                self::$chat->delUnreadMsg($message_data['to_client_id'], $message_data['from_client_id']);
                 //发送消息到当前客户端
                 Gateway::sendToCurrentClient(json_encode($new_message));
                 break;
@@ -135,14 +137,12 @@ class Events
                     );
                     //设置未读消息数
                     if (!in_array($message_data['uid'],self::$redisUsers)) {
-                        self::$chat->setUnreadMsgLists($from_client_name,$message_data['to_client_id']);
+                        self::$chat->setUnreadMsgLists($message_data['from_client_id'],$message_data['to_client_id']);
                     }
                     //保存聊天记录
-                    self::$chat->setChatMsgLists($from_client_name,$message_data['to_client_name'],$room_id,$new_message);
-                    //发送到客户端
-//                    Gateway::sendToClient($message_data['to_client_id'], json_encode($new_message));
+                    self::$chat->setChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$room_id,$new_message);
                     //通过uid发送消息
-                    Gateway::sendToUid($message_data['uid'],json_encode($new_message));
+                    Gateway::sendToUid($message_data['from_client_id'],json_encode($new_message));
                     break;
                 }
                 //群聊
@@ -160,7 +160,7 @@ class Events
                     'room_id' =>$room_id
                 );
                 //保存聊天记录
-                self::$chat->setChatMsgLists($from_client_name,'all',$room_id,$new_message);
+                self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$room_id,$new_message);
                 //添加到当前组
                 Gateway::sendToGroup($room_id ,json_encode($new_message));
                 break;

@@ -58,8 +58,8 @@ class Test extends Command
     {
         $userUUid = $this->userModel->getAll();
         $bar = $this->getOutput()->createProgressBar(count($userUUid));
-        foreach ($userUUid as $uuid) {
-            $this->userModel->updateResult(['uuid'=>md5($uuid->uuid).time().uniqid()],'username',$uuid->username);
+        foreach ($userUUid as $key=> $uuid) {
+            $this->userModel->updateResult(['uuid'=>'longer7f00000108fc0000000'.($key+1)],'username',$uuid->username);
             $this->info('当前用户【'.$uuid->username.'】uuid同步成功');
             $bar->advance();
         }
