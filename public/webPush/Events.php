@@ -33,7 +33,7 @@ class Events
     static protected $redisUsers;
     /**
      * 有消息时
-     * @param $from_client_id
+     * @param $from_client_id  //workerman 生成的client_id
      * @param $message
      * @return bool
      * @throws Exception
@@ -75,7 +75,7 @@ class Events
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
                     'type'=>'login',
-                    'from_client_id'=>$from_client_id,
+                    'from_client_id'=>$message_data['from_client_id'],
                     'from_client_name'=>htmlspecialchars($from_client_name),
                     'to_client_id' => 'all',
                     'to_client_name' => 'all',
@@ -114,17 +114,12 @@ class Events
                 break;
             // 客户端发言 message: {type:say, to_client_id:xx, content:xx}
             case 'say':
-                // 非法请求
-                if(!isset($_SESSION['room_id'])) {
-                    throw new \Exception("\$_SESSION['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']}");
-                }
-                $room_id = $_SESSION['room_id'];
                 $from_client_name = $_SESSION['client_name'];
                 // 私聊
                 if($message_data['to_client_id'] != 'all') {
                     $new_message = array(
                         'type'=>'say',
-                        'from_client_id'=>$from_client_id, //发送人
+                        'from_client_id'=>$message_data['from_client_id'], //发送人
                         'from_client_name' =>$from_client_name,
                         'to_client_id'=>$message_data['to_client_id'], //接收人
                         'to_client_name'=>$message_data['to_client_name'],
@@ -140,11 +135,16 @@ class Events
                         self::$chat->setUnreadMsgLists($message_data['from_client_id'],$message_data['to_client_id']);
                     }
                     //保存聊天记录
-                    self::$chat->setChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$room_id,$new_message);
+                    self::$chat->setChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],'',$new_message);
                     //通过uid发送消息
                     Gateway::sendToUid($message_data['from_client_id'],json_encode($new_message));
                     break;
                 }
+                // 非法请求
+                if(!isset($_SESSION['room_id'])) {
+                    throw new \Exception("\$_SESSION['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']}");
+                }
+                $room_id = $_SESSION['room_id'];
                 //群聊
                 $new_message = array(
                     'type'=>'say',
