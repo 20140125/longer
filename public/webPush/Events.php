@@ -148,7 +148,7 @@ class Events
                 //群聊
                 $new_message = array(
                     'type'=>'say',
-                    'from_client_id'=>$from_client_id,
+                    'from_client_id'=>$message_data['from_client_id'],
                     'from_client_name' =>$from_client_name,
                     'to_client_id'=>'all',
                     'to_client_name' => 'all',
