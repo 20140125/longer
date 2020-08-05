@@ -138,7 +138,7 @@ class Users extends Model
      * TODO:  更新一条数据
      * @param array $data
      * @param  $field
-     * @param string|int $value
+     * @param  $value
      * @param string $op
      * @return int
      */

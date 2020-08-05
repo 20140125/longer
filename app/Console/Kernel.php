@@ -20,7 +20,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\SyncAreaLists',
         'App\Console\Commands\SyncOauthToUsers',
         'App\Console\Commands\SyncLocal',
-        'App\Console\Commands\SyncWeather'
+        'App\Console\Commands\SyncWeather',
+        'App\Console\Commands\Test'
     ];
 
     /**

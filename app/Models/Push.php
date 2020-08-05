@@ -100,11 +100,11 @@ class Push extends Model
      * TODO: 更新一条数据
      * @param array $data
      * @param string $field
-     * @param int $value
+     * @param $value
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value,$op='=')
+    public function updateResult(array $data,string $field, $value,$op='=')
     {
         return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
