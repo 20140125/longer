@@ -97,6 +97,12 @@ class LoginController
                 //删除redis缓存的验证码 (防止恶意访问接口)
                 $this->redisClient->del($this->post['verify_code']);
                 $result = $this->userModel->loginRes($this->post);
+                $info = [
+                    'href' => '/v1/login',
+                    'msg' => 'account and password login successfully',
+                    'username' => $result['username']
+                ];
+                act_log($info);
                 break;
             case 'mail':
                 $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email','verify_code' =>'required|size:8|string']);
@@ -107,7 +113,6 @@ class LoginController
                 break;
             default:
                 return ajax_return(Code::ERROR,'Illegal parameter');
-                break;
         }
         if ($result === Code::ERROR){
             return ajax_return(Code::ERROR,'account or password validate error');
@@ -172,6 +177,12 @@ class LoginController
             $admin['role_id'] = md5($result->role_id);
             $admin['uuid'] = $result->uuid;
             $admin['avatar_url'] = $result->avatar_url;
+            $info = [
+                'href' => '/v1/login',
+                'msg' => 'email login successfully',
+                'username' => $admin['username']
+            ];
+            act_log($info);
             return $admin;
         }
         //注册
@@ -192,6 +203,12 @@ class LoginController
         CommonController::getInstance()->updateUserAvatarUrl();
         //删除redis缓存的验证码，防止恶意登录
         $this->redisClient->del($this->post['email']);
+        $info = [
+            'href' => '/v1/login',
+            'msg' => 'email register successfully',
+            'username' => $request['username']
+        ];
+        act_log($info);
         return $request;
     }
     /**
