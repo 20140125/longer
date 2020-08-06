@@ -16,7 +16,7 @@
  * 如果发现业务卡死，可以将下面declare打开（去掉//注释），并执行php start.php reload
  * 然后观察一段时间workerman.log看是否有process_timeout异常
  */
-//declare(ticks=1);
+declare(ticks=1);
 /**
  * 聊天主逻辑
  * 主要是处理 onMessage onClose
@@ -87,6 +87,7 @@ class Events
                     'weather' => self::getWeather($message_data['adcode'])
                 );
                 Gateway::sendToGroup($room_id, json_encode($new_message));
+                //加入群聊房间
                 Gateway::joinGroup($from_client_id, $room_id);
                 //将client_id与uid绑定，以便通过Gateway::sendToUid($uid)发送数据，通过Gateway::isUidOnline($uid)用户是否在线。
                 Gateway::bindUid($from_client_id,$message_data['uid']);
@@ -231,25 +232,6 @@ class Events
         array_multisort($sortArr,SORT_DESC,$arr);
         return $arr;
     }
-
-    /**
-     * TODO:通过客户端名称获取客户端ID
-     * @param $client_name
-     * @return mixed|Exception
-     */
-    public static function getClientUid($client_name)
-    {
-        try {
-            self::$db = new connection(Host,Port,UserName,Password,DbName);
-            $result = self::$db->from('os_users')->where("username='$client_name'")->select('uuid')->query();
-            return $result[0]['uuid'];
-        } catch (\Exception $exception){
-            self::$db->closeConnection();
-            echo $exception;
-        }
-        return false;
-    }
-
     /**
      * todo:获取当前城市天气
      * @param $adcode
