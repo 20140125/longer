@@ -98,7 +98,10 @@ class BaseController extends Controller
         $this->rsaUtils = Rsa::getInstance();
         $this->redisClient = RedisClient::getInstance();
         $this->commonControl = CommonController::getInstance();
-        $this->backupPath = base_path('database/migrations');
+        $this->backupPath = base_path('database/backup');
+        if (!is_dir($this->backupPath)) {
+            mkdir($this->backupPath);
+        }
         //公用权限
         $common_url = [
             route('checkLogin'),
