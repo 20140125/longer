@@ -138,7 +138,7 @@ class Events
                     //保存聊天记录
                     self::$chat->setChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],'',$new_message);
                     //通过uid发送消息
-                    Gateway::sendToUid($message_data['from_client_id'],json_encode($new_message));
+                    Gateway::sendToUid($message_data['to_client_id'],json_encode($new_message));
                     break;
                 }
                 // 非法请求
