@@ -157,14 +157,6 @@ class Rsa
         // 生成摘要
         $digest = openssl_digest($data, $digestAlgo);
         // 验签
-        $verify = openssl_verify($digest, base64_decode($signature), self::getPublicKey(), $algo);
-        return $verify;
-    }
-    /**
-     * TODO：构析函数，用来释放公钥和私钥
-     */
-    public function __destruct() {
-        openssl_free_key(self::getPrivateKey());
-        openssl_free_key(self::getPublicKey());
+        return openssl_verify($digest, base64_decode($signature), self::getPublicKey(), $algo);
     }
 }
