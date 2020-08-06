@@ -38,6 +38,6 @@ class ExcelController extends BaseController
      */
     public function import()
     {
-        return $this->ajax_return(Code::SUCCESS,'successfully',$excel_data);
+        return $this->ajax_return(Code::SUCCESS,'successfully');
     }
 }
