@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -277,6 +278,8 @@ class LoginController
             return ajax_return(Code::NOT_FOUND,'permission denied');
         }
         if (file_exists($request->get('path'))){
+            Storage::disk('public')->put($request->get('name'), file_get_contents($request->get('path')));
+            //保存到服务器
             return $response::download($request->get('path'),basename($request->get('path')));
         }
         return ajax_return(Code::NOT_FOUND,'permission denied');

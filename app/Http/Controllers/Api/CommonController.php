@@ -8,6 +8,7 @@ use App\Mail\Login;
 use App\Models\Users;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -60,6 +61,8 @@ class CommonController
         if ($this->redisUtils->sMembers(config('app.chat_user_key'))) {
             $this->redisUtils->del(config('app.chat_user_key'));
         }
+        //同步画像重新同步uuid（方便）
+        Artisan::call('longer:sync_client_id');
         return $this->redisUtils->sAdd(config('app.chat_user_key'),json_encode($users,JSON_UNESCAPED_UNICODE));
     }
 
