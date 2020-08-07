@@ -96,8 +96,15 @@ class Events
                 break;
             // 获取聊天记录 message: {type:history, to_client_id:xx, content:xx}
             case 'history':
+                //清空未读状态
+                if (!empty($message_data['source']) && $message_data['source'] === 'user') {
+                    self::$chat->delUnreadMsg($message_data['from_client_id'], $message_data['to_client_id']);
+                }
                 $room_id = $message_data['room_id'];
                 $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$room_id);
+                // 获取在线用户
+                self::$redisUsers = self::$chat->sMembers(RedisKey);
+                $clients_list = self::getUserLists(self::$redisUsers);
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -106,10 +113,10 @@ class Events
                     'to_client_id' => $message_data['to_client_id'],
                     'room_id' =>$room_id,
                     'message' => $messageLists,
-                    'uid' => $message_data['uid']
+                    'uid' => $message_data['uid'],
+                    'client_list' => $clients_list,
+                    'source' => $message_data['source']
                 );
-                //清空未读状态
-                self::$chat->delUnreadMsg($message_data['to_client_id'], $message_data['from_client_id']);
                 //发送消息到当前客户端
                 Gateway::sendToCurrentClient(json_encode($new_message));
                 break;
@@ -158,6 +165,8 @@ class Events
                     'uid' => $message_data['uid'], //发送人的uid
                     'room_id' =>$room_id
                 );
+                //设置房间未读消息数
+                self::$chat->setUnreadMsgLists($message_data['from_client_id'],$room_id);
                 //保存聊天记录
                 self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$room_id,$new_message);
                 //添加到当前组

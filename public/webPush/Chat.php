@@ -139,7 +139,7 @@ class Chat
      */
     public function delUnreadMsg($from,$to)
     {
-        return $this-> redisClient -> hDel($this->hashKey.$to, $from);
+        return $this->redisClient->hDel($this->hashKey.$from, $to);
     }
     /**
      * TODO:判断是否存在
