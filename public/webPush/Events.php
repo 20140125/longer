@@ -132,9 +132,7 @@ class Events
                         'room_id' => ''  //私聊房间号置空。
                     );
                     //设置未读消息数
-                    if (!in_array($message_data['uid'],self::$redisUsers)) {
-                        self::$chat->setUnreadMsgLists($message_data['from_client_id'],$message_data['to_client_id']);
-                    }
+                    self::$chat->setUnreadMsgLists($message_data['from_client_id'],$message_data['to_client_id']);
                     //保存聊天记录
                     self::$chat->setChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],'',$new_message);
                     //通过uid发送消息
