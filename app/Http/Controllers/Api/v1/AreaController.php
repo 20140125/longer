@@ -45,7 +45,7 @@ class AreaController extends BaseController
     public function index()
     {
         $this->validatePost(['parent_id'=>'required|integer|exists:os_china_area']);
-        $result = $this->areaModel->getResultLists($this->post['parent_id'],['id','parent_id as pid','name','code','info']);
+        $result = $this->areaModel->getResultLists($this->post['parent_id'],['id','parent_id as pid','name','code','info','forecast']);
         foreach ($result as &$item){
             $item->hasChildren = false;
             if ($this->areaModel->getResult('parent_id',$item->id)) {
@@ -68,7 +68,7 @@ class AreaController extends BaseController
             $cityMap = range(1,35);
             if (in_array($this->post['parent_id'],$cityMap)) {
                 $province = object_to_array($this->amapControl->getWeather($this->post['code'],'all'));
-                if (!empty($result)){
+                if (!empty($province)){
                     $forecast = $province['info'] == 'OK' ? $province['forecasts'][0] : '';
                     $info =  [
                         'city' => !empty($forecast['city']) ? $forecast['city'] : '',
