@@ -14,8 +14,6 @@ $log_last_count = 0;
 $push_last_count = 0;
 //授权用户总量
 $oauth_last_count = 0;
-//单个用户推送的总量
-$push_data_count = 0;
 //在线人数
 $online_user_count = 0;
 //时间跨度
@@ -54,12 +52,11 @@ $sender_io->on('connection', function($socket) {
         // 将这个连接加入到uid分组，方便针对uid推送数据
         $socket->join($uid);
     });
-    global $redis,$sender_io,$day,$log_last_count,$push_data_count,$push_last_count,$oauth_last_count;
+    global $redis,$sender_io,$day,$log_last_count,$push_last_count,$oauth_last_count;
     //已经登录的用户
     $redisUser = $redis->SMEMBERS(RedisKey);
     foreach ($redisUser as $user) {
         $pushData = pushData($user);
-        $push_data_count = count($pushData);
         $sender_io->to($user)->emit('notice', $pushData);
     }
     //在线人数

@@ -32,6 +32,17 @@ class Events
     static protected $chat;
     static protected $redisUsers;
     /**
+     * @todo 自动回复消息默认配置
+     * @var string[]
+     */
+    static protected $sysRobot = [
+        'client_id' => 'longer7f00000108fc00000001',
+        'client_name' => 'systemRobot',
+        'client_img' => 'https://cdn.pixabay.com/photo/2016/12/13/21/20/alien-1905155_960_720.png',
+        'content' => '欢迎您的到来！'
+    ];
+
+    /**
      * 有消息时
      * @param $from_client_id  //workerman 生成的client_id
      * @param $message
@@ -63,7 +74,6 @@ class Events
                 $from_client_name = htmlspecialchars($message_data['client_name']);
                 $_SESSION['room_id'] = $room_id;
                 $_SESSION['client_name'] = $from_client_name;
-                $_SESSION['client_img'] = $message_data['client_img'];
                 $_SESSION['uid'] = $message_data['uid'];
                 //添加用户到redis
                 if (!self::$chat->sIsMember(RedisKey,$message_data['uid'])) {
@@ -100,8 +110,7 @@ class Events
                 if (!empty($message_data['source']) && $message_data['source'] === 'user') {
                     self::$chat->delUnreadMsg($message_data['from_client_id'], $message_data['to_client_id']);
                 }
-                $room_id = $message_data['room_id'];
-                $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$room_id);
+                $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id']);
                 // 获取在线用户
                 self::$redisUsers = self::$chat->sMembers(RedisKey);
                 $clients_list = self::getUserLists(self::$redisUsers);
@@ -111,7 +120,7 @@ class Events
                     'from_client_id' => $message_data['from_client_id'],
                     'to_client_name' => $message_data['to_client_name'],
                     'to_client_id' => $message_data['to_client_id'],
-                    'room_id' =>$room_id,
+                    'room_id' =>$message_data['room_id'],
                     'message' => $messageLists,
                     'uid' => $message_data['uid'],
                     'client_list' => $clients_list,
@@ -119,6 +128,10 @@ class Events
                 );
                 //发送消息到当前客户端
                 Gateway::sendToCurrentClient(json_encode($new_message));
+                if (!empty($message_data['room_id'])) {
+                    self::$sysRobot['content'] = '进入房间';
+                    self::getRobotMessage($message_data['room_id']);
+                }
                 break;
             // 客户端发言 message: {type:say, to_client_id:xx, content:xx}
             case 'say':
@@ -134,7 +147,7 @@ class Events
                         'content'=>nl2br(htmlspecialchars($message_data['content'])),
                         'time'=>date('Y-m-d H:i:s'),
                         'msg_type' => $message_data['msg_type'],
-                        'avatar_url' => $message_data['avatar_url'],
+                        'client_img' => $message_data['client_img'],
                         'uid' => $message_data['uid'], //接收人的uid
                         'room_id' => ''  //私聊房间号置空。
                     );
@@ -150,7 +163,6 @@ class Events
                 if(!isset($_SESSION['room_id'])) {
                     throw new \Exception("\$_SESSION['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']}");
                 }
-                $room_id = $_SESSION['room_id'];
                 //群聊
                 $new_message = array(
                     'type'=>'say',
@@ -161,16 +173,16 @@ class Events
                     'content'=>nl2br(htmlspecialchars($message_data['content'])),
                     'time'=>date('Y-m-d H:i:s'),
                     'msg_type' => $message_data['msg_type'],
-                    'avatar_url' => $message_data['avatar_url'],
+                    'client_img' => $message_data['client_img'],
                     'uid' => $message_data['uid'], //发送人的uid
-                    'room_id' =>$room_id
+                    'room_id' =>$message_data['room_id']
                 );
-                //设置房间未读消息数
-                self::$chat->setUnreadMsgLists($message_data['from_client_id'],$room_id);
                 //保存聊天记录
-                self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$room_id,$new_message);
+                self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$message_data['room_id'],$new_message);
                 //添加到当前组
-                Gateway::sendToGroup($room_id ,json_encode($new_message));
+                Gateway::sendToGroup($message_data['room_id'] ,json_encode($new_message));
+                //自定义消息回复
+                self::getRobotMessage($message_data['room_id']);
                 break;
             default:
                 break;
@@ -199,6 +211,29 @@ class Events
             );
             Gateway::sendToGroup($room_id, json_encode($new_message));
         }
+    }
+
+    /**
+     * todo:自动回复消息
+     * @param $room_id
+     */
+    public static function getRobotMessage($room_id)
+    {
+        $new_message = array(
+            'type'=>'say',
+            'from_client_id'=> self::$sysRobot['client_id'],
+            'from_client_name' => self::$sysRobot['client_name'],
+            'to_client_id'=>'all',
+            'to_client_name' => 'all',
+            'content'=> $_SESSION['client_name'].self::$sysRobot['content'],
+            'time'=>date('Y-m-d H:i:s',time()+30),
+            'msg_type' => 'text',
+            'client_img' => self::$sysRobot['client_img'],
+            'uid' => self::$sysRobot['client_id'], //发送人的uid
+            'room_id' =>$room_id
+        );
+        //添加到当前组
+        Gateway::sendToGroup($room_id ,json_encode($new_message));
     }
 
     /**

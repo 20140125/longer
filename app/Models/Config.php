@@ -93,7 +93,7 @@ class Config extends Model
             if ($res->value && count(json_decode($res->value,true))>0) {
                 $configVal = json_decode($res->value,true);
                 foreach ($configVal as $item) {
-                    array_push($ids,$item['id']);
+                    array_push($ids,(int)$item['id']);
                 }
                 $data['value']['id'] = (int)max($ids)+1;
                 $data['value']['pid'] = $res->id;

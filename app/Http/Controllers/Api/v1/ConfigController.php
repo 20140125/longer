@@ -6,6 +6,7 @@ use App\Http\Controllers\Utils\Code;
 use App\Models\Config;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -75,6 +76,9 @@ class ConfigController extends BaseController
             $rule = ['id'=>'required|integer','name'=>'required|string'];
         }
         $this->validatePost($rule);
+        if ($this->post['act'] === 'editConfig' && (empty($this->post['value']['value']) || !isset($this->post['value']['value']) || empty($this->post['value']['name']) || !isset($this->post['value']['name']))) {
+            return $this->ajax_return(Code::ERROR,'config value is empty');
+        }
         $result = $this->configModel->updateResult($this->post,'id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'update config successfully');
