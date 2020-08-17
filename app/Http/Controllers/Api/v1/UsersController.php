@@ -94,17 +94,21 @@ class UsersController extends BaseController
             }
             return $this->ajax_return(Code::ERROR,'update users status error');
         }
-        $password = $this->userModel->getResult('id',$this->post['id'])->password;
+        $users = $this->userModel->getResult('id',$this->post['id']);
         $this->post['created_at'] = gettype($this->post['created_at']) === 'string' ? strtotime($this->post['created_at']) : $this->post['created_at'];
         $this->post['updated_at'] = time();
-        if ($password == $this->post['password']){
+        if ($users->password == $this->post['password']){
             //用户没有修改密码
             $this->validatePost($this->rule(1));
         } else {
             //用户修改密码
             $this->post['salt'] = get_round_num(8);
             $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
+            $this->post['remember_token'] = md5($this->post['password']); //用户修改密码后也修改当前token
             $this->validatePost($this->rule(2));
+            //更新授权用户列表token以及用户中token
+            UserCenter::getInstance()->updateResult(array('token'=>$this->post['remember_token'],'type'=>'update'),'uid',$users->id);
+            OAuth::getInstance()->updateResult(array('remember_token'=>$this->post['remember_token']),'uid',$users->id);
         }
         $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
         if (empty($result)){
@@ -112,13 +116,13 @@ class UsersController extends BaseController
         }
         //修改密码站内通知
         $this->post['info'] = '你的密码修改成功，新密码是：'.$this->post['password'];
-        $this->post['uid'] = md5($this->post['username']);
+        $this->post['uid'] = $users->uuid;
         $this->post['status'] = 1;
         $this->pushMessage();
         $message = array(
             'username' => $this->post['username'],
             'info' => $this->post['info'],
-            'uid'  => md5($this->post['username']),
+            'uid'  => $this->post['uid'],
             'state' => $this->post['state'],
             'title' => '修改密码',
             'status' => 1,

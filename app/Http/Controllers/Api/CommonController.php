@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Utils\Amap;
+use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Mail\Login;
 use App\Models\Users;
@@ -124,5 +125,32 @@ class CommonController
             $result = DB::table('os_send_email')->insert($data);
         }
         return $result;
+    }
+
+    /**
+     * TODO：推送站内信息处理
+     * @param $post
+     * @return string
+     */
+    public function pushMessage($post)
+    {
+        $post['state'] = Code::WebSocketState[1];
+        $post['created_at'] = time();
+        $post['uid'] = $post['username'];
+        try{
+            //推送给个人
+            if ($this->redisUtils->sIsMember(config('app.redis_user_key'),$post['uid'])) {
+                if (web_push($post['info'],$post['uid'])) {
+                    $post['state'] = Code::WebSocketState[0];
+                    return $post['state'];
+                }
+                return $post['state'];
+            }
+            $post['state'] = Code::WebSocketState[2];
+            return $post['state'];
+        }catch (\Exception $e){
+            Log::error("站内信息推送失败：".$e->getMessage());
+            return $post['state'];
+        }
     }
 }
