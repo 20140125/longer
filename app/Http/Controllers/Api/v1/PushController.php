@@ -7,6 +7,7 @@ use App\Jobs\OauthProcess;
 use App\Models\Push;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Class PushController
@@ -42,7 +43,11 @@ class PushController extends BaseController
         foreach ($result['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
         }
-        $result['oauth'] = $this->userModel->getAll();
+        $result['oauth'] = Cache::get('oauthLists');
+        if (empty($result['oauth'])) {
+            $result['oauth'] = $this->userModel->getAll();
+            Cache::forever('oauthLists',$result['oauth']);
+        }
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Push;
 use App\Models\Users;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class SyncClientId extends Command
 {
@@ -57,6 +58,8 @@ class SyncClientId extends Command
     protected function syncUserUUid ()
     {
         $userUUid = $this->userModel->getAll();
+        Cache::forget('oauthLists');
+        Cache::forever('oauthLists',$userUUid);
         $bar = $this->getOutput()->createProgressBar(count($userUUid));
         foreach ($userUUid as $key=> $uuid) {
             $this->userModel->updateResult(['uuid'=>config('app.client_id').($key+1)],'username',$uuid->username);
