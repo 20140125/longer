@@ -292,12 +292,12 @@ class OauthCallbackController
             $oauthRes =  $this->oauthModel->updateResult($data,$where);
             if (!empty($oauthRes)){
                 if (strlen($this->state) == 32) {
-                    return redirect('/#/admin/index/'.$data['remember_token'])->send();
+                    return redirect('/admin/index/'.$data['remember_token'])->send();
                 }
                 //授权列表 (账户绑定成功)
-                return redirect('/#/admin/oauth/index')->send();
+                return redirect('/admin/oauth/index')->send();
             }
-            return redirect('/#/login')->send();
+            return redirect('/login')->send();
         }
         //授权用户第一次登陆跳转到绑定页
         $data['uid'] = 0;
@@ -316,12 +316,12 @@ class OauthCallbackController
             act_log($info);
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register',$data['remember_token'],['EX'=>60]);
-                return redirect('/#/admin/user/bind/'.$data['remember_token'])->send();
+                return redirect('/admin/user/bind/'.$data['remember_token'])->send();
             }
             //授权列表 (账户绑定成功)
-            return redirect('/#/admin/oauth/index')->send();
+            return redirect('/admin/oauth/index')->send();
         }
-        return redirect('/#/login')->send();
+        return redirect('/login')->send();
     }
 
     /**
@@ -334,7 +334,7 @@ class OauthCallbackController
         try{
             if (isset($response['code']) && $response['code'] === Code::ERROR) {
                 set_code($response['code']);
-                return redirect('/#/login');
+                return redirect('/login');
             }
         }catch (\Exception $exception){
             echo $exception->getMessage();
