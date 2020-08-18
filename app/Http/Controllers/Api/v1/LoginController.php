@@ -295,7 +295,7 @@ class LoginController
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
         $result = $this->configModel->getResult('name',$this->post['name'],'=',['value']);
-        return ajax_return(Code::SUCCESS,'successfully',json_decode($result->value,true));
+        return ajax_return(Code::SUCCESS,'successfully',$result ? json_decode($result->value,true) : []);
     }
     /**
      * TODO:：文件下载
