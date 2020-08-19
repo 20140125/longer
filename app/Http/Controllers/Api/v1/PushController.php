@@ -94,6 +94,7 @@ class PushController extends BaseController
             return $this->ajax_return(Code::SUCCESS,'push message update successfully');
         }
         $this->post['username'] = ($this->pushModel->getResult('uid',$this->post['uid'],'=',['username']))->username;
+        $this->post['created_at'] = time();
         $this->pushModel->updateResult($this->post,'id',$this->post['id']);
         return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
     }
