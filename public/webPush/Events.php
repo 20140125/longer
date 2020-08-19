@@ -151,6 +151,10 @@ class Events
                     self::$chat->setUnreadMsgLists($message_data['from_client_id'],$message_data['to_client_id']);
                     //保存聊天记录
                     self::$chat->setChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],'',$new_message);
+                    // 获取在线用户
+                    self::$redisUsers = self::$chat->sMembers(RedisKey);
+                    $clients_list = self::getUserLists(self::$redisUsers);
+                    $new_message['client_list'] = $clients_list;
                     //通过uid发送消息
                     Gateway::sendToUid($message_data['to_client_id'],json_encode($new_message));
                     break;
@@ -176,6 +180,8 @@ class Events
                 //保存聊天记录
                 self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$message_data['room_id'],$new_message);
                 //添加到当前组
+                $clients_list = self::getUserLists(self::$redisUsers);
+                $new_message['client_list'] = $clients_list;
                 Gateway::sendToGroup($message_data['room_id'] ,json_encode($new_message));
                 //自定义消息回复
 //                self::getRobotMessage($message_data['room_id']);
