@@ -66,7 +66,9 @@ class MenuController extends BaseController
                     'uuid' => empty($this->users->uuid) ? '' :$this->users->uuid,
                     'local' => config('app.url'),
                     'adcode' => $adcode,
-                    'city' => !empty($province->name) ? $province->name.$area->name : $area->name
+                    'city' => !empty($province->name) ? $province->name.$area->name : $area->name,
+                    'room_id' =>'1200',
+                    'room_name' => '畅所欲言'
                 ]
             );
         }
