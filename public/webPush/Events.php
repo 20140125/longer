@@ -128,10 +128,6 @@ class Events
                 );
                 //发送消息到当前客户端
                 Gateway::sendToCurrentClient(json_encode($new_message));
-                if (!empty($message_data['room_id'])) {
-                    self::$sysRobot['content'] = '进入房间';
-                    self::getRobotMessage($message_data['room_id']);
-                }
                 break;
             // 客户端发言 message: {type:say, to_client_id:xx, content:xx}
             case 'say':
@@ -182,7 +178,7 @@ class Events
                 //添加到当前组
                 Gateway::sendToGroup($message_data['room_id'] ,json_encode($new_message));
                 //自定义消息回复
-                self::getRobotMessage($message_data['room_id']);
+//                self::getRobotMessage($message_data['room_id']);
                 break;
             default:
                 break;
