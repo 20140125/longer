@@ -6,6 +6,7 @@ use App\Http\Controllers\Utils\Amap;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Mail\Login;
+use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -58,7 +59,10 @@ class CommonController
      */
     public function updateUserAvatarUrl()
     {
-        $users = $this->usersModel->getAll([],['username as client_name','avatar_url as client_img','uuid as uid']);
+        $users = $this->usersModel->getAll([],['username as client_name','avatar_url as client_img','uuid as uid','remember_token']);
+        foreach ($users as &$user) {
+            $user->desc = UserCenter::getInstance()->getResult('token',$user->remember_token,'=',['desc'])->desc;
+        }
         if ($this->redisUtils->sMembers(config('app.chat_user_key'))) {
             $this->redisUtils->del(config('app.chat_user_key'));
         }
