@@ -51,11 +51,11 @@ class OauthCallbackController
     public function __construct(Request $request)
     {
         if (empty($request->get('code')) || empty($request->get('state'))){
-            exit(redirect('/#/login'));
+            exit(redirect('/login'));
         }
         $this->redisClient = RedisClient::getInstance();
         if ($this->redisClient->getValue($request->get('state')) == false) {
-            exit(redirect('/#/login'));
+            exit(redirect('/login'));
         }
         if ($this->redisClient->getValue('users')) {
             $this->users = json_decode($this->redisClient->getValue('users'));
