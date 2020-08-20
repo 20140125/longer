@@ -59,9 +59,10 @@ class CommonController
      */
     public function updateUserAvatarUrl()
     {
-        $users = $this->usersModel->getAll([],['username as client_name','avatar_url as client_img','uuid as uid','remember_token']);
+        $users = $this->usersModel->getAll([],['username as client_name','avatar_url as client_img','uuid as uid','id']);
         foreach ($users as &$user) {
-            $user->desc = UserCenter::getInstance()->getResult('token',$user->remember_token,'=',['desc'])->desc;
+            $user->desc = UserCenter::getInstance()->getResult('uid',$user->id,'=',['desc'])->desc;
+            $user->id = md5($user->id).uniqid();
         }
         if ($this->redisUtils->sMembers(config('app.chat_user_key'))) {
             $this->redisUtils->del(config('app.chat_user_key'));
