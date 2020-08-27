@@ -234,9 +234,10 @@ if (!function_exists('file_lists'))
      * @param $filePath
      * @param $permissionFile
      * @param string $sort
+     * @param $sort_order
      * @return array
      */
-    function file_lists($filePath,$permissionFile = array(),$sort='type')
+    function file_lists($filePath,$permissionFile = array(),$sort='type',$sort_order = SORT_ASC)
     {
         $fileArr = array();
         $permissionFile = count($permissionFile)<=0 ?
@@ -285,9 +286,9 @@ if (!function_exists('file_lists'))
             }
         }
         if ($sort === 'type') {
-            array_multisort($type,SORT_ASC,$fileArr);
+            array_multisort($type,$sort_order,$fileArr);
         } else if ($sort === 'time') {
-            array_multisort($time,SORT_ASC,$fileArr);
+            array_multisort($time,$sort_order,$fileArr);
         }
         return $fileArr;
     }

@@ -24,8 +24,9 @@ class FileController extends BaseController
      */
     public function index()
     {
-        $this->validatePost(['path'=>'required|string','basename'=>'required|string']);
-        $fileLists = file_lists(file_path($this->post['path'],$this->post['basename']),[],$this->post['sort'] ?? 'type');
+        $this->validatePost(['path'=>'required|string','basename'=>'required|string','sort'=>'required|string|in:type,time','sort_order'=>'required|string|in:asc,desc']);
+        $fileLists = file_lists(file_path($this->post['path'],$this->post['basename']),[],$this->post['sort'] ?? 'type',
+            ($this->post['sort_order'] === 'desc')? SORT_DESC : SORT_ASC);
         return $this->ajax_return(Code::SUCCESS,'successfully',$fileLists);
     }
 
