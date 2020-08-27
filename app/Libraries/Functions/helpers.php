@@ -268,12 +268,13 @@ if (!function_exists('file_lists'))
         while ($file = readdir($openDir)){
             if (!in_array($file,$permissionFile) && str_replace('/','\\',$filePath.$file)!=public_path('storage')){
                 $fileArr[] = array(
-                    'label'=>$file,
-                    'fileType' =>filetype($filePath.$file),
-                    'children' =>[],
+                    'label' => $file,
+                    'fileType' => filetype($filePath.$file),
+                    'children' => [],
                     'path' => filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
-                    'size' =>md5($filePath.$file),
+                    'size' => md5($filePath.$file),
                     'auth' => file_chmod($filePath.$file),
+                    'time' => date('Y-m-d H:i:s',fileatime($filePath.$file))
                 );
                 $type[] = filetype($filePath.$file);
                 $time[] = fileatime($filePath.$file);
