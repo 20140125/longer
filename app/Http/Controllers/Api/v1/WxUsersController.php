@@ -150,7 +150,7 @@ class WxUsersController
             $filename = date('Ymd')."/".md5(date('YmdHis')).uniqid().".".$ext;
             Storage::disk('public')->put($filename, file_get_contents($path));
             $info = array(
-                'username' => 'tourist',
+                'username' => $this->post['username'] ?? 'tourist',
                 'href' => '/v1/wx/upload',
                 'msg' => 'upload file '.$file->getClientOriginalName().' successfully'
             );
