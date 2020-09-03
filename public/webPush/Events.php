@@ -82,6 +82,8 @@ class Events
                 if (!self::$chat->sIsMember(RedisKey,$message_data['uid'])) {
                     self::$chat->sAdd(RedisKey, $message_data['uid']);
                 }
+                self::$redisUsers = self::$chat->sMembers(RedisKey);
+                $clients_list = self::getUserLists(self::$redisUsers);
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
                     'type'=>'login',
