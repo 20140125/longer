@@ -182,31 +182,15 @@ class Events
             //删除记录
             case 'srem':
                 self::$chat->recallMessage($message_data);
-                // 获取在线用户
-                $message_data['client_list'] = $clients_list;
-                if (!empty($message_data['room_id'])) {
-                    //发送消息到当前组
-                    Gateway::sendToGroup($message_data['room_id'],json_encode($message_data));
-                } else {
-                    //通过uid发送消息
-                    Gateway::sendToUid($message_data['to_client_id'],json_encode($message_data));
-                }
+                self::recallOrSRemMessage($message_data,$clients_list);
                 break;
             //消息撤回
             case 'recall':
                 self::$chat->recallMessage($message_data['recall_message']);
                 //保存聊天记录
                 unset($message_data['recall_message']);
-                self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$message_data['room_id'],$message_data);
-                // 获取在线用户
-                $message_data['client_list'] = $clients_list;
-                if (!empty($message_data['room_id'])) {
-                    //发送消息到当前组
-                    Gateway::sendToGroup($message_data['room_id'],json_encode($message_data));
-                } else {
-                    //通过uid发送消息
-                    Gateway::sendToUid($message_data['to_client_id'],json_encode($message_data));
-                }
+                self::$chat->setChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id'],$message_data);
+                self::recallOrSRemMessage($message_data,$clients_list);
                 break;
             //消息撤回
             default:
@@ -215,6 +199,23 @@ class Events
         return false;
     }
 
+    /**
+     * todo:消息撤回删除
+     * @param $message_data
+     * @param $clients_list
+     */
+    protected static function recallOrSRemMessage($message_data,$clients_list)
+    {
+        $message_data['client_list'] = $clients_list;
+        $message_data['message'] = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id']) ?? [];
+        if (!empty($message_data['room_id'])) {
+            //发送消息到当前组
+            Gateway::sendToGroup($message_data['room_id'],json_encode($message_data));
+        } else {
+            //通过uid发送消息
+            Gateway::sendToUid($message_data['to_client_id'],json_encode($message_data));
+        }
+    }
     /**
      * 当客户端断开连接时
      * @param integer $client_id 客户端id
