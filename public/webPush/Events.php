@@ -57,6 +57,9 @@ class Events
             return false;
         }
         self::$chat = new Chat();
+        // 获取在线用户
+        self::$redisUsers = self::$chat->sMembers(RedisKey);
+        $clients_list = self::getUserLists(self::$redisUsers);
         // 根据类型执行不同的业务
         switch($message_data['type']) {
             // 客户端回应服务端的心跳
@@ -79,9 +82,6 @@ class Events
                 if (!self::$chat->sIsMember(RedisKey,$message_data['uid'])) {
                     self::$chat->sAdd(RedisKey, $message_data['uid']);
                 }
-                // 获取在线用户
-                self::$redisUsers = self::$chat->sMembers(RedisKey);
-                $clients_list = self::getUserLists(self::$redisUsers);
                 // 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx}
                 $new_message = array(
                     'type'=>'login',
@@ -111,9 +111,6 @@ class Events
                     self::$chat->delUnreadMsg($message_data['from_client_id'], $message_data['to_client_id']);
                 }
                 $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id']);
-                // 获取在线用户
-                self::$redisUsers = self::$chat->sMembers(RedisKey);
-                $clients_list = self::getUserLists(self::$redisUsers);
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -151,9 +148,6 @@ class Events
                     self::$chat->setUnreadMsgLists($message_data['from_client_id'],$message_data['to_client_id']);
                     //保存聊天记录
                     self::$chat->setChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],'',$new_message);
-                    // 获取在线用户
-                    self::$redisUsers = self::$chat->sMembers(RedisKey);
-                    $clients_list = self::getUserLists(self::$redisUsers);
                     $new_message['client_list'] = $clients_list;
                     //通过uid发送消息
                     Gateway::sendToUid($message_data['to_client_id'],json_encode($new_message));
@@ -179,9 +173,6 @@ class Events
                 );
                 //保存聊天记录
                 self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$message_data['room_id'],$new_message);
-                // 获取在线用户
-                self::$redisUsers = self::$chat->sMembers(RedisKey);
-                $clients_list = self::getUserLists(self::$redisUsers);
                 $new_message['client_list'] = $clients_list;
                 //发送消息到当前组
                 Gateway::sendToGroup($message_data['room_id'] ,json_encode($new_message));
@@ -190,8 +181,7 @@ class Events
             case 'srem':
                 self::$chat->recallMessage($message_data);
                 // 获取在线用户
-                self::$redisUsers = self::$chat->sMembers(RedisKey);
-                $message_data['client_list'] = self::getUserLists(self::$redisUsers);
+                $message_data['client_list'] = $clients_list;
                 if (!empty($message_data['room_id'])) {
                     //发送消息到当前组
                     Gateway::sendToGroup($message_data['room_id'],json_encode($message_data));
@@ -207,8 +197,7 @@ class Events
                 unset($message_data['recall_message']);
                 self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$message_data['room_id'],$message_data);
                 // 获取在线用户
-                self::$redisUsers = self::$chat->sMembers(RedisKey);
-                $message_data['client_list'] = self::getUserLists(self::$redisUsers);
+                $message_data['client_list'] = $clients_list;
                 if (!empty($message_data['room_id'])) {
                     //发送消息到当前组
                     Gateway::sendToGroup($message_data['room_id'],json_encode($message_data));
