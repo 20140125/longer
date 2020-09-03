@@ -81,6 +81,52 @@ class Chat
         }
         return $messageLists;
     }
+
+    /**
+     * todo:消息撤回：删除redis缓存数据并告知用户/消息删除：直接删除消息
+     * @param $message
+     */
+    public function recallMessage($message)
+    {
+        $receiveKey = empty($message['room_id']) ? "receive_{$message['from_client_id']}_{$message['to_client_id']}" : "receive_all_{$message['room_id']}";
+        $num = $this->getMsgLen($receiveKey);
+        $recList = $this ->redisClient-> lRange($receiveKey, 0, (int)($num));
+        $newRecList = array();
+        foreach ($recList as $index=> $item) {
+            if (!$this->compareJson(json_encode($message,JSON_UNESCAPED_UNICODE),$item)) {
+                array_push($newRecList,json_decode($item,true));
+            }
+        }
+        //删除redisKey重新赋值
+        $this->redisClient->del($receiveKey);
+        foreach ($newRecList as $row) {
+            $this->setChatMsgLists($row['from_client_id'],$row['to_client_id'],$row['room_id'],$row);
+        }
+    }
+
+    /**
+     * todo:json字符串比较
+     * @param $jsonA
+     * @param $jsonB
+     * @param $field
+     * @return bool
+     */
+    protected function compareJson ($jsonA,$jsonB,$field=['type'])
+    {
+        $jsonA = json_decode($jsonA,true);
+        $jsonB = json_decode($jsonB,true);
+        if (count($jsonB)!== count($jsonA)) {
+            return false;
+        }
+        $total = count($jsonA);
+        $num = count($field);
+        foreach ($jsonA as $i => $a) {
+            if (!in_array($i,$field) && $jsonA[$i] == $jsonB[$i]) {
+                $num++;
+            }
+        }
+        return $num === $total;
+    }
     /**
      * TODO:获取聊天记录长度
      * @param $key

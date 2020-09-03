@@ -183,11 +183,41 @@ class Events
                 self::$redisUsers = self::$chat->sMembers(RedisKey);
                 $clients_list = self::getUserLists(self::$redisUsers);
                 $new_message['client_list'] = $clients_list;
-                //添加到当前组
+                //发送消息到当前组
                 Gateway::sendToGroup($message_data['room_id'] ,json_encode($new_message));
-                //自定义消息回复
-//                self::getRobotMessage($message_data['room_id']);
                 break;
+            //删除记录
+            case 'srem':
+                self::$chat->recallMessage($message_data);
+                // 获取在线用户
+                self::$redisUsers = self::$chat->sMembers(RedisKey);
+                $message_data['client_list'] = self::getUserLists(self::$redisUsers);
+                if (!empty($message_data['room_id'])) {
+                    //发送消息到当前组
+                    Gateway::sendToGroup($message_data['room_id'],json_encode($message_data));
+                } else {
+                    //通过uid发送消息
+                    Gateway::sendToUid($message_data['to_client_id'],json_encode($message_data));
+                }
+                break;
+            //消息撤回
+            case 'recall':
+                self::$chat->recallMessage($message_data['recall_message']);
+                //保存聊天记录
+                unset($message_data['recall_message']);
+                self::$chat->setChatMsgLists($message_data['from_client_id'],'all',$message_data['room_id'],$message_data);
+                // 获取在线用户
+                self::$redisUsers = self::$chat->sMembers(RedisKey);
+                $message_data['client_list'] = self::getUserLists(self::$redisUsers);
+                if (!empty($message_data['room_id'])) {
+                    //发送消息到当前组
+                    Gateway::sendToGroup($message_data['room_id'],json_encode($message_data));
+                } else {
+                    //通过uid发送消息
+                    Gateway::sendToUid($message_data['to_client_id'],json_encode($message_data));
+                }
+                break;
+            //消息撤回
             default:
                 break;
         }
