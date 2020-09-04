@@ -7,6 +7,12 @@ use App\Models\Users;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * todo:数据修复用
+ * @author <fl140125@gmail.com>
+ * Class SyncClientId
+ * @package App\Console\Commands
+ */
 class SyncClientId extends Command
 {
     /**
@@ -57,12 +63,12 @@ class SyncClientId extends Command
      */
     protected function syncUserUUid ()
     {
-        $userUUid = $this->userModel->getAll();
+        $userUUid = $this->userModel->getAll(['username','uuid','id']);
         Cache::forget('oauthLists');
         Cache::forever('oauthLists',$userUUid);
         $bar = $this->getOutput()->createProgressBar(count($userUUid));
         foreach ($userUUid as $key=> $uuid) {
-            $this->userModel->updateResult(['uuid'=>config('app.client_id').($key+1)],'username',$uuid->username);
+            $this->userModel->updateResult(['uuid'=>config('app.client_id').$uuid->id],'username',$uuid->username);
             $this->info('当前用户【'.$uuid->username.'】uuid同步成功');
             $bar->advance();
         }

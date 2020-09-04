@@ -67,8 +67,6 @@ class CommonController
         if ($this->redisUtils->sMembers(config('app.chat_user_key'))) {
             $this->redisUtils->del(config('app.chat_user_key'));
         }
-        //同步画像重新同步uuid（方便）
-        Artisan::call('longer:sync_client_id');
         return $this->redisUtils->sAdd(config('app.chat_user_key'),json_encode($users,JSON_UNESCAPED_UNICODE));
     }
 

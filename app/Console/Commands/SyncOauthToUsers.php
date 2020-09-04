@@ -8,6 +8,11 @@ use App\Models\Users;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @author <fl140125@gmail.com>
+ * Class SyncOauthToUsers
+ * @package App\Console\Commands
+ */
 class SyncOauthToUsers extends Command
 {
     /**
@@ -90,8 +95,9 @@ class SyncOauthToUsers extends Command
                     'phone_number' => '',
                     'uuid' => md5($oauth->username).uniqid()
                 ];
-                $uid = $this->usersModel->addResult($arr);
-                $this->oAuthModel->updateResult(['uid' => $uid], 'id', $oauth->id);
+                $id = $this->usersModel->addResult($arr);
+                $this->usersModel->updateResult(['uuid'=>config('app.chat_user_key').$id],'id',$id);
+                $this->oAuthModel->updateResult(['uid' => $id], 'id', $oauth->id);
                 $bar->advance();
                 $this->info('添加用户[' . $oauth->username . ']信息成功');
             }

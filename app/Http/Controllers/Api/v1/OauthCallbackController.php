@@ -305,7 +305,7 @@ class OauthCallbackController
         $oauthRes =  $this->oauthModel->addResult($data);
         if (!empty($oauthRes)){
             UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauthRes));
-            //同步用户画像
+            //同步用户数据
             Artisan::call("longer:sync_oauth");
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             $info = [

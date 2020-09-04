@@ -6,6 +6,11 @@ use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Chat;
 use Illuminate\Console\Command;
 
+/**
+ * @author <fl140125@gmail.com>
+ * Class SyncChatMessage
+ * @package App\Console\Commands
+ */
 class SyncChatMessage extends Command
 {
     /**
