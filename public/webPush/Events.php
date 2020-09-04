@@ -112,7 +112,7 @@ class Events
                 if (!empty($message_data['source']) && $message_data['source'] === 'user') {
                     self::$chat->delUnreadMsg($message_data['from_client_id'], $message_data['to_client_id']);
                 }
-                $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id']);
+                $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id'],$message_data['page'],$message_data['limit']);
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -120,8 +120,11 @@ class Events
                     'to_client_name' => $message_data['to_client_name'],
                     'to_client_id' => $message_data['to_client_id'],
                     'room_id' =>$message_data['room_id'],
-                    'message' => $messageLists,
+                    'message' => $messageLists['list'],
+                    'total' => $messageLists['total'],
                     'uid' => $message_data['uid'],
+                    'page' => $message_data['page'],
+                    'limit' => $message_data['limit'],
                     'client_list' => $clients_list,
                     'source' => $message_data['source']
                 );
@@ -218,7 +221,7 @@ class Events
     }
     /**
      * 当客户端断开连接时
-     * @param integer $client_id 客户端id
+     * @param $client_id //客户端id
      * @throws Exception
      */
     public static function onClose($client_id)

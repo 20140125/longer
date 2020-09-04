@@ -260,7 +260,8 @@ if (!function_exists('file_lists'))
                 'js',
                 'static',
                 'favicon.ico',
-                '20200515171624.jpg','20200515174304.jpg','20200515174358.jpg'
+                '20200515171624.jpg','20200515174304.jpg','20200515174358.jpg',
+                'backup'
             ] : $permissionFile;
         $openDir = opendir($filePath);
         $type = array();
@@ -576,8 +577,7 @@ if(!function_exists('auth_code'))
         // 密匙b会用来做数据完整性验证
         $keyb = md5(substr($key, 16, 16));
         // 密匙c用于变化生成的密文
-        $keyc = $ckey_length ? ($operation == 'DECODE' ? substr($string, 0, $ckey_length):
-            substr(md5(microtime()), -$ckey_length)) : '';
+        $keyc = $ckey_length ? ('DECODE' == $operation ? substr($string, 0, $ckey_length): substr(md5(microtime()), -$ckey_length)) : '';
         // 参与运算的密匙
         $crypt_key = $keya.md5($keya.$keyc);
         $key_length = strlen($crypt_key);

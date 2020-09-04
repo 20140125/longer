@@ -43,7 +43,7 @@ class Chat extends Model
      */
     public function getResult(array $where,int $limit,int $page,array $columns=['*'])
     {
-        $result['data'] = DB::table($this->table)->limit($limit)->offset($limit*($page-1))->where($where)->get($columns);
+        $result['data'] = DB::table($this->table)->limit($limit)->offset($limit*($page-1))->where($where)->orderByDesc('id')->get($columns);
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }

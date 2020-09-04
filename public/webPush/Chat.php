@@ -40,48 +40,49 @@ class Chat
      * @param $from
      * @param $to
      * @param $room_id
+     * @param int $page
+     * @param int $limit
      * @return array
      */
-    public function getChatMsgLists($from, $to,$room_id)
+    public function getChatMsgLists($from, $to,$room_id,$page = 1,$limit = 19)
     {
-        $messageLists = array();
+        $message = array();
         //群聊消息
-        if ($to == 'all' && !empty($room_id)) {
+        if (!empty($room_id)) {
             $recName = 'receive_all_'.$room_id;
             $num = $this->getMsgLen($recName);
-            $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
+            $offset = $limit * ($page - 1) ;
+            $recList = $offset + $limit >= $num ? $this ->redisClient-> lRange($recName, $offset, $num) : $this->redisClient->lRange($recName,$offset,$offset+$limit);
             $time = array();
             foreach ($recList as $item) {
-                array_push($messageLists,json_decode($item,true));
+                array_push($message,json_decode($item,true));
                 $time[] = json_decode($item,true)['time'];
             }
-            array_multisort($time,SORT_ASC,$messageLists);
-        } else if (empty($room_id) && $to!='all') { //私聊信息
-            //接受的消息
-            $recName =  "receive_{$from}_{$to}";
-            $num = $this->getMsgLen($recName);
-            $recList = $this ->redisClient-> lRange($recName, 0, (int)($num));
-            //发送的消息
-            $sendName = "receive_{$to}_{$from}";
-            $num = $this->getMsgLen($sendName);
-            $sendLists = $this ->redisClient-> lRange($sendName, 0, (int)($num));
-            $messageLists = array();
-            $time = array();
-            foreach ($sendLists as $item) {
-                array_push($messageLists,json_decode($item,true));
-                $time[] = json_decode($item,true)['time'];
-
-            }
-            foreach ($recList as $item) {
-                array_push($messageLists,json_decode($item,true));
-                $time[] = json_decode($item,true)['time'];
-
-            }
-            array_multisort($time,SORT_ASC,$messageLists);
+            array_multisort($time,SORT_ASC,$message);
+            return array('list' => $message, 'total' => $num);
         }
-        return $messageLists;
+        //接受的消息
+        $recName =  "receive_{$from}_{$to}";
+        $recNum = $this->getMsgLen($recName);
+        $offset = $limit * ($page - 1) ;
+        $recList = $offset + $limit >= $recNum ? $this ->redisClient-> lRange($recName, $offset, $recNum) : $this->redisClient->lRange($recName,$offset,$offset+$limit);
+        //发送的消息
+        $sendName = "receive_{$to}_{$from}";
+        $sendNum = $this->getMsgLen($sendName);
+        $sendLists = $offset + $limit >= $sendNum ? $this ->redisClient-> lRange($recName, $offset, $sendNum) : $this->redisClient->lRange($recName,$offset,$offset+$limit);
+        $messageLists = array();
+        $time = array();
+        foreach ($sendLists as $item) {
+            array_push($message,json_decode($item,true));
+            $time[] = json_decode($item,true)['time'];
+        }
+        foreach ($recList as $item) {
+            array_push($message,json_decode($item,true));
+            $time[] = json_decode($item,true)['time'];
+        }
+        array_multisort($time,SORT_ASC,$messageLists);
+        return array('list' => $message, 'total' => $recNum + $sendNum);
     }
-
     /**
      * todo:消息撤回：删除redis缓存数据并告知用户/消息删除：直接删除消息
      * @param $message

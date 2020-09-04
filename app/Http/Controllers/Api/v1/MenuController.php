@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
 use App\Models\Area;
+use App\Models\Chat;
 use App\Models\OAuth;
 use App\Models\TimeLine;
 use App\Models\UserCenter;
@@ -74,6 +75,19 @@ class MenuController extends BaseController
         }
         set_code(Code::NOT_ALLOW);
         return $this->ajax_return(Code::NOT_ALLOW,'permission denied');
+    }
+
+    /**
+     * todo ：获取聊天记录
+     * @return JsonResponse
+     */
+    public function chatMessage()
+    {
+        $result = Chat::getInstance()->getResult([],$this->post['limit'] ?? 15,$this->post['page'] ?? 1);
+        foreach ($result['data'] as &$item) {
+            $item->content = json_decode($item->content,true);
+        }
+        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
     /**

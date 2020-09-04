@@ -21,7 +21,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\SyncOauthToUsers',
         'App\Console\Commands\SyncLocal',
         'App\Console\Commands\SyncWeather',
-        'App\Console\Commands\SyncClientId'
+        'App\Console\Commands\SyncClientId',
+        'App\Console\Commands\SyncChatMessage'
     ];
 
     /**
