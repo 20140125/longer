@@ -41,7 +41,6 @@ class Events
         'client_img' => 'https://cdn.pixabay.com/photo/2016/12/13/21/20/alien-1905155_960_720.png',
         'content' => '欢迎您的到来！'
     ];
-
     /**
      * 有消息时
      * @param $from_client_id  //workerman 生成的client_id
@@ -113,6 +112,17 @@ class Events
                     self::$chat->delUnreadMsg($message_data['from_client_id'], $message_data['to_client_id']);
                 }
                 $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id'],$message_data['page'],$message_data['limit']);
+                if (!count($messageLists['list'])) {
+                    //数据库查询历史记录
+                    $hisMessage = array(
+                        'from_client_id' => $message_data['from_client_id'],
+                        'to_client_id' => $message_data['to_client_id'],
+                        'room_id' => $message_data['room_id'],
+                        'page' => $message_data['page'],
+                        'limit' => $message_data['limit'] + 1
+                    );
+                    $messageLists = self::getHisChatMessage($hisMessage);
+                }
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -201,7 +211,6 @@ class Events
         }
         return false;
     }
-
     /**
      * todo:消息撤回删除
      * @param $message_data
@@ -241,12 +250,11 @@ class Events
             Gateway::sendToGroup($room_id, json_encode($new_message));
         }
     }
-
     /**
      * todo:自动回复消息
      * @param $room_id
      */
-    public static function getRobotMessage($room_id)
+    protected static function getRobotMessage($room_id)
     {
         $new_message = array(
             'type'=>'say',
@@ -264,13 +272,12 @@ class Events
         //添加到当前组
         Gateway::sendToGroup($room_id ,json_encode($new_message));
     }
-
     /**
      * todo:获取管理员列表
      * @param $redisUser
      * @return array
      */
-    public static function getUserLists($redisUser)
+    protected static function getUserLists($redisUser)
     {
         self::$chat = new Chat();
         $arr = [];$sortArr = [];
@@ -308,7 +315,7 @@ class Events
      * @param $adcode
      * @return bool|mixed|string
      */
-    public static function getWeather($adcode)
+    protected static function getWeather($adcode)
     {
         try {
             self::$chat = new Chat();
@@ -325,6 +332,50 @@ class Events
                 return $redisValue;
             }
             return self::$chat->getValue($adcode);
+        } catch (\Exception $exception){
+            self::$db->closeConnection();
+            echo $exception;
+        }
+        return false;
+    }
+    /**
+     * todo:获取历史记录
+     * @param $message
+     * @return false|mixed|string|null
+     */
+    protected static function getHisChatMessage($message)
+    {
+        try {
+            self::$db = new connection(Host,Port,UserName,Password,DbName);
+            $offset = $message['limit'] * ($message['page'] - 1);
+            if (!empty($message['room_id'])) {
+                //列表
+                $lists = self::$db->from('os_chat')->orderByDESC(['id'])->where("room_id = '{$message['room_id']}'")->limit($message['limit'])->offset($offset)->select('content')->query();
+                $arr = [];
+                foreach ($lists as $item) {
+                    array_push($arr,json_decode($item['content']));
+                }
+                $result['list'] = $arr;
+                //总记录数
+                $total = self::$db->from('os_chat')->where("room_id = '{$message['room_id']}'")->select('count(*) as total')->query();
+                $result['total'] = $total[0]['total'];
+            } else {
+                //列表
+                $lists = self::$db->from('os_chat')
+                    ->where("(from_client_id = '{$message['from_client_id']}' and to_client_id = '{$message['to_client_id']}') or from_client_id = '{$message['to_client_id']}' and to_client_id = '{$message['from_client_id']}'")
+                    ->limit($message['limit'])->orderByDESC(['id'])->offset($offset)->select('content')->query();
+                $arr = [];
+                foreach ($lists as $item) {
+                    array_push($arr,json_decode($item['content']));
+                }
+                $result['list'] = $arr;
+                //总记录数
+                $total = self::$db->from('os_chat')
+                    ->where("(from_client_id = '{$message['from_client_id']}' and to_client_id = '{$message['to_client_id']}') or from_client_id = '{$message['to_client_id']}' and to_client_id = '{$message['from_client_id']}'")
+                    ->select('count(*) as total')->query();
+                $result['total'] = $total[0]['total'];
+            }
+            return $result;
         } catch (\Exception $exception){
             self::$db->closeConnection();
             echo $exception;
