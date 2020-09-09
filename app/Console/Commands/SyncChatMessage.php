@@ -77,7 +77,7 @@ class SyncChatMessage extends Command
                $chatArray = array(
                    'from_client_id' => $chat['from_client_id'],
                    'to_client_id' => $chat['to_client_id'],
-                   'room_id' => empty($chat['room_id']) ?? '',
+                   'room_id' => empty($chat['room_id']) ? '' : $chat['room_id'],
                    'content' => json_encode($chat,JSON_UNESCAPED_UNICODE)
                );
                if ($this->chatModel->saveResult($chatArray)) {
