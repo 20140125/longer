@@ -38,7 +38,7 @@ class WxUsersController
             $this->setCode(Code::METHOD_ERROR,'method not allow');
         }
         $this->appid = config('app.program_appid');
-            $this->appsecret = config('app.program_secret');
+        $this->appsecret = config('app.program_secret');
         $this->post = $request->post();
     }
 
