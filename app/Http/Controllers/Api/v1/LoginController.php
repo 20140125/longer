@@ -215,6 +215,7 @@ class LoginController
         //新用户注册系统成功
         $this->post['info'] = '欢迎新用户'.$request['username'].'账户注册成功';
         $this->post['uid'] =  $request['uuid'];
+        $this->post['username'] = $request['username'];
         $this->post['status'] = 1;
         $this->post['state'] = $this->commonControl->pushMessage($this->post);
         $message = array(
