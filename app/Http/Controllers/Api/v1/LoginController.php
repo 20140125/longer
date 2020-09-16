@@ -199,7 +199,7 @@ class LoginController
         $request['status'] = 1;  //允许访问
         $id = $this->userModel->addResult($request);
         //新用户注册生成client_id
-        $this->userModel->updateResult(['uuid'=>config('app.chat_user_key').$id],'id',$result);
+        $this->userModel->updateResult(['uuid'=>config('app.client_id').$id],'id',$result);
         UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$id,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
         $request['token'] = $request['remember_token'];
         //更新用户画像

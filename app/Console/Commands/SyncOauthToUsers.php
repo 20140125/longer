@@ -96,7 +96,7 @@ class SyncOauthToUsers extends Command
                     'uuid' => md5($oauth->username).uniqid()
                 ];
                 $id = $this->usersModel->addResult($arr);
-                $this->usersModel->updateResult(['uuid'=>config('app.chat_user_key').$id],'id',$id);
+                $this->usersModel->updateResult(['uuid'=>config('app.client_id').$id],'id',$id);
                 $this->oAuthModel->updateResult(['uid' => $id], 'id', $oauth->id);
                 $bar->advance();
                 $this->info('添加用户[' . $oauth->username . ']信息成功');
