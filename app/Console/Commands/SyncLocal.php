@@ -52,6 +52,7 @@ class SyncLocal extends Command
         foreach ($result as $item) {
             if (empty($item->local)) {
                 $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
+                echo json_encode($localObj);
                 $this->logModel->updateResult(['local'=>$localObj['province'] ?? '亚洲'.','.$localObj['city'] ?? '中国'],['id'=>$item->id]);
                 $this->info(json_encode($localObj,JSON_UNESCAPED_UNICODE));
             }
