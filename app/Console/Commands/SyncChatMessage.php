@@ -34,10 +34,6 @@ class SyncChatMessage extends Command
      * @var RedisClient $redisClient
      */
     protected $redisClient;
-    /**
-     * @var int[] $pageSize
-     */
-    protected $pageSize;
 
     /**
      * Create a new command instance.
@@ -49,7 +45,6 @@ class SyncChatMessage extends Command
         parent::__construct();
         $this->chatModel = Chat::getInstance();
         $this->redisClient = RedisClient::getInstance();
-        $this->pageSize = array('page'=>1,'limit'=>20);
     }
 
     /**
