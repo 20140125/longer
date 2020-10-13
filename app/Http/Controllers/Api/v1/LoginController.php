@@ -137,7 +137,7 @@ class LoginController
             'token'=>$users['token'],
             'username'=>$users['username'],
             'socket'=>config('app.socket_url'),
-            'avatar_url' => $users['username'] == 'admin' ? config('app.avatar_url') : $users['avatar_url'],
+            'avatar_url' => empty($users['avatar_url']) ? $this->getRandomUsersAvatarUrl() : $users['avatar_url'],
             'websocket'=>config('app.websocket'),
             'role_id' => md5($users['role_id']),
             'uuid' => empty($users['uuid']) ? '' :$users['uuid'],
@@ -154,9 +154,11 @@ class LoginController
         $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0],true);
         $avatarUrl = [];
         foreach ($users as $user) {
-            $avatarUrl[] = $user['client_img'];
+            if ($user['client_name']!=='admin') {
+                $avatarUrl[] = $user['client_img'];
+            }
         }
-        return $avatarUrl[rand(1,count($avatarUrl))]; //排除第一张图片
+        return $avatarUrl[rand(0,count($avatarUrl))]; //排除第一张图片
     }
 
     /**
