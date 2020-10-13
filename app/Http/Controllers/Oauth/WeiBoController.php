@@ -33,10 +33,10 @@ class WeiBoController extends OAuthController
 
     /**
      * WeiboController constructor.
-     * @param $appid
-     * @param $appsecret
+     * @param string $appid
+     * @param string $appsecret
      */
-    public function __construct($appid,$appsecret)
+    public function __construct(string $appid,string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -45,11 +45,11 @@ class WeiBoController extends OAuthController
     }
 
     /**
-     * @param $appid
-     * @param $appsecret
+     * @param string $appid
+     * @param string $appsecret
      * @return WeiBoController
      */
-    static public function getInstance($appid,$appsecret)
+    static public function getInstance(string $appid,string $appsecret)
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid,$appsecret);
@@ -81,11 +81,11 @@ class WeiBoController extends OAuthController
 
     /**
      * TODO:：获取access_token
-     * @param $code
+     * @param string $code
      * @return mixed
      * @throws \Exception
      */
-    public function getAccessToken($code)
+    public function getAccessToken(string $code)
     {
         $arr = [
             'client_id' => $this->appid,
@@ -107,12 +107,12 @@ class WeiBoController extends OAuthController
 
     /**
      * TODO:：获取用户信息
-     * @param $access_token
-     * @param $uid
+     * @param string $access_token
+     * @param string $uid
      * @return array|mixed
      * @throws \Exception
      */
-    public function getUserInfo($access_token,$uid)
+    public function getUserInfo(string $access_token,string $uid)
     {
         $result = $this->curl->get($this->apiUrl."2/users/show.json?access_token={$access_token}&uid={$uid}");
         if (!$result){

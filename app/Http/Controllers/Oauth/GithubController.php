@@ -34,10 +34,10 @@ class GithubController extends OAuthController
 
     /**
      * GithubController constructor.
-     * @param $appid
-     * @param $appsecret
+     * @param string $appid
+     * @param string $appsecret
      */
-    public function __construct($appid,$appsecret)
+    public function __construct(string $appid,string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -46,11 +46,11 @@ class GithubController extends OAuthController
     }
 
     /**
-     * @param $appid
-     * @param $appsecret
+     * @param string $appid
+     * @param string $appsecret
      * @return GithubController
      */
-    static public function getInstance($appid,$appsecret)
+    static public function getInstance(string $appid,string $appsecret)
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid,$appsecret);
@@ -79,12 +79,12 @@ class GithubController extends OAuthController
 
     /**
      * TODO:：获取access_token
-     * @param $code
-     * @param $state
+     * @param string $code
+     * @param string $state
      * @return array|bool|mixed
      * @throws \Exception
      */
-    public function getAccessToken($code,$state)
+    public function getAccessToken(string $code,string $state)
     {
         $arr = [
             'client_id' => $this->appid,
@@ -107,11 +107,11 @@ class GithubController extends OAuthController
 
     /**
      * TODO:：获取用户信息
-     * @param $access_token
+     * @param string $access_token
      * @return mixed
      * @throws \Exception
      */
-    public function getUserInfo($access_token)
+    public function getUserInfo(string $access_token)
     {
         $result = $this->curl->get('https://api.github.com/user?access_token='.$access_token);
         if (!$result){

@@ -34,10 +34,10 @@ class OsChinaController extends OAuthController
 
     /**
      * OsChinaController constructor.
-     * @param $appid
-     * @param $appsecret
+     * @param string $appid
+     * @param string $appsecret
      */
-    public function __construct($appid,$appsecret)
+    public function __construct(string $appid,string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -46,11 +46,11 @@ class OsChinaController extends OAuthController
     }
 
     /**
-     * @param $appid
-     * @param $appsecret
+     * @param string $appid
+     * @param string $appsecret
      * @return static
      */
-    static public function getInstance($appid,$appsecret)
+    static public function getInstance(string $appid,string $appsecret)
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid,$appsecret);
@@ -77,11 +77,11 @@ class OsChinaController extends OAuthController
 
     /**
      * TODO:：获取access_token
-     * @param $code
+     * @param string $code
      * @return array|bool|mixed
      * @throws \Exception
      */
-    public function getAccessToken($code)
+    public function getAccessToken(string $code)
     {
         $arr = [
             'client_id' => $this->appid,
@@ -105,11 +105,11 @@ class OsChinaController extends OAuthController
 
     /**
      * TODO:：刷新AccessToken续期
-     * @param $refreshToken
+     * @param string $refreshToken
      * @return array|mixed
      * @throws \Exception
      */
-    public function refreshToken($refreshToken)
+    public function refreshToken(string $refreshToken)
     {
         $arr = [
             'client_id' => $this->appid,
@@ -133,10 +133,10 @@ class OsChinaController extends OAuthController
 
     /**
      * TODO:获取用户信息
-     * @param $access_token
+     * @param string $access_token
      * @return array|mixed
      */
-    public function getUserInfo($access_token)
+    public function getUserInfo(string $access_token)
     {
         $arr = [
             'access_token' => $access_token,
@@ -155,12 +155,12 @@ class OsChinaController extends OAuthController
 
     /**
      * TODO:获取用户详情
-     * @param $access_token
-     * @param $user
-     * @param $friend
+     * @param string $access_token
+     * @param string $user
+     * @param string $friend
      * @return array|mixed
      */
-    public function getUserInformation($access_token,$user,$friend)
+    public function getUserInformation(string $access_token,string $user,string $friend)
     {
         $arr = [
             'access_token' => $access_token,

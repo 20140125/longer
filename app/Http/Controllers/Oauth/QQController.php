@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Log;
 class QQController extends OAuthController
 {
     /**
-     * @var $appid
+     * @var string $appid
      */
     protected $appid;
     /**
-     * @var $appsecret
+     * @var string $appsecret
      */
     protected $appsecret;
     /**
@@ -40,10 +40,10 @@ class QQController extends OAuthController
 
     /**
      * QQController constructor.
-     * @param $appid
-     * @param $appsecret
+     * @param string $appid
+     * @param string $appsecret
      */
-    public function __construct($appid,$appsecret)
+    public function __construct(string $appid, string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -52,11 +52,11 @@ class QQController extends OAuthController
     }
 
     /**
-     * @param $appid
-     * @param $appsecret
+     * @param string $appid
+     * @param string $appsecret
      * @return QQController
      */
-    static public function getInstance($appid,$appsecret)
+    static public function getInstance(string $appid, string $appsecret)
     {
         if (!self::$instance instanceof self){
             self::$instance = new static($appid,$appsecret);
@@ -86,11 +86,11 @@ class QQController extends OAuthController
 
     /**
      * TODO:：获取access_token
-     * @param $code
+     * @param string $code
      * @return array|bool
      * @throws \Exception
      */
-    public function getAccessToken($code)
+    public function getAccessToken(string $code)
     {
         $arr = [
             'grant_type' => 'authorization_code',
@@ -111,11 +111,11 @@ class QQController extends OAuthController
 
     /**
      * TODO:：获取用户的openid
-     * @param $access_token
+     * @param string $access_token
      * @return array
      * @throws \Exception
      */
-    public function getOpenId($access_token)
+    public function getOpenId(string $access_token)
     {
         $arr = [
             'access_token' =>$access_token
@@ -132,11 +132,11 @@ class QQController extends OAuthController
 
     /**
      * TODO:：刷新AccessToken续期
-     * @param $refreshToken
+     * @param string $refreshToken
      * @return array|mixed
      * @throws \Exception
      */
-    public function refreshToken($refreshToken)
+    public function refreshToken(string $refreshToken)
     {
         $arr = [
             'grant_type'	=>	'refresh_token',
@@ -156,11 +156,11 @@ class QQController extends OAuthController
 
     /**
      * TODO:：获取用户信息
-     * @param $access_token
+     * @param string $access_token
      * @return JsonResponse|mixed
      * @throws \Exception
      */
-    public function getUserInfo($access_token)
+    public function getUserInfo(string $access_token)
     {
         $this->openid = $this->getOpenId($access_token);
         $arr = [

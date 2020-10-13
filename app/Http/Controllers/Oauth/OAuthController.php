@@ -12,9 +12,12 @@ use App\Http\Controllers\Controller;
  */
 class OAuthController extends Controller
 {
+    /**
+     * @var string $state
+     */
     public $state;
     /**
-     * @var Curl
+     * @var Curl $curl
      */
     protected $curl;
 
@@ -42,7 +45,7 @@ class OAuthController extends Controller
      */
     public function checkState($storeState,$state)
     {
-        return $storeState === $state ? true : false;
+        return $storeState === $state;
     }
 
     /**
