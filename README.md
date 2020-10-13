@@ -30,5 +30,6 @@ windows 下启动长链接脚本
 
    ![文件管理](/public/20200515174358.jpg)
    
-###鸣谢
+**致谢**
+
   [JetBrains](https://www.jetbrains.com/?from=https://github.com/20140125/longer) 的免费支持
