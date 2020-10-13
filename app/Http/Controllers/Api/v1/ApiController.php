@@ -194,7 +194,7 @@ class ApiController extends BaseController
                     'desc' =>'required',
                     'method' =>'required|in:POST,GET,DELETE,PUT',
                     'href' =>'required|url',
-                    'response_string' =>'required|json',
+                    'response_string' =>'required|Array',
                     'type' =>'required|integer',
                 ];
                 break;

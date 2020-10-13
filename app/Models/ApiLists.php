@@ -58,8 +58,9 @@ class ApiLists extends Model
      */
     public function addResult(array $data)
     {
-        $data['request'] = empty($data['request'])?"[]":json_encode($data['request'],JSON_UNESCAPED_UNICODE);
-        $data['response'] = empty($data['response'])?"[]":json_encode($data['response'],JSON_UNESCAPED_UNICODE);
+        $data['request'] = empty($data['request'])? "[]" : json_encode($data['request'],JSON_UNESCAPED_UNICODE);
+        $data['response'] = empty($data['response'])? "[]" : json_encode($data['response'],JSON_UNESCAPED_UNICODE);
+        $data['response_string'] = json_encode($data['response_string'],JSON_UNESCAPED_UNICODE);
         return DB::table($this->table)->insertGetId($data);
     }
 
@@ -73,8 +74,9 @@ class ApiLists extends Model
      */
     public function updateResult(array $data,string $field,int $value,string $op='=')
     {
-        $data['request'] = empty($data['request'])?"[]":json_encode($data['request'],JSON_UNESCAPED_UNICODE);
-        $data['response'] = empty($data['response'])?"[]":json_encode($data['response'],JSON_UNESCAPED_UNICODE);
+        $data['request'] = empty($data['request'])? "[]" : json_encode($data['request'],JSON_UNESCAPED_UNICODE);
+        $data['response'] = empty($data['response'])? "[]" : json_encode($data['response'],JSON_UNESCAPED_UNICODE);
+        $data['response_string'] = json_encode($data['response_string'],JSON_UNESCAPED_UNICODE);
         return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
 
