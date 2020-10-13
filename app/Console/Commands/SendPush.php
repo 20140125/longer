@@ -67,7 +67,7 @@ class SendPush extends Command
         foreach ($result as &$item) {
             $userCenter = UserCenter::getInstance()->getResult('u_name',$item->username);
             if (!empty($userCenter) && $userCenter->notice_status == '2') {
-                $this->error("　".$item->username .'　禁用站内信通知');
+                $this->error("　".$item->username .'　已禁用站内信通知');
                 return false;
             }
             switch ($item->status) {

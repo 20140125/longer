@@ -70,7 +70,7 @@ class NormalRule extends Command
         foreach ($result as $item) {
             $userCenter = UserCenter::getInstance()->getResult('u_name',$item->username);
             if ($userCenter->notice_status == '2') {
-                $this->error("　".$item->username .'　禁用站内信通知');
+                $this->error("　".$item->username .'　已禁用站内信通知');
                 return false;
             }
             //权限还有要过期提醒用户关注

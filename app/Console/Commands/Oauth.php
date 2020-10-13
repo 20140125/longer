@@ -68,7 +68,7 @@ class Oauth extends Command
      * @param string $oauth_type 账号来源
      * @param string $refresh_token 用于刷新 access_token
      */
-    private function refreshToken($oauth_type,$refresh_token)
+    private function refreshToken(string $oauth_type,string $refresh_token)
     {
         switch (strtolower($oauth_type)) {
             case 'qq':
