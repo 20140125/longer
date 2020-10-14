@@ -59,7 +59,7 @@ class AreaController extends BaseController
      * TODO:获取天气
      * @param string code 城市码
      * @param integer id ID
-     * @return JsonResponse
+     * @return JsonResponse | boolean
      */
     public function weather()
     {
@@ -82,6 +82,7 @@ class AreaController extends BaseController
             return $this->ajax_return(Code::ERROR,'get weather failed');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
+            return false;
         }
     }
 
