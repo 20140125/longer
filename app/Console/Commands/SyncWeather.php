@@ -61,7 +61,7 @@ class SyncWeather extends Command
                         'reporttime' => !empty($provinceForecast['reporttime']) ? $provinceForecast['reporttime'] : '',
                         'casts' => !empty($provinceForecast['casts']) ? $provinceForecast['casts'][0] : ''
                     ];
-                    $this->areaModel->updateResult(['update_at'=>date("Y-m-d H:i:s",time()),'info' => json_encode($provinceInfo, JSON_UNESCAPED_UNICODE), 'forecast' => json_encode($provinceForecast, JSON_UNESCAPED_UNICODE)], 'id', $row->id);
+                    $this->areaModel->updateResult(['updated_at'=>date("Y-m-d H:i:s",time()),'info' => json_encode($provinceInfo, JSON_UNESCAPED_UNICODE), 'forecast' => json_encode($provinceForecast, JSON_UNESCAPED_UNICODE)], 'id', $row->id);
                     $this->info($this->areaModel->getResult('id', $row->id, '=', ['name'])->name . "：同步成功【{$row->id}】");
                 }
             }

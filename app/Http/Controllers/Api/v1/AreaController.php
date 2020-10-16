@@ -75,7 +75,7 @@ class AreaController extends BaseController
                     'reporttime' => !empty($forecast['reporttime']) ? $forecast['reporttime'] : '',
                     'casts' => !empty($forecast['casts']) ? $forecast['casts'][0] : ''
                 ];
-                $this->areaModel->updateResult(['update_at'=>date("Y-m-d H:i:s",time()),'info'=>json_encode($info,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($forecast,JSON_UNESCAPED_UNICODE)],'code',$this->post['code']);
+                $this->areaModel->updateResult(['updated_at'=>date("Y-m-d H:i:s",time()),'info'=>json_encode($info,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($forecast,JSON_UNESCAPED_UNICODE)],'code',$this->post['code']);
                 $this->redisClient->setValue($this->post['code'],json_encode(['info'=>$info,'forecast'=>$forecast],JSON_UNESCAPED_UNICODE),['EX'=>3600]);
                 return $this->ajax_return(Code::SUCCESS,'get weather successfully');
             }
