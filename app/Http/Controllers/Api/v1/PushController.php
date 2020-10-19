@@ -67,7 +67,7 @@ class PushController extends BaseController
         if ($this->post['username'] == 'all') {
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
             $this->post['username'] = 'admin';
-            $this->post['uid'] = md5('admin');
+            $this->post['uid'] = $this->userModel->getResult('username',$this->post['username'] === "all" ? 'admin' : $this->post['username'],'=',['uuid'])->uuid;
             $this->pushModel->addResult($this->post);
             return $this->ajax_return(Code::SUCCESS,'push message save successfully');
         }

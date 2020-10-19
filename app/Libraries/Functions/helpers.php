@@ -138,7 +138,7 @@ if (!function_exists('array_to_object'))
      * @param array $arr 数组
      * @return object|bool
      */
-    function array_to_object($arr) {
+    function array_to_object(array $arr) {
         if (gettype($arr) != 'array') {
             return false;
         }
