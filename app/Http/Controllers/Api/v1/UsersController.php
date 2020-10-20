@@ -177,6 +177,8 @@ class UsersController extends BaseController
         unset($this->post['email']);
         $result = UserCenter::getInstance()->updateResult($this->post,'id',$this->post['id']);
         if (!empty($result)) {
+            //更新用户画像
+            CommonController::getInstance()->updateUserAvatarUrl();
             return $this->ajax_return(Code::SUCCESS,'update user information successfully');
         }
         return $this->ajax_return(Code::SUCCESS,'update user information error');
