@@ -110,6 +110,7 @@ class PushController extends BaseController
         $params['state'] = 'successfully';
         $params['id'] = $this->post['id'];
         $params['see'] = $this->post['see'];
+        $params['created_at'] = time();
         $this->pushModel->updateResult($params,'id',$this->post['id']);
         return $this->ajax_return(Code::SUCCESS,'successfully');
     }
