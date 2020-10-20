@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class GithubController
@@ -94,6 +95,7 @@ class GithubController extends OAuthController
             'state' => $state
         ];
         $result = $this->curl->post($this->apiUrl.'login/oauth/access_token',$arr);
+        Log::error(json_encode($result));
         if (!$result){
             return $this->error(Code::ERROR,'request interface failed');
         }
@@ -113,7 +115,9 @@ class GithubController extends OAuthController
      */
     public function getUserInfo(string $access_token)
     {
-        $result = $this->curl->get('https://api.github.com/user?access_token='.$access_token);
+        $this->curl->setHeader("Authorization","token=$access_token");
+        $result = $this->curl->get('https://api.github.com/user/repos');
+        Log::error(json_encode($result));
         if (!$result){
             return $this->error(Code::ERROR,'request interface failed');
         }
