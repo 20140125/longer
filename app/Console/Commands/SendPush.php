@@ -77,18 +77,18 @@ class SendPush extends Command
                         try {
                             if (web_push($item->info, $item->uid)) {
                                 $item->state = Code::WebSocketState[0];
-                                $this->pushModel->updateResult(array('see'=>($item->see + 1),'created_at'=>time()),'id',$item->id);
-                                $this->info("　".$item->username .'　站内实时消息推送成功');
+                                $item->created_at = time();
+                                $this->info("　".$item->username .'：站内实时消息推送成功');
                             } else {
                                 $item->state = Code::WebSocketState[1];
-                                $this->error("　".$item->username .'　站内实时消息推送失败');
+                                $this->error("　".$item->username .'：站内实时消息推送失败');
                             }
-                        } catch (\ErrorException $e) {
+                        } catch (\Exception $e) {
                             $this->error($e->getMessage());
                         }
                     } else {
                         $item->state = Code::WebSocketState[2];
-                        $this->warn("　".$item->username . '已经离线~');
+                        $this->warn("　".$item->username . '：已经离线~');
                     }
                     break;
                 //定时推送
@@ -98,18 +98,18 @@ class SendPush extends Command
                             try {
                                 if (web_push($item->info, $item->uid)) {
                                     $item->state = Code::WebSocketState[0];
-                                    $this->pushModel->updateResult(array('see'=>($item->see + 1),'created_at'=>time()),'id',$item->id);
-                                    $this->info("　".$item->username .'　站内定时消息推送成功');
+                                    $item->created_at = time();
+                                    $this->info("　".$item->username .'：站内定时消息推送成功');
                                 } else {
                                     $item->state = Code::WebSocketState[1];
-                                    $this->error("　".$item->username .'　站内定时消息推送失败');
+                                    $this->error("　".$item->username .'：站内定时消息推送失败');
                                 }
-                            } catch (\ErrorException $e) {
+                            } catch (\Exception $e) {
                                 $this->error($e->getMessage());
                             }
                         } else {
                             $item->state = Code::WebSocketState[2];
-                            $this->warn("　".$item->username . '已经离线~');
+                            $this->warn("　".$item->username . '：已经离线~');
                         }
                     } else {
                         $this->info('　未到推送时间');
