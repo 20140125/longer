@@ -115,7 +115,7 @@ class GithubController extends OAuthController
      */
     public function getUserInfo(string $access_token)
     {
-        $this->curl->setHeader("Authorization","token=$access_token");
+        $this->curl->setHeader("Authorization","token $access_token");
         $result = $this->curl->get('https://api.github.com/user/repos');
         Log::error(json_encode($result));
         if (!$result){
