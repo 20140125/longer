@@ -95,7 +95,6 @@ class GithubController extends OAuthController
             'state' => $state
         ];
         $result = $this->curl->post($this->apiUrl.'login/oauth/access_token',$arr);
-        Log::error(json_encode($result));
         if (!$result){
             return $this->error(Code::ERROR,'request interface failed');
         }
@@ -117,13 +116,33 @@ class GithubController extends OAuthController
     {
         $this->curl->setHeader("Authorization","token $access_token");
         $result = $this->curl->get('https://api.github.com/user');
-        Log::error(json_encode($result));
         if (!$result){
             return $this->error(Code::ERROR,'request interface failed');
         }
         $result = object_to_array($result);
         if (isset($result['message'])){
             return $this->error(Code::ERROR,'Get user failed');
+        }
+        return $result;
+    }
+
+    /**
+     * TODO:：获取用户信息(包含所有项目)
+     * @param string $access_token
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getUserRepos(string $access_token)
+    {
+        $this->curl->setHeader("Authorization","token $access_token");
+        $result = $this->curl->get('https://api.github.com/user/repos');
+        Log::error(json_encode($result));
+        if (!$result){
+            return $this->error(Code::ERROR,'request interface failed');
+        }
+        $result = object_to_array($result);
+        if (isset($result['message'])){
+            return $this->error(Code::ERROR,'Get user repos failed');
         }
         return $result;
     }
