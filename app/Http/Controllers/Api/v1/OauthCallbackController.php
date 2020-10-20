@@ -237,7 +237,7 @@ class OauthCallbackController
     public function osChina(Request $request)
     {
         $appId = config('app.os_china_appid');
-        $appSecret = config('app.os_china_appsecret');
+        $appSecret = config('app.os_china_secret');
         $osChinaOAuth = OsChinaController::getInstance($appId,$appSecret);
         // 1 获取access_token
         $result = $osChinaOAuth->getAccessToken($request->get('code'));
