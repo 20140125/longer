@@ -257,7 +257,7 @@ class OauthCallbackController
             'remember_token' =>md5(md5($userInfo['name']).$userInfo['id'].time()),
         );
         $where[] = array('openid','=',(string)$userInfo['id']);
-        $where[] = array('oauth_type','=','osChina');
+        $where[] = array('oauth_type','=','os_china');
         return $this->oauth($data,$where);
     }
 
