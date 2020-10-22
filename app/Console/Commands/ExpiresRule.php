@@ -8,8 +8,8 @@ use App\Models\Auth;
 use App\Models\Push;
 use App\Models\ReqRule;
 use App\Models\Role;
-use App\Models\OAuth;
 use App\Models\UserCenter;
+use App\Models\Users;
 use Illuminate\Console\Command;
 /**
  * Class ExpiresRule
@@ -40,9 +40,9 @@ class ExpiresRule extends Command
      */
     protected $roleModel;
     /**
-     * @var OAuth $oauthModel
+     * @var Users $userModel
      */
-    protected $oauthModel;
+    protected $userModel;
     /**
      * @var RedisClient $redisClient
      */
@@ -62,7 +62,7 @@ class ExpiresRule extends Command
         date_default_timezone_set("Asia/Shanghai");
         $this->reqRuleModel = ReqRule::getInstance();
         $this->roleModel = Role::getInstance();
-        $this->oauthModel = OAuth::getInstance();
+        $this->userModel = Users::getInstance();
         $this->authModel = Auth::getInstance();
         $this->redisClient = RedisClient::getInstance();
     }
@@ -85,15 +85,15 @@ class ExpiresRule extends Command
         $result = $this->reqRuleModel->getCommandRule($where);
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as &$item) {
-            $userCenter = UserCenter::getInstance()->getResult('u_name',$item->username);
+            $userCenter = UserCenter::getInstance()->getResult('uid',$item->user_id);
             if ($userCenter->notice_status == '2') {
                 $this->error("　".$item->username .'　已禁用站内信通知');
                 return false;
             }
             //获取当前申请授权用户信息
-            $oauth = $this->oauthModel->getResult('id',$item->user_id);
+            $users = $this->userModel->getResult('id',$item->user_id);
             //获取当前用户的角色信息
-            $role = $this->roleModel->getResult('id', $oauth->role_id);
+            $role = $this->roleModel->getResult('id', $users->role_id);
             $auth_ids = json_decode($role->auth_ids,true);
             $auth_url = json_decode($role->auth_url,true);
             //根据用户请求授权地址获取该条规则信息
@@ -118,8 +118,8 @@ class ExpiresRule extends Command
                 //告诉用户权限已经过期
                 $message = array(
                     'username' => $item->username,
-                    'info' => '您有权限('.config('app.url').str_replace('admin/','api/v1/',$item->href).')已经过期,过期时长('.diff_times(time(),$item->expires).')，如有需要请前往个人中心续期~！',
-                    'uid'  => md5($item->username),
+                    'info' => '您有权限('.config('app.url').str_replace('admin/','api/v1/',$item->href).')已经过期,过期时长('.diff_times(time(),$item->expires).')，如有需要请前往申请权限列表续期~！',
+                    'uid'  => Users::getInstance()->getResult('id',$item->user_id,'=',['uuid'])->uuid,
                     'state' => Code::WebSocketState[1],
                     'status' => 1,
                     'created_at' => time()
@@ -138,12 +138,12 @@ class ExpiresRule extends Command
                     $item->expires = 0;
                     $item->updated_at = time();
                     $this->reqRuleModel->updateResult(object_to_array($item),'id',$item->id);
-                } catch (\ErrorException $e) {
+                } catch (\Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->info('用户过期权限已经撤销');
+                $this->info("权限接口 ".config('app.url').str_replace('admin/','api/v1/',$item->href).',已经过期('.diff_times($item->expires,time()).')，现已撤销回收');
             } else {
-                $this->error('操作失败');
+                $this->info("权限接口 ".config('app.url').str_replace('admin/','api/v1/',$item->href).'),还有('.diff_times($item->expires,time()).')过期');
             }
             sleep(0.5);
             $bar->advance();

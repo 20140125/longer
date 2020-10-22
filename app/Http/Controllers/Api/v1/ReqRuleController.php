@@ -6,11 +6,13 @@ use App\Http\Controllers\Utils\Code;
 use App\Mail\Notice;
 use App\Models\Push;
 use App\Models\ReqRule;
+use App\Models\Users;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -51,7 +53,7 @@ class ReqRuleController extends BaseController
             $item->expires = empty($item->expires) ? '' : date('Y-m-d H:i:s',$item->expires);
             $item->ruleLists = $this->setAuth($item->user_id);
         }
-        $result['userLists'] = $this->oauthModel->getOauthLists([],['id','username']);
+        $result['userLists'] = $this->userModel->getAll([],['id','username']);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 
@@ -78,7 +80,7 @@ class ReqRuleController extends BaseController
         $ruleLists = $this->authModel->getResultListsByStatusAndLevel('0',0);
         //获取待授权角色
         $where[] = ['id',$userId];
-        $users = $this->oauthModel->getResult($where);
+        $users = $this->userModel->getResult($where);
         //角色权限
         $role = $this->roleModel->getResult('id',$users->role_id);
         $loginAuth = json_decode($role->auth_url,true);
@@ -108,12 +110,12 @@ class ReqRuleController extends BaseController
                 return $this->ajax_return(Code::ERROR,'authorization expires must be a date after '.date('Y-m-d H:i:s'));
             }
         }
-        $oauth = $this->oauthModel->getResult('username',$this->post['username']);
-        if (empty($oauth)) {
+        $users = $this->userModel->getResult('id',$this->post['username']);
+        if (empty($users)) {
             return $this->ajax_return(Code::ERROR,'user does not exist');
         }
-        $req['username'] = $oauth->username;
-        $req['user_id'] = $oauth->id;
+        $req['username'] = $users->username;
+        $req['user_id'] = $users->id;
         $req['expires'] = empty($this->post['expires']) ? 0 : strtotime($this->post['expires']);
         $req['desc'] = empty($this->post['desc']) ? '申请权限授权' : $this->post['desc'];
         $where[] = ['username',$req['username']];
@@ -133,13 +135,13 @@ class ReqRuleController extends BaseController
                 //推送站内信息
                 $this->post['info'] = $this->post['username'].'申请权限';
                 $this->post['username'] = 'admin';
-                $this->post['uid'] = md5($this->post['username']);
+                $this->post['uid'] = Users::getInstance()->getResult('username',$this->post['username'],'=',['uuid'])->uuid;
                 $this->post['status'] = 1;
                 $this->pushMessage();
                 $message = array(
                     'username' => $this->post['username'],
                     'info' => $this->post['info'],
-                    'uid'  => md5($this->post['username']),
+                    'uid'  => $this->post['uid'],
                     'state' => $this->post['state'],
                     'title' => '权限申请',
                     'status' => 1,
@@ -169,7 +171,7 @@ class ReqRuleController extends BaseController
     {
         if (!empty($this->post['act'])) {
             //同意用户申请授权信息
-            $this->validatePost(['status'=>'required|integer|in:1','id'=>'required|integer|exists:os_req_rule']);
+            $this->validatePost(['status'=>'required|integer|in:1,2','id'=>'required|integer|exists:os_req_rule']);
             $getReq = $this->reqRuleModel->getResult('id',$this->post['id']);
             //用户没有申请时长暂定 7 天权限
             if (empty($getReq->expires)) {
@@ -185,9 +187,9 @@ class ReqRuleController extends BaseController
             $result = $this->reqRuleModel->updateResult($this->post,'id',$this->post['id']);
             if ($result) {
                 //获取当前申请授权用户信息
-                $oauth = $this->oauthModel->getResult('id',$getReq->user_id);
+                $users = $this->userModel->getResult('id',$getReq->user_id);
                 //获取当前用户的角色信息
-                $role = $this->roleModel->getResult('id', $oauth->role_id);
+                $role = $this->roleModel->getResult('id', $users->role_id);
                 $auth_ids = json_decode($role->auth_ids,true);
                 $auth_url = json_decode($role->auth_url,true);
                 //根据用户请求授权地址获取该条规则信息
@@ -208,7 +210,7 @@ class ReqRuleController extends BaseController
                         'updated_at' => time(),
                     );
                     //判断当前申请授权用户是否存在记录
-                    $existsRole = $this->roleModel->getResult('role_name',$setReq['role_name']);
+                    $existsRole = $this->roleModel->getResult('id',$users->role_id);
                     if ($existsRole) {
                         //修改角色信息
                         $this->roleModel->updateResult($setReq,'role_name',$setReq['role_name']);
@@ -216,18 +218,19 @@ class ReqRuleController extends BaseController
                         //生成新的角色
                         $data['role_id'] = $this->roleModel->addResult($setReq);
                         //修改请求授权用户的角色ID
-                        $this->oauthModel->updateResult($data,'id',$oauth->id);
+                        $this->userModel->updateResult($data,'id',$users->id);
                     }
+                    Log::error(json_encode(Users::getInstance()->getResult('username',$users->username,'=',['uuid'])));
                     //推送站内信息
                     $this->post['username'] = $getReq->username;
                     $this->post['info'] = '你申请的权限已经审核通过~！';
-                    $this->post['uid'] = md5($this->post['username']);
+                    $this->post['uid'] = Users::getInstance()->getResult('username',$users->username,'=',['uuid'])->uuid;
                     $this->post['status'] = 1;
                     $this->pushMessage();
                     $message = array(
                         'username' => $this->post['username'],
                         'info' => $this->post['info'],
-                        'uid'  => md5($this->post['username']),
+                        'uid'  => $this->post['uid'],
                         'state' => $this->post['state'],
                         'status' => 1,
                         'title' => '权限通过',
@@ -235,14 +238,14 @@ class ReqRuleController extends BaseController
                     );
                     Push::getInstance()->addResult($message);
                     //如果用户已经绑定邮箱，并且站内通知没有成功，发送邮件告知用户授权已经成功
-                    if (!empty($oauth->email) && $this->post['state']!=Code::WebSocketState[0]) {
+                    if (!empty($users->email) && $this->post['state']!=Code::WebSocketState[0]) {
                         try {
-                            $mail = array( 'href' =>$getReq->href, 'rule_name' => $rule->name,'username' =>$getReq->username,'remember_token'=>$oauth->remember_token );
-                            Mail::to($oauth->email)->send(new Notice($mail));
+                            $mail = array( 'href' =>$getReq->href, 'rule_name' => $rule->name,'username' =>$getReq->username,'remember_token'=>$users->remember_token );
+                            Mail::to($users->email)->send(new Notice($mail));
                         } catch (Exception $exception) {
                             $info = array(
-                                'username' => $oauth->username,
-                                'href' => $oauth->email,
+                                'username' => $users->username,
+                                'href' => $users->email,
                                 'msg' => $exception->getMessage()
                             );
                             act_log($info);
@@ -276,7 +279,9 @@ class ReqRuleController extends BaseController
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $this->post['expires'] = $this->post['status'] === 1 ? strtotime($this->post['expires']) : strtotime('-1 day');
         $this->post['href'] = implode('',$this->post['href']);
-        if (!empty($this->post['ruleLists'])) unset($this->post['ruleLists']);
+        if (!empty($this->post['ruleLists'])) {
+            unset($this->post['ruleLists']);
+        }
         $result = $this->reqRuleModel->updateResult($this->post,'id',$this->post['id']);
         if ($result) {
             return $this->ajax_return(Code::SUCCESS,'update request authorization successfully');
@@ -295,9 +300,9 @@ class ReqRuleController extends BaseController
         //获取当前申请权限记录
         $getReq = $this->reqRuleModel->getResult('id',$this->post['id']);
         //获取当前申请授权用户信息
-        $oauth = $this->oauthModel->getResult('id',$getReq->user_id);
+        $users = $this->userModel->getResult('id',$getReq->user_id);
         //获取当前用户的角色信息
-        $role = $this->roleModel->getResult('id', $oauth->role_id);
+        $role = $this->roleModel->getResult('id', $users->role_id);
         $auth_ids = json_decode($role->auth_ids,true);
         $auth_url = json_decode($role->auth_url,true);
         //根据用户请求授权地址获取该条规则信息
@@ -314,7 +319,7 @@ class ReqRuleController extends BaseController
         }
         DB::beginTransaction();
         try{
-            $result = $this->reqRuleModel->deleteResult('id',$this->post['id']);
+            $result = $this->reqRuleModel->updateResult(['status'=>2,'updated_at'=>time(),'expires'=>0],'id',$this->post['id']);
             if ($result){
                 $data = array(
                     'auth_ids' => json_encode($auth_ids),

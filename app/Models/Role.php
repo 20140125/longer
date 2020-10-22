@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Scalar\String_;
 
 /**
  * Class Role
@@ -103,11 +104,11 @@ class Role extends Model
      * TODO: 更新一条数据
      * @param array $data
      * @param string|int $field
-     * @param int $value
+     * @param int|string $value
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data, $field,int $value,string $op='=')
+    public function updateResult(array $data, $field, $value,string $op='=')
     {
         return DB::table($this->table)->where($field,$op,$value)->update($data);
     }
