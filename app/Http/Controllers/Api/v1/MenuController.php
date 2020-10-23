@@ -69,7 +69,8 @@ class MenuController extends BaseController
                     'adcode' => $adcode,
                     'city' => !empty($province->name) ? $province->name.$area->name : $area->name,
                     'room_id' =>'1200',
-                    'room_name' => '畅所欲言'
+                    'room_name' => '畅所欲言',
+                    'user_id'=>$this->users->id
                 ]
             );
         }

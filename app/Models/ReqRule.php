@@ -102,12 +102,12 @@ class ReqRule extends Model
     /**
      * TODO 更新一条数据
      * @param array $data
-     * @param string $field
+     * @param $field
      * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value=0,string $op='=')
+    public function updateResult(array $data ,$field,int $value=0,string $op='=')
     {
         $data['updated_at'] = time();
         return DB::table($this->table)->where($field,$op,$value)->update($data);

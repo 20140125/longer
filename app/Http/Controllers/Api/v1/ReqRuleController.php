@@ -101,7 +101,7 @@ class ReqRuleController extends BaseController
      */
     public function save()
     {
-        $this->validatePost(['username'=>'required|string','href'=>'required|Array']);
+        $this->validatePost(['user_id'=>'required|string','href'=>'required|Array']);
         if (isset($this->post['expires']) && !empty($this->post['expires'])){
             if (strtotime($this->post['expires'])>strtotime('+1 year')) {
                 return $this->ajax_return(Code::ERROR,'authorization expires must be a date before '.date('Y-m-d H:i:s',strtotime('+1 year')));
@@ -110,7 +110,7 @@ class ReqRuleController extends BaseController
                 return $this->ajax_return(Code::ERROR,'authorization expires must be a date after '.date('Y-m-d H:i:s'));
             }
         }
-        $users = $this->userModel->getResult('id',$this->post['username']);
+        $users = $this->userModel->getResult('id',$this->post['user_id']);
         if (empty($users)) {
             return $this->ajax_return(Code::ERROR,'user does not exist');
         }
@@ -118,7 +118,6 @@ class ReqRuleController extends BaseController
         $req['user_id'] = $users->id;
         $req['expires'] = empty($this->post['expires']) ? 0 : strtotime($this->post['expires']);
         $req['desc'] = empty($this->post['desc']) ? '申请权限授权' : $this->post['desc'];
-        $where[] = ['username',$req['username']];
         $where[] = ['user_id',$req['user_id']];
         $result = 0;
         foreach ($this->post['href'] as &$href){
@@ -133,7 +132,7 @@ class ReqRuleController extends BaseController
             }
             if ($this->users->username != 'admin') {
                 //推送站内信息
-                $this->post['info'] = $this->post['username'].'申请权限';
+                $this->post['info'] = $req['username'].'申请权限('.config('app.url').str_replace('/admin/','api/v1/',$req['href']).')';
                 $this->post['username'] = 'admin';
                 $this->post['uid'] = Users::getInstance()->getResult('username',$this->post['username'],'=',['uuid'])->uuid;
                 $this->post['status'] = 1;
@@ -277,7 +276,7 @@ class ReqRuleController extends BaseController
             'expires.after'  => 'authorization expires must be a date after '.date('Y-m-d H:i:s')
         ]);
         $this->post['created_at'] = strtotime($this->post['created_at']);
-        $this->post['expires'] = $this->post['status'] === 1 ? strtotime($this->post['expires']) : strtotime('-1 day');
+        $this->post['expires'] = strtotime($this->post['expires']);
         $this->post['href'] = implode('',$this->post['href']);
         if (!empty($this->post['ruleLists'])) {
             unset($this->post['ruleLists']);
@@ -319,7 +318,7 @@ class ReqRuleController extends BaseController
         }
         DB::beginTransaction();
         try{
-            $result = $this->reqRuleModel->updateResult(['status'=>2,'updated_at'=>time(),'expires'=>0],'id',$this->post['id']);
+            $result = $this->reqRuleModel->updateResult(['status'=>2,'updated_at'=>time(),'expires'=>0,'desc'=>'权限被管理员收回'],'id',$this->post['id']);
             if ($result){
                 $data = array(
                     'auth_ids' => json_encode($auth_ids),
