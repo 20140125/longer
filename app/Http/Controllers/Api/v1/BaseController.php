@@ -140,7 +140,15 @@ class BaseController extends Controller
             $this->setCode(Code::Unauthorized,'Token Is Invalid');
         }
         //用户不属于超级管理员
-        $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids']);
+        $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids','status']);
+        //角色不存在
+        if (empty($this->role)) {
+            $this->setCode(Code::Unauthorized,'Role Is Not Exists');
+        }
+        //角色被禁用
+        if ($this->role->status === 2) {
+            $this->setCode(Code::Unauthorized,'Role Is Disabled');
+        }
         if ($this->users->role_id !== 1) {
             if (!empty($this->role) && !in_array(str_replace(['/api/v1'],['/admin'],$url),json_decode($this->role->auth_url,true)) && !in_array(asset($url),$common_url)) {
                 $this->setCode(Code::NOT_ALLOW,'Permission denied');
@@ -158,7 +166,7 @@ class BaseController extends Controller
     protected function setCode($code,$message)
     {
         set_code($code);
-        exit(json_encode(array('code'=>$code,'msg'=>$message)));
+        exit(json_encode(array('code'=>$code,'msg'=>$message,'url'=>request()->getRequestUri())));
     }
 
     /**

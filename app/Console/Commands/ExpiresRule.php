@@ -137,6 +137,7 @@ class ExpiresRule extends Command
                     $item->status = 2;
                     $item->expires = 0;
                     $item->updated_at = time();
+                    $item->desc = '权限被管理员收回';
                     $this->reqRuleModel->updateResult(object_to_array($item),'id',$item->id);
                 } catch (\Exception $e) {
                     $this->error($e->getMessage());
