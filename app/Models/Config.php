@@ -74,71 +74,59 @@ class Config extends Model
 
     /**
      * TODO: 更新一条数据
-     * @param array $data
+     * @param $data
      * @param string $field
      * @param int $value
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value,string $op='=')
+    public function updateResult($data,string $field,int $value,string $op='=')
     {
-        $data['updated_at'] = time();
-        $data['created_at'] = empty($data['created_at']) ? time() : strtotime($data['created_at']);
-        if (!empty($data['value']) && is_array($data['value'])) {
-            $data['created_at'] = strtotime($data['created_at']);
-            $data['value']['created_at'] = date('Y-m-d H:i:s');
-            $data['value']['updated_at'] = date('Y-m-d H:i:s');
-            $res = $this->getResult($field,$value);
-            $ids = [];
-            if ($res->value && count(json_decode($res->value,true))>0) {
-                $configVal = json_decode($res->value,true);
-                foreach ($configVal as $item) {
-                    array_push($ids,(int)$item['id']);
-                }
-                $data['value']['id'] = (int)max($ids)+1;
-                $data['value']['pid'] = $res->id;
-                array_push($configVal,$data['value']);
-            } else {
-                $data['value']['id'] = $res->id*100;
-                $data['value']['pid'] = $res->id;
-                $configVal = [$data['value']];
-            }
-            $data['value'] = str_replace('\\','',json_encode($configVal,JSON_UNESCAPED_UNICODE));
+        if (!empty($data['act'])) {
+            unset($data['act']);
+            return  DB::table($this->table)->where($field,$op,$value)->update($data);
         }
-        unset($data['children']);
-        unset($data['act']);
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
-    }
-
-    /**
-     * TODO：修改配置值
-     * @param array $data
-     * @param string $field
-     * @param int $value
-     * @return int
-     */
-    public function updateValResult(array $data,string $field,int $value)
-    {
-        $config = $this->getResult($field,$value);
-        $configVal = json_decode($config->value,true);
-        $data['updated_at'] = date('Y-m-d H:i:s');
-        $configObj = $data;
-        $configObj['status'] = (int)$configObj['status'];
-        $configArr = [];
-        foreach ($configVal as $item) {
-            if ($item['id'] == $data['id']) {
-                if ($data['act'] === 'update') {
-                    unset($configObj['act']);
-                    array_push($configArr,$configObj);
-                } else {
-                    unset($item);
+        switch ($data['hasChildren']) {
+            case "true":
+                unset($data['hasChildren']);
+                $intFields = ['status','id'];
+                foreach ($intFields as $int) {
+                    $data[$int] = (int)$data[$int];
                 }
-            } else {
-                array_push($configArr,$item);
-            }
+                $data['children'] = json_encode($data['children'],JSON_UNESCAPED_UNICODE);
+                $data['created_at'] = empty($data['created_at']) ? time() : strtotime($data['created_at']);
+                $data['updated_at'] = empty($data['updated_at']) ? time() : strtotime($data['updated_at']);
+                $res = DB::table($this->table)->where($field,$op,$value)->update($data);
+                break;
+            case "false":
+                $result = DB::table($this->table)->where($field,$op,$data['pid'])->first();
+                unset($data['hasChildren']);
+                $result->children = object_to_array(json_decode($result->children,true));
+                $index = 0;
+                foreach ($result->children as $key=> $child) {
+                    if ($data['id'] == $child['id']) {
+                        unset($result->children[$key]);
+                        $index = $key;
+                    }
+                }
+                $intFields = ['status','id','pid'];
+                foreach ($intFields as $int) {
+                    $data[$int] = (int)$data[$int];
+                }
+                $result->children[$index] = $data;
+                $children = array();$sort = array();
+                foreach ($result->children as $item) {
+                    array_push($children,$item);
+                    $sort[] = $item['id'];
+                }
+                array_multisort($sort,$children,SORT_ASC);
+                $result->children = json_encode($children,JSON_UNESCAPED_UNICODE);
+                $res =  DB::table($this->table)->where('id','=',$data['pid'])->update(object_to_array($result));
+                break;
+            default:
+                $res = 0;
         }
-        $res['value'] = str_replace('\\','',json_encode($configArr,JSON_UNESCAPED_UNICODE));
-        return DB::table($this->table)->where($field,$value)->update($res);
+        return $res;
     }
 
     /**

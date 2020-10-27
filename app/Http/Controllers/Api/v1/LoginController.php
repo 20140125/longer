@@ -283,8 +283,8 @@ class LoginController
         if ($validate->fails()){
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $result = $this->configModel->getResult('name',$this->post['name'],'=',['value']);
-        return ajax_return(Code::SUCCESS,'successfully',$result ? json_decode($result->value,true) : []);
+        $result = $this->configModel->getResult('name',$this->post['name'],'=',['children']);
+        return ajax_return(Code::SUCCESS,'successfully',$result ? json_decode($result->children,true) : []);
     }
     /**
      * TODO:：文件下载

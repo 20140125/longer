@@ -104,20 +104,9 @@ class BaseController extends Controller
         }
         //公用权限
         $common_url = [
-            route('checkLogin'),
-            route('apiLogout'),
-            route('logSave'),
-            route('menu'),
-            route('reqRuleSave'),
-            route('emotion'),
-            route('saveCenter'),
-            route('userCenter'),
-            route('areaLists'),
-            route('total'),
-            route('export'),
-            route('chat'),
-            route('uploadFile'),
-            route('getCityName'),
+            route('checkLogin'), route('apiLogout'), route('logSave'), route('menu'), route('reqRuleSave'),
+            route('emotion'), route('saveCenter'), route('userCenter'), route('areaLists'), route('total'),
+            route('export'), route('chat'), route('uploadFile'), route('getCityName')
         ];
         $this->post['token'] = $this->post['token'] ?? ($request->get('token') ?? $this->redisClient->getValue('oauth_register'));
         //判断必填字段是否为空

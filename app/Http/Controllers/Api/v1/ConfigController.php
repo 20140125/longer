@@ -40,8 +40,11 @@ class ConfigController extends BaseController
         foreach ($result as &$item){
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
             $item->updated_at = date('Y-m-d H:i:s',$item->updated_at);
-            if (!empty($item->value)){
-                $item->children = json_decode($item->value,true);
+            $item->children = $item->children ? json_decode($item->children,true) : [];
+            foreach ($item->children as &$child) {
+                $child['status'] = (int)$child['status'];
+                $child['pid'] = (int)$child['pid'];
+                $child['id'] = (int)$child['id'];
             }
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
@@ -76,30 +79,11 @@ class ConfigController extends BaseController
             $rule = ['id'=>'required|integer','name'=>'required|string'];
         }
         $this->validatePost($rule);
-        if ($this->post['act'] === 'editConfig' && (empty($this->post['value']['value']) || !isset($this->post['value']['value']) || empty($this->post['value']['name']) || !isset($this->post['value']['name']))) {
-            return $this->ajax_return(Code::ERROR,'config value is empty');
-        }
         $result = $this->configModel->updateResult($this->post,'id',$this->post['id']);
         if ($result){
             return $this->ajax_return(Code::SUCCESS,'update config successfully');
         }
         return $this->ajax_return(Code::ERROR,'update config failed');
-    }
-
-    /**
-     * TODO：更新配置值
-     * @param integer id
-     * @param string name
-     * @return JsonResponse
-     */
-    public function value()
-    {
-        $this->validatePost(['id'=>'required|integer','name'=>'required|string']);
-        $result = $this->configModel->updateValResult($this->post,'id',$this->post['pid']);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,'update config value successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'update config value failed');
     }
 
     /**
