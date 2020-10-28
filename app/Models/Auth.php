@@ -42,7 +42,7 @@ class Auth extends Model
     /**
      * TODO：查询一条记录
      * @param string $field
-     * @param string|int $value
+     * @param $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|Collection|object|null

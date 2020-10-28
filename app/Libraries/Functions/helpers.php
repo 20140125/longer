@@ -86,6 +86,24 @@ if (!function_exists('find_str'))
         return $first;
     }
 }
+if (!function_exists('find_str_in_array'))
+{
+    /**
+     * todo:获取字符串在数组中出现的位置
+     * @param $array
+     * @param $str
+     * @return int|string
+     */
+    function find_str_in_array($array,$str) {
+        $index = 0;
+        foreach ($array as $key=> $item) {
+            if ($array[$key] == $str) {
+                $index = $key;
+            }
+        }
+        return $index;
+    }
+}
 
 if (!function_exists('get_tree'))
 {

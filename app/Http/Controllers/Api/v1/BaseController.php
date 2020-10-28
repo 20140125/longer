@@ -222,7 +222,7 @@ class BaseController extends Controller
         if ($this->post['status'] == '1') {
             try{
                 //推送给所有人
-                if ($this->post['username'] == 'all') {
+                if ($this->post['uid'] == config('app.client_id')) {
                     if (web_push($this->post['info'])) {
                         $this->post['state'] = Code::WebSocketState[0];
                     }

@@ -8,6 +8,9 @@ use App\Models\Push;
 use App\Models\UserCenter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use mysql_xdevapi\Exception;
 
 
 /**
@@ -87,51 +90,48 @@ class UsersController extends BaseController
             $this->validatePost($this->rule(4),['id.gt'=>'Permission denied']);
             unset($this->post['act']);
             $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
-            if (!empty($result)){
-                //更新用户画像
-                CommonController::getInstance()->updateUserAvatarUrl();
-                return $this->ajax_return(Code::SUCCESS,'update users status successfully');
-            }
-            return $this->ajax_return(Code::ERROR,'update users status error');
+            return empty($result) ? $this->ajax_return(Code::ERROR,'update users status error') : $this->ajax_return(Code::SUCCESS,'update users status successfully');
         }
         $users = $this->userModel->getResult('id',$this->post['id']);
         $this->post['created_at'] = gettype($this->post['created_at']) === 'string' ? strtotime($this->post['created_at']) : $this->post['created_at'];
         $this->post['updated_at'] = time();
-        if ($users->password == $this->post['password']){
-            //用户没有修改密码
-            $this->validatePost($this->rule(1));
-        } else {
+        try {
+            DB::beginTransaction();
+            $this->post['password'] === $users->password ?  $this->validatePost($this->rule(1)) :  $this->validatePost($this->rule(2));
             //用户修改密码
             $this->post['salt'] = get_round_num(8);
-            $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
+            $message = array(
+                'username' => $this->post['username'],
+                'info' => '你的密码修改成功，新密码是：' . $this->post['password'],
+                'uid' => $users->uuid,
+                'state' => 1,
+                'title' => '修改密码',
+                'status' => 1,
+                'created_at' => time()
+            );
+            $this->post['password'] !== $users->password ? Push::getInstance()->addResult($message) : '';
+            $this->post['password'] = md5(md5($this->post['password']) . $this->post['salt']);
             $this->post['remember_token'] = md5($this->post['password']); //用户修改密码后也修改当前token
-            $this->validatePost($this->rule(2));
             //更新授权用户列表token以及用户中token
-            UserCenter::getInstance()->updateResult(array('token'=>$this->post['remember_token'],'type'=>'update'),'uid',$users->id);
-            OAuth::getInstance()->updateResult(array('remember_token'=>$this->post['remember_token']),'uid',$users->id);
+            UserCenter::getInstance()->updateResult(array('token' => $this->post['remember_token'], 'type' => 'update'), 'uid', $users->id);
+            OAuth::getInstance()->updateResult(array('remember_token' => $this->post['remember_token']), 'uid', $users->id);
+            $result = $this->userModel->updateResult($this->post, 'id', $this->post['id']);
+            if (empty($result)) {
+                DB::rollBack();
+                return $this->ajax_return(Code::ERROR, 'update users error');
+            }
+            //修改密码站内通知
+            $this->post = $message;
+            $this->post['password'] !== $users->password ? $this->pushMessage() : '';
+            //更新用户画像
+            CommonController::getInstance()->updateUserAvatarUrl();
+            DB::commit();
+            return $this->ajax_return(Code::SUCCESS, 'update users successfully');
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            DB::rollBack();
+            return $this->ajax_return(Code::ERROR, 'update users error');
         }
-        $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
-        if (empty($result)){
-            return $this->ajax_return(Code::ERROR,'update users error');
-        }
-        //修改密码站内通知
-        $this->post['info'] = '你的密码修改成功，新密码是：'.$this->post['password'];
-        $this->post['uid'] = $users->uuid;
-        $this->post['status'] = 1;
-        $this->pushMessage();
-        $message = array(
-            'username' => $this->post['username'],
-            'info' => $this->post['info'],
-            'uid'  => $this->post['uid'],
-            'state' => $this->post['state'],
-            'title' => '修改密码',
-            'status' => 1,
-            'created_at' => time()
-        );
-        Push::getInstance()->addResult($message);
-        //更新用户画像
-        CommonController::getInstance()->updateUserAvatarUrl();
-        return $this->ajax_return(Code::SUCCESS,'update users successfully');
     }
 
     /**
@@ -201,7 +201,7 @@ class UsersController extends BaseController
 
     /**
      * TODO: 验证规则
-     * @param $status 1 不验证密码 （更新）  2 验证密码 （更新）  3 验证用户名（添加）
+     * @param $status 1 不验证密码 （更新）  2 验证密码 （更新）  3 验证用户名（添加） 4 修改用户状态
      * @return array
      */
     protected function rule($status)

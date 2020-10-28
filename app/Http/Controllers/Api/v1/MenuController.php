@@ -70,7 +70,8 @@ class MenuController extends BaseController
                     'city' => !empty($province->name) ? $province->name.$area->name : $area->name,
                     'room_id' =>'1200',
                     'room_name' => '畅所欲言',
-                    'user_id'=>$this->users->id
+                    'user_id'=>$this->users->id,
+                    'default_client_id'=>config('app.client_id')
                 ]
             );
         }

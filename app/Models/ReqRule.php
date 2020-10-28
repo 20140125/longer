@@ -83,7 +83,7 @@ class ReqRule extends Model
         if (!in_array($user->role_id,[1])){
             $where[] = ['user_id',$user->id];
         }
-        $result['data'] = DB::table($this->table)->limit($limit)->where($where)->offset($limit*($page-1))->orderBy('expires')->get();
+        $result['data'] = DB::table($this->table)->limit($limit)->where($where)->offset($limit*($page-1))->orderByDesc('updated_at')->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }

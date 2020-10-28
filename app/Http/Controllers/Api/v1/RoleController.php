@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -43,7 +44,7 @@ class RoleController extends BaseController
         $authLists = $this->authModel->getResult('id',$this->post['auth_ids'],'in',['href']);
         $auth_url = array();
         foreach ($authLists as $item){
-            $auth_url[] = strtolower($item->href);
+            $auth_url[] = $item->href;
         }
         $this->post['auth_url'] = str_replace("\\",'',json_encode($auth_url));
         $this->post['auth_ids'] = json_encode($this->post['auth_ids']);
@@ -67,26 +68,26 @@ class RoleController extends BaseController
             unset($this->post['act']);
             $this->validatePost(['status'=>'required|in:1,2','id'=>'required|integer|gt:1' ],['id.gt'=>'Permission denied']);
             $result = $this->roleModel->updateResult($this->post,'id',$this->post['id']);
-            if (!empty($result)){
-                return $this->ajax_return(Code::SUCCESS,'role update status successfully');
-            }
-            return $this->ajax_return(Code::ERROR,'role update status error');
+            return !empty($result) ? $this->ajax_return(Code::SUCCESS,'role update status successfully') :  $this->ajax_return(Code::ERROR,'role update status error');
         }
         $this->validatePost(['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string']);
-        $authLists = $this->authModel->getResult('id', $this->post['auth_ids'],'in',['href']);
+        $auth_ids = array();
+        foreach ($this->post['auth_ids'] as $auth_id) {
+            if (!in_array($auth_id,$auth_ids)) {
+                $auth_ids[] = $auth_id;
+            }
+        }
+        $authLists = $this->authModel->getResult('id', $auth_ids,'in',['href']);
         $auth_url = array();
         foreach ($authLists as $item){
-            $auth_url[] = strtolower($item->href);
+            $auth_url[] = $item->href;
         }
         $this->post['auth_url'] = str_replace("\\",'',json_encode($auth_url));
-        $this->post['auth_ids'] = json_encode($this->post['auth_ids']);
+        $this->post['auth_ids'] = json_encode($auth_ids);
         $this->post['updated_at'] = time();
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $result = $this->roleModel->updateResult($this->post,'id',$this->post['id']);
-        if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'role update successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'role update failed');
+        return !empty($result) ? $this->ajax_return(Code::SUCCESS,'role update status successfully') :  $this->ajax_return(Code::ERROR,'role update status error');
     }
 
     /**
