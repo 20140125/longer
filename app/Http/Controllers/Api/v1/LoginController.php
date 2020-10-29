@@ -196,12 +196,12 @@ class LoginController
         $request['email'] = $this->post['email'];
         $request['phone_number'] = 0;
         $request['created_at'] = time();
-        $request['uuid'] = md5($request['password']).uniqid();
+        $request['uuid'] = config('app.client_id');
         $request['username'] = explode("@",$this->post['email'])[0];
         $request['status'] = 1;  //允许访问
         $id = $this->userModel->addResult($request);
         //新用户注册生成client_id
-        $this->userModel->updateResult(['uuid'=>config('app.client_id').$id],'id',$id);
+        $this->userModel->updateResult(['uuid'=>$request['uuid'].$id],'id',$id);
         UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$id,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
         $request['token'] = $request['remember_token'];
         //更新用户画像
@@ -283,8 +283,15 @@ class LoginController
         if ($validate->fails()){
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $result = $this->configModel->getResult('name',$this->post['name'],'=',['children']);
-        return ajax_return(Code::SUCCESS,'successfully',$result ? json_decode($result->children,true) : []);
+        $children = $this->configModel->getResult('name',$this->post['name'],'=',['children'])->children;
+        $intFields = ['status','id','pid'];
+        $children = json_decode($children,true) ?? [];
+        foreach ($intFields as $int) {
+            foreach ($children as &$child) {
+                $child[$int] = (int)$child[$int];
+            }
+        }
+        return ajax_return(Code::SUCCESS,'successfully',$children);
     }
     /**
      * TODO:：文件下载

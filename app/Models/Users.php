@@ -131,6 +131,7 @@ class Users extends Model
      */
     public function addResult(array $data)
     {
+        $data['ip_address'] = get_server_ip();
         return DB::table($this->table)->insertGetId($data);
     }
 

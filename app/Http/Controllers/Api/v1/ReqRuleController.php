@@ -86,7 +86,7 @@ class ReqRuleController extends BaseController
         $loginAuth = json_decode($role->auth_url,true);
         foreach ($ruleLists as &$item){
             $item->disable = false;
-            if (in_array(strtolower($item->href),$loginAuth)) {
+            if (in_array($item->href,$loginAuth)) {
                 $item->disable = true;
             }
         }

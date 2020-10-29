@@ -37,14 +37,15 @@ class ConfigController extends BaseController
     public function index()
     {
         $result = $this->configModel->getResultLists();
+        $intFields = ['status','id','pid'];
         foreach ($result as &$item){
             $item->created_at = date('Y-m-d H:i:s',$item->created_at);
             $item->updated_at = date('Y-m-d H:i:s',$item->updated_at);
             $item->children = $item->children ? json_decode($item->children,true) : [];
-            foreach ($item->children as &$child) {
-                $child['status'] = (int)$child['status'];
-                $child['pid'] = (int)$child['pid'];
-                $child['id'] = (int)$child['id'];
+            foreach ($intFields as $int) {
+                foreach ($item->children as &$child) {
+                    $child[$int] = (int)$child[$int];
+                }
             }
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);

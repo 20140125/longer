@@ -38,26 +38,29 @@ class UsersController extends BaseController
 
     /**
      * TODO: 管理员保存
-     * @param Request $request (password:密码，role_id:角色ID，ip_address:IP地址)
      * @return JsonResponse
      */
-    public function save(Request $request)
+    public function save()
     {
         $this->validatePost($this->rule(3));
-        $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
-        $this->post['ip_address'] = $request->ip();
-        $this->post['avatar_url'] = empty($this->post['avatar_url']) ? '0' : $this->post['avatar_url'];
-        $this->post['uuid'] = md5($this->post['username']).uniqid();
-        $result = $this->userModel->addResult($this->post);
-        if ($result){
-            if (!empty($this->post['avatar_url'])) {
-                OAuth::getInstance()->updateResult(['uid'=>$result],'remember_token',$this->post['remember_token']);
-            }
-            //更新用户画像
+        DB::beginTransaction();
+        try {
+            $this->post['password'] = md5(md5($this->post['password']).$this->post['salt']);
+            $this->post['remember_token'] = md5($this->post['password']);
+            $this->post['status'] = $this->users->username === 'admin' ? $this->post['status'] : 2;
+            $user_id = $this->userModel->addResult($this->post);
+            $this->post['uid'] = config('app.client_id').$user_id;
+            UserCenter::getInstance()->addResult(['uid'=>$user_id,'u_name'=>$this->post['username'],'token'=>$this->post['remember_token']]);
+            $result = $this->userModel->updateResult($this->post,'id',$user_id);
+            //同步新用户画像
             CommonController::getInstance()->updateUserAvatarUrl();
-            return $this->ajax_return(Code::SUCCESS,'add user successfully');
+            DB::commit();
+            return $result ? $this->ajax_return(Code::SUCCESS,'add user successfully') :  $this->ajax_return(Code::ERROR,'add user error');
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            DB::rollBack();
+            return $this->ajax_return(Code::ERROR,'add user error');
         }
-        return $this->ajax_return(Code::ERROR,'add user error');
     }
 
     /**
@@ -100,33 +103,16 @@ class UsersController extends BaseController
             $this->post['password'] === $users->password ?  $this->validatePost($this->rule(1)) :  $this->validatePost($this->rule(2));
             //用户修改密码
             $this->post['salt'] = get_round_num(8);
-            $message = array(
-                'username' => $this->post['username'],
-                'info' => '你的密码修改成功，新密码是：' . $this->post['password'],
-                'uid' => $users->uuid,
-                'state' => 1,
-                'title' => '修改密码',
-                'status' => 1,
-                'created_at' => time()
-            );
-            $this->post['password'] !== $users->password ? Push::getInstance()->addResult($message) : '';
             $this->post['password'] = md5(md5($this->post['password']) . $this->post['salt']);
             $this->post['remember_token'] = md5($this->post['password']); //用户修改密码后也修改当前token
             //更新授权用户列表token以及用户中token
             UserCenter::getInstance()->updateResult(array('token' => $this->post['remember_token'], 'type' => 'update'), 'uid', $users->id);
             OAuth::getInstance()->updateResult(array('remember_token' => $this->post['remember_token']), 'uid', $users->id);
             $result = $this->userModel->updateResult($this->post, 'id', $this->post['id']);
-            if (empty($result)) {
-                DB::rollBack();
-                return $this->ajax_return(Code::ERROR, 'update users error');
-            }
-            //修改密码站内通知
-            $this->post = $message;
-            $this->post['password'] !== $users->password ? $this->pushMessage() : '';
             //更新用户画像
             CommonController::getInstance()->updateUserAvatarUrl();
-            DB::commit();
-            return $this->ajax_return(Code::SUCCESS, 'update users successfully');
+            empty($result) ? DB::rollBack() : DB::commit();
+            return empty($result) ? $this->ajax_return(Code::ERROR, 'update users error') : $this->ajax_return(Code::SUCCESS, 'update users successfully');
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
             DB::rollBack();
