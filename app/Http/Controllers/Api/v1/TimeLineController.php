@@ -20,7 +20,7 @@ class TimeLineController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer|gt:0','limit'=>'required|integer|gt:0']);
-        $result = TimeLine::getInstance()->getResultLists($this->post['page'],$this->post['limit']);
+        $result = TimeLine::getInstance()->getResultLists($this->post['page'] ?? 1,$this->post['limit'] ?? 10);
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 

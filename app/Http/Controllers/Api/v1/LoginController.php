@@ -231,9 +231,13 @@ class LoginController
         if ($validate->fails()) {
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
+        $hasEmail = $this->userModel->getResult('email',$this->post['email'],'=',['email','uuid']);
+        if (!$hasEmail) {
+            return ajax_return(Code::ERROR,'email not exists');
+        }
         $result = $this->commonControl->sendMail($this->post);
         if ($result){
-            return ajax_return(Code::SUCCESS,'email send successfully');
+            return ajax_return(Code::SUCCESS,'email send successfully',$hasEmail);
         }
         return ajax_return(Code::ERROR,'email send failed');
     }

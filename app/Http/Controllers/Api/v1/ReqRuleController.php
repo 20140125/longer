@@ -101,55 +101,40 @@ class ReqRuleController extends BaseController
      */
     public function save()
     {
-        $this->validatePost(['user_id'=>'required|string','href'=>'required|Array']);
-        if (isset($this->post['expires']) && !empty($this->post['expires'])){
-            if (strtotime($this->post['expires'])>strtotime('+1 year')) {
-                return $this->ajax_return(Code::ERROR,'authorization expires must be a date before '.date('Y-m-d H:i:s',strtotime('+1 year')));
+        $this->validatePost(['user_id'=>'required|string','href'=>'required|Array',
+            'expires' => 'required|date|before:'.date('Y-m-d H:i:s',strtotime('+1 year')).'|after:'.date('Y-m-d H:i:s')],
+        [
+            'expires.before' => 'authorization expires must be a date before '.date('Y-m-d H:i:s',strtotime('+1 year')),
+            'expires.after'  => 'authorization expires must be a date after '.date('Y-m-d H:i:s')
+        ]);
+        DB::beginTransaction();
+        try {
+            $users = $this->userModel->getResult('id',$this->post['user_id']);
+            if (empty($users)) {
+                return $this->ajax_return(Code::ERROR,'user does not exist');
             }
-            if (strtotime($this->post['expires'])<= time()) {
-                return $this->ajax_return(Code::ERROR,'authorization expires must be a date after '.date('Y-m-d H:i:s'));
+            $req['username'] = $users->username;
+            $req['user_id'] = $users->id;
+            $req['expires'] = $this->post['expires'] ?? strtotime($this->post['expires']);
+            $req['desc'] = $this->post['desc'] ?? '申请权限授权';
+            $where[] = ['user_id',$req['user_id']];
+            $result = 0;
+            foreach ($this->post['href'] as $href){
+                $req['href'] = str_replace('v1','admin',$href);
+                $where[] = ['href',$req['href']];
+                $reqRes = $this->reqRuleModel->getResult($where);
+                $result = !empty($reqRes) ? $this->reqRuleModel->updateResult($req,$where) : $this->reqRuleModel->addResult($req);
             }
+            $message = array('username' => $users->username, 'info' => $users->username.'申请权限待审批，请周知~', 'uid'  => $users->uuid, 'title' => '申请权限', 'created_at' => time());
+            $this->pushMessage();
+            Push::getInstance()->addResult($message);
+            DB::commit();
+            return $result ? $this->ajax_return(Code::SUCCESS,'save request authorization successfully') : $this->ajax_return(Code::ERROR,'save request authorization failed');
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            DB::rollBack();
+            return $this->ajax_return(Code::SERVER_ERROR,'save request authorization failed');
         }
-        $users = $this->userModel->getResult('id',$this->post['user_id']);
-        if (empty($users)) {
-            return $this->ajax_return(Code::ERROR,'user does not exist');
-        }
-        $req['username'] = $users->username;
-        $req['user_id'] = $users->id;
-        $req['expires'] = empty($this->post['expires']) ? 0 : strtotime($this->post['expires']);
-        $req['desc'] = empty($this->post['desc']) ? '申请权限授权' : $this->post['desc'];
-        $where[] = ['user_id',$req['user_id']];
-        $result = 0;
-        foreach ($this->post['href'] as &$href){
-            $href = str_replace('v1','admin',$href);
-            $req['href'] = $href;
-            $where[] = ['href',$href];
-            $reqRes = $this->reqRuleModel->getResult($where);
-            if (!empty($reqRes)) {
-                $result = $this->reqRuleModel->updateResult($req,$where);
-            } else {
-                $result = $this->reqRuleModel->addResult($req);
-            }
-            if ($this->users->username != 'admin') {
-                //推送站内信息
-                $this->post['info'] = $req['username'].'申请权限('.config('app.url').str_replace('/admin/','api/v1/',$req['href']).')';
-                $this->post['username'] = 'admin';
-                $this->post['uid'] = Users::getInstance()->getResult('username',$this->post['username'],'=',['uuid'])->uuid;
-                $this->post['status'] = 1;
-                $this->pushMessage();
-                $message = array(
-                    'username' => $this->post['username'],
-                    'info' => $this->post['info'],
-                    'uid'  => $this->post['uid'],
-                    'state' => $this->post['state'],
-                    'title' => '权限申请',
-                    'status' => 1,
-                    'created_at' => time()
-                );
-                Push::getInstance()->addResult($message);
-            }
-        }
-        return $result ? $this->ajax_return(Code::SUCCESS,'save request authorization successfully') : $this->ajax_return(Code::SUCCESS,'save request authorization failed');
     }
 
     /**
@@ -225,7 +210,7 @@ class ReqRuleController extends BaseController
         } catch (Exception $exception) {
             Log::error(json_encode([$exception->getMessage(),$this->post]));
             DB::rollBack();
-            return $this->ajax_return(Code::ERROR,'update authorization error');
+            return $this->ajax_return(Code::SERVER_ERROR,'update authorization error');
         }
     }
 
@@ -264,11 +249,11 @@ class ReqRuleController extends BaseController
                 $this->roleModel->updateResult($data,'id',$role_id);
             }
             DB::commit();
-            return $this->ajax_return(Code::SUCCESS,'remove authorization successfully');
+            return $result ? $this->ajax_return(Code::SUCCESS,'remove authorization successfully') : $this->ajax_return(Code::ERROR,'remove authorization failed');
         }catch (Exception $exception){
             DB::rollBack();
             Log::error($exception->getMessage());
-            return $this->ajax_return(Code::SUCCESS,'remove authorization failed');
+            return $this->ajax_return(Code::SERVER_ERROR,'remove authorization failed');
         }
     }
 }

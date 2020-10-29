@@ -15,20 +15,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(function () {
     /********************************************共有权限********************************************************/
-    Route::match(['get','post'],'report/verifyCode','v1\LoginController@setVerifyCode')->name('reportCode');
-    Route::match(['get','post'],'login','v1\LoginController@index')->name('apiLogin');
-    Route::match(['get','post'],'config','v1\LoginController@config')->name('getConfig');
-    Route::match(['get','post'],'file/download','v1\LoginController@download')->name('downloadFile');
-    Route::match(['get','post'],'sendEmail','v1\LoginController@email')->name('sendEmail');
-    Route::match(['get','post'],'checkCode','v1\LoginController@code')->name('checkCode');
-    Route::match(['get','post'],'checkLogin','v1\MenuController@check')->name('checkLogin');
-    Route::match(['get','post'],'logout','v1\MenuController@logout')->name('apiLogout');
-    Route::match(['get','post'],'menu','v1\MenuController@getMenu')->name('menu');
-    Route::match(['get','post'],'chat/index','v1\MenuController@chatMessage')->name('chatMessage');
-    Route::match(['get','post'],'total','v1\MenuController@getCountData')->name('total');
-    Route::match(['get','post'],'getCityName','v1\MenuController@getCityName')->name('getCityName');
-    Route::match(['get','post'],'confirmMail','v1\ResetPasswordController@sendMail')->name('confirmMail');
-    Route::match(['get','post'],'resetPass','v1\ResetPasswordController@resetPass')->name('resetPass');
+    Route::match(['get','post'],'common/report','v1\LoginController@setVerifyCode')->name('reportCode');
+    Route::match(['get','post'],'common/login','v1\LoginController@index')->name('apiLogin');
+    Route::match(['get','post'],'common/config','v1\LoginController@config')->name('getConfig');
+    Route::match(['get','post'],'common/download','v1\LoginController@download')->name('downloadFile');
+    Route::match(['get','post'],'common/send_email','v1\LoginController@email')->name('sendEmail');
+    Route::match(['get','post'],'common/check_code','v1\LoginController@code')->name('checkCode');
+    Route::match(['get','post'],'common/check_login','v1\MenuController@check')->name('checkLogin');
+    Route::match(['get','post'],'common/logout','v1\MenuController@logout')->name('apiLogout');
+    Route::match(['get','post'],'common/menu','v1\MenuController@getMenu')->name('menu');
+    Route::match(['get','post'],'common/chat','v1\MenuController@chatMessage')->name('chatMessage');
+    Route::match(['get','post'],'common/get_city_name','v1\MenuController@getCityName')->name('getCityName');
+    Route::match(['get','post'],'common/reset_pass','v1\ResetPasswordController@resetPass')->name('resetPass');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
@@ -36,13 +34,13 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'user/index','v1\UsersController@index');
     Route::match(['get','post'],'user/update','v1\UsersController@update')->name('userUpdate');
     Route::match(['get','post'],'user/save','v1\UsersController@save');
-    Route::match(['get','post'],'user/center','v1\UsersController@center')->name('userCenter');
-    Route::match(['get','post'],'center/save','v1\UsersController@saveCenter')->name('saveCenter');
     Route::match(['get','post'],'user/bind','v1\UsersController@getBindInfo')->name('getBindInfo');
     Route::match(['get','post'],'user/delete','v1\UsersController@delete');
+    Route::match(['get','post'],'center/index','v1\UsersController@center')->name('userCenter');
+    Route::match(['get','post'],'center/save','v1\UsersController@saveCenter')->name('saveCenter');
     //小程序
     Route::match(['get','post'],'wx/login','v1\WxUsersController@login')->name('wxLogin');
-    Route::match(['get','post'],'wx/getOpenid','v1\WxUsersController@getOpenId')->name('getOpenId');
+    Route::match(['get','post'],'wx/get_openid','v1\WxUsersController@getOpenId')->name('getOpenId');
     Route::match(['get','post'],'wx/upload','v1\WxUsersController@upload');
     //权限
     Route::match(['get','post'],'auth/index','v1\AuthController@index');
@@ -51,19 +49,18 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'auth/delete','v1\AuthController@delete');
     //授权
     Route::match(['get','post'],'oauth/index','v1\OauthController@index');
-    Route::match(['get','post'],'oauth/sendMail','v1\OauthController@email');
+    Route::match(['get','post'],'oauth/sendMail','v1\OauthController@email'); ##
     Route::match(['get','post'],'oauth/update','v1\OauthController@update');
     Route::match(['get','post'],'oauth/delete','v1\OauthController@delete');
-    Route::match(['get','post'],'oauth/verifyCode','v1\OauthController@code');
+    Route::match(['get','post'],'oauth/verifyCode','v1\OauthController@code'); ##
     Route::match(['get','post'],'oauth/bind','v1\OauthController@oauthBind');
-    Route::match(['post','get'],'oauth/chat','v1\OauthController@getChatOAuthLists')->name('chat');
 
     //请求授权
-    Route::match(['get','post'],'req-rule/index','v1\ReqRuleController@index');
-    Route::match(['get','post'],'req-rule/save','v1\ReqRuleController@save')->name('reqRuleSave');
-    Route::match(['get','post'],'req-rule/update','v1\ReqRuleController@update');
-    Route::match(['get','post'],'req-rule/delete','v1\ReqRuleController@delete');
-    Route::match(['get','post'],'req-rule/getAuth','v1\ReqRuleController@getAuth');
+    Route::match(['get','post'],'req_rule/index','v1\ReqRuleController@index');
+    Route::match(['get','post'],'req_rule/save','v1\ReqRuleController@save')->name('reqRuleSave');
+    Route::match(['get','post'],'req_rule/update','v1\ReqRuleController@update');
+    Route::match(['get','post'],'req_rule/delete','v1\ReqRuleController@delete');
+    Route::match(['get','post'],'req_rule/get','v1\ReqRuleController@getAuth');
     //日志
     Route::match(['get','post'],'log/index','v1\LogController@index');
     Route::match(['get','post'],'log/save','v1\LogController@save')->name('logSave');
@@ -111,9 +108,9 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'api/update','v1\ApiController@update');
     Route::match(['post','get'],'api/save','v1\ApiController@save');
     //API接口
-    Route::match(['get','post'],'apidoc/index','v1\ApiDocController@index');
-    Route::match(['post','get'],'apidoc/update','v1\ApiDocController@update');
-    Route::match(['post','get'],'apidoc/save','v1\ApiDocController@save');
+    Route::match(['get','post'],'api_doc/index','v1\ApiDocController@index');
+    Route::match(['post','get'],'api_doc/update','v1\ApiDocController@update');
+    Route::match(['post','get'],'api_doc/save','v1\ApiDocController@save');
     //API接口分类
     Route::match(['post','get'],'category/index','v1\ApiController@category');
     Route::match(['post','get'],'category/delete','v1\ApiController@CategoryDelete');
@@ -135,22 +132,22 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
 
     /******************************************第三方登陆**********************************************************/
     //QQ
-    Route::get('oauth-login/qq','v1\OauthLoginController@QQ')->name('qqLogin');
+    Route::get('oauth_login/qq','v1\OauthLoginController@QQ')->name('qqLogin');
     Route::get('callback/qq','v1\OauthCallbackController@QQ')->name('qqCallback');
     //Github
-    Route::get('oauth-login/github','v1\OauthLoginController@gitHub')->name('gitHubLogin');
+    Route::get('oauth_login/github','v1\OauthLoginController@gitHub')->name('gitHubLogin');
     Route::get('callback/github','v1\OauthCallbackController@gitHub')->name('gitHubCallback');
     //WeiBo
-    Route::get('oauth-login/weibo','v1\OauthLoginController@weibo')->name('weiboLogin');
+    Route::get('oauth_login/weibo','v1\OauthLoginController@weibo')->name('weiboLogin');
     Route::get('callback/weibo','v1\OauthCallbackController@weibo')->name('weiboCallback');
     //Gitee
-    Route::get('oauth-login/gitee','v1\OauthLoginController@gitee')->name('giteeLogin');
+    Route::get('oauth_login/gitee','v1\OauthLoginController@gitee')->name('giteeLogin');
     Route::get('callback/gitee','v1\OauthCallbackController@gitee')->name('giteeCallback');
     //Baidu
-    Route::get('oauth-login/baidu','v1\OauthLoginController@baidu')->name('baiduLogin');
+    Route::get('oauth_login/baidu','v1\OauthLoginController@baidu')->name('baiduLogin');
     Route::get('callback/baidu','v1\OauthCallbackController@baidu')->name('baiduCallback');
     //osChina
-    Route::get('oauth-login/os_china','v1\OauthLoginController@osChina')->name('osChinaLogin');
+    Route::get('oauth_login/os_china','v1\OauthLoginController@osChina')->name('osChinaLogin');
     Route::get('callback/os_china','v1\OauthCallbackController@osChina')->name('osChinaCallback');
     /******************************************第三方登陆**********************************************************/
 

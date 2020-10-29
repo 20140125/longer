@@ -119,15 +119,4 @@ class MenuController extends BaseController
         UserCenter::getInstance()->updateResult(array('token'=>$remember_token,'type'=>'logout'),'token',$this->users->remember_token);
         return $this->ajax_return(Code::SUCCESS,'logout system successfully');
     }
-
-    /**
-     * TODO：获取总数
-     * @param string token 用户标识
-     * @return JsonResponse
-     */
-    public function getCountData()
-    {
-        $result['timeline'] = TimeLine::getInstance()->getResultLists(1,10);
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
-    }
 }

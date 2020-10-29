@@ -23,6 +23,8 @@ class Code
     const NOT_FOUND = 404;
     //邮箱验证失败码
     const VERIFY_CODE = 202;
+    //服务器错误
+    const SERVER_ERROR = 500;
     // 站内信息推送的状态 (成功 失败 离线)
     const WebSocketState = array( 'successfully', 'failed', 'offline');
     /**

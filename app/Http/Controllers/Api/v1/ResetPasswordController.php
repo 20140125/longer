@@ -50,30 +50,6 @@ class ResetPasswordController
         $this->redisClient = RedisClient::getInstance();
     }
     /**
-     * todo:邮件发送
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function sendMail(Request $request)
-    {
-        if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allowed');
-        }
-        $validate = Validator::make($this->post,['email'=>'required|string|email']);
-        if ($validate->fails()) {
-            return ajax_return(Code::ERROR,$validate->errors()->first());
-        }
-        $hasEmail = $this->userModel->getResult('email',$this->post['email'],'=',['email','uuid']);
-        if (!$hasEmail) {
-            return ajax_return(Code::ERROR,'email not exists');
-        }
-        $result = $this->commonControl->sendMail($this->post);
-        if ($result){
-            return ajax_return(Code::SUCCESS,'email send successfully',$hasEmail);
-        }
-        return ajax_return(Code::ERROR,'email send failed');
-    }
-    /**
      * todo:密码重置
      * @param Request $request
      * @return JsonResponse

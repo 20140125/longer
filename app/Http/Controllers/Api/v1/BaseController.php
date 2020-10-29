@@ -13,6 +13,8 @@ use App\Models\Users;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -102,12 +104,6 @@ class BaseController extends Controller
         if (!is_dir($this->backupPath)) {
             mkdir($this->backupPath);
         }
-        //公用权限
-        $common_url = [
-            route('checkLogin'), route('apiLogout'), route('logSave'), route('menu'), route('reqRuleSave'),
-            route('emotion'), route('saveCenter'), route('userCenter'), route('areaLists'), route('total'),
-            route('export'), route('chat'), route('uploadFile'), route('getCityName')
-        ];
         $this->post['token'] = $this->post['token'] ?? ($request->get('token') ?? $this->redisClient->getValue('oauth_register'));
         //判断必填字段是否为空
         $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
@@ -139,9 +135,18 @@ class BaseController extends Controller
             $this->setCode(Code::Unauthorized,'Role Is Disabled');
         }
         if ($this->users->role_id !== 1) {
-            if (!empty($this->role) && !in_array(str_replace(['/api/v1'],['/admin'],$url),json_decode($this->role->auth_url,true)) && !in_array(asset($url),$common_url)) {
+            if (!empty($this->role) && !in_array(str_replace(['/api/v1'],['/admin'],$url),json_decode($this->role->auth_url,true))) {
                 $this->setCode(Code::NOT_ALLOW,'Permission denied');
             }
+        }
+        $default_url = Cache::get('default_url');
+        if (!$default_url) {
+            $default_url = $this->authModel->getResult('pid',[100],'in',['href']);
+            Cache::forever('default_url',$default_url);
+        }
+        $common_url = [];
+        foreach ($default_url as $item) {
+            $common_url[] = $item->href;
         }
         if (!in_array(asset($url),$common_url)) {
             unset($this->post['token']);
