@@ -75,6 +75,7 @@ class Users extends Model
         $where[] = array('u_name',$result->username);
         UserCenter::getInstance()->updateResult(array('token'=>$admin['token'],'type'=>'login'),$where);     //修改用户中心标识
         OAuth::getInstance()->updateResult(array('remember_token'=>$admin['token']),'uid',$result->id); //修改用户授权标识
+        $admin['logInfo'] = 'account and password login successfully';
         return $admin;
     }
 

@@ -98,12 +98,6 @@ class LoginController
                 //删除redis缓存的验证码 (防止恶意访问接口)
                 $this->redisClient->del($this->post['verify_code']);
                 $result = $this->userModel->loginRes($this->post);
-                $info = [
-                    'href' => '/v1/login',
-                    'msg' => 'account and password login successfully',
-                    'username' => $result['username']
-                ];
-                act_log($info);
                 break;
             case 'mail':
                 $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email','verify_code' =>'required|size:8|string']);
@@ -115,16 +109,27 @@ class LoginController
             default:
                 return ajax_return(Code::ERROR,'Illegal parameter');
         }
-        if ($result === Code::ERROR){
-            return ajax_return(Code::ERROR,'account or password validate error');
+        switch ($result) {
+            case Code::ERROR:
+                $res = ajax_return(Code::ERROR,'account or password validate error');
+                break;
+            case Code::NOT_ALLOW:
+                $res = ajax_return(Code::NOT_ALLOW,'users not allow login system');
+                break;
+            case Code::VERIFY_CODE:
+                $res = ajax_return(Code::ERROR,'verify code error');
+                break;
+            default:
+                $info = [
+                    'href' => '/v1/login',
+                    'msg' => $result['logInfo'],
+                    'username' => $result['username']
+                ];
+                act_log($info);
+                $res = ajax_return(Code::SUCCESS,'login successfully',$this->setUserInfo($result));
+                break;
         }
-        if ($result === Code::NOT_ALLOW){
-            return ajax_return(Code::NOT_ALLOW,'users not allow login system');
-        }
-        if ($result === Code::VERIFY_CODE){
-            return ajax_return(Code::ERROR,'verify code error');
-        }
-        return ajax_return(Code::SUCCESS,'login successfully',$this->setUserInfo($result));
+        return $res;
     }
     /**
      * todo:设置用户信息
@@ -175,18 +180,8 @@ class LoginController
             if ($result->status == 2){
                 return Code::NOT_ALLOW;
             }
-            $admin['token'] = $result->remember_token;
-            $admin['username'] = $result->username;
-            $admin['role_id'] = md5($result->role_id);
-            $admin['uuid'] = $result->uuid;
-            $admin['avatar_url'] = $result->avatar_url;
-            $info = [
-                'href' => '/v1/login',
-                'msg' => 'email login successfully',
-                'username' => $admin['username']
-            ];
-            act_log($info);
-            return $admin;
+            $result->logInfo = 'email login successfully';
+            return object_to_array($result);
         }
         //注册
         $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
@@ -208,12 +203,7 @@ class LoginController
         CommonController::getInstance()->updateUserAvatarUrl();
         //删除redis缓存的验证码，防止恶意登录
         $this->redisClient->del($this->post['email']);
-        $info = [
-            'href' => '/v1/login',
-            'msg' => 'email register successfully',
-            'username' => $request['username']
-        ];
-        act_log($info);
+        $request['logInfo'] = 'email register successfully';
         return $request;
     }
     /**
