@@ -27,6 +27,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'common/chat','v1\MenuController@chatMessage')->name('chatMessage');
     Route::match(['get','post'],'common/get_city_name','v1\MenuController@getCityName')->name('getCityName');
     Route::match(['get','post'],'common/reset_pass','v1\ResetPasswordController@resetPass')->name('resetPass');
+    Route::match(['get','post'],'common/log_save','v1\LogController@save')->name('logSave');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
@@ -63,7 +64,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'req_rule/get','v1\ReqRuleController@getAuth');
     //日志
     Route::match(['get','post'],'log/index','v1\LogController@index');
-    Route::match(['get','post'],'log/save','v1\LogController@save')->name('logSave');
     Route::match(['get','post'],'log/delete','v1\LogController@delete')->name('logDelete');
     //配置
     Route::match(['get','post'],'config/index','v1\ConfigController@index');

@@ -28,7 +28,7 @@ class RoleController extends BaseController
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
         }
         $authLists = DB::table('os_rule')->get(['id as key','name as label']);
-        return $this->ajax_return(Code::SUCCESS,'successfully',['role'=>$roleLists,'auth'=>$authLists]);
+        return $this->ajax_return(Code::SUCCESS,'successfully',['role'=>$roleLists,'auth'=>$authLists,'defaultAuth'=>$this->defaultAuth]);
     }
 
     /**
@@ -41,13 +41,13 @@ class RoleController extends BaseController
     public function save()
     {
         $this->validatePost(['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string']);
-        $authLists = $this->authModel->getResult('id',$this->post['auth_ids'],'in',['href']);
+        $authLists = $this->authModel->getResult('id',$this->setDefaultAuth(),'in',['href']);
         $auth_url = array();
         foreach ($authLists as $item){
             $auth_url[] = $item->href;
         }
         $this->post['auth_url'] = str_replace("\\",'',json_encode($auth_url));
-        $this->post['auth_ids'] = json_encode($this->post['auth_ids']);
+        $this->post['auth_ids'] = json_encode($this->setDefaultAuth());
         $result = $this->roleModel->addResult($this->post);
         if (!empty($result)){
             return $this->ajax_return(Code::SUCCESS,'role save successfully');
@@ -72,7 +72,7 @@ class RoleController extends BaseController
         }
         $this->validatePost(['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string']);
         $auth_ids = array();
-        foreach ($this->post['auth_ids'] as $auth_id) {
+        foreach ($this->setDefaultAuth() as $auth_id) {
             if (!in_array($auth_id,$auth_ids)) {
                 $auth_ids[] = $auth_id;
             }
@@ -88,6 +88,20 @@ class RoleController extends BaseController
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $result = $this->roleModel->updateResult($this->post,'id',$this->post['id']);
         return !empty($result) ? $this->ajax_return(Code::SUCCESS,'role update status successfully') :  $this->ajax_return(Code::ERROR,'role update status error');
+    }
+
+    /**
+     * todo:设置默认的权限
+     * @return mixed
+     */
+    protected function setDefaultAuth()
+    {
+        foreach ($this->defaultAuth as $auth) {
+            if (!in_array($auth,$this->post['auth_ids'])) {
+                array_push($this->post['auth_ids'],$auth);
+            }
+        }
+        return $this->post['auth_ids'];
     }
 
     /**

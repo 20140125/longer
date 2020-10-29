@@ -75,6 +75,10 @@ class BaseController extends Controller
      * @var CommonController $commonControl
      */
     protected $commonControl;
+    /**
+     * @var $defaultAuth
+     */
+    protected $defaultAuth;
 
     /**
      * BaseController constructor.
@@ -139,16 +143,17 @@ class BaseController extends Controller
                 $this->setCode(Code::NOT_ALLOW,'Permission denied');
             }
         }
-        $default_url = Cache::get('default_url');
-        if (!$default_url) {
-            $default_url = $this->authModel->getResult('pid',[100],'in',['href']);
-            Cache::forever('default_url',$default_url);
+        $default_auth = Cache::get('default_auth');
+        if (!$default_auth) {
+            $default_auth = $this->authModel->getResult('pid',[100],'in',['href','id']);
+            Cache::put('default_auth',$default_auth,Carbon::now()->addHours(2));
         }
         $common_url = [];
-        foreach ($default_url as $item) {
+        foreach ($default_auth as $item) {
             $common_url[] = $item->href;
+            $this->defaultAuth[] = (int)$item->id;
         }
-        if (!in_array(asset($url),$common_url)) {
+        if (!in_array(str_replace(['/api/v1'],['/admin'],$url),$common_url)) {
             unset($this->post['token']);
         }
     }
