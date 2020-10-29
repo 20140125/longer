@@ -216,7 +216,7 @@ class ReqRuleController extends BaseController
                 array_push($role->auth_url,$getReq->href);
             }
             //更新角色记录
-            $this->roleModel->updateResult(['auth_ids'=>json_encode($role->auth_ids),'auth_url'=>json_encode($role->auth_url)],'id',$role_id);
+            $this->roleModel->updateResult(['auth_ids'=>json_encode($role->auth_ids),'auth_url'=>str_replace('\\','',json_encode($role->auth_url))],'id',$role_id);
             //修改申请权限列表
             unset($this->post['act']);
             $result = $this->reqRuleModel->updateResult($this->post,'id',$this->post['id']);
