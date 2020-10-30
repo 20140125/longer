@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 /**
  * TODO: 用户管理
- * Class UsersController
+ * Class WxUsersController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
  */
