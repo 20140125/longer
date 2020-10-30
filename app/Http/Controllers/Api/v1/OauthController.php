@@ -9,11 +9,8 @@ use App\Http\Controllers\Oauth\OsChinaController;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Utils\Code;
-use App\Mail\Oauth;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Mail;
-
 /**
  * TODO：授权列表
  * Class OauthController

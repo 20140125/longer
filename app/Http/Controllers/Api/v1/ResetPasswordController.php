@@ -10,6 +10,7 @@ use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -59,48 +60,34 @@ class ResetPasswordController
         if ($request->isMethod('get')){
             return ajax_return(Code::METHOD_ERROR,'method not allowed');
         }
-        $validate = Validator::make($this->post,['email'=>'required|string|email','uuid'=>'required|string','password'=>'required|string','verify_code'=>'required|integer']);
+        $validate = Validator::make($this->post,['email'=>'required|string|email','remember_token'=>'required|string','password'=>'required|string','verify_code'=>'required|integer']);
         if ($validate->fails()) {
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
         if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
             return ajax_return(Code::ERROR,'verify code error');
         }
-        $where[] = ['email',$this->post['email']];
-        $where[] = ['uuid',$this->post['uuid']];
-        $hasEmail = $this->userModel->getResult($where,'','',['username']);
-        if (!$hasEmail) {
-            return ajax_return(Code::ERROR,'email not exists');
-        }
-        //添加修改密码记录
-        $reset = array(
-            'email' => $this->post['email'],
-            'token' => $this->post['uuid'],
-            'updated_at' => time(),
-            'created_at' => time()
-        );
-        $salt = get_round_num(8,'str');
-        $data = array(
-            'salt' => $salt,
-            'password' => md5(md5($this->post['password']).$salt),
-            'updated_at'=>time()
-        );
-        $update = $this->userModel->updateResult($data,$where);
-        if ($update){
+        DB::beginTransaction();
+        try {
+            $where[] = ['email',$this->post['email']];
+            $where[] = ['remember_token',$this->post['remember_token']];
+            $hasEmail = $this->userModel->getResult($where,'','',['username']);
+            if (!$hasEmail) {
+                return ajax_return(Code::ERROR,'email not exists');
+            }
+            //添加修改密码记录
+            $reset = array('email' => $this->post['email'], 'token' => $this->post['remember_token'], 'updated_at' => time(), 'created_at' => time());
+            $salt = get_round_num(8,'str');
+            $data = array('salt' => $salt, 'password' => md5(md5($this->post['password']).$salt), 'updated_at'=>time());
+            $data['remember_token'] = md5($data['password']);
+            $update = $this->userModel->updateResult($data,$where);
             DB::table('os_password_resets')->insert($reset);
-            //修改密码站内通知
-            $message = array(
-                'username' => $hasEmail->username,
-                'info' => "你的密码修改成功，新密码是：".$data['password'],
-                'uid'  => md5($hasEmail->username),
-                'state' => 'offline',
-                'title' => '修改密码',
-                'status' => 1,
-                'created_at' => time()
-            );
-            Push::getInstance()->addResult($message);
-            return ajax_return(Code::SUCCESS,'reset password successfully');
+            DB::commit();
+            return $update ? ajax_return(Code::SUCCESS,'reset password successfully') : ajax_return(Code::ERROR,'reset password failed');
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            DB::rollBack();
+            return ajax_return(Code::ERROR,'reset password failed');
         }
-        return ajax_return(Code::ERROR,'reset password failed');
     }
 }

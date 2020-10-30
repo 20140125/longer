@@ -37,7 +37,7 @@ class Oauth extends Mailable
         return $this->view('email.oauth')->with([
             'code'=>$this->request['verify_code'],
             'username'=>$this->request['username'],
-            'url'=>config('app.url')."#/admin/index/{$this->request['remember_token']}"
+            'url'=>config('app.url')."/admin/index/{$this->request['remember_token']}"
         ]);
     }
 }

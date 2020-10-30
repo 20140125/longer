@@ -3,18 +3,14 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
-use App\Mail\Notice;
 use App\Models\Push;
 use App\Models\ReqRule;
-use App\Models\Users;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-
 /**
  * TODO：用户请求授权
  * Class ReqRuleController

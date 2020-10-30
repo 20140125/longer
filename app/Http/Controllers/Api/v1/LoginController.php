@@ -221,15 +221,12 @@ class LoginController
         if ($validate->fails()) {
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
-        $hasEmail = $this->userModel->getResult('email',$this->post['email'],'=',['email','uuid']);
+        $hasEmail = $this->userModel->getResult('email',$this->post['email'],'=',['email','remember_token']);
         if (!$hasEmail) {
             return ajax_return(Code::ERROR,'email not exists');
         }
         $result = $this->commonControl->sendMail($this->post);
-        if ($result){
-            return ajax_return(Code::SUCCESS,'email send successfully',$hasEmail);
-        }
-        return ajax_return(Code::ERROR,'email send failed');
+        return $result ? ajax_return(Code::SUCCESS,'email send successfully',$hasEmail) : ajax_return(Code::ERROR,'email send failed');
     }
 
     /**
@@ -249,19 +246,9 @@ class LoginController
             return ajax_return(Code::ERROR,$validate->errors()->first());
         }
         if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
-            return ajax_return(Code::ERROR,'verify code error');
+            return ajax_return(Code::ERROR,'code verify error');
         }
-        $data = array(
-            'email' => $this->post['email'],
-            'code'  => $this->post['verify_code'],
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        );
-        $result = $this->commonControl->verifyMailAndCode($this->post,$data);
-        if ($result){
-            return ajax_return(Code::SUCCESS,'code verify successfully');
-        }
-        return ajax_return(Code::ERROR,'code verify failed');
+        return ajax_return(Code::SUCCESS,'code verify successfully');
     }
     /**
      * TODO：获取配置
