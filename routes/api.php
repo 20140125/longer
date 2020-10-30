@@ -30,6 +30,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'common/log_save','v1\LogController@save')->name('logSave');
     Route::match(['get','post'],'common/area','v1\AreaController@lists')->name('areaLists');
     Route::match(['get','post'],'common/upload','v1\WxUsersController@upload');
+    Route::match(['post','get'],'common/emotion','v1\EmotionController@index')->name('emotion');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
@@ -116,8 +117,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['post','get'],'category/delete','v1\ApiController@CategoryDelete');
     Route::match(['post','get'],'category/save','v1\ApiController@categorySave');
     Route::match(['post','get'],'category/update','v1\ApiController@CategoryUpdate');
-    //表情
-    Route::match(['post','get'],'emotion/index','v1\EmotionController@index')->name('emotion');
     //excel导入导出
     Route::match(['post','get'],'excel/import','v1\ExcelController@import');
     Route::match(['post','get'],'excel/export','v1\ExcelController@export')->name('export');
