@@ -27,8 +27,8 @@ class RoleController extends BaseController
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
         }
-        $authLists = DB::table('os_rule')->get(['id as key','name as label']);
-        return $this->ajax_return(Code::SUCCESS,'successfully',['role'=>$roleLists,'auth'=>$authLists,'defaultAuth'=>$this->defaultAuth]);
+        $authLists = in_array($this->users->role_id,[1]) ? DB::table('os_rule')->get(['id as key','name as label']) : [];
+        return $this->ajax_return(Code::SUCCESS,'successfully',['role'=>$roleLists,'auth'=>$authLists,'defaultAuth'=>in_array($this->users->role_id,[1]) ? $this->defaultAuth : []]);
     }
 
     /**

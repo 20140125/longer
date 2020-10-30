@@ -32,7 +32,7 @@ class UsersController extends BaseController
             $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
             $item->created_at = date("Y-m-d H:i:s",$item->created_at);
         }
-        $result['roleLists'] = $this->roleModel->getResult2('1',['id','role_name']);
+        $result['roleLists'] = in_array($this->users->role_id,[1]) ? $this->roleModel->getResult2('1',['id','role_name']) : [];
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
 

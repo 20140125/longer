@@ -28,6 +28,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'common/get_city_name','v1\MenuController@getCityName')->name('getCityName');
     Route::match(['get','post'],'common/reset_pass','v1\ResetPasswordController@resetPass')->name('resetPass');
     Route::match(['get','post'],'common/log_save','v1\LogController@save')->name('logSave');
+    Route::match(['get','post'],'common/area','v1\AreaController@lists')->name('areaLists');
     /********************************************共有权限********************************************************/
 
     /********************************************私有权限********************************************************/
@@ -96,7 +97,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     //城市
     Route::match(['get','post'],'area/index','v1\AreaController@index');
     Route::match(['get','post'],'area/weather','v1\AreaController@weather');
-    Route::match(['get','post'],'area/lists','v1\AreaController@lists')->name('areaLists');
     //站内信息推送
     Route::match(['get','post'],'push/index','v1\PushController@index');
     Route::match(['get','post'],'push/save','v1\PushController@save');
