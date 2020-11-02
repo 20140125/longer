@@ -16,7 +16,7 @@
  * 如果发现业务卡死，可以将下面declare打开（去掉//注释），并执行php start.php reload
  * 然后观察一段时间workerman.log看是否有process_timeout异常
  */
-declare(ticks=1);
+//declare(ticks=1);
 /**
  * 聊天主逻辑
  * 主要是处理 onMessage onClose
@@ -111,18 +111,16 @@ class Events
                 if (!empty($message_data['source']) && $message_data['source'] === 'user') {
                     self::$chat->delUnreadMsg($message_data['from_client_id'], $message_data['to_client_id']);
                 }
-                $messageLists = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id'],$message_data['page'],$message_data['limit']);
-                if (!count($messageLists['list'])) {
-                    //数据库查询历史记录
-                    $hisMessage = array(
-                        'from_client_id' => $message_data['from_client_id'],
-                        'to_client_id' => $message_data['to_client_id'],
-                        'room_id' => $message_data['room_id'],
-                        'page' => $message_data['page'],
-                        'limit' => $message_data['limit'] + 1
-                    );
-                    $messageLists = self::getHisChatMessage($hisMessage);
-                }
+                $redisMessage = self::$chat->getChatMsgLists($message_data['from_client_id'],$message_data['to_client_id'],$message_data['room_id'],$message_data['page'],$message_data['limit']);
+                //数据库查询历史记录
+                $hisMessage = array(
+                    'from_client_id' => $message_data['from_client_id'],
+                    'to_client_id' => $message_data['to_client_id'],
+                    'room_id' => $message_data['room_id'],
+                    'page' => $message_data['page'],
+                    'limit' => $message_data['limit'] + 1
+                );
+                $messageLists = ceil($redisMessage['total']/$hisMessage['limit']) > $hisMessage['page'] ? $redisMessage : self::getHisChatMessage($redisMessage,$hisMessage);
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -312,26 +310,26 @@ class Events
     }
     /**
      * todo:获取当前城市天气
-     * @param $adcode
+     * @param $adCode
      * @return bool|mixed|string
      */
-    protected static function getWeather($adcode)
+    protected static function getWeather($adCode)
     {
         try {
             self::$chat = new Chat();
-            if (!self::$chat->getValue($adcode)) {
+            if (!self::$chat->getValue($adCode)) {
                 self::$db = new connection(Host,Port,UserName,Password,DbName);
-                $result = self::$db->from('os_china_area')->where("code='$adcode'")->select('info,forecast')->query();
+                $result = self::$db->from('os_china_area')->where("code='$adCode'")->select('info,forecast')->query();
                 $redisValue = json_encode(
                     [
                         'info'=>$result[0]['info'] ? json_decode($result[0]['info'],true) : '',
                         'forecast'=>$result[0]['forecast'] ? json_decode($result[0]['forecast'],true) : ''
                     ],
                     JSON_UNESCAPED_UNICODE);
-                self::$chat->setValue($adcode,$redisValue,['EX'=>3600]);
+                self::$chat->setValue($adCode,$redisValue,['EX'=>3600]);
                 return $redisValue;
             }
-            return self::$chat->getValue($adcode);
+            return self::$chat->getValue($adCode);
         } catch (\Exception $exception){
             self::$db->closeConnection();
             echo $exception;
@@ -339,11 +337,12 @@ class Events
         return false;
     }
     /**
-     * todo:获取历史记录
+     * todo:获取历史记录(数据库查询数据)
+     * @param $redisMessage
      * @param $message
      * @return false|mixed|string|null
      */
-    protected static function getHisChatMessage($message)
+    protected static function getHisChatMessage($redisMessage,$message)
     {
         try {
             self::$db = new connection(Host,Port,UserName,Password,DbName);
@@ -351,29 +350,27 @@ class Events
             if (!empty($message['room_id'])) {
                 //列表
                 $lists = self::$db->from('os_chat')->orderByDESC(['id'])->where("room_id = '{$message['room_id']}'")->limit($message['limit'])->offset($offset)->select('content')->query();
-                $arr = [];
                 foreach ($lists as $item) {
-                    array_push($arr,json_decode($item['content']));
+                    array_push($redisMessage['list'],json_decode($item['content']));
                 }
-                $result['list'] = $arr;
+                $result['list'] = $redisMessage['list'];
                 //总记录数
                 $total = self::$db->from('os_chat')->where("room_id = '{$message['room_id']}'")->select('count(*) as total')->query();
-                $result['total'] = $total[0]['total'];
+                $result['total'] = (int)$total[0]['total'] + (int)$redisMessage['total'];
             } else {
                 //列表
                 $lists = self::$db->from('os_chat')
                     ->where("(from_client_id = '{$message['from_client_id']}' and to_client_id = '{$message['to_client_id']}') or from_client_id = '{$message['to_client_id']}' and to_client_id = '{$message['from_client_id']}'")
                     ->limit($message['limit'])->orderByDESC(['id'])->offset($offset)->select('content')->query();
-                $arr = [];
                 foreach ($lists as $item) {
-                    array_push($arr,json_decode($item['content']));
+                    array_push($redisMessage['list'],json_decode($item['content']));
                 }
-                $result['list'] = $arr;
+                $result['list'] = $redisMessage['list'];
                 //总记录数
                 $total = self::$db->from('os_chat')
                     ->where("(from_client_id = '{$message['from_client_id']}' and to_client_id = '{$message['to_client_id']}') or from_client_id = '{$message['to_client_id']}' and to_client_id = '{$message['from_client_id']}'")
                     ->select('count(*) as total')->query();
-                $result['total'] = $total[0]['total'];
+                $result['total'] = (int)$total[0]['total'] + (int)$redisMessage['total'];
             }
             return $result;
         } catch (\Exception $exception){

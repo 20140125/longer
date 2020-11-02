@@ -47,40 +47,37 @@ class Chat
     public function getChatMsgLists($from, $to,$room_id,$page = 1,$limit = 19)
     {
         $message = array();
+        $time = array();
+        $offset = $limit * ($page - 1) ;
         //群聊消息
         if (!empty($room_id)) {
             $recName = 'receive_all_'.$room_id;
             $num = $this->getMsgLen($recName);
-            $offset = $limit * ($page - 1) ;
             $recList = $offset + $limit >= $num ? $this ->redisClient-> lRange($recName, $offset, $num) : $this->redisClient->lRange($recName,$offset,$offset+$limit);
-            $time = array();
             foreach ($recList as $item) {
                 array_push($message,json_decode($item,true));
                 $time[] = json_decode($item,true)['time'];
             }
-            array_multisort($time,SORT_ASC,$message);
+            array_multisort($message,$time,SORT_ASC);
             return array('list' => $message, 'total' => $num);
         }
         //接受的消息
         $recName =  "receive_{$from}_{$to}";
         $recNum = $this->getMsgLen($recName);
-        $offset = $limit * ($page - 1) ;
         $recList = $offset + $limit >= $recNum ? $this ->redisClient-> lRange($recName, $offset, $recNum) : $this->redisClient->lRange($recName,$offset,$offset+$limit);
-        //发送的消息
-        $sendName = "receive_{$to}_{$from}";
-        $sendNum = $this->getMsgLen($sendName);
-        $sendLists = $offset + $limit >= $sendNum ? $this ->redisClient-> lRange($recName, $offset, $sendNum) : $this->redisClient->lRange($recName,$offset,$offset+$limit);
-        $messageLists = array();
-        $time = array();
-        foreach ($sendLists as $item) {
-            array_push($message,json_decode($item,true));
-            $time[] = json_decode($item,true)['time'];
-        }
         foreach ($recList as $item) {
             array_push($message,json_decode($item,true));
             $time[] = json_decode($item,true)['time'];
         }
-        array_multisort($time,SORT_ASC,$messageLists);
+        //发送的消息
+        $sendName = "receive_{$to}_{$from}";
+        $sendNum = $this->getMsgLen($sendName);
+        $sendLists = $offset + $limit >= $sendNum ? $this ->redisClient-> lRange($sendName, $offset, $sendNum) : $this->redisClient->lRange($sendName,$offset,$offset+$limit);
+        foreach ($sendLists as $item) {
+            array_push($message,json_decode($item,true));
+            $time[] = json_decode($item,true)['time'];
+        }
+        array_multisort($message,$time,SORT_ASC);
         return array('list' => $message, 'total' => $recNum + $sendNum);
     }
     /**
