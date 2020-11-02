@@ -305,7 +305,7 @@ class LoginController
             return ajax_return(Code::NOT_FOUND,'permission denied');
         }
         if (file_exists($request->get('path'))){
-            Storage::disk('public')->put($request->get('name'), file_get_contents($request->get('path')));
+            Storage::disk('public')->put(basename($request->get('path')), file_get_contents($request->get('path')));
             //保存到服务器
             return $response::download($request->get('path'),basename($request->get('path')));
         }
