@@ -271,7 +271,7 @@ class OauthCallbackController
         //授权用户存在直接跳转到欢迎页
         if (!empty($oauth)){
             $info = [
-                'href' => '/v1/oauth-login/'.$data['oauth_type'],
+                'href' => '/v1/oauth_login/'.$data['oauth_type'],
                 'msg' => 'oauth login successfully',
                 'username' => $data['username']
             ];
@@ -296,7 +296,7 @@ class OauthCallbackController
             Artisan::call("longer:sync_oauth {$data['remember_token']}");
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             $info = [
-                'href' => '/v1/oauth-login/'.$data['oauth_type'],
+                'href' => '/v1/oauth_login/'.$data['oauth_type'],
                 'msg' => 'oauth register successfully',
                 'username' => $data['username']
             ];
