@@ -8,6 +8,7 @@ use App\Models\Push;
 use App\Models\UserCenter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use mysql_xdevapi\Exception;
@@ -105,13 +106,8 @@ class UsersController extends BaseController
             $this->post['salt'] = get_round_num(8);
             $this->post['password'] = md5(md5($this->post['password']) . $this->post['salt']);
             $this->post['remember_token'] = md5($this->post['password']); //用户修改密码后也修改当前token
-            //更新授权用户列表token以及用户中token
-            UserCenter::getInstance()->updateResult(array('token' => $this->post['remember_token'], 'type' => 'update'), 'uid', $users->id);
-            OAuth::getInstance()->updateResult(array('remember_token' => $this->post['remember_token']), 'uid', $users->id);
-            $result = $this->userModel->updateResult($this->post, 'id', $this->post['id']);
-            //更新用户画像
-            CommonController::getInstance()->updateUserAvatarUrl();
-            empty($result) ? DB::rollBack() : DB::commit();
+            Artisan::call("longer:sync_oauth {$this->post['remember_token']}");
+            DB::commit();
             return empty($result) ? $this->ajax_return(Code::ERROR, 'update users error') : $this->ajax_return(Code::SUCCESS, 'update users successfully');
         } catch (Exception $exception) {
             Log::error($exception->getMessage());

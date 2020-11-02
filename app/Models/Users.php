@@ -49,7 +49,7 @@ class Users extends Model
      * @param array $data
      * @return array|int
      */
-    public function loginRes(array $data)
+    public function loginSYS(array $data)
     {
         $result = $this->getResult( 'email',$data['email']);
         if (empty($result)){
@@ -74,7 +74,6 @@ class Users extends Model
         $admin['avatar_url'] = $result->avatar_url;
         $where[] = array('u_name',$result->username);
         UserCenter::getInstance()->updateResult(array('token'=>$admin['token'],'type'=>'login'),$where);     //修改用户中心标识
-        OAuth::getInstance()->updateResult(array('remember_token'=>$admin['token']),'uid',$result->id); //修改用户授权标识
         $admin['logInfo'] = 'account and password login successfully';
         return $admin;
     }

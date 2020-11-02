@@ -10,6 +10,7 @@ use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -97,7 +98,7 @@ class LoginController
                 }
                 //删除redis缓存的验证码 (防止恶意访问接口)
                 $this->redisClient->del($this->post['verify_code']);
-                $result = $this->userModel->loginRes($this->post);
+                $result = $this->userModel->loginSYS($this->post);
                 break;
             case 'mail':
                 $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email','verify_code' =>'required|size:8|string']);
@@ -118,6 +119,9 @@ class LoginController
                 break;
             case Code::VERIFY_CODE:
                 $res = ajax_return(Code::ERROR,'verify code error');
+                break;
+            case Code::SERVER_ERROR:
+                $res = ajax_return(Code::SERVER_ERROR,'server error');
                 break;
             default:
                 $info = [
@@ -175,36 +179,49 @@ class LoginController
         if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
             return Code::VERIFY_CODE;
         }
-        $result = $this->userModel->getResult('email',$this->post['email']);
-        if (!empty($result)) {
-            if ($result->status == 2){
-                return Code::NOT_ALLOW;
+        DB::beginTransaction();
+        try {
+            $result = $this->userModel->getResult('email',$this->post['email']);
+            if (!empty($result)) {
+                if ($result->status == 2){
+                    return Code::NOT_ALLOW;
+                }
+                $result->salt = get_round_num(8);
+                $result->password = md5 (md5($result->password).$result->salt);
+                $result->remember_token = md5 (md5($result->password).$result->salt);
+                $result->logInfo = 'email login successfully';
+                $this->userModel->updateResult(object_to_array($result),'id',$result->id);
+                UserCenter::getInstance()->updateResult(['token'=>$result->remember_token],'uid',$result->id);
+                return object_to_array($result);
             }
-            $result->logInfo = 'email login successfully';
-            return object_to_array($result);
+            //注册
+            $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
+            $request['salt'] = get_round_num(8);
+            $request['password'] = md5 (md5(get_round_num(32)).$request['salt']);
+            $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
+            $request['email'] = $this->post['email'];
+            $request['phone_number'] = 0;
+            $request['created_at'] = time();
+            $request['uuid'] = config('app.client_id');
+            $request['username'] = explode("@",$this->post['email'])[0];
+            $request['status'] = 1;  //允许访问
+            $id = $this->userModel->addResult($request);
+            //新用户注册生成client_id
+            $this->userModel->updateResult(['uuid'=>$request['uuid'].$id],'id',$id);
+            UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$id,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
+            $request['token'] = $request['remember_token'];
+            //更新用户画像
+            CommonController::getInstance()->updateUserAvatarUrl();
+            //删除redis缓存的验证码，防止恶意登录
+            $this->redisClient->del($this->post['email']);
+            $request['logInfo'] = 'email register successfully';
+            DB::commit();
+            return $request;
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            DB::rollBack();
+            return Code::SERVER_ERROR;
         }
-        //注册
-        $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
-        $request['salt'] = get_round_num(8);
-        $request['password'] = md5 (md5($request['salt']).$request['salt']);
-        $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
-        $request['email'] = $this->post['email'];
-        $request['phone_number'] = 0;
-        $request['created_at'] = time();
-        $request['uuid'] = config('app.client_id');
-        $request['username'] = explode("@",$this->post['email'])[0];
-        $request['status'] = 1;  //允许访问
-        $id = $this->userModel->addResult($request);
-        //新用户注册生成client_id
-        $this->userModel->updateResult(['uuid'=>$request['uuid'].$id],'id',$id);
-        UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$id,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
-        $request['token'] = $request['remember_token'];
-        //更新用户画像
-        CommonController::getInstance()->updateUserAvatarUrl();
-        //删除redis缓存的验证码，防止恶意登录
-        $this->redisClient->del($this->post['email']);
-        $request['logInfo'] = 'email register successfully';
-        return $request;
     }
     /**
      * TODO:获取邮箱验证码

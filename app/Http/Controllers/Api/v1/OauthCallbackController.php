@@ -12,8 +12,6 @@ use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Mail\Register;
 use App\Models\OAuth;
-use App\Models\UserCenter;
-use App\Models\Users;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -272,13 +270,6 @@ class OauthCallbackController
         $oauth = $this->oauthModel->getResult($where);
         //授权用户存在直接跳转到欢迎页
         if (!empty($oauth)){
-            $whereOauth[] = array('uid',$oauth->uid);
-            if (UserCenter::getInstance()->getResult($whereOauth)) {
-                UserCenter::getInstance()->updateResult(array('token'=>$data['remember_token'],'type'=>'login'),$whereOauth);
-                Users::getInstance()->updateResult(array('remember_token'=>$data['remember_token']),'id',$oauth->uid);
-            } else {
-                UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauth->id));
-            }
             $info = [
                 'href' => '/v1/oauth-login/'.$data['oauth_type'],
                 'msg' => 'oauth login successfully',
@@ -291,11 +282,9 @@ class OauthCallbackController
             }
             $oauthRes =  $this->oauthModel->updateResult($data,$where);
             if (!empty($oauthRes)){
-                if (strlen($this->state) == 32) {
-                    return redirect('/admin/index/'.$data['remember_token'])->send();
-                }
-                //授权列表 (账户绑定成功)
-                return redirect('/admin/oauth/index')->send();
+                //同步用户数据
+                Artisan::call("longer:sync_oauth {$data['remember_token']}");
+                return strlen($this->state) == 32 ? redirect('/admin/index/'.$data['remember_token'])->send() :  redirect('/admin/oauth/index')->send();
             }
             return redirect('/login')->send();
         }
@@ -304,9 +293,7 @@ class OauthCallbackController
         $data['role_id'] = 2;
         $oauthRes =  $this->oauthModel->addResult($data);
         if (!empty($oauthRes)){
-            UserCenter::getInstance()->addResult(array('token'=>$data['remember_token'],'u_name'=>$data['username'],'uid'=>$oauthRes));
-            //同步用户数据
-            Artisan::call("longer:sync_oauth");
+            Artisan::call("longer:sync_oauth {$data['remember_token']}");
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             $info = [
                 'href' => '/v1/oauth-login/'.$data['oauth_type'],
@@ -327,7 +314,7 @@ class OauthCallbackController
     /**
      * TODO：异常捕获
      * @param $response
-     * @return RedirectResponse|Redirector
+     * @return RedirectResponse|Redirector|boolean
      */
     protected function throwException($response)
     {
@@ -339,5 +326,6 @@ class OauthCallbackController
         }catch (\Exception $exception){
             echo $exception->getMessage();
         }
+        return true;
     }
 }

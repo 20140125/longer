@@ -52,11 +52,9 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'auth/delete','v1\AuthController@delete');
     //授权
     Route::match(['get','post'],'oauth/index','v1\OauthController@index');
-    Route::match(['get','post'],'oauth/sendMail','v1\OauthController@email'); ##
     Route::match(['get','post'],'oauth/update','v1\OauthController@update');
     Route::match(['get','post'],'oauth/delete','v1\OauthController@delete');
-    Route::match(['get','post'],'oauth/verifyCode','v1\OauthController@code'); ##
-    Route::match(['get','post'],'oauth/bind','v1\OauthController@oauthBind');
+    Route::match(['get','post'],'oauth/save','v1\OauthController@save');
 
     //请求授权
     Route::match(['get','post'],'req_rule/index','v1\ReqRuleController@index');
@@ -102,8 +100,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'push/index','v1\PushController@index');
     Route::match(['get','post'],'push/save','v1\PushController@save');
     Route::match(['get','post'],'push/update','v1\PushController@update');
-    Route::match(['get','post'],'push/see','v1\PushController@read');
     Route::match(['get','post'],'push/delete','v1\PushController@delete');
+    Route::match(['get','post'],'push/see','v1\PushController@read');
     //API接口
     Route::match(['get','post'],'api/index','v1\ApiController@index');
     Route::match(['post','get'],'api/update','v1\ApiController@update');

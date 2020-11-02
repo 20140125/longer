@@ -67,7 +67,7 @@ class OauthController extends BaseController
      * TODO:账户绑定
      * @return JsonResponse
      */
-    public function oauthBind()
+    public function save()
     {
         $this->validatePost(['oauth_type'=>'required|string','remember_token'=>'required|string|size:32']);
         $result = Users::getInstance()->getResult('remember_token',$this->post['remember_token']);
@@ -125,52 +125,6 @@ class OauthController extends BaseController
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',['oauth_url'=>$url]);
     }
-    /**
-     * TODO:验证邮箱是否正确
-     * @param string email
-     * @param integer id
-     * @param string username
-     * @param string remember_token
-     * @return JsonResponse
-     */
-    public function email()
-    {
-        $this->validatePost(['email'=>'required|string|email']);
-        $hasEmail = $this->oauthModel->getResult('email',$this->post['email'],'=',['email']);
-        if ($hasEmail) {
-            return ajax_return(Code::ERROR,'email already exists');
-        }
-        $result = $this->commonControl->sendMail($this->post);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,'email send successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'email send failed');
-    }
-
-    /**
-     * TODO:校验验证码是否正确
-     * @param string code 验证码
-     * @param integer id
-     * @return JsonResponse
-     */
-    public function code()
-    {
-        $this->validatePost(['code'=>'required|string','email'=>'required|string|email']);
-        if ($this->post['code'] === $this->redisClient->getValue($this->post['email'])) {
-            $data = array(
-                'email' => $this->post['email'],
-                'code'  => $this->post['code'],
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            );
-            $result = $this->commonControl->verifyMailAndCode($this->post,$data);
-            if ($result){
-                return ajax_return(Code::SUCCESS,'code verify successfully');
-            }
-            return ajax_return(Code::ERROR,'code verify failed');
-        }
-        return ajax_return(Code::ERROR,'code not exists');
-    }
 
     /**
      * TODO：删除授权用户
@@ -181,9 +135,6 @@ class OauthController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer']);
         $result = $this->oauthModel->deleteResult('id',$this->post['id']);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,'remove oauth successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'remove oauth failed');
+        return $result ?  $this->ajax_return(Code::SUCCESS,'remove oauth successfully') : $this->ajax_return(Code::ERROR,'remove oauth failed');
     }
 }

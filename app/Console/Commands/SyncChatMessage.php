@@ -72,7 +72,7 @@ class SyncChatMessage extends Command
                $chatArray = array(
                    'from_client_id' => $chat['from_client_id'],
                    'to_client_id' => $chat['to_client_id'],
-                   'room_id' => empty($chat['room_id']) ? '' : $chat['room_id'],
+                   'room_id' => empty($chat['room_id']) ? 0 : $chat['room_id'],
                    'content' => json_encode($chat,JSON_UNESCAPED_UNICODE)
                );
                if ($this->chatModel->saveResult($chatArray)) {
@@ -90,14 +90,5 @@ class SyncChatMessage extends Command
     protected function getAllRedisKey ()
     {
         return $this->redisClient->keys('receive_*');
-    }
-    /**
-     * todo:获取redis列表的长度
-     * @param $key
-     * @return int
-     */
-    protected function getKeysLen ($key)
-    {
-        return $this->redisClient->lLen($key);
     }
 }

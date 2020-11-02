@@ -79,7 +79,7 @@ class ResetPasswordController
             $reset = array('email' => $this->post['email'], 'token' => $this->post['remember_token'], 'updated_at' => time(), 'created_at' => time());
             $salt = get_round_num(8,'str');
             $data = array('salt' => $salt, 'password' => md5(md5($this->post['password']).$salt), 'updated_at'=>time());
-            $data['remember_token'] = md5($data['password']);
+            $data['remember_token'] = md5($data['password'].$salt);
             $update = $this->userModel->updateResult($data,$where);
             DB::table('os_password_resets')->insert($reset);
             DB::commit();

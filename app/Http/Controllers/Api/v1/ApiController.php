@@ -50,16 +50,6 @@ class ApiController extends BaseController
         }
         return $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
-
-    /**
-     * TODO:：接口分类
-     * @return JsonResponse
-     */
-    public function category()
-    {
-        $result = $this->apiCategoryModel->getResultListsLevel2();
-        return $this->ajax_return(Code::SUCCESS,'successfully', ['category_tree'=>get_tree($result,0,'children'),'category'=>$result]);
-    }
     /**
      * TODO:：保存API数据
      * @param String desc 接口描述
@@ -125,7 +115,15 @@ class ApiController extends BaseController
         return $this->ajax_return(Code::ERROR,'update api lists error');
     }
     /*********************************************************************api 分类****************************************************************/
-
+    /**
+     * TODO:：接口分类
+     * @return JsonResponse
+     */
+    public function category()
+    {
+        $result = $this->apiCategoryModel->getResultListsLevel2();
+        return $this->ajax_return(Code::SUCCESS,'successfully', ['category_tree'=>get_tree($result,0,'children'),'category'=>$result]);
+    }
     /**
      * TODO:：保存APICategory数据
      * @param String name 分类名称

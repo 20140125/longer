@@ -20,7 +20,7 @@ class SyncOauthToUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync_oauth';
+    protected $signature = 'longer:sync_oauth {remember_token=default}';
 
     /**
      * The console command description.
@@ -67,7 +67,11 @@ class SyncOauthToUsers extends Command
      */
     protected function SyncOauthToUsers()
     {
-        $oauthArr = $this->oAuthModel->getOauthLists();
+        $where = [];
+        if ($this->argument('remember_token') !== 'default') {
+            $where[] =  ['remember_token', '=',$this->argument('remember_token')];
+        }
+        $oauthArr = $this->oAuthModel->getOauthLists($where);
         $bar = $this->getOutput()->createProgressBar(count($oauthArr));
         foreach ($oauthArr as $oauth) {
             //同步用户数据
@@ -91,7 +95,7 @@ class SyncOauthToUsers extends Command
                     'updated_at' => time(),
                     'status' => $oauth->status,
                     'phone_number' => '',
-                    'uuid' => md5($oauth->username).uniqid()
+                    'uuid' => ''
                 ];
                 $id = $this->usersModel->addResult($arr);
                 $this->usersModel->updateResult(['uuid'=>config('app.client_id').$id],'id',$id);
@@ -108,7 +112,11 @@ class SyncOauthToUsers extends Command
      */
     protected function SyncUserToUserCenter()
     {
-        $users = DB::table('os_users')->get();
+        $where = [];
+        if ($this->argument('remember_token') !== 'default') {
+            $where[] =  ['remember_token', '=',$this->argument('remember_token')];
+        }
+        $users = $this->usersModel->getAll($where,["*"]);
         $bar = $this->getOutput()->createProgressBar(count($users));
         foreach ($users as $user) {
             //同步用户基础信息数据

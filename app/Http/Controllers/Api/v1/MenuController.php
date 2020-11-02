@@ -111,12 +111,7 @@ class MenuController extends BaseController
     public function logout()
     {
         $remember_token = md5(md5($this->users->remember_token).time());
-        //授权列表
-        OAuth::getInstance()->updateResult(['remember_token'=>$remember_token],'remember_token',$this->users->remember_token);
-        //用户表
-        Users::getInstance()->updateResult(['remember_token'=>$remember_token],'remember_token',$this->users->remember_token);
-        //用户信息表
-        UserCenter::getInstance()->updateResult(array('token'=>$remember_token,'type'=>'logout'),'token',$this->users->remember_token);
-        return $this->ajax_return(Code::SUCCESS,'logout system successfully');
+        $result = Users::getInstance()->updateResult(['remember_token'=>$remember_token],'remember_token',$this->users->remember_token);
+        return $result ? $this->ajax_return(Code::SUCCESS,'logout system successfully') : $this->ajax_return(Code::ERROR,'logout system error');
     }
 }
