@@ -301,8 +301,8 @@ class LoginController
     {
         $username = $this->userModel->getResult('remember_token',$request->get('token'));
         set_code(Code::NOT_FOUND);
-        if (empty($username)){
-            return ajax_return(Code::NOT_FOUND,'permission denied');
+        if (empty($username) || in_array(basename($request->get('path')),['.env','db.php'])){
+            return ajax_return(Code::NOT_FOUND,'file not found');
         }
         if (file_exists($request->get('path'))){
             Storage::disk('public')->put(basename($request->get('path')), file_get_contents($request->get('path')));
