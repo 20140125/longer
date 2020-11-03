@@ -12,19 +12,19 @@
 </head>
 <body>
 <main><section class="collage-404">
-    <h1>404</h1>
-    <div class="collage-404-images">
-    </div>
-</section><section class="message-404">
-    <h1>页面找不到或已被删除</h1>
-    <p>
-        Oops,Page not found or deleted <a id="color-choice"></a>
-    </p>
-</section>
+        <h1>404</h1>
+        <div class="collage-404-images">
+        </div>
+    </section><section class="message-404">
+        <h1>页面找不到或已被删除</h1>
+        <p>
+            Oops,Page not found or deleted <a id="color-choice"></a>
+        </p>
+    </section>
     <div class="explore-cta">
         <div>
             <a href='/' target='_self' class="back">返回首页</a>
-            <input class="color-range">
+            <label><input class="color-range"></label>
         </div>
     </div>
 </main>
