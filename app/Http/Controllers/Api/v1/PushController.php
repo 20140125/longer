@@ -62,7 +62,7 @@ class PushController extends BaseController
     public function save()
     {
         $this->validatePost(['info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
-        $this->pushMessage();
+        $this->post['status'] == 1 ? $this->pushMessage() : '';
         $this->post['created_at'] = time();
         if ($this->post['uid'] == config('app.client_id')) {
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
@@ -88,7 +88,7 @@ class PushController extends BaseController
     public function update()
     {
         $this->validatePost(['id'=>'required|integer','info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
-        $this->pushMessage();
+        $this->post['status'] == 1 ? $this->pushMessage() : '';
         if ($this->post['username'] == 'all') {
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
             return $this->ajax_return(Code::SUCCESS,'push message update successfully');

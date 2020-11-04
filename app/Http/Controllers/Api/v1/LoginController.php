@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Config;
-use App\Models\Push;
 use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Http\JsonResponse;

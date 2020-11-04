@@ -49,15 +49,14 @@ class Log extends Model
     {
         if (empty($page) || empty($limit)) {
             return DB::table($this->table)->where('day',$ctime)->whereRaw('local is null')->get();
-        } else {
-            $where =[];
-            if (!empty($ctime)){
-                $where[] = ['created_at','<=',$ctime];
-            }
-            $result['data'] =  DB::table($this->table)->where($where)->limit($limit)->offset($limit*($page-1))->orderBy('id','desc')->get();
-            $result['total'] = DB::table($this->table)->where($where)->count();
-            return $result;
         }
+        $where =[];
+        if (!empty($ctime)){
+            $where[] = ['created_at','<=',$ctime];
+        }
+        $result['data'] =  DB::table($this->table)->where($where)->limit($limit)->offset($limit*($page-1))->orderBy('id','desc')->get();
+        $result['total'] = DB::table($this->table)->where($where)->count();
+        return $result;
     }
     /**
      * TODO:添加记录

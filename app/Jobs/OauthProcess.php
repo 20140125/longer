@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
+use App\Models\Push;
 use App\Models\Users;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -26,6 +27,10 @@ class OauthProcess implements ShouldQueue
      */
     protected $redisClient;
     /**
+     * @var Push $pushModel
+     */
+    protected $pushModel;
+    /**
      * Create a new job instance.
      * @param $post
      * @return void
@@ -34,6 +39,7 @@ class OauthProcess implements ShouldQueue
     {
         $this->post = $post;
         $this->redisClient = RedisClient::getInstance();
+        $this->pushModel = Push::getInstance();
     }
 
     /**
@@ -56,9 +62,9 @@ class OauthProcess implements ShouldQueue
                 $this->post['uid'] = $item->uuid;
                 $this->post['username'] = $item->username;
                 $this->post['created_at'] = $created_at;
-                $rs = DB::table('os_push')->where(array('created_at'=>$created_at,'uid'=>$this->post['uid']))->first();
+                $rs = $this->pushModel->getResult(array('created_at'=>$created_at,'uid'=>$this->post['uid']));
                 if (empty($rs)) {
-                    DB::table('os_push')->insert($this->post);
+                    $this->pushModel->addResult($this->post);
                 }
             }
             DB::commit();
