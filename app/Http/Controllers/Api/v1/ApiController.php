@@ -45,10 +45,7 @@ class ApiController extends BaseController
     {
         $this->validatePost(['type'=>'required|integer']);
         $result = $this->apiListsModel->getResult('type',$this->post['type']);
-        if (empty($result)){
-            return $this->ajax_return(Code::ERROR,'interface not found');
-        }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $result ? $this->ajax_return(Code::ERROR,'interface not found') : $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
     /**
      * TODO:：保存API数据
@@ -136,10 +133,7 @@ class ApiController extends BaseController
     {
         $this->validatePost($this->rules('category'));
         $result = $this->apiCategoryModel->addResult($this->post);
-        if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'save api category successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'save api category error');
+        return !empty($result) ? $this->ajax_return(Code::SUCCESS,'save api category successfully') : $this->ajax_return(Code::ERROR,'save api category error');
     }
     /**
      * TODO: 更新APICategory数据
@@ -155,10 +149,7 @@ class ApiController extends BaseController
         $this->validatePost($this->rules('category'));
         unset($this->post['children']);
         $result = $this->apiCategoryModel->updateResult($this->post,'id',$this->post['pid']);
-        if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'update api category successfully');
-        }
-        return $this->ajax_return( Code::ERROR,'update api category error');
+        return !empty($result) ? $this->ajax_return(Code::SUCCESS,'update api category successfully') : $this->ajax_return( Code::ERROR,'update api category error');
     }
 
     /**

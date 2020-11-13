@@ -60,7 +60,7 @@ class CommonController
         $users = $this->usersModel->getAll([],['username as client_name','avatar_url as client_img','uuid as uid','id']);
         foreach ($users as &$user) {
             $user->centerInfo = UserCenter::getInstance()->getResult('uid',$user->id,'=',['desc','tags','ip_address','local']);
-            $user->id = encrypt($user->id);
+            $user->id = md5($user->id);
         }
         if ($this->redisUtils->sMembers(config('app.chat_user_key'))) {
             $this->redisUtils->del(config('app.chat_user_key'));

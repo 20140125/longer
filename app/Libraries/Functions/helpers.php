@@ -71,7 +71,7 @@ if (!function_exists('get_round_num'))
 if (!function_exists('find_str'))
 {
     /**
-     * 寻找字符串出现的位置
+     * todo:寻找字符串出现的位置
      * @param $str
      * @param $chr
      * @param $num
@@ -240,7 +240,9 @@ if (!function_exists('format_bates')){
     function format_bytes($size, $delimiter = '')
     {
         $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
-        for ($i = 0; $size >= 1024 && $i < 5; $i++) $size /= 1024;
+        for ($i = 0; $size >= 1024 && $i < 5; $i++) {
+            $size /= 1024;
+        }
         return round($size, 2) . $delimiter . $units[$i];
     }
 }
@@ -415,13 +417,13 @@ if (!function_exists('file_chmod')){
 if (!function_exists('gzip'))
 {
     /**
-     * 文件压缩
+     * todo：文件压缩
      * @param array $docLists 文件列表
      * @param string $zipProductPath 文件路径
      * @param string $filename 文件名
      * @return bool
      */
-    function gzip($docLists,$zipProductPath,$filename)
+    function gzip(array $docLists,string $zipProductPath,string $filename)
     {
         $zipObj = new ZipArchive();
         $result = $zipObj->open($zipProductPath.$filename,ZipArchive::CREATE);
@@ -442,6 +444,7 @@ if (!function_exists('gzip'))
 if (!function_exists('add_file_to_zip'))
 {
     /**
+     * todo:zip文件压缩
      * @param $path
      * @param ZipArchive $zip
      */
@@ -470,9 +473,10 @@ if (!function_exists('unzip'))
      * 文件解压
      * @param string $path 文件路径
      * @param string $resource 解压包文件名称
+     * @param boolean $removeResource
      * @return bool
      */
-    function unzip($path,$resource='')
+    function unzip(string $path,$resource='',$removeResource = false)
     {
         if(!file_exists($path)){
             return false;
@@ -490,7 +494,7 @@ if (!function_exists('unzip'))
             $zip->extractTo($filePath);   //将完整的归档或给定文件提取到指定的目标
         }
         $zip->close();    //关闭资源
-        return true;
+        return $removeResource ? remove_files($path) : true;
     }
 }
 if(!function_exists('remove_files'))
@@ -523,11 +527,7 @@ if(!function_exists('remove_files'))
         }
         @closedir($dh);
         //删除当前文件夹：
-        if(rmdir($path)) {
-            return true;
-        } else {
-            return false;
-        }
+        return rmdir($path);
     }
 }
 if(!function_exists('empty_dir'))
@@ -559,21 +559,17 @@ if(!function_exists('is_mobile'))
         $useragent=isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         $useragent_comments_block=preg_match('|\(.*?\)|',$useragent,$matches)>0?$matches[0]:'';
         function _is_mobile($substr,$text){
-            foreach($substr as $str)
-                if(false!==strpos($text,$str)){
+            foreach($substr as $str) {
+                if (false !== strpos($text, $str)) {
                     return true;
                 }
+            }
             return false;
         }
         $mobile_os_list=array('Google Wireless Transcoder','Windows CE','WindowsCE','Symbian','Android','armv6l','armv5','Mobile','CentOS','mowser','AvantGo','Opera Mobi','J2ME/MIDP','Smartphone','Go.Web','Palm','iPAQ');
         $mobile_token_list=array('Profile/MIDP','Configuration/CLDC-','160×160','176×220','240×240','240×320','320×240','UP.Browser','UP.Link','SymbianOS','PalmOS','PocketPC','SonyEricsson','Nokia','BlackBerry','Vodafone','BenQ','Novarra-Vision','Iris','NetFront','HTC_','Xda_','SAMSUNG-SGH','Wapaka','DoCoMo','iPhone','iPod');
-        $found_mobile=_is_mobile($mobile_os_list,$useragent_comments_block) ||
-            _is_mobile($mobile_token_list,$useragent);
-        if ($found_mobile){
-            return true;
-        }else{
-            return false;
-        }
+        return _is_mobile($mobile_os_list,$useragent_comments_block) || _is_mobile($mobile_token_list,$useragent);
+
     }
 }
 if(!function_exists('auth_code'))
@@ -793,9 +789,9 @@ if (!function_exists('base64_image_content'))
      * @param string $id 图片名称
      * @return array|bool
      */
-    function base64_image_content($base64_image_content,$path,$id)
+    function base64_image_content($base64_image_content,string $path,string $id)
     {
-        $mainSiteUrl = 'https://www.fanglonger.com';  //host 自定义
+        $mainSiteUrl = config('app.url');  //host 自定义
         //匹配出图片的格式
         if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_image_content, $result)){
             $new_file = $path."/";
@@ -805,14 +801,11 @@ if (!function_exists('base64_image_content'))
             }
             $new_file = $new_file.$id.".png";
             if (file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64_image_content)))){
-                $qrcode = $mainSiteUrl.'/storage/public/'.date("Ymd").'/'.$id.".png";
-                return $qrcode;
-            }else{
-                return false;
+                return $mainSiteUrl.'/storage/public/'.date("Ymd").'/'.$id.".png";
             }
-        }else{
             return false;
         }
+        return false;
     }
 }
 if(!function_exists('imgBase64Encode'))
@@ -826,7 +819,7 @@ if(!function_exists('imgBase64Encode'))
     function imgBase64Encode($img = '', $imgHtmlCode = true)
     {
         //如果是本地文件
-        if(strpos($img,'http') === false && !file_exists($img)){
+        if(in_array($img,['http','https'])){
             return $img;
         }
         //获取文件内容
@@ -842,46 +835,6 @@ if(!function_exists('imgBase64Encode'))
         return $prefix.chunk_split(base64_encode($file_content));
     }
 }
-if (!function_exists('download_image'))
-{
-    /**
-     * todo:远程下载图片
-     * @param string $url 图片地址
-     */
-     function download_image($url)
-     {
-         $ch = curl_init();
-         curl_setopt($ch, CURLOPT_URL, $url);
-         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-         $file = curl_exec($ch);
-         curl_close($ch);
-         saveAsImage($url, $file);
-     }
-}
-if (!function_exists('save_image'))
-{
-    /**
-     * todo:保存图片到本地
-     * @param string $url 图片远程地址
-     * @param string $file 图片存放本地路径
-     */
-    function saveAsImage($url, $file)
-    {
-        $filename = pathinfo($url, PATHINFO_BASENAME);
-        $path = public_path('emotion');
-        $fullPath = $path .'/'. $filename;
-        // 如果目录不存在，则创建
-        if (!is_dir($path)) {
-            mkdir($path, 0777, true);
-        }
-        if (!file_exists($fullPath)) {
-            $resource = fopen($fullPath, 'a');
-            fwrite($resource, $file);
-            fclose($resource);
-        }
-    }
-}
 if (!function_exists('cut_file'))
 {
 
@@ -891,7 +844,7 @@ if (!function_exists('cut_file'))
      * @param string $block 文件分割大小
      * @return bool
      */
-    function cut_file($filename,$block){
+    function cut_file(string $filename,string $block){
         //判断是不是一个文件
         if(!file_exists($filename)){
             return false;
@@ -980,12 +933,12 @@ if (!function_exists('diff_times'))
         $i = floor($diff_time%3600/60);
         $s = floor($diff_time%60);
         $str = '';
-        $str.= empty($y) ? '' : $y.($lan == 'zh' ? ' 年 ' : ' year ');
-        $str.= empty($m) ? '' : $m.($lan == 'zh' ? ' 月 ' : ' month ');
-        $str.= empty($d) ? '' : $d.($lan == 'zh' ? ' 天 ' : ' day ');
-        $str.= empty($h) ? '' : $h.($lan == 'zh' ? ' 时 ' : ' hour ');
-        $str.= empty($i) ? '' : $i.($lan == 'zh' ? ' 分 ' : ' minute ');
-        $str.= empty($s) ? '' : $s.($lan == 'zh' ? ' 秒 ' : ' second ');
+        $str.= empty($y) ? '' : $y.($lan == 'zh' ? '年' : 'year');
+        $str.= empty($m) ? '' : $m.($lan == 'zh' ? '月' : 'month');
+        $str.= empty($d) ? '' : $d.($lan == 'zh' ? '天' : 'day');
+        $str.= empty($h) ? '' : $h.($lan == 'zh' ? '时' : 'hour');
+        $str.= empty($i) ? '' : $i.($lan == 'zh' ? '分' : 'minute');
+        $str.= empty($s) ? '' : $s.($lan == 'zh' ? '秒' : 'second');
         return $str;
     }
 }
@@ -996,7 +949,7 @@ if(!function_exists('saveImg')) {
      * @param string $target_image 背景图片大小300*300
      * @param string $source_img  生成的新的图片地址
      */
-    function saveImg($imgArr,$target_image,$source_img)
+    function saveImg(array $imgArr,string $target_image,string $source_img)
     {
         $positionArr = array();
         switch (count($imgArr)) {
@@ -1093,7 +1046,7 @@ if (!function_exists('ImageShrink')) {
      * @param number $miny 长
      * @return false|resource
      */
-    function ImageShrink($imgFile,$minx,$miny)
+    function ImageShrink(string $imgFile,$minx,$miny)
     {
         //获取大图信息
         $imageSizeArr = getimagesize($imgFile);

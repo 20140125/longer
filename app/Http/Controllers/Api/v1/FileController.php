@@ -25,8 +25,7 @@ class FileController extends BaseController
     public function index()
     {
         $this->validatePost(['path'=>'required|string','basename'=>'required|string','sort'=>'required|string|in:type,time','sort_order'=>'required|string|in:asc,desc']);
-        $fileLists = file_lists(file_path($this->post['path'],$this->post['basename']),[],$this->post['sort'] ?? 'type',
-            ($this->post['sort_order'] === 'desc')? SORT_DESC : SORT_ASC);
+        $fileLists = file_lists(file_path($this->post['path'],$this->post['basename']),[],$this->post['sort'] ?? 'type', ($this->post['sort_order'] === 'desc')? SORT_DESC : SORT_ASC);
         return $this->ajax_return(Code::SUCCESS,'successfully',$fileLists);
     }
 
@@ -44,10 +43,7 @@ class FileController extends BaseController
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         $bool = gzip($this->post['docLists'],$this->post['path'],$this->post['resource'].'_'.date("YmdHis").'.zip');
-        if ($bool){
-            return $this->ajax_return(Code::SUCCESS,'compression file successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'compression file failed');
+        return $bool ?  $this->ajax_return(Code::SUCCESS,'compression file successfully') : $this->ajax_return(Code::ERROR,'compression file failed');
     }
 
     /**
@@ -61,7 +57,10 @@ class FileController extends BaseController
         if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',['content'=>open_file($this->post['path'])]);
+        if (filesize($this->post['path'])>1024*1024*3) {
+            return $this->ajax_return(Code::ERROR,'File size exceeds limit');
+        }
+        return $this->ajax_return(Code::SUCCESS,'Get file successfully',['content'=>open_file($this->post['path'])]);
     }
     /**
      * TODO:：文件解压
@@ -74,13 +73,8 @@ class FileController extends BaseController
         if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
-        $bool = unzip($this->post['path'],$this->post['resource']);
-        if ($bool){
-            //删除压缩包 (个人需求而定)
-            remove_files($this->post['path']);
-            return $this->ajax_return(Code::SUCCESS,'Decompression file successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'Decompression file failed');
+        $bool = unzip($this->post['path'],$this->post['resource'],true);
+        return $bool ? $this->ajax_return(Code::SUCCESS,'Decompression file successfully') : $this->ajax_return(Code::ERROR,'Decompression file failed');
     }
 
     /**
@@ -96,11 +90,7 @@ class FileController extends BaseController
             $ext = $file->getClientOriginalExtension();
             //获取文件的绝对路径
             $path = $file->getRealPath();
-            $info = array(
-                'username' => $this->users->username,
-                'href' => '/v1/file/upload',
-                'msg' => 'upload file '.$file->getClientOriginalName().' successfully'
-            );
+            $info = array('username' => $this->users->username, 'href' => '/v1/file/upload', 'msg' => 'upload file '.$file->getClientOriginalName().' successfully');
             //修改用户图片
             if (!empty($this->post['rand']) && $this->post['rand']) {
                 //图片格式上传错误
@@ -150,7 +140,7 @@ class FileController extends BaseController
         if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
-        write_file($this->post['path'],$this->post['content']??'');
+        write_file($this->post['path'],$this->post['content'] ?? '');
         return $this->ajax_return(Code::SUCCESS,'file save successfully');
     }
 
@@ -168,10 +158,7 @@ class FileController extends BaseController
         //服务器上面需要 777 权限才能删除文件
         chmod($this->post['path'],0777);
         $bool = remove_files($this->post['path']);
-        if ($bool){
-            return $this->ajax_return(Code::SUCCESS,'remove file successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'remove file failed');
+        return $bool ? $this->ajax_return(Code::SUCCESS,'remove file successfully') : $this->ajax_return(Code::ERROR,'remove file failed');
     }
 
     /**
@@ -186,10 +173,7 @@ class FileController extends BaseController
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         $bool = save_file($this->post['path']);
-        if ($bool){
-            return $this->ajax_return(Code::SUCCESS,'create file successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'create file failed');
+        return $bool ? $this->ajax_return(Code::SUCCESS,'create file successfully') : $this->ajax_return(Code::ERROR,'create file failed');
     }
 
     /**
@@ -202,10 +186,7 @@ class FileController extends BaseController
     {
         $this->validatePost(['oldFile'=>'required|string','newFile'=>'required|string']);
         $bool = file_rename($this->post['oldFile'],$this->post['newFile']);
-        if ($bool){
-            return $this->ajax_return(Code::SUCCESS,'rename file successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'rename file failed');
+        return $bool ? $this->ajax_return(Code::SUCCESS,'rename file successfully') : $this->ajax_return(Code::ERROR,'rename file failed');
     }
 
     /**
@@ -221,10 +202,8 @@ class FileController extends BaseController
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
         chmod($this->post['path'],octdec((int)"0".$this->post['auth']));
-        if (file_chmod($this->post['path'])==$this->post['auth']){
-            return $this->ajax_return(Code::SUCCESS,'Modify file permissions successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'Modify file permissions failed');
+        $bool = file_chmod($this->post['path']) == $this->post['auth'];
+        return $bool ? $this->ajax_return(Code::SUCCESS,'Modify file permissions successfully') : $this->ajax_return(Code::ERROR,'Modify file permissions failed');
     }
 
     /**
@@ -238,6 +217,6 @@ class FileController extends BaseController
         if (!file_exists($this->post['path'])) {
             return $this->ajax_return(Code::ERROR,'file does not exist');
         }
-        return $this->ajax_return(Code::SUCCESS,'Get the file address successfully', ['src'=>imgBase64Encode($this->post['path'])]);
+        return !file_exists($this->post['path']) ? $this->ajax_return(Code::ERROR,'file does not exist') : $this->ajax_return(Code::SUCCESS,'Get the file address successfully', ['src'=>imgBase64Encode($this->post['path'])]);
     }
 }

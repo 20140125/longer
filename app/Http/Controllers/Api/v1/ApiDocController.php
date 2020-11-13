@@ -43,10 +43,7 @@ class ApiDocController extends BaseController
     {
         $this->validatePost(['type'=>'required|integer']);
         $result = $this->apiDocListsModel->getResult('type',$this->post['type']);
-        if (empty($result)){
-            return $this->ajax_return(Code::ERROR,'interface not found');
-        }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return empty($result) ? $this->ajax_return(Code::ERROR,'interface not found') : $this->ajax_return(Code::SUCCESS,'successfully',$result);
     }
     /**
      * TODO:：保存API数据

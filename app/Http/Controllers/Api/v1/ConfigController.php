@@ -60,10 +60,7 @@ class ConfigController extends BaseController
     {
         $this->validatePost(['name'=>'required|string|unique:os_config']);
         $result = $this->configModel->addResult($this->post);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,'save config successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'save config failed');
+        return $result ? $this->ajax_return(Code::SUCCESS,'save config successfully') : $this->ajax_return(Code::ERROR,'save config failed');
     }
     /**
      * TODO：更新配置
@@ -81,10 +78,7 @@ class ConfigController extends BaseController
         }
         $this->validatePost($rule);
         $result = $this->configModel->updateResult($this->post,'id',$this->post['id']);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,'update config successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'update config failed');
+        return $result ? $this->ajax_return(Code::SUCCESS,'update config successfully') : $this->ajax_return(Code::ERROR,'update config failed');
     }
 
     /**
@@ -96,9 +90,6 @@ class ConfigController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer']);
         $result = $this->configModel->deleteResult($this->post,'id',$this->post['id']);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,'remove config successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'remove config failed');
+        return $result ? $this->ajax_return(Code::SUCCESS,'remove config successfully') : $this->ajax_return(Code::ERROR,'remove config failed');
     }
 }

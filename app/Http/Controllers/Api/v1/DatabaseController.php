@@ -5,6 +5,7 @@ use App\Http\Controllers\Utils\Code;
 use App\Models\Database;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * 数据库管理
@@ -73,10 +74,8 @@ class DatabaseController extends BaseController
     {
         $this->validatePost(['name'=>'required|string']);
         $result = $this->databaseModel->repairTable($this->post['name']);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,$this->string.' repair successfully');
-        }
-        return $this->ajax_return(Code::ERROR,$this->string.' repair failed');
+        Log::error(json_encode($result));
+        return $result ? $this->ajax_return(Code::SUCCESS,$this->string.' repair successfully') : $this->ajax_return(Code::ERROR,$this->string.' repair failed');
     }
 
     /**
@@ -88,10 +87,7 @@ class DatabaseController extends BaseController
     {
         $this->validatePost(['name'=>'required|string']);
         $result = $this->databaseModel->optimizeTable($this->post['name']);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,$this->string.' optimize successfully');
-        }
-        return $this->ajax_return(Code::ERROR,$this->string.' optimize failed');
+        return $result ? $this->ajax_return(Code::SUCCESS,$this->string.' optimize successfully') : $this->ajax_return(Code::ERROR,$this->string.' optimize failed');
     }
     /**
      * TODO：优化数据表
@@ -103,9 +99,6 @@ class DatabaseController extends BaseController
     {
         $this->validatePost(['name'=>'required|string','comment'=>'required|string']);
         $result = $this->databaseModel->commentTable($this->post['name'],$this->post['comment']);
-        if (is_array($result)){
-            return $this->ajax_return(Code::SUCCESS,$this->string.'  comment update successfully');
-        }
-        return $this->ajax_return(Code::ERROR,$this->string.' comment update failed');
+        return is_array($result) ? $this->ajax_return(Code::SUCCESS,$this->string.'  comment update successfully') : $this->ajax_return(Code::ERROR,$this->string.' comment update failed');
     }
 }
