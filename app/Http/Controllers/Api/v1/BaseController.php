@@ -93,7 +93,7 @@ class BaseController extends Controller
         if (strstr($url,'?')){
             $url = substr($url,0,find_str($request->getRequestUri(),'?',2));
         }
-        if ($request->isMethod('get') && !in_array(asset($url),[route('downloadFile')])){
+        if ($request->isMethod('get') && !in_array(asset($url),[route('download')])){
             $this->setCode(Code::METHOD_ERROR,'Method Not Allowed');
         }
         $this->post = $request->post();
@@ -165,7 +165,7 @@ class BaseController extends Controller
     protected function setCode($code,$message)
     {
         set_code($code);
-        exit(json_encode(array('code'=>$code,'msg'=>$message,'url'=>request()->getRequestUri())));
+        exit(json_encode(array('code'=>$code,'msg'=>$message,'url'=>str_replace('/','',config('app.url')).request()->getRequestUri())));
     }
 
     /**

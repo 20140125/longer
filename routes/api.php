@@ -31,7 +31,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'],'common/area','v1\AreaController@lists')->name('areaLists');
     Route::match(['get','post'],'common/upload','v1\WxUsersController@upload');
     Route::match(['post','get'],'common/emotion','v1\EmotionController@index')->name('emotion');
-    Route::match(['post','get'],'common/download','v1\LoginController@download');
+    Route::match(['post','get'],'common/download','v1\LoginController@download')->name('download');
 
     /********************************************共有权限********************************************************/
 
