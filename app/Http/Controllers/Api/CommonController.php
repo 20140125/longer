@@ -29,7 +29,9 @@ class CommonController
      * @var Users $usersModel
      */
     protected $usersModel;
-
+    /**
+     * @var static $instance
+     */
     protected static $instance;
 
     /**
@@ -63,12 +65,7 @@ class CommonController
         );
         foreach ($users as &$user) {
             $user->centerInfo = UserCenter::getInstance()
-                ->getResult(
-                    'uid',
-                    $user->id,
-                    '=',
-                    ['desc','tags','ip_address','local']
-                );
+                ->getResult('uid', $user->id, '=', ['desc','tags','ip_address','local']);
             $user->id = md5($user->id);
         }
         if ($this->redisUtils->sMembers(config('app.chat_user_key'))) {
