@@ -27,9 +27,9 @@ class Push extends Model
     /**
      * @return Push
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -57,7 +57,7 @@ class Push extends Model
      * @param int $status
      * @return mixed
      */
-    public function getResultLists(int $page,int $limit,$user,string $state='',int $status=0)
+    public function getResultLists(int $page, int $limit, $user, string $state = '', int $status = 0)
     {
         $where = [];
         if (!empty($state)) {
@@ -66,10 +66,11 @@ class Push extends Model
         if (!empty($status)) {
             $where[] = ['status',$status];
         }
-        if (!in_array($user->role_id,[1])){
+        if (!in_array($user->role_id, [1])) {
             $where[] = ['uid',empty($user->uuid) ? '' : $user->uuid];
         }
-        $result['data'] = DB::table($this->table)->where($where)->orderByDesc('id')->offset($limit*($page-1))->limit($limit)->get();
+        $result['data'] = DB::table($this->table)->where($where)->orderByDesc('id')
+            ->offset($limit*($page-1))->limit($limit)->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
@@ -82,9 +83,9 @@ class Push extends Model
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value='', $op='=', array $column = ['*'])
+    public function getResult($field, $value = '', $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
     /**
      * TODO: 添加记录
@@ -104,9 +105,9 @@ class Push extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field, $value,$op='=')
+    public function updateResult(array $data, string $field, $value, $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
+        return DB::table($this->table)->where($field, $op, $value)->update($data);
     }
 
     /**
@@ -115,8 +116,8 @@ class Push extends Model
      * @param int $value
      * @return int
      */
-    public function deleteResult(string $field,int $value)
+    public function deleteResult(string $field, int $value)
     {
-        return DB::table($this->table)->where($field,$value)->delete();
+        return DB::table($this->table)->where($field, $value)->delete();
     }
 }

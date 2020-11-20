@@ -38,17 +38,17 @@ class ConfigController extends BaseController
     {
         $result = $this->configModel->getResultLists();
         $intFields = ['status','id','pid'];
-        foreach ($result as &$item){
-            $item->created_at = date('Y-m-d H:i:s',$item->created_at);
-            $item->updated_at = date('Y-m-d H:i:s',$item->updated_at);
-            $item->children = $item->children ? json_decode($item->children,true) : [];
+        foreach ($result as &$item) {
+            $item->created_at = date('Y-m-d H:i:s', $item->created_at);
+            $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
+            $item->children = $item->children ? json_decode($item->children, true) : [];
             foreach ($intFields as $int) {
                 foreach ($item->children as &$child) {
                     $child[$int] = (int)$child[$int];
                 }
             }
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
     /**
@@ -60,7 +60,8 @@ class ConfigController extends BaseController
     {
         $this->validatePost(['name'=>'required|string|unique:os_config']);
         $result = $this->configModel->addResult($this->post);
-        return $result ? $this->ajax_return(Code::SUCCESS,'save config successfully') : $this->ajax_return(Code::ERROR,'save config failed');
+        return $result ? $this->ajaxReturn(Code::SUCCESS, 'save config successfully')
+            : $this->ajaxReturn(Code::ERROR, 'save config failed');
     }
     /**
      * TODO：更新配置
@@ -71,14 +72,15 @@ class ConfigController extends BaseController
      */
     public function update()
     {
-        if (!empty($this->post['act']) && $this->post['act'] === 'status'){
+        if (!empty($this->post['act']) && $this->post['act'] === 'status') {
             $rule = ['id'=>'required|integer','status'=>'required|integer|in:1,2'];
         } else {
             $rule = ['id'=>'required|integer','name'=>'required|string'];
         }
         $this->validatePost($rule);
-        $result = $this->configModel->updateResult($this->post,'id',$this->post['id']);
-        return $result ? $this->ajax_return(Code::SUCCESS,'update config successfully') : $this->ajax_return(Code::ERROR,'update config failed');
+        $result = $this->configModel->updateResult($this->post, 'id', $this->post['id']);
+        return $result ? $this->ajaxReturn(Code::SUCCESS, 'update config successfully')
+            : $this->ajaxReturn(Code::ERROR, 'update config failed');
     }
 
     /**
@@ -89,7 +91,8 @@ class ConfigController extends BaseController
     public function delete()
     {
         $this->validatePost(['id'=>'required|integer']);
-        $result = $this->configModel->deleteResult($this->post,'id',$this->post['id']);
-        return $result ? $this->ajax_return(Code::SUCCESS,'remove config successfully') : $this->ajax_return(Code::ERROR,'remove config failed');
+        $result = $this->configModel->deleteResult($this->post, 'id', $this->post['id']);
+        return $result ? $this->ajaxReturn(Code::SUCCESS, 'remove config successfully')
+            : $this->ajaxReturn(Code::ERROR, 'remove config failed');
     }
 }

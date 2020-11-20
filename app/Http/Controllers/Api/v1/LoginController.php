@@ -60,13 +60,13 @@ class LoginController
      * @param Request $request
      * @return JsonResponse
      */
-    public function setVerifyCode (Request $request)
+    public function setVerifyCode(Request $request)
     {
-        if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        if ($request->isMethod('get')) {
+            return ajaxReturn(Code::METHOD_ERROR, 'method not allowed');
         }
-        $this->redisClient->setValue($this->post['verify_code'],strtoupper($this->post['verify_code']),['EX'=>120]);
-        return ajax_return(Code::SUCCESS,'successfully');
+        $this->redisClient->setValue($this->post['verify_code'], strtoupper($this->post['verify_code']), ['EX'=>120]);
+        return ajaxReturn(Code::SUCCESS, 'successfully');
     }
     /**
      * TODO:用户登录
@@ -79,48 +79,56 @@ class LoginController
      */
     public function index(Request $request)
     {
-        if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        if ($request->isMethod('get')) {
+            return ajaxReturn(Code::METHOD_ERROR, 'method not allowed');
         }
         if (empty($this->post['loginType'])) {
-            return ajax_return(Code::ERROR,'require params missing');
+            return ajaxReturn(Code::ERROR, 'require params missing');
         }
         switch ($this->post['loginType']) {
             case 'password':
-                $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email','password' =>'required|between:6,32|string','verify_code'=>'required|size:6|string']);
-                if ($validate->fails()){
-                    return ajax_return(Code::ERROR,$validate->errors()->first());
+                $validate = Validator::make(
+                    $this->post,
+                    ['email' =>'required|between:8,64|email', 'password' =>'required|between:6,32|string',
+                     'verify_code'=>'required|size:6|string']
+                );
+                if ($validate->fails()) {
+                    return ajaxReturn(Code::ERROR, $validate->errors()->first());
                 }
                 //不区分大小写(图片验证码)
-                if (true != $this->redisClient->getValue($this->post['verify_code']) && strtoupper($this->post['verify_code'])!= $this->redisClient->getValue($this->post['verify_code'])) {
-                    return ajax_return(Code::ERROR,'verify code validate error');
+                if (true != $this->redisClient->getValue($this->post['verify_code']) &&
+                    strtoupper($this->post['verify_code'])!= $this->redisClient->getValue($this->post['verify_code'])) {
+                    return ajaxReturn(Code::ERROR, 'verify code validate error');
                 }
                 //删除redis缓存的验证码 (防止恶意访问接口)
                 $this->redisClient->del($this->post['verify_code']);
                 $result = $this->userModel->loginSYS($this->post);
                 break;
             case 'mail':
-                $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email','verify_code' =>'required|size:8|string']);
-                if ($validate->fails()){
-                    return ajax_return(Code::ERROR,$validate->errors()->first());
+                $validate = Validator::make(
+                    $this->post,
+                    ['email' =>'required|between:8,64|email', 'verify_code' =>'required|size:8|string']
+                );
+                if ($validate->fails()) {
+                    return ajaxReturn(Code::ERROR, $validate->errors()->first());
                 }
                 $result = $this->emailLogin();
                 break;
             default:
-                return ajax_return(Code::ERROR,'Illegal parameter');
+                return ajaxReturn(Code::ERROR, 'Illegal parameter');
         }
         switch ($result) {
             case Code::ERROR:
-                $res = ajax_return(Code::ERROR,'account or password validate error');
+                $res = ajaxReturn(Code::ERROR, 'account or password validate error');
                 break;
             case Code::NOT_ALLOW:
-                $res = ajax_return(Code::NOT_ALLOW,'users not allow login system');
+                $res = ajaxReturn(Code::NOT_ALLOW, 'users not allow login system');
                 break;
             case Code::VERIFY_CODE:
-                $res = ajax_return(Code::ERROR,'verify code error');
+                $res = ajaxReturn(Code::ERROR, 'verify code error');
                 break;
             case Code::SERVER_ERROR:
-                $res = ajax_return(Code::SERVER_ERROR,'server error');
+                $res = ajaxReturn(Code::SERVER_ERROR, 'server error');
                 break;
             default:
                 $info = [
@@ -128,8 +136,8 @@ class LoginController
                     'msg' => $result['logInfo'],
                     'username' => $result['username']
                 ];
-                act_log($info);
-                $res = ajax_return(Code::SUCCESS,'login successfully',$this->setUserInfo($result));
+                actLog($info);
+                $res = ajaxReturn(Code::SUCCESS, 'login successfully', $this->setUserInfo($result));
                 break;
         }
         return $res;
@@ -139,7 +147,7 @@ class LoginController
      * @param $users
      * @return array
      */
-    private function setUserInfo ($users)
+    private function setUserInfo($users)
     {
         return [
             'token'=>$users['token'],
@@ -159,14 +167,14 @@ class LoginController
      */
     private function getRandomUsersAvatarUrl()
     {
-        $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0],true);
+        $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0], true);
         $avatarUrl = [];
         foreach ($users as $user) {
             if ($user['client_name']!=='admin') {
                 $avatarUrl[] = $user['client_img'];
             }
         }
-        return $avatarUrl[rand(0,count($avatarUrl))]; //排除第一张图片
+        return $avatarUrl[rand(0, count($avatarUrl))]; //排除第一张图片
     }
 
     /**
@@ -175,39 +183,51 @@ class LoginController
      */
     private function emailLogin()
     {
-        if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
+        if (true != $this->redisClient->getValue($this->post['email'])
+            && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
             return Code::VERIFY_CODE;
         }
         DB::beginTransaction();
         try {
-            $result = $this->userModel->getResult('email',$this->post['email']);
+            $result = $this->userModel->getResult('email', $this->post['email']);
             if (!empty($result)) {
-                if ($result->status == 2){
+                if ($result->status == 2) {
                     return Code::NOT_ALLOW;
                 }
-                $result->salt = get_round_num(8);
-                $result->password = md5 (md5($result->password).$result->salt);
-                $result->remember_token = md5 (md5($result->password).$result->salt);
+                $result->salt = getRoundNum(8);
+                $result->password = md5(md5($result->password).$result->salt);
+                $result->remember_token = md5(md5($result->password).$result->salt);
                 $result->logInfo = 'email login successfully';
-                $this->userModel->updateResult(object_to_array($result),'id',$result->id);
-                UserCenter::getInstance()->updateResult(['token'=>$result->remember_token],'uid',$result->id);
-                return object_to_array($result);
+                $this->userModel->updateResult(objectToArray($result), 'id', $result->id);
+                UserCenter::getInstance()->updateResult(['token'=>$result->remember_token], 'uid', $result->id);
+                return objectToArray($result);
             }
             //注册
-            $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2,'avatar_url'=>$this->getRandomUsersAvatarUrl());
-            $request['salt'] = get_round_num(8);
-            $request['password'] = md5 (md5(get_round_num(32)).$request['salt']);
-            $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
+            $request = array(
+                'ip_address' =>request()->ip(),
+                'updated_at' =>time(),'role_id'=>2,
+                'avatar_url'=>$this->getRandomUsersAvatarUrl()
+            );
+            $request['salt'] = getRoundNum(8);
+            $request['password'] = md5(md5(getRoundNum(32)).$request['salt']);
+            $request['remember_token'] = md5(md5($request['password']).$request['salt']);
             $request['email'] = $this->post['email'];
             $request['phone_number'] = 0;
             $request['created_at'] = time();
             $request['uuid'] = config('app.client_id');
-            $request['username'] = explode("@",$this->post['email'])[0];
+            $request['username'] = explode("@", $this->post['email'])[0];
             $request['status'] = 1;  //允许访问
             $id = $this->userModel->addResult($request);
             //新用户注册生成client_id
-            $this->userModel->updateResult(['uuid'=>$request['uuid'].$id],'id',$id);
-            UserCenter::getInstance()->addResult(['u_name'=>$request['username'],'uid'=>$id,'token'=>$request['remember_token'],'notice_status'=>1,'user_status'=>1]);
+            $this->userModel->updateResult(['uuid'=>$request['uuid'].$id], 'id', $id);
+            UserCenter::getInstance()->addResult(
+                [
+                    'u_name'=>$request['username'],
+                    'uid'=>$id,'token'=>$request['remember_token'],
+                    'notice_status'=>1,
+                    'user_status'=>1
+                ]
+            );
             $request['token'] = $request['remember_token'];
             //更新用户画像
             CommonController::getInstance()->updateUserAvatarUrl();
@@ -230,19 +250,20 @@ class LoginController
      */
     public function email(Request $request)
     {
-        if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        if ($request->isMethod('get')) {
+            return ajaxReturn(Code::METHOD_ERROR, 'method not allowed');
         }
-        $validate = Validator::make($this->post,['email'=>'required|string|email']);
+        $validate = Validator::make($this->post, ['email'=>'required|string|email']);
         if ($validate->fails()) {
-            return ajax_return(Code::ERROR,$validate->errors()->first());
+            return ajaxReturn(Code::ERROR, $validate->errors()->first());
         }
-        $hasEmail = $this->userModel->getResult('email',$this->post['email'],'=',['email','remember_token']);
+        $hasEmail = $this->userModel->getResult('email', $this->post['email'], '=', ['email','remember_token']);
         if (!$hasEmail) {
-            return ajax_return(Code::ERROR,'email not exists');
+            return ajaxReturn(Code::ERROR, 'email not exists');
         }
         $result = $this->commonControl->sendMail($this->post);
-        return $result ? ajax_return(Code::SUCCESS,'email send successfully',$hasEmail) : ajax_return(Code::ERROR,'email send failed');
+        return $result ? ajaxReturn(Code::SUCCESS, 'email send successfully', $hasEmail)
+            : ajaxReturn(Code::ERROR, 'email send failed');
     }
 
     /**
@@ -254,17 +275,21 @@ class LoginController
      */
     public function code(Request $request)
     {
-        if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        if ($request->isMethod('get')) {
+            return ajaxReturn(Code::METHOD_ERROR, 'method not allowed');
         }
-        $validate = Validator::make($this->post,['email'=>'required|string|email','verify_code'=>'required|string|size:8']);
+        $validate = Validator::make(
+            $this->post,
+            ['email'=>'required|string|email', 'verify_code'=>'required|string|size:8']
+        );
         if ($validate->fails()) {
-            return ajax_return(Code::ERROR,$validate->errors()->first());
+            return ajaxReturn(Code::ERROR, $validate->errors()->first());
         }
-        if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
-            return ajax_return(Code::ERROR,'code verify error');
+        if (true != $this->redisClient->getValue($this->post['email'])
+            && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
+            return ajaxReturn(Code::ERROR, 'code verify error');
         }
-        return ajax_return(Code::SUCCESS,'code verify successfully');
+        return ajaxReturn(Code::SUCCESS, 'code verify successfully');
     }
     /**
      * TODO：获取配置
@@ -273,22 +298,22 @@ class LoginController
      */
     public function config(Request $request)
     {
-        if ($request->isMethod('get')){
-            return ajax_return(Code::METHOD_ERROR,'method not allowed');
+        if ($request->isMethod('get')) {
+            return ajaxReturn(Code::METHOD_ERROR, 'method not allowed');
         }
-        $validate = Validator::make($this->post,['name'=>'required|string']);
-        if ($validate->fails()){
-            return ajax_return(Code::ERROR,$validate->errors()->first());
+        $validate = Validator::make($this->post, ['name'=>'required|string']);
+        if ($validate->fails()) {
+            return ajaxReturn(Code::ERROR, $validate->errors()->first());
         }
-        $children = $this->configModel->getResult('name',$this->post['name'],'=',['children'])->children;
+        $children = $this->configModel->getResult('name', $this->post['name'], '=', ['children'])->children;
         $intFields = ['status','id','pid'];
-        $children = json_decode($children,true) ?? [];
+        $children = json_decode($children, true) ?? [];
         foreach ($intFields as $int) {
             foreach ($children as &$child) {
                 $child[$int] = (int)$child[$int];
             }
         }
-        return ajax_return(Code::SUCCESS,'successfully',$children);
+        return ajaxReturn(Code::SUCCESS, 'successfully', $children);
     }
     /**
      * TODO:：文件下载
@@ -296,18 +321,18 @@ class LoginController
      * @param Response $response
      * @return JsonResponse|BinaryFileResponse
      */
-    public function download(Request $request,Response $response)
+    public function download(Request $request, Response $response)
     {
-        $username = $this->userModel->getResult('remember_token',$request->get('token'));
-        set_code(Code::NOT_FOUND);
-        if (empty($username) || in_array(basename($request->get('path')),['.env','db.php'])){
-            return ajax_return(Code::NOT_FOUND,'file not found');
+        $username = $this->userModel->getResult('remember_token', $request->get('token'));
+        setCode(Code::NOT_FOUND);
+        if (empty($username) || in_array(basename($request->get('path')), ['.env','db.php'])) {
+            return ajaxReturn(Code::NOT_FOUND, 'file not found');
         }
-        if (file_exists($request->get('path'))){
+        if (file_exists($request->get('path'))) {
             Storage::disk('public')->put(basename($request->get('path')), file_get_contents($request->get('path')));
             //保存到服务器
-            return $response::download($request->get('path'),basename($request->get('path')));
+            return $response::download($request->get('path'), basename($request->get('path')));
         }
-        return ajax_return(Code::NOT_FOUND,'permission denied');
+        return ajaxReturn(Code::NOT_FOUND, 'permission denied');
     }
 }

@@ -31,9 +31,9 @@ class ReqRule extends Model
     /**
      * @return ReqRule
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -57,14 +57,14 @@ class ReqRule extends Model
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, int $value=0, string $op='=',array $column = ['*'])
+    public function getResult($field, int $value = 0, string $op = '=', array $column = ['*'])
     {
-        switch ($op){
+        switch ($op) {
             case 'in':
-                $result = DB::table($this->table)->whereIn($field,$value)->get($column);
+                $result = DB::table($this->table)->whereIn($field, $value)->get($column);
                 break;
             default:
-                $result = DB::table($this->table)->where($field,$op,$value)->first($column);
+                $result = DB::table($this->table)->where($field, $op, $value)->first($column);
                 break;
         }
         return $result;
@@ -77,13 +77,14 @@ class ReqRule extends Model
      * @param $user
      * @return mixed
      */
-    public function getResultLists(int $page,int $limit,$user)
+    public function getResultLists(int $page, int $limit, $user)
     {
         $where = [];
-        if (!in_array($user->role_id,[1])){
+        if (!in_array($user->role_id, [1])) {
             $where[] = ['user_id',$user->id];
         }
-        $result['data'] = DB::table($this->table)->limit($limit)->where($where)->offset($limit*($page-1))->orderByDesc('updated_at')->get();
+        $result['data'] = DB::table($this->table)->limit($limit)
+            ->where($where)->offset($limit*($page-1))->orderByDesc('updated_at')->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
@@ -107,10 +108,10 @@ class ReqRule extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data ,$field,int $value=0,string $op='=')
+    public function updateResult(array $data, $field, int $value = 0, string $op = '=')
     {
         $data['updated_at'] = time();
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
+        return DB::table($this->table)->where($field, $op, $value)->update($data);
     }
 
     /**
@@ -120,9 +121,9 @@ class ReqRule extends Model
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,int $value,string $op='=')
+    public function deleteResult(string $field, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->delete();
+        return DB::table($this->table)->where($field, $op, $value)->delete();
     }
 
 }

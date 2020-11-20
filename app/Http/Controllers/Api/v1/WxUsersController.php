@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-
 /**
  * TODO: 用户管理
  * Class WxUsersController
@@ -18,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
  */
 class WxUsersController
 {
-    protected $post;
+    protected array|string|null $post;
     /**
      * @var Repository|mixed 用户APPID（小程序）
      */
@@ -35,7 +34,7 @@ class WxUsersController
     public function __construct(Request $request)
     {
         if ($request->isMethod('get')) {
-            $this->setCode(Code::METHOD_ERROR,'method not allow');
+            $this->setCode(Code::METHOD_ERROR, 'method not allow');
         }
         $this->appid = config('app.program_appid');
         $this->appsecret = config('app.program_secret');
@@ -60,7 +59,7 @@ class WxUsersController
         $curl = new Curl();
         $response = $curl->post($url.http_build_query($data));
         $parsedData = json_decode(trim($response), true, 512, JSON_OBJECT_AS_ARRAY);
-        return $this->ajax_return(Code::SUCCESS,'successfully',$parsedData);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $parsedData);
     }
 
     /**
@@ -69,7 +68,7 @@ class WxUsersController
      */
     public function login()
     {
-        return $this->ajax_return(Code::SUCCESS,'login successfully');
+        return $this->ajaxReturn(Code::SUCCESS, 'login successfully');
     }
 
     /**
@@ -79,14 +78,14 @@ class WxUsersController
      * @param array $data
      * @return JsonResponse
      */
-    protected function ajax_return($code,$msg,$data = array())
+    protected function ajaxReturn($code, $msg, $data = array())
     {
         $item = array(
             'code' =>$code,
             'msg' =>$msg,
             'item' =>$data,
         );
-        return response()->json($item,$code);
+        return response()->json($item, $code);
     }
 
     /**
@@ -94,14 +93,14 @@ class WxUsersController
      * @param array $rules
      * @param array $message
      */
-    protected function validatePost(array $rules,array $message = [])
+    protected function validatePost(array $rules, array $message = [])
     {
-        $validate = Validator::make($this->post,$rules,$message);
+        $validate = Validator::make($this->post, $rules, $message);
         if ($validate->fails()) {
-            if ($validate->errors()->first() == 'Permission denied'){
-                $this->setCode(Code::NOT_ALLOW,$validate->errors()->first());
+            if ($validate->errors()->first() == 'Permission denied') {
+                $this->setCode(Code::NOT_ALLOW, $validate->errors()->first());
             }
-            $this->setCode(Code::ERROR,$validate->errors()->first());
+            $this->setCode(Code::ERROR, $validate->errors()->first());
         }
     }
     /**
@@ -109,9 +108,9 @@ class WxUsersController
      * @param $code
      * @param $message
      */
-    protected function setCode($code,$message)
+    protected function setCode($code, $message)
     {
-        set_code($code);
+        setCode($code);
         exit(json_encode(array('code'=>$code,'msg'=>$message)));
     }
 
@@ -136,16 +135,16 @@ class WxUsersController
                 case 'jpeg':
                     //图片大小上传错误
                     if ($file->getSize()>2*1024*1024) {
-                        return $this->ajax_return(Code::ERROR,'upload image size error');
+                        return $this->ajaxReturn(Code::ERROR, 'upload image size error');
                     }
                     break;
                 case 'mp4':
                     if ($file->getSize()>5*1024*1024) {
-                        return $this->ajax_return(Code::ERROR,'upload video size error');
+                        return $this->ajaxReturn(Code::ERROR, 'upload video size error');
                     }
                     break;
                 default:
-                    return $this->ajax_return(Code::ERROR,'Unsupported file format');
+                    return $this->ajaxReturn(Code::ERROR, 'Unsupported file format');
             }
             $filename = date('Ymd')."/".md5(date('YmdHis')).uniqid().".".$ext;
             Storage::disk('public')->put($filename, file_get_contents($path));
@@ -154,9 +153,13 @@ class WxUsersController
                 'href' => '/v1/wx/upload',
                 'msg' => 'upload file '.$file->getClientOriginalName().' successfully'
             );
-            act_log($info);
-            return $this->ajax_return(Code::SUCCESS,'upload file '.$file->getClientOriginalName().' successfully',array('src'=>config('app.url').'storage/'.$filename));
+            actLog($info);
+            return $this->ajaxReturn(
+                Code::SUCCESS,
+                'upload file '.$file->getClientOriginalName().' successfully',
+                array('src'=>config('app.url').'storage/'.$filename)
+            );
         }
-        return $this->ajax_return(Code::ERROR,'upload file failed');
+        return $this->ajaxReturn(Code::ERROR, 'upload file failed');
     }
 }

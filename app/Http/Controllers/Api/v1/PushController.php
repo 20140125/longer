@@ -39,16 +39,22 @@ class PushController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer|gt:0','limit'=>'required|integer|gt:0']);
-        $result = $this->pushModel->getResultLists($this->post['page'],$this->post['limit'],$this->users,$this->post['state']??'',$this->post['status']??0);
+        $result = $this->pushModel->getResultLists(
+            $this->post['page'],
+            $this->post['limit'],
+            $this->users,
+            $this->post['state']??'',
+            $this->post['status']??0
+        );
         foreach ($result['data'] as &$item) {
-            $item->created_at = date('Y-m-d H:i:s',$item->created_at);
+            $item->created_at = date('Y-m-d H:i:s', $item->created_at);
         }
         $result['oauth'] = Cache::get('oauthLists');
         if (empty($result['oauth'])) {
             $result['oauth'] = $this->userModel->getAll();
-            Cache::forever('oauthLists',$result['oauth']);
+            Cache::forever('oauthLists', $result['oauth']);
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
     /**
@@ -61,19 +67,32 @@ class PushController extends BaseController
      */
     public function save()
     {
-        $this->validatePost(['info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
-        $this->post['status'] == 1 ? $this->pushMessage() : '';
+        $this->validatePost(
+            [
+                'info'=>'required|string',
+                'username'=>'required|string',
+                'status'=>'required|integer|in:1,2',
+                'created_at'=>'required|string|date'
+            ]
+        );
+        $this->post['status'] == 1 ? $this->pushMessage() : '1';
         $this->post['created_at'] = time();
         if ($this->post['uid'] == config('app.client_id')) {
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
             $this->post['username'] = 'admin';
-            $this->post['uid'] = $this->userModel->getResult('username',$this->post['uid'] === config('app.client_id') ? 'admin' : $this->post['username'],'=',['uuid'])->uuid;
+            $this->post['uid'] = $this->userModel->getResult(
+                'username',
+                $this->post['uid'] === config('app.client_id') ? 'admin' : $this->post['username'],
+                '=',
+                ['uuid']
+            )->uuid;
             $this->pushModel->addResult($this->post);
-            return $this->ajax_return(Code::SUCCESS,'push message save successfully');
+            return $this->ajaxReturn(Code::SUCCESS, 'push message save successfully');
         }
-        $this->post['username'] = ($this->pushModel->getResult('uid',$this->post['uid'],'=',['username']))->username;
-        $this->pushModel->addResult($this->post);
-        return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
+        $this->post['username'] = ($this->pushModel->getResult('uid', $this->post['uid'], '=', ['username']))->username;
+        $result = $this->pushModel->addResult($this->post);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'push message successfully') :
+            $this->ajaxReturn(Code::ERROR, 'push message failed');
     }
 
     /**
@@ -87,16 +106,25 @@ class PushController extends BaseController
      */
     public function update()
     {
-        $this->validatePost(['id'=>'required|integer','info'=>'required|string','username'=>'required|string','status'=>'required|integer|in:1,2','created_at'=>'required|string|date']);
+        $this->validatePost(
+            [
+                'id'=>'required|integer',
+                'info'=>'required|string',
+                'username'=>'required|string',
+                'status'=>'required|integer|in:1,2',
+                'created_at'=>'required|string|date'
+            ]
+        );
         $this->post['status'] == 1 ? $this->pushMessage() : '';
         if ($this->post['username'] == 'all') {
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
-            return $this->ajax_return(Code::SUCCESS,'push message update successfully');
+            return $this->ajaxReturn(Code::SUCCESS, 'push message update successfully');
         }
-        $this->post['username'] = ($this->pushModel->getResult('uid',$this->post['uid'],'=',['username']))->username;
+        $this->post['username'] = ($this->pushModel->getResult('uid', $this->post['uid'], '=', ['username']))->username;
         $this->post['created_at'] = time();
-        $this->pushModel->updateResult($this->post,'id',$this->post['id']);
-        return $this->ajax_return(Code::SUCCESS,'push message '.$this->post['state']);
+        $result = $this->pushModel->updateResult($this->post, 'id', $this->post['id']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'push message successfully') :
+            $this->ajaxReturn(Code::ERROR, 'push message failed');
     }
     /**
      * TODO：查看站内推送的消息
@@ -111,8 +139,9 @@ class PushController extends BaseController
         $params['id'] = $this->post['id'];
         $params['see'] = $this->post['see'];
         $params['created_at'] = time();
-        $this->pushModel->updateResult($params,'id',$this->post['id']);
-        return $this->ajax_return(Code::SUCCESS,'successfully');
+        $result = $this->pushModel->updateResult($params, 'id', $this->post['id']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'update message successfully') :
+            $this->ajaxReturn(Code::ERROR, 'update message failed');
     }
 
     /**
@@ -123,10 +152,8 @@ class PushController extends BaseController
     public function delete()
     {
         $this->validatePost(['id'=>'required|integer']);
-        $result = $this->pushModel->deleteResult('id',$this->post['id']);
-        if (!empty($result)) {
-            return $this->ajax_return(Code::SUCCESS,'remove push successfully');
-        }
-        return $this->ajax_return(Code::SUCCESS,'remove push failed');
+        $result = $this->pushModel->deleteResult('id', $this->post['id']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'remove push message successfully') :
+            $this->ajaxReturn(Code::ERROR, 'remove push message failed');
     }
 }

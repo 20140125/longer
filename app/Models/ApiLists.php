@@ -19,16 +19,16 @@ class ApiLists extends Model
      */
     public $table = 'os_api_lists';
     /**
-     * @var $instance
+     * @var static $instance
      */
     protected static $instance;
 
     /**
      * @return ApiLists
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -46,9 +46,9 @@ class ApiLists extends Model
      * @param array $column
      * @return Model|Builder|object|null
      */
-    public function getResult(string $field, int $value,string $op='=', array $column = ['*'])
+    public function getResult(string $field, int $value, string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
 
     /**
@@ -58,9 +58,9 @@ class ApiLists extends Model
      */
     public function addResult(array $data)
     {
-        $data['request'] = empty($data['request'])? "[]" : json_encode($data['request'],JSON_UNESCAPED_UNICODE);
-        $data['response'] = empty($data['response'])? "[]" : json_encode($data['response'],JSON_UNESCAPED_UNICODE);
-        $data['response_string'] = json_encode($data['response_string'],JSON_UNESCAPED_UNICODE);
+        $data['request'] = empty($data['request'])? "[]" : json_encode($data['request'], JSON_UNESCAPED_UNICODE);
+        $data['response'] = empty($data['response'])? "[]" : json_encode($data['response'], JSON_UNESCAPED_UNICODE);
+        $data['response_string'] = json_encode($data['response_string'], JSON_UNESCAPED_UNICODE);
         return DB::table($this->table)->insertGetId($data);
     }
 
@@ -72,12 +72,12 @@ class ApiLists extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value,string $op='=')
+    public function updateResult(array $data, string $field, int $value, string $op = '=')
     {
-        $data['request'] = empty($data['request'])? "[]" : json_encode($data['request'],JSON_UNESCAPED_UNICODE);
-        $data['response'] = empty($data['response'])? "[]" : json_encode($data['response'],JSON_UNESCAPED_UNICODE);
-        $data['response_string'] = json_encode($data['response_string'],JSON_UNESCAPED_UNICODE);
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
+        $data['request'] = empty($data['request'])? "[]" : json_encode($data['request'], JSON_UNESCAPED_UNICODE);
+        $data['response'] = empty($data['response'])? "[]" : json_encode($data['response'], JSON_UNESCAPED_UNICODE);
+        $data['response_string'] = json_encode($data['response_string'], JSON_UNESCAPED_UNICODE);
+        return DB::table($this->table)->where($field, $op, $value)->update($data);
     }
 
     /**
@@ -86,8 +86,8 @@ class ApiLists extends Model
      * @param int $value
      * @return int
      */
-    public function deleteResult(string $field,int $value)
+    public function deleteResult(string $field, int $value)
     {
-        return DB::table($this->table)->where($field,$value)->delete();
+        return DB::table($this->table)->where($field, $value)->delete();
     }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api\v1;
+
 use App\Http\Controllers\Oauth\BaiDuController;
 use App\Http\Controllers\Oauth\GiteeController;
 use App\Http\Controllers\Oauth\GithubController;
@@ -22,7 +23,7 @@ class OauthLoginController extends Controller
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    protected RedisClient $redisClient;
 
     /**
      * OauthLoginController constructor.
@@ -40,9 +41,9 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.qq_appid');
         $appSecret = config('app.qq_secret');
-        $QQOauth = QQController::getInstance($appId,$appSecret);
+        $QQOauth = QQController::getInstance($appId, $appSecret);
         $url = $QQOauth->getAuthUrl();
-        $this->redisClient->setValue($QQOauth->state,$QQOauth->state,['EX' => 60]);
+        $this->redisClient->setValue($QQOauth->state, $QQOauth->state, ['EX' => 60]);
         return redirect($url);
     }
 
@@ -54,9 +55,9 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.github_appid');
         $appSecret = config('app.github_secret');
-        $gitHubOAuth = GithubController::getInstance($appId,$appSecret);
+        $gitHubOAuth = GithubController::getInstance($appId, $appSecret);
         $url = $gitHubOAuth->getAuthUrl();
-        $this->redisClient->setValue($gitHubOAuth->state,$gitHubOAuth->state,['EX' => 60]);
+        $this->redisClient->setValue($gitHubOAuth->state, $gitHubOAuth->state, ['EX' => 60]);
         return redirect($url);
     }
 
@@ -68,9 +69,9 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.weibo_appid');
         $appSecret = config('app.weibo_secret');
-        $weiboOAuth = WeiBoController::getInstance($appId,$appSecret);
+        $weiboOAuth = WeiBoController::getInstance($appId, $appSecret);
         $url = $weiboOAuth->getAuthUrl();
-        $this->redisClient->setValue($weiboOAuth->state,$weiboOAuth->state,['EX' => 60]);
+        $this->redisClient->setValue($weiboOAuth->state, $weiboOAuth->state, ['EX' => 60]);
         return redirect($url);
     }
 
@@ -82,9 +83,9 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
-        $giteeOAuth =GiteeController::getInstance($appId,$appSecret);
+        $giteeOAuth =GiteeController::getInstance($appId, $appSecret);
         $url = $giteeOAuth->getAuthUrl();
-        $this->redisClient->setValue($giteeOAuth->state,$giteeOAuth->state,['EX' => 60]);
+        $this->redisClient->setValue($giteeOAuth->state, $giteeOAuth->state, ['EX' => 60]);
         return redirect($url);
     }
     /**
@@ -95,9 +96,9 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.baidu_appid');
         $appSecret = config('app.baidu_secret');
-        $baiDuOauth = BaiDuController::getInstance($appId,$appSecret);
+        $baiDuOauth = BaiDuController::getInstance($appId, $appSecret);
         $url = $baiDuOauth->getAuthUrl();
-        $this->redisClient->setValue($baiDuOauth->state,$baiDuOauth->state,['EX' => 60]);
+        $this->redisClient->setValue($baiDuOauth->state, $baiDuOauth->state, ['EX' => 60]);
         return redirect($url);
     }
     /**
@@ -108,9 +109,9 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.os_china_appid');
         $appSecret = config('app.os_china_secret');
-        $osChinaOauth = OsChinaController::getInstance($appId,$appSecret);
+        $osChinaOauth = OsChinaController::getInstance($appId, $appSecret);
         $url = $osChinaOauth->getAuthUrl();
-        $this->redisClient->setValue($osChinaOauth->state,$osChinaOauth->state,['EX' => 60]);
+        $this->redisClient->setValue($osChinaOauth->state, $osChinaOauth->state, ['EX' => 60]);
         return redirect($url);
     }
 }

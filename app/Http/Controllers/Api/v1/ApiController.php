@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Api\v1;
+
 use App\Http\Controllers\Utils\Code;
 use App\Models\ApiCategory;
 use App\Models\ApiDocLists;
@@ -18,10 +20,16 @@ class ApiController extends BaseController
 {
     /**
      * @var ApiCategory $apiCategoryModel api分类模型
+     */
+    protected $apiCategoryModel;
+    /**
      * @var ApiLists $apiListsModel api列表模型
+     */
+    protected $apiListsModel;
+    /**
      * @var ApiLog $apiLogModel api日志模型
      */
-    protected $apiCategoryModel,$apiListsModel,$apiLogModel;
+    protected $apiLogModel;
 
     /**
      * TODO: 构造函数
@@ -44,8 +52,9 @@ class ApiController extends BaseController
     public function index()
     {
         $this->validatePost(['type'=>'required|integer']);
-        $result = $this->apiListsModel->getResult('type',$this->post['type']);
-        return $result ? $this->ajax_return(Code::ERROR,'interface not found') : $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        $result = $this->apiListsModel->getResult('type', $this->post['type']);
+        return $result ? $this->ajaxReturn(Code::ERROR, 'interface not found')
+            : $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
     /**
      * TODO:：保存API数据
@@ -63,20 +72,20 @@ class ApiController extends BaseController
     {
         $this->validatePost($this->rules('lists'));
         $result = $this->apiListsModel->addResult($this->post);
-        if (!empty($result)){
+        if (!empty($result)) {
             $apiLog = array(
                 'username' => $this->users->username,
                 'api_id' => $result,
                 'updated_at' => time(),
                 'type' => 1,
-                'json' => json_encode($this->post,JSON_UNESCAPED_UNICODE),
+                'json' => json_encode($this->post, JSON_UNESCAPED_UNICODE),
                 'markdown' => '',
                 'desc' => '编辑'.$this->post['desc']
             );
             $this->apiLogModel->addResult($apiLog);
-            return $this->ajax_return(Code::SUCCESS,'save api lists successfully');
+            return $this->ajaxReturn(Code::SUCCESS, 'save api lists successfully');
         }
-        return $this->ajax_return(Code::ERROR,'save api lists error');
+        return $this->ajaxReturn(Code::ERROR, 'save api lists error');
     }
 
     /**
@@ -95,7 +104,7 @@ class ApiController extends BaseController
     public function update()
     {
         $this->validatePost($this->rules('lists'));
-        $result = $this->apiListsModel->updateResult($this->post,'id',$this->post['id']);
+        $result = $this->apiListsModel->updateResult($this->post, 'id',$this->post['id']);
         if (!empty($result)){
             $apiLog = array(
                 'username' => $this->users->username,
@@ -107,9 +116,9 @@ class ApiController extends BaseController
                 'desc' => '编辑'.$this->post['desc']
             );
             $this->apiLogModel->addResult($apiLog);
-            return $this->ajax_return(Code::SUCCESS,'update api lists successfully');
+            return $this->ajaxReturn(Code::SUCCESS,'update api lists successfully');
         }
-        return $this->ajax_return(Code::ERROR,'update api lists error');
+        return $this->ajaxReturn(Code::ERROR,'update api lists error');
     }
     /*********************************************************************api 分类****************************************************************/
     /**
@@ -119,7 +128,7 @@ class ApiController extends BaseController
     public function category()
     {
         $result = $this->apiCategoryModel->getResultListsLevel2();
-        return $this->ajax_return(Code::SUCCESS,'successfully', ['category_tree'=>get_tree($result,0,'children'),'category'=>$result]);
+        return $this->ajaxReturn(Code::SUCCESS,'successfully', ['category_tree'=>get_tree($result,0,'children'),'category'=>$result]);
     }
     /**
      * TODO:：保存APICategory数据
@@ -133,7 +142,7 @@ class ApiController extends BaseController
     {
         $this->validatePost($this->rules('category'));
         $result = $this->apiCategoryModel->addResult($this->post);
-        return !empty($result) ? $this->ajax_return(Code::SUCCESS,'save api category successfully') : $this->ajax_return(Code::ERROR,'save api category error');
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS,'save api category successfully') : $this->ajaxReturn(Code::ERROR,'save api category error');
     }
     /**
      * TODO: 更新APICategory数据
@@ -148,8 +157,9 @@ class ApiController extends BaseController
     {
         $this->validatePost($this->rules('category'));
         unset($this->post['children']);
-        $result = $this->apiCategoryModel->updateResult($this->post,'id',$this->post['pid']);
-        return !empty($result) ? $this->ajax_return(Code::SUCCESS,'update api category successfully') : $this->ajax_return( Code::ERROR,'update api category error');
+        $result = $this->apiCategoryModel->updateResult($this->post, 'id', $this->post['pid']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'update api category successfully')
+            : $this->ajaxReturn(Code::ERROR, 'update api category error');
     }
 
     /**
@@ -157,16 +167,16 @@ class ApiController extends BaseController
      * @param integer id 分类ID
      * @return JsonResponse
      */
-    public function CategoryDelete()
+    public function categoryDelete()
     {
         $this->validatePost(['id'=>'required|integer']);
-        $result = $this->apiCategoryModel->deleteResult('id',$this->post['id']);
-        if (!empty($result)){
-            $this->apiListsModel->deleteResult('type',$this->post['id']);
-            ApiDocLists::getInstance()->deleteResult('type',$this->post['id']);
-            return $this->ajax_return(Code::SUCCESS,'remove api and api category successfully');
+        $result = $this->apiCategoryModel->deleteResult('id', $this->post['id']);
+        if (!empty($result)) {
+            $this->apiListsModel->deleteResult('type', $this->post['id']);
+            ApiDocLists::getInstance()->deleteResult('type', $this->post['id']);
+            return $this->ajaxReturn(Code::SUCCESS, 'remove api and api category successfully');
         }
-        return $this->ajax_return(Code::ERROR,'remove api and api category errors');
+        return $this->ajaxReturn(Code::ERROR, 'remove api and api category errors');
     }
 
     /**
@@ -177,7 +187,7 @@ class ApiController extends BaseController
     protected function rules($methods)
     {
         $rules = array();
-        switch ($methods){
+        switch ($methods) {
             case 'lists':
                 $rules = [
                     'desc' =>'required',

@@ -19,24 +19,24 @@ class NormalRule extends Command
     /**
      * The name and signature of the console command.
      *
-     * @var string
+     * @var string $signature
      */
     protected $signature = 'longer:normal_rule';
 
     /**
      * The console command description.
      *
-     * @var string
+     * @var string $description
      */
     protected $description = 'normal rule station information push';
     /**
      * @var ReqRule $reqRuleModel
      */
-    protected $reqRuleModel;
+    public $reqRuleModel;
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    public $redisClient;
 
 
     /**
@@ -69,7 +69,7 @@ class NormalRule extends Command
         $result = $this->reqRuleModel->getCommandRule($where);
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as $item) {
-            $userCenter = UserCenter::getInstance()->getResult('uid',$item->user_id);
+            $userCenter = UserCenter::getInstance()->getResult('uid', $item->user_id);
             if ($userCenter->notice_status == '2') {
                 $this->error("　".$item->username .'　已禁用站内信通知');
                 return false;
@@ -79,29 +79,33 @@ class NormalRule extends Command
                 //告诉用户权限已经过期
                 $message = array(
                     'username' => $item->username,
-                    'info' => '您有权限('.config('app.url').str_replace('admin/','api/v1/',$item->href).')即将过期,还有('.diff_times($item->expires,time()).')，如有需要请前往申请权限列表续期~！',
-                    'uid'  => Users::getInstance()->getResult('id',$item->user_id,'=',['uuid'])->uuid,
-                    'state' => Code::WebSocketState[1],
+                    'info' => '您有权限('.config('app.url').str_replace('admin/', 'api/v1/', $item->href).')即将过期,
+                    还有('.diffTimes($item->expires, time()).')，如有需要请前往申请权限列表续期~！',
+                    'uid'  => Users::getInstance()->getResult('id', $item->user_id, '=', ['uuid'])->uuid,
+                    'state' => Code::WEBSOCKET_STATE[1],
                     'status' => 1,
                     'created_at' => time()
                 );
                 try {
-                    if ($this->redisClient->sIsMember(config('app.redis_user_key'),$message['uid'])) {
-                        if (web_push($message['info'], $message['uid'])) {
-                            $message['state'] = Code::WebSocketState[0];
+                    if ($this->redisClient->sIsMember(config('app.redis_user_key'), $message['uid'])) {
+                        if (webPush($message['info'], $message['uid'])) {
+                            $message['state'] = Code::WEBSOCKET_STATE[0];
                         }
                     } else {
-                        $message['state'] = Code::WebSocketState[2];
+                        $message['state'] = Code::WEBSOCKET_STATE[2];
                     }
                     Push::getInstance()->addResult($message);
                 } catch (\Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->info('已通过站内信通知用户【'.$item->username.'】'.config('app.url').str_replace('admin/','api/v1/',$item->href).',还有('.diff_times($item->expires,time()).')过期，后期将会通过用户填写的邮箱发送邮件告知');
+                $this->info('已通过站内信通知用户【'.$item->username.'】'.config('app.url').
+                    str_replace('admin/', 'api/v1/', $item->href). ',还有('.diffTimes($item->expires, time()).')过期，
+                    后期将会通过用户填写的邮箱发送邮件告知');
                 sleep(0.5);
                 $bar->advance();
             } else {
-                $this->info("权限接口 ".config('app.url').str_replace('admin/','api/v1/',$item->href).',还有('.diff_times($item->expires,time()).')过期');
+                $this->info("权限接口 ".config('app.url').str_replace('admin/', 'api/v1/', $item->href).'
+                ,还有('.diffTimes($item->expires, time()).')过期');
             }
         }
         $bar->finish();

@@ -18,21 +18,27 @@ class SyncOauthToUsers extends Command
     /**
      * The name and signature of the console command.
      *
-     * @var string
+     * @var string $signature
      */
     protected $signature = 'longer:sync_oauth {remember_token=default}';
 
     /**
      * The console command description.
      *
-     * @var string
+     * @var string $description
      */
     protected $description = 'sync oauth info to users';
-
+    /**
+     * @var Users $usersModel
+     */
     protected $usersModel;
-
+    /**
+     * @var \App\Models\OAuth  $oAuthModel
+     */
     protected $oAuthModel;
-
+    /**
+     * @var UserCenter $userCenterModel
+     */
     protected $userCenterModel;
 
     /**
@@ -54,9 +60,9 @@ class SyncOauthToUsers extends Command
      */
     public function handle()
     {
-        $this->SyncOauthToUsers();
+        $this->syncOauthToUsers();
         sleep(1);
-        $this->SyncUserToUserCenter();
+        $this->syncUserToUserCenter();
         //更新用户画像
         CommonController::getInstance()->updateUserAvatarUrl();
         $this->info('同步用户画像成功');
@@ -65,7 +71,7 @@ class SyncOauthToUsers extends Command
     /**
      * TODO:将Oauth同步给用户
      */
-    protected function SyncOauthToUsers()
+    protected function syncOauthToUsers()
     {
         $where = [];
         if ($this->argument('remember_token') !== 'default') {
@@ -81,7 +87,7 @@ class SyncOauthToUsers extends Command
                 $bar->advance();
                 $this->info('修改用户[' . $oauth->username . ']信息成功');
             } else {
-                $salt = get_round_num(8);
+                $salt = getRoundNum(8);
                 $arr = [
                     'username' => $oauth->username,
                     'avatar_url' => $oauth->avatar_url,
@@ -90,7 +96,7 @@ class SyncOauthToUsers extends Command
                     'salt' => $salt,
                     'password' => md5(md5('123456789') . $salt),
                     'role_id' => $oauth->role_id,
-                    'ip_address' => get_server_ip(),
+                    'ip_address' => getServerIp(),
                     'created_at' => time(),
                     'updated_at' => time(),
                     'status' => $oauth->status,
@@ -98,7 +104,7 @@ class SyncOauthToUsers extends Command
                     'uuid' => ''
                 ];
                 $id = $this->usersModel->addResult($arr);
-                $this->usersModel->updateResult(['uuid'=>config('app.client_id').$id],'id',$id);
+                $this->usersModel->updateResult(['uuid'=>config('app.client_id').$id], 'id', $id);
                 $this->oAuthModel->updateResult(['uid' => $id], 'id', $oauth->id);
                 $bar->advance();
                 $this->info('添加用户[' . $oauth->username . ']信息成功');
@@ -110,19 +116,23 @@ class SyncOauthToUsers extends Command
     /**
      * TODO:将用户同步到用户中心
      */
-    protected function SyncUserToUserCenter()
+    protected function syncUserToUserCenter()
     {
         $where = [];
         if ($this->argument('remember_token') !== 'default') {
             $where[] =  ['remember_token', '=',$this->argument('remember_token')];
         }
-        $users = $this->usersModel->getAll($where,["*"]);
+        $users = $this->usersModel->getAll($where, ["*"]);
         $bar = $this->getOutput()->createProgressBar(count($users));
         foreach ($users as $user) {
             //同步用户基础信息数据
-            $userCenter = $this->userCenterModel->getResult('uid',$user->id);
+            $userCenter = $this->userCenterModel->getResult('uid', $user->id);
             if (!empty($userCenter)) {
-                $this->userCenterModel->updateResult(['token'=>$user->remember_token,'u_name'=>$user->username,'type'=>'sync'],'uid',$user->id);
+                $this->userCenterModel->updateResult(
+                    ['token'=>$user->remember_token,'u_name'=>$user->username,'type'=>'sync'],
+                    'uid',
+                    $user->id
+                );
                 $bar->advance();
                 $this->info('修改用户['.$user->username.']基础信息成功');
             } else {

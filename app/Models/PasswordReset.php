@@ -30,9 +30,9 @@ class PasswordReset extends Model
     /**
      * @return PasswordReset
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -46,9 +46,9 @@ class PasswordReset extends Model
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult(string $field, string $value,string $op='=', array $column = ['*'])
+    public function getResult(string $field, string $value, string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
 
     /**
@@ -69,9 +69,9 @@ class PasswordReset extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value,$op='=')
+    public function updateResult(array $data, string $field, int $value, $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
+        return DB::table($this->table)->where($field, $op, $value)->update($data);
     }
 
     /**
@@ -81,8 +81,8 @@ class PasswordReset extends Model
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,int $value,string $op='=')
+    public function deleteResult(string $field, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->delete();
+        return DB::table($this->table)->where($field, $op, $value)->delete();
     }
 }

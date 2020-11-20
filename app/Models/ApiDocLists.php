@@ -18,16 +18,16 @@ class ApiDocLists extends Model
      */
     public $table = 'os_api_doc';
     /**
-     * @var $instance
+     * @var static $instance
      */
     protected static $instance;
 
     /**
      * @return ApiDocLists
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -45,9 +45,9 @@ class ApiDocLists extends Model
      * @param array $column
      * @return Model|Builder|object|null
      */
-    public function getResult(string $field, int $value,string $op='=', array $column = ['*'])
+    public function getResult(string $field, int $value, string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
     /**
      * TODO: 添加记录
@@ -67,9 +67,9 @@ class ApiDocLists extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value,string $op='=')
+    public function updateResult(array $data, string $field, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
+        return DB::table($this->table)->where($field, $op, $value)->update($data);
     }
 
     /**
@@ -78,8 +78,8 @@ class ApiDocLists extends Model
      * @param int $value
      * @return int
      */
-    public function deleteResult(string $field,int $value)
+    public function deleteResult(string $field, int $value)
     {
-        return DB::table($this->table)->where($field,$value)->delete();
+        return DB::table($this->table)->where($field, $value)->delete();
     }
 }

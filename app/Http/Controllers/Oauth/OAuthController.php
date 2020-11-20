@@ -24,7 +24,10 @@ class OAuthController extends Controller
     public function __construct()
     {
         $this->curl = new Curl();
-        $this->curl->setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36");
+        $this->curl->setHeader(
+            "User-Agent",
+            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
+        );
     }
 
     /**
@@ -34,7 +37,7 @@ class OAuthController extends Controller
      */
     public function getState($length = 32)
     {
-        $this->state = substr(md5(get_round_num($length).time().uniqid()),0,$length);
+        $this->state = substr(md5(getRoundNum($length).time().uniqid()), 0, $length);
         return $this->state;
     }
     /**
@@ -43,7 +46,7 @@ class OAuthController extends Controller
      * @param $state
      * @return bool
      */
-    public function checkState($storeState,$state)
+    public function checkState($storeState, $state)
     {
         return $storeState === $state;
     }
@@ -55,7 +58,7 @@ class OAuthController extends Controller
      */
     public function json($data)
     {
-        return json_decode(str_replace(['callback','(',')',';'],'',$data),true);
+        return json_decode(str_replace(['callback','(',')',';'], '', $data), true);
     }
 
     /**
@@ -64,7 +67,7 @@ class OAuthController extends Controller
      * @param $message
      * @return array
      */
-    public function error($code,$message)
+    public function error($code, $message)
     {
         return array('code'=>$code,'message'=>$message);
     }
@@ -79,7 +82,7 @@ class OAuthController extends Controller
         $paramsArr = array();
         foreach ($queryParts as $param) {
             $item = explode('=', $param);
-            if (is_array($item) && !empty($item)){
+            if (is_array($item) && !empty($item)) {
                 $paramsArr[$item[0]] = $item[1];
             }
         }

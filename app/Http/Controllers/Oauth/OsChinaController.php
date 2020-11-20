@@ -37,7 +37,7 @@ class OsChinaController extends OAuthController
      * @param string $appid
      * @param string $appsecret
      */
-    public function __construct(string $appid,string $appsecret)
+    public function __construct(string $appid, string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -50,10 +50,10 @@ class OsChinaController extends OAuthController
      * @param string $appsecret
      * @return static
      */
-    static public function getInstance(string $appid,string $appsecret)
+    public static function getInstance(string $appid, string $appsecret)
     {
         if (!self::$instance instanceof self) {
-            self::$instance = new static($appid,$appsecret);
+            self::$instance = new static($appid, $appsecret);
         }
         return self::$instance;
     }
@@ -64,7 +64,7 @@ class OsChinaController extends OAuthController
      * @param string $callback
      * @return string
      */
-    public function getAuthUrl($length = 32,$callback = '')
+    public function getAuthUrl($length = 32, $callback = '')
     {
         $arr = [
             'client_id' => $this->appid,
@@ -92,15 +92,12 @@ class OsChinaController extends OAuthController
             'dataType' => 'json',
             'callback' => 'json'
         ];
-        $result = $this->curl->post($this->apiUrl.'action/openapi/token',$arr);
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        $result = $this->curl->post($this->apiUrl.'action/openapi/token', $arr);
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -120,15 +117,12 @@ class OsChinaController extends OAuthController
             'dataType' => 'json',
             'callback' => 'json'
         ];
-        $result = $this->curl->post($this->apiUrl.'action/openapi/token',$arr);
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        $result = $this->curl->post($this->apiUrl.'action/openapi/token', $arr);
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -142,15 +136,12 @@ class OsChinaController extends OAuthController
             'access_token' => $access_token,
             'dataType' => 'json'
         ];
-        $result = $this->curl->post($this->apiUrl.'action/openapi/user',$arr);
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        $result = $this->curl->post($this->apiUrl.'action/openapi/user', $arr);
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -160,7 +151,7 @@ class OsChinaController extends OAuthController
      * @param string $friend
      * @return array|mixed
      */
-    public function getUserInformation(string $access_token,string $user,string $friend)
+    public function getUserInformation(string $access_token, string $user, string $friend)
     {
         $arr = [
             'access_token' => $access_token,
@@ -168,14 +159,11 @@ class OsChinaController extends OAuthController
             'user' => $user,
             'friend' => $friend
         ];
-        $result = $this->curl->post($this->apiUrl.'action/openapi/user_information',$arr);
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        $result = $this->curl->post($this->apiUrl.'action/openapi/user_information', $arr);
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 }

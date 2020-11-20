@@ -37,7 +37,7 @@ class BaiDuController extends OAuthController
      * @param string $appid
      * @param string $appsecret
      */
-    public function __construct(string $appid,string $appsecret)
+    public function __construct(string $appid, string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -49,10 +49,10 @@ class BaiDuController extends OAuthController
      * @param string $appsecret
      * @return BaiDuController
      */
-    static public function getInstance(string $appid,string $appsecret)
+    public static function getInstance(string $appid, string $appsecret)
     {
         if (!self::$instance instanceof self) {
-            self::$instance = new static($appid,$appsecret);
+            self::$instance = new static($appid, $appsecret);
         }
         return self::$instance;
     }
@@ -63,7 +63,7 @@ class BaiDuController extends OAuthController
      * @param int $length
      * @return string
      */
-    public function getAuthUrl($length = 32,$callback = '')
+    public function getAuthUrl($length = 32, $callback = '')
     {
         /**
          * display desc
@@ -103,14 +103,11 @@ class BaiDuController extends OAuthController
             'redirect_uri' => $this->redirectUri,
         ];
         $result = $this->curl->get($this->apiUrl.'oauth/2.0/token?'.http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])) {
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -125,14 +122,11 @@ class BaiDuController extends OAuthController
             'format' => 'json'
         ];
         $result = $this->curl->get($this->apiUrl.'rest/2.0/passport/users/getLoggedInUser?'.http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])) {
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -148,14 +142,11 @@ class BaiDuController extends OAuthController
             'get_unionid' => '1',
         ];
         $result = $this->curl->get($this->apiUrl.'rest/2.0/passport/users/getInfo?'.http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])) {
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -166,20 +157,17 @@ class BaiDuController extends OAuthController
     public function refreshToken(string  $refreshToken)
     {
         $arr =  array(
-            'grant_type'	=>	'refresh_token',
-            'refresh_token'	=>	$refreshToken,
-            'client_id'		=>	$this->appid,
-            'client_secret'	=>	$this->appsecret,
-            'scope'			=>	'basic',
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refreshToken,
+            'client_id' => $this->appid,
+            'client_secret' => $this->appsecret,
+            'scope' => 'basic'
         );
         $result = $this->curl->get($this->apiUrl.'oauth/2.0/token?'.http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if ($result['error']){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 }

@@ -23,10 +23,6 @@ class Users extends Model
      * @var static $instance
      */
     private static $instance;
-    /**
-     * @var static $code
-     */
-    protected static $code;
 
     private function __clone()
     {
@@ -36,9 +32,9 @@ class Users extends Model
     /**
      * @return Users
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -51,29 +47,32 @@ class Users extends Model
      */
     public function loginSYS(array $data)
     {
-        $result = $this->getResult( 'email',$data['email']);
-        if (empty($result)){
+        $result = $this->getResult('email', $data['email']);
+        if (empty($result)) {
             return Code::ERROR;
         }
-        $password = md5 (md5($data['password']).$result->salt);
-        if ($password!==$result->password){
+        $password = md5(md5($data['password']).$result->salt);
+        if ($password!==$result->password) {
             return Code::ERROR;
         }
-        if ($result->status == 2){
+        if ($result->status == 2) {
             return Code::NOT_ALLOW;
         }
         $request = array('ip_address' =>request()->ip(), 'updated_at' =>time());
-        $request['salt'] = get_round_num(8);
-        $request['password'] = md5 (md5($data['password']).$request['salt']);
-        $request['remember_token'] = md5 (md5($request['password']).$request['salt']);
-        $this->updateResult($request,'id',$result->id); //修改用户标识
+        $request['salt'] = getRoundNum(8);
+        $request['password'] = md5(md5($data['password']).$request['salt']);
+        $request['remember_token'] = md5(md5($request['password']).$request['salt']);
+        $this->updateResult($request, 'id', $result->id); //修改用户标识
         $admin['token'] = $request['remember_token'];
         $admin['username'] = $result->username;
         $admin['role_id'] = md5($result->role_id);
         $admin['uuid'] = $result->uuid;
         $admin['avatar_url'] = $result->avatar_url;
         $where[] = array('u_name',$result->username);
-        UserCenter::getInstance()->updateResult(array('token'=>$admin['token'],'type'=>'login'),$where);     //修改用户中心标识
+        UserCenter::getInstance()->updateResult(
+            array('token'=>$admin['token'], 'type'=>'login'),
+            $where
+        );     //修改用户中心标识
         $admin['logInfo'] = 'account and password login successfully';
         return $admin;
     }
@@ -85,14 +84,14 @@ class Users extends Model
      * @param int $limit
      * @return mixed
      */
-    public function  getResultList($user,int $page=1,int $limit=15)
+    public function getResultList($user, int $page = 1, int $limit = 15)
     {
         $where = [];
-        if (!in_array($user->role_id,[1])){
+        if (!in_array($user->role_id, [1])) {
             $id = empty($user->oauth_type) ? $user->id : $user->uid;
             $where[] = ['os_users.id',$id];
         }
-        $result['data'] = DB::table($this->table)->join('os_role',$this->table.'.role_id','=','os_role.id')
+        $result['data'] = DB::table($this->table)->join('os_role', $this->table.'.role_id', '=', 'os_role.id')
             ->limit($limit)->offset($limit*($page-1))
             ->orderByDesc('updated_at')
             ->where($where)
@@ -106,7 +105,7 @@ class Users extends Model
      * @param string[] $column
      * @return Collection
      */
-    public function getAll($where=[],$column=['uuid','username'])
+    public function getAll($where=[], $column = ['uuid','username'])
     {
         return DB::table($this->table)->where($where)->get($column);
     }
@@ -120,9 +119,9 @@ class Users extends Model
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value='',string $op='=', array $column = ['*'])
+    public function getResult($field, $value = '', string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
     /**
      * TODO:  添加记录
@@ -131,7 +130,7 @@ class Users extends Model
      */
     public function addResult(array $data)
     {
-        $data['ip_address'] = get_server_ip();
+        $data['ip_address'] = getServerIp();
         return DB::table($this->table)->insertGetId($data);
     }
 
@@ -143,9 +142,9 @@ class Users extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data, $field,$value=null,string $op='=')
+    public function updateResult(array $data, $field, $value = null, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$value,$op)->update($data);
+        return DB::table($this->table)->where($field, $value, $op)->update($data);
     }
 
     /**
@@ -155,8 +154,8 @@ class Users extends Model
      * @param string $op
      * @return int
      */
-    public function deleteResult($field,int $value,string $op='=')
+    public function deleteResult($field, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$value,$op)->delete();
+        return DB::table($this->table)->where($field, $value, $op)->delete();
     }
 }

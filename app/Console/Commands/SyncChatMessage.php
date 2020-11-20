@@ -60,34 +60,34 @@ class SyncChatMessage extends Command
      */
     protected function getMessageLists()
     {
-       $keys = $this->getAllRedisKey();
-       if (empty($keys)) {
-           $this->info('暂无消息需要同步');
-           return ;
-       }
-       foreach ($keys as $key) {
-           $lens = $this->redisClient->lLen($key);
-           for ($i = 1 ; $i<=$lens;$i++) {
-               $chat = json_decode($this->redisClient->rPop($key),true);
-               $chatArray = array(
+        $keys = $this->getAllRedisKey();
+        if (empty($keys)) {
+            $this->info('暂无消息需要同步');
+            return;
+        }
+        foreach ($keys as $key) {
+            $lens = $this->redisClient->lLen($key);
+            for ($i = 1; $i<=$lens; $i++) {
+                $chat = json_decode($this->redisClient->rPop($key), true);
+                $chatArray = array(
                    'from_client_id' => $chat['from_client_id'],
                    'to_client_id' => $chat['to_client_id'],
                    'room_id' => empty($chat['room_id']) ? 0 : $chat['room_id'],
-                   'content' => json_encode($chat,JSON_UNESCAPED_UNICODE)
-               );
-               if ($this->chatModel->saveResult($chatArray)) {
-                   $this->info('redis记录入库成功');
-               } else {
-                   $this->info('redis记录入库失败');
-               }
-           }
-       }
+                   'content' => json_encode($chat, JSON_UNESCAPED_UNICODE)
+                );
+                if ($this->chatModel->saveResult($chatArray)) {
+                    $this->info('redis记录入库成功');
+                } else {
+                    $this->info('redis记录入库失败');
+                }
+            }
+        }
     }
     /**
      * todo:获取redis所有key
      * @return array
      */
-    protected function getAllRedisKey ()
+    protected function getAllRedisKey()
     {
         return $this->redisClient->keys('receive_*');
     }

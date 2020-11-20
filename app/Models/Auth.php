@@ -19,7 +19,7 @@ class Auth extends Model
      */
     protected $table='os_rule';
     /**
-     * @var $instance
+     * @var static $instance
      */
     private static $instance;
 
@@ -31,9 +31,9 @@ class Auth extends Model
     /**
      * @return Auth
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -47,14 +47,14 @@ class Auth extends Model
      * @param array $column
      * @return Model|Builder|Collection|object|null
      */
-    public function getResult(string $field, $value, string $op='=',array $column = ['*'])
+    public function getResult(string $field, $value, string $op = '=', array $column = ['*'])
     {
-        switch ($op){
+        switch ($op) {
             case 'in':
-                $result = DB::table($this->table)->whereIn($field,$value)->get($column);
+                $result = DB::table($this->table)->whereIn($field, $value)->get($column);
                 break;
             default:
-                $result = DB::table($this->table)->where($field,$op,$value)->first($column);
+                $result = DB::table($this->table)->where($field, $op, $value)->first($column);
                 break;
         }
         return $result;
@@ -66,16 +66,16 @@ class Auth extends Model
      * @param int $level
      * @return Collection
      */
-    public function getResultListsByStatusAndLevel(string $status='1',int $level=0)
+    public function getResultListsByStatusAndLevel(string $status = '1', int $level = 0)
     {
         $where = [];
-        if (!empty($level)){
+        if (!empty($level)) {
             $where[] = ['level','<',$level];
         }
         if (!empty($status)) {
             $where[] = ['status','=',$status];
         }
-        return DB::table($this->table)->orderBy('path','asc')->where($where)->get();
+        return DB::table($this->table)->orderBy('path', 'asc')->where($where)->get();
     }
 
     /**
@@ -87,10 +87,10 @@ class Auth extends Model
     {
         $where['status'] = 1;
         $where[] = ['level','<',2];
-        if (empty($ids)){
+        if (empty($ids)) {
             $result =  DB::table($this->table)->where($where)->get();
-        }else{
-            $result = DB::table($this->table)->where($where)->whereIn('id',$ids)->get();
+        } else {
+            $result = DB::table($this->table)->where($where)->whereIn('id', $ids)->get();
         }
         return $result;
     }
@@ -100,7 +100,7 @@ class Auth extends Model
      * @param string $id
      * @return Collection
      */
-    public function getAuthLists(array $column = ['*'],string $id='')
+    public function getAuthLists(array $column = ['*'], string $id = '')
     {
         $where=[];
         if (!empty($id) || (int)$id == 0) {
@@ -117,14 +117,14 @@ class Auth extends Model
     public function addResult(array $data)
     {
         $id = DB::table($this->table)->insertGetId($data);
-        $parent_result = $this->getResult('id',$data['pid']);
+        $parent_result = $this->getResult('id', $data['pid']);
         $data['path'] = $id;
         $data['level'] = 0;
-        if (!empty($parent_result)){
+        if (!empty($parent_result)) {
             $data['path'] = $parent_result->path.'-'.$id;
-            $data['level'] = substr_count($data['path'],'-');
+            $data['level'] = substr_count($data['path'], '-');
         }
-        return DB::table($this->table)->where('id',$id)->update($data);
+        return DB::table($this->table)->where('id', $id)->update($data);
     }
 
     /**
@@ -135,19 +135,19 @@ class Auth extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value,string $op='=')
+    public function updateResult(array $data, string $field, int $value, string $op = '=')
     {
-        $parent_result = $this->getResult($field,$value,$op);
-        if (!empty($parent_result) && !empty($data['path'])){
-            if (!empty($parent_result->path)){
+        $parent_result = $this->getResult($field, $value, $op);
+        if (!empty($parent_result) && !empty($data['path'])) {
+            if (!empty($parent_result->path)) {
                 $data['path'] = $parent_result->path.'-'.$data['id'];
             } else {
                 $data['path'] = $data['id'];
             }
-            $data['level'] = substr_count($data['path'],'-');
+            $data['level'] = substr_count($data['path'], '-');
         }
         unset($data['hasChildren']);
-        return DB::table($this->table)->where($field,$op,$data['id'])->update($data);
+        return DB::table($this->table)->where($field, $op, $data['id'])->update($data);
     }
 
     /**
@@ -157,9 +157,9 @@ class Auth extends Model
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,int $value,string $op='=')
+    public function deleteResult(string $field, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->delete();
+        return DB::table($this->table)->where($field, $op, $value)->delete();
     }
 
 }

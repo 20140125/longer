@@ -1,4 +1,5 @@
 <?php
+namespace database;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,8 +16,8 @@ class CreateOsRuleTable extends Migration
     {
         Schema::create('os_rule', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name',64)->default('0')->comment('权限名称');
-            $table->string('href',64)->default('0')->comment('权限地址');
+            $table->string('name', 64)->default('0')->comment('权限名称');
+            $table->string('href', 64)->default('0')->comment('权限地址');
             $table->integer('pid')->default(0)->comment('权限上级');
             $table->string('path')->default('0')->comment('权限路径');
             $table->tinyInteger('level')->default(0)->comment('权限等级');

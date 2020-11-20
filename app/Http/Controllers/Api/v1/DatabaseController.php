@@ -42,7 +42,7 @@ class DatabaseController extends BaseController
     public function index()
     {
         $result = $this->databaseModel->lists();
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
     /**
@@ -54,15 +54,17 @@ class DatabaseController extends BaseController
     {
         $this->validatePost(['name'=>'required|string']);
         function_exists('set_time_limit') && set_time_limit(0);
-        $savePath = $this->backupPath.DIRECTORY_SEPARATOR.date('Y_m_d').'_'.get_round_num(6,'number').'_'.$this->post['name'].'_table.sql';
-        $content = $this->databaseModel->createTable($this->post['name']).$this->databaseModel->sourceTable($this->post['name']);
+        $savePath = $this->backupPath.DIRECTORY_SEPARATOR.date('Y_m_d').'_'
+            .getRoundNum(6, 'number').'_'.$this->post['name'].'_table.sql';
+        $content = $this->databaseModel
+                ->createTable($this->post['name']).$this->databaseModel->sourceTable($this->post['name']);
         $s_time = time();
-        if (write_file($savePath,$content)){
+        if (writeFile($savePath, $content)) {
             $e_time = time();
-            return $this->ajax_return(Code::SUCCESS,$this->string.' backup successfully',['times'=>$e_time-$s_time]);
+            return $this->ajaxReturn(Code::SUCCESS, $this->string.' backup successfully', ['times'=>$e_time-$s_time]);
         }
         $e_time = time();
-        return $this->ajax_return(Code::ERROR,$this->string.' backup failed',['times'=>$e_time-$s_time]);
+        return $this->ajaxReturn(Code::ERROR, $this->string.' backup failed', ['times'=>$e_time-$s_time]);
     }
 
     /**
@@ -74,8 +76,8 @@ class DatabaseController extends BaseController
     {
         $this->validatePost(['name'=>'required|string']);
         $result = $this->databaseModel->repairTable($this->post['name']);
-        Log::error(json_encode($result));
-        return $result ? $this->ajax_return(Code::SUCCESS,$this->string.' repair successfully') : $this->ajax_return(Code::ERROR,$this->string.' repair failed');
+        return $result ? $this->ajaxReturn(Code::SUCCESS, $this->string.' repair successfully')
+            : $this->ajaxReturn(Code::ERROR, $this->string.' repair failed');
     }
 
     /**
@@ -87,7 +89,8 @@ class DatabaseController extends BaseController
     {
         $this->validatePost(['name'=>'required|string']);
         $result = $this->databaseModel->optimizeTable($this->post['name']);
-        return $result ? $this->ajax_return(Code::SUCCESS,$this->string.' optimize successfully') : $this->ajax_return(Code::ERROR,$this->string.' optimize failed');
+        return $result ? $this->ajaxReturn(Code::SUCCESS, $this->string.' optimize successfully')
+            : $this->ajaxReturn(Code::ERROR, $this->string.' optimize failed');
     }
     /**
      * TODO：优化数据表
@@ -98,7 +101,8 @@ class DatabaseController extends BaseController
     public function comment()
     {
         $this->validatePost(['name'=>'required|string','comment'=>'required|string']);
-        $result = $this->databaseModel->commentTable($this->post['name'],$this->post['comment']);
-        return is_array($result) ? $this->ajax_return(Code::SUCCESS,$this->string.'  comment update successfully') : $this->ajax_return(Code::ERROR,$this->string.' comment update failed');
+        $result = $this->databaseModel->commentTable($this->post['name'], $this->post['comment']);
+        return is_array($result) ? $this->ajaxReturn(Code::SUCCESS, $this->string.'  comment update successfully')
+            : $this->ajaxReturn(Code::ERROR, $this->string.' comment update failed');
     }
 }

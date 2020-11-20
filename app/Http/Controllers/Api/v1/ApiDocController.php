@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api\v1;
+
 use App\Http\Controllers\Utils\Code;
 use App\Models\ApiCategory;
 use App\Models\ApiDocLists;
@@ -17,10 +18,13 @@ use Illuminate\Http\Request;
 class ApiDocController extends BaseController
 {
     /**
-     * @var ApiLists $apiListsModel api列表模型
+     * @var ApiDocLists $apiDocListsModel api列表模型
+     */
+    protected $apiDocListsModel;
+    /**
      * @var ApiLog $apiLogModel api日志模型
      */
-    protected $apiDocListsModel,$apiLogModel;
+    protected $apiLogModel;
 
     /**
      * TODO: 构造函数
@@ -42,8 +46,9 @@ class ApiDocController extends BaseController
     public function index()
     {
         $this->validatePost(['type'=>'required|integer']);
-        $result = $this->apiDocListsModel->getResult('type',$this->post['type']);
-        return empty($result) ? $this->ajax_return(Code::ERROR,'interface not found') : $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        $result = $this->apiDocListsModel->getResult('type', $this->post['type']);
+        return empty($result) ? $this->ajaxReturn(Code::ERROR, 'interface not found')
+            : $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
     /**
      * TODO:：保存API数据
@@ -56,7 +61,7 @@ class ApiDocController extends BaseController
     {
         $this->validatePost(['markdown' =>'required|string', 'html' =>'required|string', 'type' =>'required|integer',]);
         $result = $this->apiDocListsModel->addResult($this->post);
-        if (!empty($result)){
+        if (!empty($result)) {
             $apiLog = array(
                 'username' => $this->users->username,
                 'api_id' => $result,
@@ -64,12 +69,12 @@ class ApiDocController extends BaseController
                 'type' => 2,
                 'markdown' => $this->post['markdown'],
                 'json' => '',
-                'desc' => '编辑'.ApiCategory::getInstance()->getResult('id',$this->post['type'])->name
+                'desc' => '编辑'.ApiCategory::getInstance()->getResult('id', $this->post['type'])->name
             );
             $this->apiLogModel->addResult($apiLog);
-            return $this->ajax_return(Code::SUCCESS,'save api doc successfully');
+            return $this->ajaxReturn(Code::SUCCESS, 'save api doc successfully');
         }
-        return $this->ajax_return(Code::ERROR,'save api doc error');
+        return $this->ajaxReturn(Code::ERROR, 'save api doc error');
     }
 
     /**
@@ -82,9 +87,12 @@ class ApiDocController extends BaseController
      */
     public function update()
     {
-        $this->validatePost(['markdown' =>'required|string', 'html' =>'required|string', 'type' =>'required|integer','id'=>'required|integer']);
-        $result = $this->apiDocListsModel->updateResult($this->post,'id',$this->post['id']);
-        if (!empty($result)){
+        $this->validatePost(
+            ['markdown' =>'required|string', 'html' =>'required|string',
+             'type' =>'required|integer','id'=>'required|integer']
+        );
+        $result = $this->apiDocListsModel->updateResult($this->post, 'id', $this->post['id']);
+        if (!empty($result)) {
             $apiLog = array(
                 'username' => $this->users->username,
                 'api_id' => $this->post['id'],
@@ -92,11 +100,11 @@ class ApiDocController extends BaseController
                 'type' => 2,
                 'markdown' => $this->post['markdown'],
                 'json' => '',
-                'desc' => '编辑'.ApiCategory::getInstance()->getResult('id',$this->post['type'])->name
+                'desc' => '编辑'.ApiCategory::getInstance()->getResult('id', $this->post['type'])->name
             );
             $this->apiLogModel->addResult($apiLog);
-            return $this->ajax_return(Code::SUCCESS,'update api doc successfully');
+            return $this->ajaxReturn(Code::SUCCESS, 'update api doc successfully');
         }
-        return $this->ajax_return(Code::ERROR,'update api doc error');
+        return $this->ajaxReturn(Code::ERROR, 'update api doc error');
     }
 }

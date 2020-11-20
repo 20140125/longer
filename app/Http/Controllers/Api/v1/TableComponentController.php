@@ -21,8 +21,10 @@ class TableComponentController extends BaseController
     {
         $this->validatePost(['table'=>'required|string']);
         $tables = $this->tablesName();
-        $data = DB::select(sprintf("SELECT * FROM %s ORDER BY id DESC LIMIT 10",$this->post['table']));
-        return $this->ajax_return(Code::SUCCESS,'successfully',
+        $data = DB::select(sprintf("SELECT * FROM %s ORDER BY id DESC LIMIT 10", $this->post['table']));
+        return $this->ajaxReturn(
+            Code::SUCCESS,
+            'successfully',
             [
                 'data'=>$data,
                 'columns'=>$this->tableMapping(),
@@ -69,7 +71,7 @@ class TableComponentController extends BaseController
         $arr = array();
         $tables = DB::select(sprintf("SHOW TABLES"));
         foreach ($tables as $table) {
-            array_push($arr,['label'=>$table->Tables_in_longer,'value'=>$table->Tables_in_longer]);
+            array_push($arr, ['label'=>$table->Tables_in_longer, 'value'=>$table->Tables_in_longer]);
         }
         return $arr;
     }
@@ -86,15 +88,21 @@ class TableComponentController extends BaseController
                 case 'zh':
                     //字段存在备注的时候
                     if (!empty($columns->Comment)) {
-                        array_push($mapping,['label'=>$columns->Comment,'prop'=>$columns->Field]);
+                        array_push($mapping, ['label'=>$columns->Comment, 'prop'=>$columns->Field]);
                     }
                     //字段不存在备注的时候
                     if (empty($columns->Comment)) {
-                        array_push($mapping,['label'=>ucfirst(str_replace('_',' ',$columns->Field)),'prop'=>$columns->Field]);
+                        array_push(
+                            $mapping,
+                            ['label'=>ucfirst(str_replace('_', ' ', $columns->Field)), 'prop'=>$columns->Field]
+                        );
                     }
                     break;
                 default:
-                    array_push($mapping,['label'=>ucfirst(str_replace('_',' ',$columns->Field)),'prop'=>$columns->Field]);
+                    array_push(
+                        $mapping,
+                        ['label'=>ucfirst(str_replace('_', ' ', $columns->Field)), 'prop'=>$columns->Field]
+                    );
                     break;
             }
         }
@@ -105,6 +113,6 @@ class TableComponentController extends BaseController
      */
     public function action()
     {
-        return $this->ajax_return(Code::SUCCESS,'successfully');
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully');
     }
 }

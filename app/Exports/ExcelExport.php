@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
  * @author <fl140125@gmail.com>
  * @package App\Exports
  */
-class ExcelExport implements FromCollection,WithHeadings,ShouldAutoSize
+class ExcelExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
      * @var array $request
@@ -58,11 +58,11 @@ class ExcelExport implements FromCollection,WithHeadings,ShouldAutoSize
         foreach ($columnsObj as $columns) {
             //字段存在备注的时候
             if (!empty($columns->Comment)) {
-                array_push($mapping,$columns->Comment);
+                array_push($mapping, $columns->Comment);
             }
             //字段不存在备注的时候
             if (empty($columns->Comment)) {
-                array_push($mapping,$columns->Field);
+                array_push($mapping, $columns->Field);
             }
         }
         return $mapping;

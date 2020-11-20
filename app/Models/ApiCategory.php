@@ -19,16 +19,16 @@ class ApiCategory extends Model
      */
     public $table = 'os_api_category';
     /**
-     * @var $instance
+     * @var static $instance
      */
     protected static $instance;
 
     /**
      * @return ApiCategory
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -46,9 +46,9 @@ class ApiCategory extends Model
      * @param array $column
      * @return Model|Builder|object|null
      */
-    public function getResult(string $field, string $value,string $op='=', array $column = ['*'])
+    public function getResult(string $field, string $value, string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)-> first($column);
+        return DB::table($this->table)->where($field, $op, $value)-> first($column);
     }
 
     /**
@@ -68,14 +68,14 @@ class ApiCategory extends Model
     public function addResult(array $data)
     {
         $id = DB::table($this->table)->insertGetId($data);
-        $parent_result = $this->getResult('id',$data['pid']);
+        $parent_result = $this->getResult('id', $data['pid']);
         $data['path'] = $id;
         $data['level'] = 0;
-        if (!empty($parent_result)){
+        if (!empty($parent_result)) {
             $data['path'] = $parent_result->path.'-'.$id;
-            $data['level'] = substr_count($data['path'],'-');
+            $data['level'] = substr_count($data['path'], '-');
         }
-        return DB::table($this->table)->where('id',$id)->update($data);
+        return DB::table($this->table)->where('id', $id)->update($data);
     }
 
     /**
@@ -86,18 +86,18 @@ class ApiCategory extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value,string $op='=')
+    public function updateResult(array $data, string $field, int $value, string $op = '=')
     {
-        $parent_result = $this->getResult($field,$value,$op);
+        $parent_result = $this->getResult($field, $value, $op);
         if (!empty($parent_result) && !empty($data['path'])) {
-            if (!empty($parent_result->path)){
+            if (!empty($parent_result->path)) {
                 $data['path'] = $parent_result->path.'-'.$data['id'];
             } else {
                 $data['path'] = $data['id'];
             }
-            $data['level'] = substr_count($data['path'],'-');
+            $data['level'] = substr_count($data['path'], '-');
         }
-        return DB::table($this->table)->where($field,$op,$data['id'])->update($data);
+        return DB::table($this->table)->where($field, $op, $data['id'])->update($data);
     }
 
     /**
@@ -106,8 +106,8 @@ class ApiCategory extends Model
      * @param int $value
      * @return int
      */
-    public function deleteResult(string $field,int $value)
+    public function deleteResult(string $field, int $value)
     {
-        return DB::table($this->table)->where($field,$value)->delete();
+        return DB::table($this->table)->where($field, $value)->delete();
     }
 }

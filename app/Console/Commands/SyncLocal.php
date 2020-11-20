@@ -11,14 +11,14 @@ class SyncLocal extends Command
     /**
      * The name and signature of the console command.
      *
-     * @var string
+     * @var string $signature
      */
     protected $signature = 'longer:sync_local';
 
     /**
      * The console command description.
      *
-     * @var string
+     * @var string $description
      */
     protected $description = 'sync local from amap to ip address';
     /**
@@ -47,15 +47,15 @@ class SyncLocal extends Command
      */
     protected function getLogLists()
     {
-        $result = $this->logModel->getLists(0,0,date('Ymd'));
+        $result = $this->logModel->getLists(0, 0, date('Ymd'));
         $bar = $this->output->createProgressBar(count($result));
         foreach ($result as $item) {
             if (empty($item->local)) {
-                $localObj =  object_to_array($this->amapUtils->getAddress($item->ip_address));
+                $localObj =  objectToArray($this->amapUtils->getAddress($item->ip_address));
                 $province = is_string($localObj['province']) ? $localObj['province'] : '亚洲';
                 $city = is_string($localObj['city']) ? $localObj['city'] : '中国';
-                $this->logModel->updateResult(['local'=>$province.",".$city],['id'=>$item->id]);
-                $this->info(json_encode($localObj,JSON_UNESCAPED_UNICODE));
+                $this->logModel->updateResult(['local'=>$province.", ".$city], ['id'=>$item->id]);
+                $this->info(json_encode($localObj, JSON_UNESCAPED_UNICODE));
             }
             sleep(0.5);
             $bar->advance();

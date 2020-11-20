@@ -25,19 +25,22 @@ class ExcelController extends BaseController
         }
         $result = Excel::store(new ExcelExport($this->post), '/public/'.date('Ymd').'/'.$this->post['table'].'.xls');
         if ($result) {
-            return $this->ajax_return(Code::SUCCESS,'excel '.$this->post['table'].'.xls export successfully',
+            return $this->ajaxReturn(
+                Code::SUCCESS,
+                'excel '.$this->post['table'].'.xls export successfully',
                 [
                     'href'=> storage_path('app/public/').date('Ymd').'/'.$this->post['table'].'.xls',
                     'name' => $this->post['table'].'.xls',
-                ]);
+                ]
+            );
         }
-        return $this->ajax_return(Code::ERROR,'excel '.$this->post['table'].'.xls export failed');
+        return $this->ajaxReturn(Code::ERROR, 'excel '.$this->post['table'].'.xls export failed');
     }
     /**
      * TODO：数据导入(直接入库)
      */
     public function import()
     {
-        return $this->ajax_return(Code::SUCCESS,'successfully');
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully');
     }
 }

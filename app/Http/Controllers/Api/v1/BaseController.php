@@ -11,14 +11,13 @@ use App\Models\Role;
 use App\Models\Auth;
 use App\Models\Users;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+
 /**
  * TODO:公共类
  * Class BaseController
@@ -44,19 +43,15 @@ class BaseController extends Controller
      */
     protected $oauthModel;
     /**
-     * @var array $post 请求数据
+     * @var array|string|null $post 请求数据
      */
     protected $post;
     /**
-     * @var $users bool|Model|Builder|object|null 用户信息
+     * @var $users
      */
     protected $users;
     /**
-     * @var $config Object 用户基础信息
-     */
-    protected $config;
-    /**
-     * @var Model|Builder|object|null 角色信息
+     * @var Role $role 角色信息
      */
     protected $role;
     /**
@@ -90,11 +85,11 @@ class BaseController extends Controller
     {
         date_default_timezone_set("Asia/Shanghai");
         $url = $request->getRequestUri();
-        if (strstr($url,'?')){
-            $url = substr($url,0,find_str($request->getRequestUri(),'?',2));
+        if (strstr($url, '?')) {
+            $url = substr($url, 0, findStr($request->getRequestUri(), '?', 2));
         }
-        if ($request->isMethod('get') && !in_array(asset($url),[route('download')])){
-            $this->setCode(Code::METHOD_ERROR,'Method Not Allowed');
+        if ($request->isMethod('get') && !in_array(asset($url), [route('download')])) {
+            $this->setCode(Code::METHOD_ERROR, 'Method Not Allowed');
         }
         $this->post = $request->post();
         $this->userModel = Users::getInstance();
@@ -108,52 +103,55 @@ class BaseController extends Controller
         if (!is_dir($this->backupPath)) {
             mkdir($this->backupPath);
         }
-        $this->post['token'] = $this->post['token'] ?? ($request->get('token') ?? $this->redisClient->getValue('oauth_register'));
+        $this->post['token'] = $this->post['token'] ?? ($request->get('token')
+                ?? $this->redisClient->getValue('oauth_register'));
         //判断必填字段是否为空
-        $validate = Validator::make($this->post,['token'=>'required|string|size:32']);
+        $validate = Validator::make($this->post, ['token'=>'required|string|size:32']);
        //获取用户信息
-        $this->users = $this->userModel->getResult('remember_token',$this->post['token']) ?? $this->oauthModel->getResult('remember_token',$this->post['token']);
+        $this->users = $this->userModel->getResult('remember_token', $this->post['token'])
+            ?? $this->oauthModel->getResult('remember_token', $this->post['token']);
         //用户第三方授权注册不验证headers
         if (!$this->redisClient->getValue('oauth_register')) {
             //token不正确或为空
             if ($validate->fails() || empty($request->header('Authorization'))) {
-                $this->setCode(Code::Unauthorized,'Token Is Not Provided');
+                $this->setCode(Code::UNAUTHORIZED, 'Token Is Not Provided');
             }
             //token不正确
-            if (empty($this->users) || $this->post['token']!==mb_substr($request->header('Authorization'),32,32)) {
-                $this->setCode(Code::Unauthorized,'Token Is Expired');
+            if (empty($this->users) || $this->post['token'] !== mb_substr($request->header('Authorization'), 32, 32)) {
+                $this->setCode(Code::UNAUTHORIZED, 'Token Is Expired');
             }
         }
         //用户被禁用
-        if ($this->users->status!==1){
-            $this->setCode(Code::Unauthorized,'Token Is Invalid');
+        if ($this->users->status!==1) {
+            $this->setCode(Code::UNAUTHORIZED, 'Token Is Invalid');
         }
         //用户不属于超级管理员
-        $this->role = $this->roleModel->getResult('id',$this->users->role_id,'=',['auth_url','auth_ids','status']);
+        $this->role = $this->roleModel->getResult('id', $this->users->role_id, '=', ['auth_url', 'auth_ids','status']);
         //角色不存在
         if (empty($this->role)) {
-            $this->setCode(Code::Unauthorized,'Role Is Not Exists');
+            $this->setCode(Code::UNAUTHORIZED, 'Role Is Not Exists');
         }
         //角色被禁用
         if ($this->role->status === 2) {
-            $this->setCode(Code::Unauthorized,'Role Is Disabled');
+            $this->setCode(Code::UNAUTHORIZED, 'Role Is Disabled');
         }
         if ($this->users->role_id !== 1) {
-            if (!empty($this->role) && !in_array(str_replace(['/api/v1'],['/admin'],$url),json_decode($this->role->auth_url,true))) {
-                $this->setCode(Code::NOT_ALLOW,'Permission denied');
+            if (!empty($this->role) &&
+                !in_array(str_replace(['/api/v1'], ['/admin'], $url), json_decode($this->role->auth_url, true))) {
+                $this->setCode(Code::NOT_ALLOW, 'Permission denied');
             }
         }
         $default_auth = Cache::get('default_auth');
         if (!$default_auth) {
-            $default_auth = $this->authModel->getResult('pid',[100],'in',['href','id']);
-            Cache::put('default_auth',$default_auth,Carbon::now()->addHours(2));
+            $default_auth = $this->authModel->getResult('pid', [100], 'in', ['href', 'id']);
+            Cache::put('default_auth', $default_auth, Carbon::now()->addHours(2));
         }
         $common_url = [];
         foreach ($default_auth as $item) {
             $common_url[] = $item->href;
             $this->defaultAuth[] = (int)$item->id;
         }
-        if (!in_array(str_replace(['/api/v1'],['/admin'],$url),$common_url)) {
+        if (!in_array(str_replace(['/api/v1'], ['/admin'], $url), $common_url)) {
             unset($this->post['token']);
         }
     }
@@ -162,10 +160,16 @@ class BaseController extends Controller
      * @param $code
      * @param $message
      */
-    protected function setCode($code,$message)
+    protected function setCode($code, $message)
     {
-        set_code($code);
-        exit(json_encode(array('code'=>$code,'msg'=>$message,'url'=>str_replace('/','',config('app.url')).request()->getRequestUri())));
+        setCode($code);
+        exit(json_encode(
+            array(
+                'code'=>$code,
+                'msg'=>$message,
+                'url'=>str_replace('/', '', config('app.url')).request()->getRequestUri()
+            )
+        ));
     }
 
     /**
@@ -175,14 +179,14 @@ class BaseController extends Controller
      * @param array $data
      * @return JsonResponse
      */
-    protected function ajax_return($code,$msg,$data = array())
+    protected function ajaxReturn($code, $msg, $data = array())
     {
         $item = array(
             'code' =>$code,
             'msg' =>$msg,
             'item' =>$data,
         );
-        return response()->json($item,$code);
+        return response()->json($item, $code);
     }
 
     /**
@@ -190,14 +194,14 @@ class BaseController extends Controller
      * @param array $rules
      * @param array $message
      */
-    protected function validatePost(array $rules,array $message = [])
+    protected function validatePost(array $rules, array $message = [])
     {
-        $validate = Validator::make($this->post,$rules,$message);
+        $validate = Validator::make($this->post, $rules, $message);
         if ($validate->fails()) {
-            if ($validate->errors()->first() == 'Permission denied'){
-                $this->setCode(Code::NOT_ALLOW,$validate->errors()->first());
+            if ($validate->errors()->first() == 'Permission denied') {
+                $this->setCode(Code::NOT_ALLOW, $validate->errors()->first());
             }
-            $this->setCode(Code::ERROR,$validate->errors()->first());
+            $this->setCode(Code::ERROR, $validate->errors()->first());
         }
     }
 
@@ -206,7 +210,7 @@ class BaseController extends Controller
      * @param string $data
      * @return string|null
      */
-    protected function publicEncrypt($data='')
+    protected function publicEncrypt(string $data)
     {
         return $this->rsaUtils->publicEncrypt($data);
     }
@@ -216,7 +220,7 @@ class BaseController extends Controller
      * @param string $data
      * @return null
      */
-    protected function privateDecrypt($data='')
+    protected function privateDecrypt(string $data)
     {
         return $this->rsaUtils->privateDecrypt($data);
     }
@@ -226,27 +230,27 @@ class BaseController extends Controller
      */
     protected function pushMessage()
     {
-        $this->post['state'] = Code::WebSocketState[1];
+        $this->post['state'] = Code::WEBSOCKET_STATE[1];
         $this->post['created_at'] = empty($this->post['created_at'])? time():strtotime($this->post['created_at']);
         if ($this->post['status'] == 1) {
-            try{
+            try {
                 //推送给所有人
                 if ($this->post['uid'] == config('app.client_id')) {
-                    if (web_push($this->post['info'])) {
-                        $this->post['state'] = Code::WebSocketState[0];
+                    if (webPush($this->post['info'])) {
+                        $this->post['state'] = Code::WEBSOCKET_STATE[0];
                     }
                     return ;
                 }
                 //推送给个人
-                if ($this->redisClient->sIsMember(config('app.redis_user_key'),$this->post['uid'])) {
-                    if (web_push($this->post['info'],$this->post['uid'])) {
-                        $this->post['state'] = Code::WebSocketState[0];
+                if ($this->redisClient->sIsMember(config('app.redis_user_key'), $this->post['uid'])) {
+                    if (webPush($this->post['info'], $this->post['uid'])) {
+                        $this->post['state'] = Code::WEBSOCKET_STATE[0];
                         return ;
                     }
                     return;
                 }
-                $this->post['state'] = Code::WebSocketState[2];
-            }catch (Exception $e){
+                $this->post['state'] = Code::WEBSOCKET_STATE[2];
+            } catch (Exception $e) {
                 Log::error("站内信息推送失败：".$e->getMessage());
             }
         }

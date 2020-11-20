@@ -11,6 +11,9 @@ class Login extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /**
+     * @var $request
+     */
     protected $request;
 
     /**

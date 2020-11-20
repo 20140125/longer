@@ -33,9 +33,9 @@ class RedisClient
     /**
      * @return static
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             return self::$instance = new static();
         }
         return self::$instance;
@@ -49,11 +49,11 @@ class RedisClient
         $this->host = config('app.redis_host');
         $this->port = config('app.redis_port');
         $this->password = config('app.redis_password');
-        $this->redisClient->connect($this->host,$this->port);
+        $this->redisClient->connect($this->host, $this->port);
         if (!empty($this->password)) {
-            try{
+            try {
                 $this->redisClient->auth($this->password);
-            }catch (\Exception $exception){
+            } catch (\Exception $exception) {
                 echo $exception->getMessage();
             }
         }
@@ -67,9 +67,9 @@ class RedisClient
      * @param int $timeout
      * @return bool
      */
-    public function setValue($key,$value,$timeout = 0)
+    public function setValue($key, $value, $timeout = 0)
     {
-        return $this->redisClient->set($key,$value,$timeout);
+        return $this->redisClient->set($key, $value, $timeout);
     }
 
     /**
@@ -88,9 +88,9 @@ class RedisClient
      * @param $value
      * @return int
      */
-    public function sAdd($key,$value)
+    public function sAdd($key, $value)
     {
-        return $this->redisClient->sAdd($key,$value);
+        return $this->redisClient->sAdd($key, $value);
     }
 
     /**
@@ -109,9 +109,9 @@ class RedisClient
      * @param $value
      * @return bool
      */
-    public function sIsMember($key,$value)
+    public function sIsMember($key, $value)
     {
-        return $this->redisClient->sIsMember($key,$value);
+        return $this->redisClient->sIsMember($key, $value);
     }
 
     /**
@@ -120,9 +120,9 @@ class RedisClient
      * @param $value
      * @return int
      */
-    public function sRem($key,$value)
+    public function sRem($key, $value)
     {
-        return $this->redisClient->sRem($key,$value);
+        return $this->redisClient->sRem($key, $value);
     }
 
     /**
@@ -141,9 +141,9 @@ class RedisClient
      * @param $value
      * @return bool|int
      */
-    public function lPush($key,$value)
+    public function lPush($key, $value)
     {
-        return $this->redisClient->lPush($key,$value);
+        return $this->redisClient->lPush($key, $value);
     }
     /**
      * TODO:移除并返回列表的第一个元素（ Redis 列表(List)）
@@ -160,9 +160,9 @@ class RedisClient
      * @param $value
      * @return bool|int
      */
-    public function rPush($key,$value)
+    public function rPush($key, $value)
     {
-        return $this->redisClient->rPush($key,$value);
+        return $this->redisClient->rPush($key, $value);
     }
     /**
      * TODO:移除并返回列表的最末元素（ Redis 列表(List)）
@@ -181,9 +181,9 @@ class RedisClient
      * @param $num
      * @return array
      */
-    public function lRange($key,$start,$num)
+    public function lRange($key, $start, $num)
     {
-        return $this->redisClient->lRange($key,$start,$num);
+        return $this->redisClient->lRange($key, $start, $num);
     }
 
     /**
@@ -204,7 +204,7 @@ class RedisClient
      */
     public function hIncrBy($from, $to)
     {
-        return $this->redisClient->hIncrBy($to,$from,1);
+        return $this->redisClient->hIncrBy($to, $from, 1);
     }
 
     /**
@@ -215,7 +215,7 @@ class RedisClient
      */
     public function hDel($from, $to)
     {
-        return $this->redisClient->hDel($to,$from);
+        return $this->redisClient->hDel($to, $from);
     }
     /**
      * TODO:获取所有的Key

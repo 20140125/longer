@@ -32,24 +32,25 @@ class Role extends Model
     /**
      * @return Role
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
     }
+
     /**
      * TODO: 查询一条记录
      * @param string $field
-     * @param string|int $value
+     * @param $value
      * @param string $op
-     * @param array $column
-     * @return Model|Builder|null|object
+     * @param array|string[] $column
+     * @return object
      */
-    public function getResult(string $field, $value,string $op='=', array $column = ['*'])
+    public function getResult(string $field, $value, string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
 
     /**
@@ -58,10 +59,10 @@ class Role extends Model
      * @param array $column
      * @return Collection
      */
-    public function getResult2(int $status = 0,array $column = ['*'])
+    public function getResult2(int $status = 0, array $column = ['*'])
     {
         $where=[];
-        if (!empty($status)){
+        if (!empty($status)) {
             $where[] = array('status','=',$status);
         }
         return DB::table($this->table)->where($where)->get($column);
@@ -76,13 +77,13 @@ class Role extends Model
      * @param array $column
      * @return mixed
      */
-    public function getResultLists($user,int $page,int $limit,int $status = 0,array $column = ['*'])
+    public function getResultLists($user, int $page, int $limit, int $status = 0, array $column = ['*'])
     {
         $where=[];
-        if (!empty($status)){
+        if (!empty($status)) {
             $where[] = array('status','=',$status);
         }
-        if (!in_array($user->role_id,[1])){
+        if (!in_array($user->role_id, [1])) {
             $where[] = ['id',$user->role_id];
         }
         $result['data'] = DB::table($this->table)->offset($limit*($page-1))->limit($limit)->where($where)->get($column);
@@ -108,9 +109,9 @@ class Role extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data, $field, $value,string $op='=')
+    public function updateResult(array $data, $field, $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
+        return DB::table($this->table)->where($field, $op, $value)->update($data);
     }
 
     /**
@@ -120,8 +121,8 @@ class Role extends Model
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,int $value,string $op='=')
+    public function deleteResult(string $field, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->delete();
+        return DB::table($this->table)->where($field, $op, $value)->delete();
     }
 }

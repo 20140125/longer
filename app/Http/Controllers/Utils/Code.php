@@ -18,7 +18,7 @@ class Code
     //没有权限
     const NOT_ALLOW = 403;
     //没有登录
-    const Unauthorized = 401;
+    const UNAUTHORIZED = 401;
     //页面不存在
     const NOT_FOUND = 404;
     //邮箱验证失败码
@@ -26,17 +26,18 @@ class Code
     //服务器错误
     const SERVER_ERROR = 500;
     // 站内信息推送的状态 (成功 失败 离线)
-    const WebSocketState = array( 'successfully', 'failed', 'offline');
+    const WEBSOCKET_STATE = array( 'successfully', 'failed', 'offline');
     /**
      * @var static $instance
      */
     protected static $instance;
+
     /**
-     * @return Code
+     * @return Code|static
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;

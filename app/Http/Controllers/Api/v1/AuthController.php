@@ -18,15 +18,15 @@ class AuthController extends BaseController
      */
     public function index()
     {
-        $result['authLists'] = $this->authModel->getAuthLists(['*'],$this->post['id']);
-        foreach ($result['authLists'] as &$item){
+        $result['authLists'] = $this->authModel->getAuthLists(['*'], $this->post['id']);
+        foreach ($result['authLists'] as &$item) {
             $item->hasChildren = false;
-            if ($this->authModel->getResult('pid',$item->id)) {
+            if ($this->authModel->getResult('pid', $item->id)) {
                 $item->hasChildren = true;
             }
         }
-        $result['selectAuth'] = $this->authModel->getResultListsByStatusAndLevel('0',2);
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        $result['selectAuth'] = $this->authModel->getResultListsByStatusAndLevel('0', 2);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
     /**
@@ -39,7 +39,8 @@ class AuthController extends BaseController
     {
         $this->validatePost(['name'=> 'required|unique:os_rule','href' =>'required|unique:os_rule']);
         $result = $this->authModel->addResult($this->post);
-        return !empty($result) ?  $this->ajax_return(Code::SUCCESS,'save rule successfully') : $this->ajax_return(Code::ERROR,'failed');
+        return !empty($result) ?  $this->ajaxReturn(Code::SUCCESS, 'save rule successfully')
+            : $this->ajaxReturn(Code::ERROR, 'failed');
     }
 
     /**
@@ -51,15 +52,17 @@ class AuthController extends BaseController
      */
     public function update()
     {
-        if (empty($this->post['act'])){
+        if (empty($this->post['act'])) {
             $this->validatePost(['name'=> 'required|string','href' =>'required|string']);
-            $result = $this->authModel->updateResult($this->post,'id',$this->post['pid']);
-            return !empty($result) ? $this->ajax_return(Code::SUCCESS,'update rule successfully') : $this->ajax_return(Code::ERROR,'update rule failed');
+            $result = $this->authModel->updateResult($this->post, 'id', $this->post['pid']);
+            return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'update rule successfully')
+                : $this->ajaxReturn(Code::ERROR, 'update rule failed');
         }
         unset($this->post['act']);
         $this->validatePost(['status'=> 'required|in:1,2','id' =>'required|integer']);
-        $result = $this->authModel->updateResult($this->post,'id',$this->post['id']);
-        return !empty($result) ? $this->ajax_return(Code::SUCCESS,'update rule status successfully') : $this->ajax_return(Code::ERROR,'update rule status failed');
+        $result = $this->authModel->updateResult($this->post, 'id', $this->post['id']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'update rule status successfully')
+            : $this->ajaxReturn(Code::ERROR, 'update rule status failed');
     }
 
     /**
@@ -72,11 +75,12 @@ class AuthController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer','level'=>'gt:0']);
         //查看下面是否还有下级权限
-        $_child = $this->authModel->getResult('pid',$this->post['id']);
-        if (!empty($_child)){
-            return $this->ajax_return(Code::ERROR,'Cannot be delete');
+        $_child = $this->authModel->getResult('pid', $this->post['id']);
+        if (!empty($_child)) {
+            return $this->ajaxReturn(Code::ERROR, 'Cannot be delete');
         }
-        $result = $this->authModel->deleteResult('id',$this->post['id']);
-        return !empty($result) ? $this->ajax_return(Code::SUCCESS,'remove rule successfully') : $this->ajax_return(Code::ERROR,'remove rule failed');
+        $result = $this->authModel->deleteResult('id', $this->post['id']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'remove rule successfully')
+            : $this->ajaxReturn(Code::ERROR, 'remove rule failed');
     }
 }

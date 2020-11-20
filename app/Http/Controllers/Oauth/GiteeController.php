@@ -37,7 +37,7 @@ class GiteeController extends OAuthController
      * @param string $appid
      * @param string $appsecret
      */
-    public function __construct(string $appid,string $appsecret)
+    public function __construct(string $appid, string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -50,10 +50,10 @@ class GiteeController extends OAuthController
      * @param string $appsecret
      * @return GiteeController
      */
-    static public function getInstance(string $appid,string $appsecret)
+    public static function getInstance(string $appid, string $appsecret)
     {
         if (!self::$instance instanceof self) {
-            self::$instance = new static($appid,$appsecret);
+            self::$instance = new static($appid, $appsecret);
         }
         return self::$instance;
     }
@@ -64,13 +64,13 @@ class GiteeController extends OAuthController
      * @param string $callback
      * @return string
      */
-    public function getAuthUrl($length = 32,$callback = '')
+    public function getAuthUrl($length = 32, $callback = '')
     {
         $arr = array(
-            'client_id'			=>	$this->appid,
+            'client_id' => $this->appid,
             'redirect_uri' => empty($callback) ? $this->redirectUri : $callback,
-            'response_type'		=>	'code',
-            'state'				=>	$this->getState($length),
+            'response_type' => 'code',
+            'state' => $this->getState($length)
         );
         return $this->apiUrl.'oauth/authorize?'.http_build_query($arr);
     }
@@ -84,21 +84,18 @@ class GiteeController extends OAuthController
     public function getAccessToken(string $code)
     {
         $arr = [
-            'grant_type'	=>	'authorization_code',
-            'code'			=>	$code,
-            'client_id'		=>	$this->appid,
-            'redirect_uri'	=>	$this->redirectUri,
-            'client_secret'	=>	$this->appsecret
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'client_id' => $this->appid,
+            'redirect_uri' => $this->redirectUri,
+            'client_secret' => $this->appsecret
         ];
         $result = $this->curl->post($this->apiUrl."oauth/token?".http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -110,18 +107,15 @@ class GiteeController extends OAuthController
     public function refreshToken(string $refresh_token)
     {
         $arr = [
-            'grant_type'	=>	'refresh_token',
-            'refresh_token'	=>	$refresh_token
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refresh_token
         ];
         $result = $this->curl->post($this->apiUrl."oauth/token?".http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -133,13 +127,10 @@ class GiteeController extends OAuthController
     public function getUserInfo(string $access_token)
     {
         $result = $this->curl->get($this->apiUrl."api/v5/user?access_token=$access_token");
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error'])){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 }

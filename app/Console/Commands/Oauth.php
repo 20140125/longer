@@ -53,13 +53,13 @@ class Oauth extends Command
     {
         $where[] = ['expires','>',time()];
         $where[] = ['refresh_token','<>',''];
-        $result = oauthModel::getInstance()->getOauthLists($where,['expires','refresh_token','id','oauth_type']);
+        $result = oauthModel::getInstance()->getOauthLists($where, ['expires','refresh_token', 'id', 'oauth_type']);
         if (count($result) == 0) {
             $this->warn('access_token already updated');
             return;
         }
         foreach ($result as $item) {
-            $this->refreshToken($item->oauth_type,$item->refresh_token);
+            $this->refreshToken($item->oauth_type, $item->refresh_token);
         }
     }
 
@@ -68,14 +68,14 @@ class Oauth extends Command
      * @param string $oauth_type 账号来源
      * @param string $refresh_token 用于刷新 access_token
      */
-    private function refreshToken(string $oauth_type,string $refresh_token)
+    private function refreshToken(string $oauth_type, string $refresh_token)
     {
         switch (strtolower($oauth_type)) {
             case 'qq':
                 try {
                     $appId = config('app.qq_appid');
                     $appSecret = config('app.qq_secret');
-                    $result = QQController::getInstance($appId,$appSecret)->refreshToken($refresh_token);
+                    $result = QQController::getInstance($appId, $appSecret)->refreshToken($refresh_token);
                     if (isset($result['code']) && $result['code'] === 201) {
                         $this->warn($result['message']);
                         return ;
@@ -84,7 +84,7 @@ class Oauth extends Command
                     $where[] = ['refresh_token',$refresh_token];
                     $data['remember_token'] = md5(md5($result['access_token']).time());
                     $data['expires'] = time()+$result['expires_in'];
-                    $oauth = oauthModel::getInstance()->updateResult($data,$where);
+                    $oauth = oauthModel::getInstance()->updateResult($data, $where);
                     if ($oauth) {
                         $this->info('update qq oauth success');
                         return ;
@@ -95,10 +95,10 @@ class Oauth extends Command
                 }
                 break;
             case 'gitee':
-                try{
+                try {
                     $appId = config('app.gitee_appid');
                     $appSecret = config('app.gitee_secret');
-                    $result = GiteeController::getInstance($appId,$appSecret)->refreshToken($refresh_token);
+                    $result = GiteeController::getInstance($appId, $appSecret)->refreshToken($refresh_token);
                     if (isset($result['code']) && $result['code'] === 201) {
                         $this->warn($result['message']);
                         return ;
@@ -107,21 +107,21 @@ class Oauth extends Command
                     $where[] = ['refresh_token',$refresh_token];
                     $data['remember_token'] = md5(md5($result['access_token']).time());
                     $data['expires'] = time()+$result['expires_in'];
-                    $oauth = oauthModel::getInstance()->updateResult($data,$where);
+                    $oauth = oauthModel::getInstance()->updateResult($data, $where);
                     if ($oauth) {
                         $this->info('update gitee oauth success');
                         return ;
                     }
                     $this->warn('update  gitee oauth failed');
-                }catch (\Exception $exception){
+                } catch (\Exception $exception) {
                     $this->error($exception->getMessage().' gitee');
                 }
                 break;
             case 'baidu':
-                try{
+                try {
                     $appId = config('app.baidu_appid');
                     $appSecret = config('app.baidu_secret');
-                    $result = BaiDuController::getInstance($appId,$appSecret)->refreshToken($refresh_token);
+                    $result = BaiDuController::getInstance($appId, $appSecret)->refreshToken($refresh_token);
                     if (isset($result['code']) && $result['code'] === 201) {
                         $this->warn($result['message']);
                         return ;
@@ -130,13 +130,13 @@ class Oauth extends Command
                     $where[] = ['refresh_token',$refresh_token];
                     $data['remember_token'] = md5(md5($result['access_token']).time());
                     $data['expires'] = time()+$result['expires_in'];
-                    $oauth = oauthModel::getInstance()->updateResult($data,$where);
+                    $oauth = oauthModel::getInstance()->updateResult($data, $where);
                     if ($oauth) {
                         $this->info('update baidu oauth success');
                         return ;
                     }
                     $this->warn('update baidu oauth failed');
-                }catch (\Exception $exception){
+                } catch (\Exception $exception) {
                     $this->error($exception->getMessage().' baidu');
                 }
                 break;

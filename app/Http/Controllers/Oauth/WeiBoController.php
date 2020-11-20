@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Oauth;
+
 use App\Http\Controllers\Utils\Code;
 
 /**
@@ -36,7 +37,7 @@ class WeiBoController extends OAuthController
      * @param string $appid
      * @param string $appsecret
      */
-    public function __construct(string $appid,string $appsecret)
+    public function __construct(string $appid, string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -49,10 +50,10 @@ class WeiBoController extends OAuthController
      * @param string $appsecret
      * @return WeiBoController
      */
-    static public function getInstance(string $appid,string $appsecret)
+    public static function getInstance(string $appid, string $appsecret)
     {
         if (!self::$instance instanceof self) {
-            self::$instance = new static($appid,$appsecret);
+            self::$instance = new static($appid, $appsecret);
         }
         return self::$instance;
     }
@@ -64,7 +65,7 @@ class WeiBoController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl($length = 32,$callback = '',$scope = 'all,email')
+    public function getAuthUrl($length = 32, $callback = '', $scope = 'all,email')
     {
         $this->redirectUri = empty($callback) ? $this->redirectUri :$callback;
         $arr = [
@@ -94,15 +95,12 @@ class WeiBoController extends OAuthController
             'code' => $code,
             'redirect_uri' => $this->redirectUri
         ];
-        $result = $this->curl->post($this->apiUrl.'oauth2/access_token',$arr);
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        $result = $this->curl->post($this->apiUrl.'oauth2/access_token', $arr);
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error_code'])){
-            return $this->error(Code::ERROR,$result['error']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error_code']) ? $this->error(Code::ERROR, $result['error']) : $result;
     }
 
     /**
@@ -112,16 +110,13 @@ class WeiBoController extends OAuthController
      * @return array|mixed
      * @throws \Exception
      */
-    public function getUserInfo(string $access_token,string $uid)
+    public function getUserInfo(string $access_token, string $uid)
     {
         $result = $this->curl->get($this->apiUrl."2/users/show.json?access_token={$access_token}&uid={$uid}");
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['error_code'])){
-            return $this->error(Code::ERROR,$result['error']);
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['error_code']) ? $this->error(Code::ERROR, $result['error']) : $result;
     }
 }

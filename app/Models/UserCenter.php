@@ -17,9 +17,9 @@ class UserCenter extends Model
     /**
      * @return UserCenter
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             return self::$instance = new static();
         }
         return self::$instance;
@@ -33,9 +33,9 @@ class UserCenter extends Model
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value='',string $op='=', array $column = ['*'])
+    public function getResult($field, $value = '', string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
 
     /**
@@ -45,9 +45,12 @@ class UserCenter extends Model
      */
     public function addResult(array $data)
     {
-        $data['tags'] = empty($data['tags']) ? '0' : str_replace('\\','',json_encode($data['tags'],JSON_UNESCAPED_UNICODE));
-        $data['ip_address'] = empty($data['ip_address']) ? '0' : str_replace('\\','',json_encode($data['ip_address'],JSON_UNESCAPED_UNICODE));
-        $data['local'] = empty($data['local']) ? '0' : str_replace('\\','',json_encode($data['local'],JSON_UNESCAPED_UNICODE));
+        $data['tags'] = empty($data['tags']) ? '0' :
+            str_replace('\\', '', json_encode($data['tags'], JSON_UNESCAPED_UNICODE));
+        $data['ip_address'] = empty($data['ip_address']) ? '0' :
+            str_replace('\\', '', json_encode($data['ip_address'], JSON_UNESCAPED_UNICODE));
+        $data['local'] = empty($data['local']) ? '0' :
+            str_replace('\\', '', json_encode($data['local'], JSON_UNESCAPED_UNICODE));
         return DB::table($this->table)->insertGetId($data);
     }
     /**
@@ -58,15 +61,18 @@ class UserCenter extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data, $field,$value=null,$op='=')
+    public function updateResult(array $data, $field, $value = null, $op = '=')
     {
         if (empty($data['type'])) {
-            $data['tags'] = (empty($data['tags']) || !isset($data['tags'])) ? '0' : str_replace('\\','',json_encode($data['tags'],JSON_UNESCAPED_UNICODE));
-            $data['ip_address'] = (empty($data['ip_address']) || !isset($data['ip_address'])) ? '0' : str_replace('\\','',json_encode($data['ip_address'],JSON_UNESCAPED_UNICODE));
-            $data['local'] = (empty($data['local']) || !isset($data['local'])) ? '0' : str_replace('\\','',json_encode($data['local'],JSON_UNESCAPED_UNICODE));
+            $data['tags'] = (empty($data['tags']) || !isset($data['tags'])) ? '0' :
+                str_replace('\\', '', json_encode($data['tags'], JSON_UNESCAPED_UNICODE));
+            $data['ip_address'] = (empty($data['ip_address']) || !isset($data['ip_address'])) ? '0' :
+                str_replace('\\', '', json_encode($data['ip_address'], JSON_UNESCAPED_UNICODE));
+            $data['local'] = (empty($data['local']) || !isset($data['local'])) ? '0' :
+                str_replace('\\', '', json_encode($data['local'], JSON_UNESCAPED_UNICODE));
         } else {
             unset($data['type']);
         }
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
+        return DB::table($this->table)->where($field, $op, $value)->update($data);
     }
 }

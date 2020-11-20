@@ -30,9 +30,9 @@ class Config extends Model
     /**
      * @return Config
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -46,9 +46,9 @@ class Config extends Model
      * @param array $column
      * @return Model|Builder|object|null
      */
-    public function getResult(string $field, $value,string $op='=', array $column = ['*'])
+    public function getResult(string $field, $value, string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
 
     /**
@@ -80,11 +80,11 @@ class Config extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult($data,string $field,int $value,string $op='=')
+    public function updateResult($data, string $field, int $value, string $op = '=')
     {
         if (!empty($data['act'])) {
             unset($data['act']);
-            return  DB::table($this->table)->where($field,$op,$value)->update($data);
+            return  DB::table($this->table)->where($field, $op, $value)->update($data);
         }
         switch ($data['hasChildren']) {
             case "true":
@@ -93,17 +93,17 @@ class Config extends Model
                 foreach ($intFields as $int) {
                     $data[$int] = (int)$data[$int];
                 }
-                $data['children'] = json_encode($data['children'],JSON_UNESCAPED_UNICODE);
+                $data['children'] = json_encode($data['children'], JSON_UNESCAPED_UNICODE);
                 $data['created_at'] = empty($data['created_at']) ? time() : strtotime($data['created_at']);
                 $data['updated_at'] = empty($data['updated_at']) ? time() : strtotime($data['updated_at']);
-                $res = DB::table($this->table)->where($field,$op,$value)->update($data);
+                $res = DB::table($this->table)->where($field, $op, $value)->update($data);
                 break;
             case "false":
-                $result = DB::table($this->table)->where($field,$op,$data['pid'])->first();
+                $result = DB::table($this->table)->where($field, $op, $data['pid'])->first();
                 unset($data['hasChildren']);
-                $result->children = object_to_array(json_decode($result->children,true));
+                $result->children = objectToArray(json_decode($result->children, true));
                 $index = 0;
-                foreach ($result->children as $key=> $child) {
+                foreach ($result->children as $key => $child) {
                     if ($data['id'] == $child['id']) {
                         unset($result->children[$key]);
                         $index = $key;
@@ -114,14 +114,15 @@ class Config extends Model
                     $data[$int] = (int)$data[$int];
                 }
                 $result->children[$index] = $data;
-                $children = array();$sort = array();
+                $children = array();
+                $sort = array();
                 foreach ($result->children as $item) {
-                    array_push($children,$item);
+                    array_push($children, $item);
                     $sort[] = $item['id'];
                 }
-                array_multisort($sort,$children,SORT_ASC);
-                $result->children = json_encode($children,JSON_UNESCAPED_UNICODE);
-                $res =  DB::table($this->table)->where('id','=',$data['pid'])->update(object_to_array($result));
+                array_multisort($sort, $children, SORT_ASC);
+                $result->children = json_encode($children, JSON_UNESCAPED_UNICODE);
+                $res =  DB::table($this->table)->where('id', '=', $data['pid'])->update(objectToArray($result));
                 break;
             default:
                 $res = 0;
@@ -136,8 +137,8 @@ class Config extends Model
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,int $value,string $op='=')
+    public function deleteResult(string $field, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->delete();
+        return DB::table($this->table)->where($field, $op, $value)->delete();
     }
 }

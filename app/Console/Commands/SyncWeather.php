@@ -11,14 +11,14 @@ class SyncWeather extends Command
     /**
      * The name and signature of the console command.
      *
-     * @var string
+     * @var string $signature
      */
     protected $signature = 'longer:sync_weather';
 
     /**
      * The console command description.
      *
-     * @var string
+     * @var string $description
      */
     protected $description = 'sync weather from amap to area table';
     /**
@@ -49,9 +49,9 @@ class SyncWeather extends Command
         $bar = $this->output->createProgressBar(count($this->areaModel->getAll(['id'])));
         $groupResult = $this->areaModel->getListsGroupByParentId();
         try {
-            foreach ($groupResult as  $row) {
-                $this->info("当前同步的是：".$this->areaModel->getResult('id',$row->id,'=',['name'])->name);
-                $provinceWeather = object_to_array($this->amapUtils->getWeather($row->code,'all'));
+            foreach ($groupResult as $row) {
+                $this->info("当前同步的是：".$this->areaModel->getResult('id', $row->id, '=', ['name'])->name);
+                $provinceWeather = objectToArray($this->amapUtils->getWeather($row->code, 'all'));
                 if (!empty($provinceWeather)) {
                     $provinceForecast = $provinceWeather['info'] == 'OK' ? $provinceWeather['forecasts'][0] : '';
                     $provinceInfo = [
@@ -61,7 +61,15 @@ class SyncWeather extends Command
                         'reporttime' => !empty($provinceForecast['reporttime']) ? $provinceForecast['reporttime'] : '',
                         'casts' => !empty($provinceForecast['casts']) ? $provinceForecast['casts'][0] : ''
                     ];
-                    $this->areaModel->updateResult(['updated_at'=>date("Y-m-d H:i:s",time()),'info' => json_encode($provinceInfo, JSON_UNESCAPED_UNICODE), 'forecast' => json_encode($provinceForecast, JSON_UNESCAPED_UNICODE)], 'id', $row->id);
+                    $this->areaModel->updateResult(
+                        [
+                            'updated_at'=>date("Y-m-d H:i:s", time()),
+                            'info' => json_encode($provinceInfo, JSON_UNESCAPED_UNICODE),
+                            'forecast' => json_encode($provinceForecast, JSON_UNESCAPED_UNICODE)
+                        ],
+                        'id',
+                        $row->id
+                    );
                     $this->info($this->areaModel->getResult('id', $row->id, '=', ['name'])->name . "：同步成功【{$row->id}】");
                 }
             }

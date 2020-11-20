@@ -38,7 +38,7 @@ class GithubController extends OAuthController
      * @param string $appid
      * @param string $appsecret
      */
-    public function __construct(string $appid,string $appsecret)
+    public function __construct(string $appid, string $appsecret)
     {
         parent::__construct();
         $this->appid = $appid;
@@ -51,10 +51,10 @@ class GithubController extends OAuthController
      * @param string $appsecret
      * @return GithubController
      */
-    static public function getInstance(string $appid,string $appsecret)
+    public static function getInstance(string $appid, string $appsecret)
     {
         if (!self::$instance instanceof self) {
-            self::$instance = new static($appid,$appsecret);
+            self::$instance = new static($appid, $appsecret);
         }
         return self::$instance;
     }
@@ -66,7 +66,7 @@ class GithubController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl($length = 32,$callback = '', $scope = 'user:email')
+    public function getAuthUrl($length = 32, $callback = '', $scope = 'user:email')
     {
         $arr = [
             'client_id' => $this->appid,
@@ -85,7 +85,7 @@ class GithubController extends OAuthController
      * @return array|bool|mixed
      * @throws \Exception
      */
-    public function getAccessToken(string $code,string $state)
+    public function getAccessToken(string $code, string $state)
     {
         $arr = [
             'client_id' => $this->appid,
@@ -94,16 +94,12 @@ class GithubController extends OAuthController
             'redirect_uri' => $this->redirectUri,
             'state' => $state
         ];
-        $result = $this->curl->post($this->apiUrl.'login/oauth/access_token',$arr);
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        $result = $this->curl->post($this->apiUrl.'login/oauth/access_token', $arr);
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
         $result = $this->__getAccessToken($result);
-        if (isset($result['error'])){
-            return $this->error(Code::ERROR,$result['error_description']);
-        }
-        return $result;
-
+        return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
     /**
@@ -114,16 +110,13 @@ class GithubController extends OAuthController
      */
     public function getUserInfo(string $access_token)
     {
-        $this->curl->setHeader("Authorization","token $access_token");
+        $this->curl->setHeader("Authorization", "token $access_token");
         $result = $this->curl->get('https://api.github.com/user');
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['message'])){
-            return $this->error(Code::ERROR,'Get user failed');
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['message']) ? $this->error(Code::ERROR, $result['message']) : $result;
     }
 
     /**
@@ -134,16 +127,13 @@ class GithubController extends OAuthController
      */
     public function getUserRepos(string $access_token)
     {
-        $this->curl->setHeader("Authorization","token $access_token");
+        $this->curl->setHeader("Authorization", "token $access_token");
         $result = $this->curl->get('https://api.github.com/user/repos');
         Log::error(json_encode($result));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = object_to_array($result);
-        if (isset($result['message'])){
-            return $this->error(Code::ERROR,'Get user repos failed');
-        }
-        return $result;
+        $result = objectToArray($result);
+        return isset($result['message']) ? $this->error(Code::ERROR, $result['message']) : $result;
     }
 }

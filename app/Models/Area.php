@@ -23,9 +23,9 @@ class Area extends Model
     /**
      * @return Area
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             return self::$instance = new static();
         }
         return self::$instance;
@@ -39,9 +39,9 @@ class Area extends Model
      * @param array $columns
      * @return Model|Builder|object|null
      */
-    public function getResult(string $filed,int $value,string $op='=',array $columns=['*'])
+    public function getResult(string $filed, int $value, string $op = '=', array $columns = ['*'])
     {
-        return DB::table($this->table)->where($filed,$op,$value)->first($columns);
+        return DB::table($this->table)->where($filed, $op, $value)->first($columns);
     }
 
     /**
@@ -50,9 +50,9 @@ class Area extends Model
      * @param array $columns
      * @return Collection
      */
-    public function getResultLists(int $pid = 1,array $columns=['*'])
+    public function getResultLists(int $pid = 1, array $columns = ['*'])
     {
-        return DB::table($this->table)->where('parent_id',$pid)->get($columns);
+        return DB::table($this->table)->where('parent_id', $pid)->get($columns);
     }
 
     /**
@@ -60,7 +60,7 @@ class Area extends Model
      * @param array $columns
      * @return Collection
      */
-    public function getAll(array $columns=['*'])
+    public function getAll(array $columns = ['*'])
     {
         return DB::table($this->table)->get($columns);
     }
@@ -71,8 +71,9 @@ class Area extends Model
      */
     public function getListsGroupByParentId()
     {
-        return DB::table($this->table)->where('parent_id','>',0)->groupBy(['parent_id','id','name','code'])->get(['parent_id','id','name','code']);
-
+        return DB::table($this->table)->where('parent_id', '>', 0)
+            ->groupBy(['parent_id','id','name','code'])
+            ->get(['parent_id','id','name','code']);
     }
 
     /**
@@ -83,8 +84,8 @@ class Area extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data,string $filed,int $value,string $op='=')
+    public function updateResult(array $data, string $filed, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($filed,$op,$value)->update($data);
+        return DB::table($this->table)->where($filed, $op, $value)->update($data);
     }
 }

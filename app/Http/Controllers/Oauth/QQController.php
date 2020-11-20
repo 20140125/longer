@@ -16,7 +16,7 @@ class QQController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appsecret
      */
@@ -56,10 +56,10 @@ class QQController extends OAuthController
      * @param string $appsecret
      * @return QQController
      */
-    static public function getInstance(string $appid, string $appsecret)
+    public static function getInstance(string $appid, string $appsecret)
     {
-        if (!self::$instance instanceof self){
-            self::$instance = new static($appid,$appsecret);
+        if (!self::$instance instanceof self) {
+            self::$instance = new static($appid, $appsecret);
         }
         return self::$instance;
     }
@@ -71,7 +71,7 @@ class QQController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl($length = 32,$callback = '',$scope = 'get_user_info')
+    public function getAuthUrl($length = 32, $callback = '', $scope = 'get_user_info')
     {
         $arr = [
             'response_type' => 'code',
@@ -100,11 +100,11 @@ class QQController extends OAuthController
             'redirect_uri' => $this->redirectUri
         ];
         $result = $this->curl->get($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        if (isset($this->json($result)['error'])){
-            return $this->error(Code::ERROR,$this->json($result)['error_description']);
+        if (isset($this->json($result)['error'])) {
+            return $this->error(Code::ERROR, $this->json($result)['error_description']);
         }
         return  $this->__getAccessToken($result);
     }
@@ -121,11 +121,11 @@ class QQController extends OAuthController
             'access_token' =>$access_token
         ];
         $result = $this->curl->get($this->apiUrl.'oauth2.0/me?'.http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        if (isset($this->json($result)['error'])){
-            return $this->error(Code::ERROR,$this->json($result)['error_description']);
+        if (isset($this->json($result)['error'])) {
+            return $this->error(Code::ERROR, $this->json($result)['error_description']);
         }
         return $this->json($result)['openid'];
     }
@@ -139,17 +139,17 @@ class QQController extends OAuthController
     public function refreshToken(string $refreshToken)
     {
         $arr = [
-            'grant_type'	=>	'refresh_token',
-            'client_id'		=>	$this->appid,
-            'client_secret'	=>	$this->appsecret,
-            'refresh_token'	=>	$refreshToken
+            'grant_type' => 'refresh_token',
+            'client_id' => $this->appid,
+            'client_secret' => $this->appsecret,
+            'refresh_token' => $refreshToken
         ];
         $result = $this->curl->get($this->apiUrl.'oauth2.0/token?'.http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        if (isset($this->json($result)['error'])){
-            return $this->error(Code::ERROR,$this->json($result)['error_description']);
+        if (isset($this->json($result)['error'])) {
+            return $this->error(Code::ERROR, $this->json($result)['error_description']);
         }
         return  $this->__getAccessToken($result);
     }
@@ -169,12 +169,12 @@ class QQController extends OAuthController
             'openid' => $this->openid
         ];
         $result = $this->curl->get($this->apiUrl.'user/get_user_info?'.http_build_query($arr));
-        if (!$result){
-            return $this->error(Code::ERROR,'request interface failed');
+        if (!$result) {
+            return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = json_decode($result,true);
-        if (isset($result['ret']) && $result['ret']!=0){
-            return $this->error(Code::ERROR,$result['msg']);
+        $result = json_decode($result, true);
+        if (isset($result['ret']) && $result['ret']!=0) {
+            return $this->error(Code::ERROR, $result['msg']);
         }
         return $result;
     }

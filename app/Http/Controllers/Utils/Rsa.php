@@ -16,11 +16,11 @@ class Rsa
     /**
      * @var false|string
      */
-    protected $publicKey='';
+    protected $publicKey = '';
     /**
      * @var false|string
      */
-    protected $privateKey='';
+    protected $privateKey = '';
 
     private function __clone()
     {
@@ -30,9 +30,9 @@ class Rsa
     /**
      * @return Rsa
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -75,7 +75,7 @@ class Rsa
         if (!is_string($data)) {
             return null;
         }
-        return openssl_private_encrypt($data,$encrypted,self::getPrivateKey()) ? base64_encode($encrypted) : null;
+        return openssl_private_encrypt($data, $encrypted, self::getPrivateKey()) ? base64_encode($encrypted) : null;
     }
 
     /**
@@ -88,7 +88,7 @@ class Rsa
         if (!is_string($data)) {
             return null;
         }
-        return openssl_public_encrypt($data,$encrypted,self::getPublicKey()) ? base64_encode($encrypted) : null;
+        return openssl_public_encrypt($data, $encrypted, self::getPublicKey()) ? base64_encode($encrypted) : null;
     }
 
     /**
@@ -101,7 +101,8 @@ class Rsa
         if (!is_string($encrypted)) {
             return null;
         }
-        return (openssl_private_decrypt(base64_decode($encrypted), $decrypted, self::getPrivateKey())) ? $decrypted : null;
+        return (openssl_private_decrypt(base64_decode($encrypted), $decrypted, self::getPrivateKey()))
+            ? $decrypted : null;
     }
 
     /**
@@ -114,7 +115,8 @@ class Rsa
         if (!is_string($encrypted)) {
             return null;
         }
-        return (openssl_public_decrypt(base64_decode($encrypted), $decrypted, self::getPublicKey())) ? $decrypted : null;
+        return (openssl_public_decrypt(base64_decode($encrypted), $decrypted, self::getPublicKey()))
+            ? $decrypted : null;
     }
 
     /**
@@ -146,7 +148,7 @@ class Rsa
      * @param string $signature 签名
      * @return int|null
      */
-    public function checkSign($data,$signature)
+    public function checkSign($data, $signature)
     {
         if (!is_string($data)) {
             return null;

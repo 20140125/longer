@@ -12,6 +12,9 @@ use Illuminate\Config\Repository;
  */
 class Amap
 {
+    /**
+     * @var Amap $instance
+     */
     protected static $instance;
     /**
      * @var Repository|mixed
@@ -36,11 +39,11 @@ class Amap
     }
 
     /**
-     * @return Amap
+     * @return static
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -63,38 +66,38 @@ class Amap
      * @param string $extensions
      * @return mixed
      */
-    public function getWeather($adcode,$extensions = 'base')
+    public function getWeather($adcode, $extensions = 'base')
     {
         $weatherUrl = 'weather/weatherInfo';
         $this->data['city'] = $adcode;
         $this->data['extensions'] = $extensions;
-        return $this->Curl->get($this->url.$weatherUrl,$this->data);
+        return $this->Curl->get($this->url.$weatherUrl, $this->data);
     }
 
     /**
      * TODO:根据IP地位
-     * @param $ipAddress
+     * @param string $ipAddress
      * @return int|mixed|null
      */
-    public function getAddress($ipAddress)
+    public function getAddress(string $ipAddress = '127.0.0.1')
     {
         $ipUrl = 'ip';
         $this->data['ip'] = $ipAddress;
-        return $this->Curl->get($this->url.$ipUrl,$this->data);
+        return $this->Curl->get($this->url.$ipUrl, $this->data);
     }
 
     /**
      * TODO:地理/逆地理编码
-     * @param $address
      * @param $city
+     * @param string $address
      * @return int|mixed|null
      */
-    public function geoCode($city,$address)
+    public function geoCode($city, string $address)
     {
         $geoUrl = 'geocode/geo';
         $this->data['city'] = $city;
         $this->data['address'] = $address;
-        return $this->Curl->get($this->url.$geoUrl,$this->data);
+        return $this->Curl->get($this->url.$geoUrl, $this->data);
     }
 
     /**
@@ -103,12 +106,12 @@ class Amap
      * @param  string $destination  目的地  规则： lon，lat（经度，纬度）， “,”分割，如117.500244, 40.417801     经纬度小数点不超过6位
      * @return int|mixed|null
      */
-    public function direction($origin,$destination)
+    public function direction(string $origin, string $destination)
     {
         $directionUrl = 'direction/walking';
         $this->data['origin'] = $origin;
         $this->data['destination'] = $destination;
-        return $this->Curl->get($this->url.$directionUrl,$this->data);
+        return $this->Curl->get($this->url.$directionUrl, $this->data);
     }
 
     /**
@@ -118,12 +121,12 @@ class Amap
      * @param string  $city 可选值：citycode、adcode
      * @return int|mixed|null
      */
-    public function inputTips($keywords,$location,$city)
+    public function inputTips(string $keywords, string $location, string $city)
     {
         $assistantUrl = 'assistant/inputtips';
         $this->data['keywords'] = $keywords;
         $this->data['location'] = $location;
         $this->data['city'] = $city;
-        return $this->Curl->get($this->url.$assistantUrl,$this->data);
+        return $this->Curl->get($this->url.$assistantUrl, $this->data);
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithMappedCells;
 
-class ExcelImport implements ToModel,WithMappedCells
+class ExcelImport implements ToModel, WithMappedCells
 {
     /**
      * @var array $request
@@ -25,7 +25,6 @@ class ExcelImport implements ToModel,WithMappedCells
      */
     public function model(array $row)
     {
-
     }
     /**
      * TODO：获取数据表注释
@@ -36,7 +35,7 @@ class ExcelImport implements ToModel,WithMappedCells
         $mapping = array();
         $columnsObj  = DB::select(sprintf("SHOW FULL COLUMNS FROM %s", 'os_oauth'));
         foreach ($columnsObj as $columns) {
-            array_push($mapping,$columns->Field);
+            array_push($mapping, $columns->Field);
         }
         return $mapping;
     }

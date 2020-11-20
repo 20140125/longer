@@ -20,7 +20,7 @@ class Emotion extends Model
     /**
      * @return Emotion
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -35,10 +35,10 @@ class Emotion extends Model
      * @param int $limit
      * @return mixed
      */
-    public function getListByType(int $type,int $page,int $limit)
+    public function getListByType(int $type, int $page, int $limit)
     {
-        $result['data'] = DB::table($this->table)->where('type',$type)->offset($limit*($page-1))->limit($limit)->get();
-        $result['pages'] = ceil(DB::table($this->table)->where('type',$type)->count()/$limit);
+        $result['data'] = DB::table($this->table)->where('type', $type)->offset($limit*($page-1))->limit($limit)->get();
+        $result['pages'] = ceil(DB::table($this->table)->where('type', $type)->count()/$limit);
         return $result;
     }
 }

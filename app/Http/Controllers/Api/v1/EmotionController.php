@@ -39,12 +39,18 @@ class EmotionController extends BaseController
      */
     public function index()
     {
-        $this->validatePost(['type'=>'required|integer','page'=>'required|integer|gt:0','limit'=>'required|integer|lt:56']);
+        $this->validatePost(
+            [
+                'type'=>'required|integer',
+                'page'=>'required|integer|gt:0',
+                'limit'=>'required|integer|lt:56'
+            ]
+        );
         $result = Cache::get($this->post['type']);
         if (!Cache::has($this->post['type'])) {
-            $result = $this->emotionModel->getListByType($this->post['type'],$this->post['page']??1,1000);
-            Cache::forever($this->post['type'],$result);
+            $result = $this->emotionModel->getListByType($this->post['type'], $this->post['page']??1, 1000);
+            Cache::forever($this->post['type'], $result);
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 }

@@ -13,21 +13,22 @@ use Illuminate\Support\Facades\DB;
 class Database extends Model
 {
     /**
-     * @var $instance
+     * @var static $instance
      */
     private static $instance;
     /**
      * @var string $start_line
      */
-    private $start_line;
+    private string $start_line;
     /**
      * @var string $end_line
      */
-    private $end_line;
+    private string $end_line;
     /**
      * @var string $str_line
      */
-    private $str_line;
+    private string $str_line;
+
     private function __clone()
     {
         // TODO: Implement __clone() method.
@@ -36,9 +37,9 @@ class Database extends Model
     /**
      * @return Database
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -64,11 +65,11 @@ class Database extends Model
     {
         $result = DB::select('SHOW TABLE STATUS');
         $tables=array();
-        foreach ($result as $key => $item){
+        foreach ($result as $key => $item) {
             $tables[$key]['name'] = $item->Name;
             $tables[$key]['engine'] = $item->Engine;
             $tables[$key]['version'] = $item->Version;
-            $tables[$key]['data_length'] = format_bytes($item->Data_length);
+            $tables[$key]['data_length'] = formatBates($item->Data_length);
             $tables[$key]['auto_increment'] = $item->Auto_increment;
             $tables[$key]['create_time'] = $item->Create_time;
             $tables[$key]['comment'] = $item->Comment;
@@ -81,14 +82,14 @@ class Database extends Model
      * @param string $tableName
      * @return string
      */
-    public  function createTable(string $tableName)
+    public function createTable(string $tableName)
     {
         $result = DB::select(sprintf("SHOW CREATE TABLE %s", $tableName));
         $sql = $this->start_line;
-        foreach ($result as $item){
+        foreach ($result as $item) {
             $item = object_to_array($item);
             $sql.="-- ----------------------------\n-- Table structure for {$item['Table']}\n-- ----------------------------\n";
-            $sql.= sprintf("DROP TABLE IF EXISTS `%s`",$item["Table"]).";";
+            $sql.= sprintf("DROP TABLE IF EXISTS `%s`", $item["Table"]).";";
             $sql.= "\n".$item['Create Table'];
             $sql.=";\n".$this->str_line;
         }
@@ -104,17 +105,17 @@ class Database extends Model
     {
         $result = DB::select(sprintf("SELECT * FROM %s", $tableName));
         $sql=";\n-- ----------------------------\n-- Records of $tableName\n-- ----------------------------\n";
-        if (empty($result)){
+        if (empty($result)) {
             $sql.= $this->end_line;
             return $sql;
         }
-        foreach ($result as $item){
-            $sql.= sprintf("INSERT INTO %s VALUES %s",$tableName,"(");
+        foreach ($result as $item) {
+            $sql.= sprintf("INSERT INTO %s VALUES %s", $tableName, "(");
             foreach ($item as $keys => $rows) {
                 $sql.= "'$rows',";
             }
             $sql.=");";
-            $sql= substr($sql,0,strlen($sql)-3); //删除最后三个字符串
+            $sql= substr($sql, 0, strlen($sql)-3); //删除最后三个字符串
             $sql.=");\n";
         }
         $sql.= $this->end_line;
@@ -146,8 +147,8 @@ class Database extends Model
      * @param string $comment
      * @return array
      */
-    public function commentTable(string $tableName,string $comment)
+    public function commentTable(string $tableName, string $comment)
     {
-        return DB::select(sprintf("ALTER TABLE %s COMMENT '%s'", $tableName,$comment));
+        return DB::select(sprintf("ALTER TABLE %s COMMENT '%s'", $tableName, $comment));
     }
 }

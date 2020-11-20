@@ -25,11 +25,11 @@ class OauthProcess implements ShouldQueue
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    protected RedisClient $redisClient;
     /**
      * @var Push $pushModel
      */
-    protected $pushModel;
+    protected Push $pushModel;
     /**
      * Create a new job instance.
      * @param $post
@@ -49,16 +49,17 @@ class OauthProcess implements ShouldQueue
      */
     public function handle()
     {
-        $created_at = (isset($this->post['id']) || !empty($this->post['id'])) ? strtotime($this->post['created_at']) : $this->post['created_at'];
+        $created_at = (isset($this->post['id']) || !empty($this->post['id'])) ?
+            strtotime($this->post['created_at']) : $this->post['created_at'];
         DB::beginTransaction();
-        try{
+        try {
             $oauthRes = Users::getInstance()->getAll();
             $redisUser = $this->redisClient->sMembers(config('app.redis_user_key'));
             foreach ($oauthRes as $item) {
-                if (in_array($item->uuid,$redisUser)) {
-                    $this->post['state'] = Code::WebSocketState[0];
+                if (in_array($item->uuid, $redisUser)) {
+                    $this->post['state'] = Code::WEBSOCKET_STATE[0];
                 }
-                $this->post['state'] = Code::WebSocketState[2];
+                $this->post['state'] = Code::WEBSOCKET_STATE[2];
                 $this->post['uid'] = $item->uuid;
                 $this->post['username'] = $item->username;
                 $this->post['created_at'] = $created_at;
@@ -68,10 +69,9 @@ class OauthProcess implements ShouldQueue
                 }
             }
             DB::commit();
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error('站内通知对列执行错误：'.$exception->getMessage());
             DB::rollBack();
         }
-
     }
 }

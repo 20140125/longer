@@ -1,4 +1,5 @@
 <?php
+namespace database;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,10 +18,10 @@ class CreateOsEmotionTable extends Migration
             $table->bigIncrements('id');
             $table->tinyInteger('type')->default(1)->comment('类型');
             $table->index('type');
-            $table->string('title',64)->default('0')->comment('名称');
-            $table->string('icon',256)->default('0')->comment('icon');
-            $table->string('emoji',32)->default('0')->comment('emoji');
-            $table->string('unified',32)->default('0')->comment('unified');
+            $table->string('title', 64)->default('0')->comment('名称');
+            $table->string('icon', 256)->default('0')->comment('icon');
+            $table->string('emoji', 32)->default('0')->comment('emoji');
+            $table->string('unified', 32)->default('0')->comment('unified');
         });
     }
 

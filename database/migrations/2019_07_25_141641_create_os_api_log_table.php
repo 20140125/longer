@@ -1,4 +1,5 @@
 <?php
+namespace database;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,7 +17,7 @@ class CreateOsApiLogTable extends Migration
         Schema::create('os_api_log', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->index('api_id');
-            $table->string('username',64)->default('0')->comment('执行人');
+            $table->string('username', 64)->default('0')->comment('执行人');
             $table->integer('api_id')->default(0)->comment('接口ID');
             $table->text('type')->default(1)->comment('1 JSON 2markdown');
             $table->text('markdown')->default('0')->comment('接口详情 (markdown)');

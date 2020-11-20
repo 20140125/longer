@@ -3,16 +3,11 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\CommonController;
 use App\Http\Controllers\Utils\Code;
-use App\Models\OAuth;
-use App\Models\Push;
 use App\Models\UserCenter;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use mysql_xdevapi\Exception;
-
 
 /**
  * TODO: 用户管理
@@ -28,13 +23,14 @@ class UsersController extends BaseController
      */
     public function index()
     {
-        $result = $this->userModel->getResultList($this->users,$this->post['page'],$this->post['limit']);
-        foreach ($result['data'] as &$item){
-            $item->updated_at = date("Y-m-d H:i:s",$item->updated_at);
-            $item->created_at = date("Y-m-d H:i:s",$item->created_at);
+        $result = $this->userModel->getResultList($this->users, $this->post['page'], $this->post['limit']);
+        foreach ($result['data'] as &$item) {
+            $item->updated_at = date("Y-m-d H:i:s", $item->updated_at);
+            $item->created_at = date("Y-m-d H:i:s", $item->created_at);
         }
-        $result['roleLists'] = in_array($this->users->role_id,[1]) ? $this->roleModel->getResult2('1',['id','role_name']) : [];
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        $result['roleLists'] = in_array($this->users->role_id, [1]) ?
+            $this->roleModel->getResult2('1', ['id','role_name']) : [];
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
     /**
@@ -51,16 +47,19 @@ class UsersController extends BaseController
             $this->post['status'] = $this->users->username === 'admin' ? $this->post['status'] : 2;
             $user_id = $this->userModel->addResult($this->post);
             $this->post['uid'] = config('app.client_id').$user_id;
-            UserCenter::getInstance()->addResult(['uid'=>$user_id,'u_name'=>$this->post['username'],'token'=>$this->post['remember_token']]);
-            $result = $this->userModel->updateResult($this->post,'id',$user_id);
+            UserCenter::getInstance()->addResult(
+                ['uid'=>$user_id,'u_name'=>$this->post['username'],'token'=>$this->post['remember_token']]
+            );
+            $result = $this->userModel->updateResult($this->post, 'id', $user_id);
             //同步新用户画像
             CommonController::getInstance()->updateUserAvatarUrl();
             DB::commit();
-            return $result ? $this->ajax_return(Code::SUCCESS,'add user successfully') :  $this->ajax_return(Code::ERROR,'add user error');
-        } catch (Exception $exception) {
+            return $result ? $this->ajaxReturn(Code::SUCCESS, 'add user successfully') :
+                $this->ajaxReturn(Code::ERROR, 'add user error');
+        } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             DB::rollBack();
-            return $this->ajax_return(Code::ERROR,'add user error');
+            return $this->ajaxReturn(Code::ERROR, 'add user error');
         }
     }
 
@@ -71,11 +70,9 @@ class UsersController extends BaseController
     public function getBindInfo()
     {
         $this->validatePost(['remember_token'=>'required|string|size:32']);
-        $result = $this->userModel->getResult('remember_token',$this->post['remember_token']);
-        if (!empty($result)) {
-            return $this->ajax_return(Code::SUCCESS,'successfully',$result);
-        }
-        return $this->ajax_return(Code::ERROR,'No bound account information');
+        $result = $this->userModel->getResult('remember_token', $this->post['remember_token']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'successfully', $result) :
+            $this->ajaxReturn(Code::ERROR, 'No bound account information');
     }
     /**
      * TODO: 管理员更新
@@ -90,29 +87,33 @@ class UsersController extends BaseController
     public function update()
     {
         //修改用户禁用状态
-        if (!empty($this->post['act'])){
-            $this->validatePost($this->rule(4),['id.gt'=>'Permission denied']);
+        if (!empty($this->post['act'])) {
+            $this->validatePost($this->rule(4), ['id.gt'=>'Permission denied']);
             unset($this->post['act']);
-            $result = $this->userModel->updateResult($this->post,'id',$this->post['id']);
-            return empty($result) ? $this->ajax_return(Code::ERROR,'update users status error') : $this->ajax_return(Code::SUCCESS,'update users status successfully');
+            $result = $this->userModel->updateResult($this->post, 'id', $this->post['id']);
+            return empty($result) ? $this->ajaxReturn(Code::ERROR, 'update users status error') :
+                $this->ajaxReturn(Code::SUCCESS, 'update users status successfully');
         }
-        $users = $this->userModel->getResult('id',$this->post['id']);
-        $this->post['created_at'] = gettype($this->post['created_at']) === 'string' ? strtotime($this->post['created_at']) : $this->post['created_at'];
+        $users = $this->userModel->getResult('id', $this->post['id']);
+        $this->post['created_at'] = gettype($this->post['created_at']) === 'string' ?
+            strtotime($this->post['created_at']) : $this->post['created_at'];
         $this->post['updated_at'] = time();
         try {
             DB::beginTransaction();
-            $this->post['password'] === $users->password ?  $this->validatePost($this->rule(1)) :  $this->validatePost($this->rule(2));
+            $this->post['password'] === $users->password ?
+                $this->validatePost($this->rule(1)) :  $this->validatePost($this->rule(2));
             //用户修改密码
-            $this->post['salt'] = get_round_num(8);
+            $this->post['salt'] = getRoundNum(8);
             $this->post['password'] = md5(md5($this->post['password']) . $this->post['salt']);
             $this->post['remember_token'] = md5($this->post['password']); //用户修改密码后也修改当前token
             Artisan::call("longer:sync_oauth {$this->post['remember_token']}");
             DB::commit();
-            return empty($result) ? $this->ajax_return(Code::ERROR, 'update users error') : $this->ajax_return(Code::SUCCESS, 'update users successfully');
-        } catch (Exception $exception) {
+            return empty($result) ? $this->ajaxReturn(Code::ERROR, 'update users error') :
+                $this->ajaxReturn(Code::SUCCESS, 'update users successfully');
+        } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             DB::rollBack();
-            return $this->ajax_return(Code::ERROR, 'update users error');
+            return $this->ajaxReturn(Code::ERROR, 'update users error');
         }
     }
 
@@ -123,12 +124,12 @@ class UsersController extends BaseController
      */
     public function center()
     {
-        $result = UserCenter::getInstance()->getResult('token',$this->users->remember_token);
+        $result = UserCenter::getInstance()->getResult('token', $this->users->remember_token);
         $result->email = $this->users->email;
-        $result->tags = empty($result->tags) ? array() : json_decode($result->tags,true);
-        $result->ip_address = empty($result->ip_address) ? array() :json_decode($result->ip_address,true);
-        $result->local = empty($result->local) ? array() : json_decode($result->local,true);
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        $result->tags = empty($result->tags) ? array() : json_decode($result->tags, true);
+        $result->ip_address = empty($result->ip_address) ? array() :json_decode($result->ip_address, true);
+        $result->local = empty($result->local) ? array() : json_decode($result->local, true);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
     /**
@@ -157,13 +158,13 @@ class UsersController extends BaseController
             ]
         );
         unset($this->post['email']);
-        $result = UserCenter::getInstance()->updateResult($this->post,'id',$this->post['id']);
+        $result = UserCenter::getInstance()->updateResult($this->post, 'id', $this->post['id']);
         if (!empty($result)) {
             //更新用户画像
             CommonController::getInstance()->updateUserAvatarUrl();
-            return $this->ajax_return(Code::SUCCESS,'update user information successfully');
+            return $this->ajaxReturn(Code::SUCCESS, 'update user information successfully');
         }
-        return $this->ajax_return(Code::SUCCESS,'update user information error');
+        return $this->ajaxReturn(Code::SUCCESS, 'update user information error');
     }
 
     /**
@@ -173,12 +174,10 @@ class UsersController extends BaseController
      */
     public function delete()
     {
-        $this->validatePost(['id'=>'required|integer|gt:1'],['id.gt'=>'Permission denied']);
-        $result = $this->userModel->deleteResult('id',$this->post['id']);
-        if ($result){
-            return $this->ajax_return(Code::SUCCESS,'delete user successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'delete user error');
+        $this->validatePost(['id'=>'required|integer|gt:1'], ['id.gt'=>'Permission denied']);
+        $result = $this->userModel->deleteResult('id', $this->post['id']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'delete user successfully') :
+            $this->ajaxReturn(Code::ERROR, 'delete user error');
     }
 
     /**
@@ -188,7 +187,7 @@ class UsersController extends BaseController
      */
     protected function rule($status)
     {
-        switch ($status){
+        switch ($status) {
             case 1:
                 $rule = [
                     'username' => 'required|max:16|string',

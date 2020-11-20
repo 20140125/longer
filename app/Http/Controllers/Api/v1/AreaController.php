@@ -45,14 +45,17 @@ class AreaController extends BaseController
     public function index()
     {
         $this->validatePost(['parent_id'=>'required|integer|exists:os_china_area']);
-        $result = $this->areaModel->getResultLists($this->post['parent_id'],['id','parent_id as pid','name','code','info','forecast']);
-        foreach ($result as &$item){
+        $result = $this->areaModel->getResultLists(
+            $this->post['parent_id'],
+            ['id','parent_id as pid', 'name', 'code', 'info', 'forecast']
+        );
+        foreach ($result as &$item) {
             $item->hasChildren = false;
-            if ($this->areaModel->getResult('parent_id',$item->id)) {
+            if ($this->areaModel->getResult('parent_id', $item->id)) {
                 $item->hasChildren = true;
             }
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
     /**
@@ -64,9 +67,12 @@ class AreaController extends BaseController
     public function weather()
     {
         try {
-            $this->validatePost(['code'=>'required|string|exists:os_china_area','id'=>'required|integer|exists:os_china_area','parent_id'=>'required']);
-            $province = object_to_array($this->amapControl->getWeather($this->post['code'],'all'));
-            if (!empty($province)){
+            $this->validatePost(
+                ['code'=>'required|string|exists:os_china_area',
+                 'id'=>'required|integer|exists:os_china_area','parent_id'=>'required']
+            );
+            $province = objectToArray($this->amapControl->getWeather($this->post['code'], 'all'));
+            if (!empty($province)) {
                 $forecast = $province['info'] == 'OK' ? $province['forecasts'][0] : '';
                 $info =  [
                     'city' => !empty($forecast['city']) ? $forecast['city'] : '',
@@ -75,11 +81,23 @@ class AreaController extends BaseController
                     'reporttime' => !empty($forecast['reporttime']) ? $forecast['reporttime'] : '',
                     'casts' => !empty($forecast['casts']) ? $forecast['casts'][0] : ''
                 ];
-                $this->areaModel->updateResult(['updated_at'=>date("Y-m-d H:i:s",time()),'info'=>json_encode($info,JSON_UNESCAPED_UNICODE),'forecast'=>json_encode($forecast,JSON_UNESCAPED_UNICODE)],'code',$this->post['code']);
-                $this->redisClient->setValue($this->post['code'],json_encode(['info'=>$info,'forecast'=>$forecast],JSON_UNESCAPED_UNICODE),['EX'=>3600]);
-                return $this->ajax_return(Code::SUCCESS,'get weather successfully');
+                $this->areaModel->updateResult(
+                    [
+                        'updated_at'=>date("Y-m-d H:i:s", time()),
+                        'info'=>json_encode($info, JSON_UNESCAPED_UNICODE),
+                        'forecast'=>json_encode($forecast, JSON_UNESCAPED_UNICODE)
+                    ],
+                    'code',
+                    $this->post['code']
+                );
+                $this->redisClient->setValue(
+                    $this->post['code'],
+                    json_encode(['info'=>$info, 'forecast'=>$forecast], JSON_UNESCAPED_UNICODE),
+                    ['EX'=>3600]
+                );
+                return $this->ajaxReturn(Code::SUCCESS, 'get weather successfully');
             }
-            return $this->ajax_return(Code::ERROR,'get weather failed');
+            return $this->ajaxReturn(Code::ERROR, 'get weather failed');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return false;
@@ -103,14 +121,14 @@ class AreaController extends BaseController
         }
         $result = Cache::get($cacheVal);
         if (empty($result)) {
-            $result = get_tree($this->areaModel->getAll($fields),1,'children','parent_id');
+            $result = getTree($this->areaModel->getAll($fields), 1, 'children', 'parent_id');
             if ($ex) {
-                Cache::put($cacheVal,json_encode($result,JSON_UNESCAPED_UNICODE),Carbon::now()->addMinutes(120));
+                Cache::put($cacheVal, json_encode($result, JSON_UNESCAPED_UNICODE), Carbon::now()->addMinutes(120));
             } else {
-                Cache::forever($cacheVal,json_encode($result,JSON_UNESCAPED_UNICODE));
+                Cache::forever($cacheVal, json_encode($result, JSON_UNESCAPED_UNICODE));
             }
-            return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+            return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',json_decode($result,true));
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', json_decode($result, true));
     }
 }

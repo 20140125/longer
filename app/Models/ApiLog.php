@@ -18,16 +18,16 @@ class ApiLog extends Model
      */
     public $table = 'os_api_log';
     /**
-     * @var $instance
+     * @var static $instance
      */
     protected static $instance;
 
     /**
      * @return ApiLog
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -45,9 +45,9 @@ class ApiLog extends Model
      * @param array $column
      * @return Collection
      */
-    public function getResult(string $field, int $value,string $op='=',array $column = ['*'])
+    public function getResult(string $field, int $value, string $op = '=', array $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->orderBy('id','desc')->limit(10)->get($column);
+        return DB::table($this->table)->where($field, $op, $value)->orderBy('id', 'desc')->limit(10)->get($column);
     }
     /**
      * TODO: 添加记录
@@ -65,8 +65,8 @@ class ApiLog extends Model
      * @param int $value
      * @return int
      */
-    public function deleteResult(string $filed,int $value)
+    public function deleteResult(string $filed, int $value)
     {
-        return DB::table($this->table)->where($filed,$value)->delete();
+        return DB::table($this->table)->where($filed, $value)->delete();
     }
 }

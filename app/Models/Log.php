@@ -30,9 +30,9 @@ class Log extends Model
     /**
      * @return Log
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -45,16 +45,17 @@ class Log extends Model
      * @param string $ctime
      * @return mixed
      */
-    public function getLists(int $page = 0,int $limit = 0,string $ctime = '')
+    public function getLists(int $page = 0, int $limit = 0, string $ctime = '')
     {
         if (empty($page) || empty($limit)) {
-            return DB::table($this->table)->where('day',$ctime)->whereRaw('local is null')->get();
+            return DB::table($this->table)->where('day', $ctime)->whereRaw('local is null')->get();
         }
         $where =[];
-        if (!empty($ctime)){
+        if (!empty($ctime)) {
             $where[] = ['created_at','<=',$ctime];
         }
-        $result['data'] =  DB::table($this->table)->where($where)->limit($limit)->offset($limit*($page-1))->orderBy('id','desc')->get();
+        $result['data'] =  DB::table($this->table)->where($where)->limit($limit)
+            ->offset($limit*($page-1))->orderBy('id', 'desc')->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
@@ -73,7 +74,7 @@ class Log extends Model
      * @param $where
      * @return bool
      */
-    public function updateResult(array $data,$where)
+    public function updateResult(array $data, $where)
     {
         return DB::table($this->table)->where($where)->update($data);
     }
@@ -85,15 +86,15 @@ class Log extends Model
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,$value,string $op='in')
+    public function deleteResult(string $field, $value, string $op = 'in')
     {
         $result = 0;
-        switch ($op){
+        switch ($op) {
             case '=':
-                $result = DB::table($this->table)->where($field,$value)->delete();
+                $result = DB::table($this->table)->where($field, $value)->delete();
                 break;
             case 'in':
-                $result = DB::table($this->table)->whereIn($field,$value)->delete();
+                $result = DB::table($this->table)->whereIn($field, $value)->delete();
                 break;
         }
         return $result;

@@ -30,9 +30,9 @@ class OAuth extends Model
     /**
      * @return OAuth
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -45,13 +45,14 @@ class OAuth extends Model
      * @param $user
      * @return mixed
      */
-    public function getResultLists(int $page,int $limit,$user)
+    public function getResultLists(int $page, int $limit, $user)
     {
         $where = [];
-        if (!in_array($user->role_id,[1])){
+        if (!in_array($user->role_id, [1])) {
             $where[] = ['uid',$user->id];
         }
-        $result['data'] = DB::table($this->table)->limit($limit)->where($where)->orderBy('updated_at','desc')->offset($limit*($page-1))->get();
+        $result['data'] = DB::table($this->table)->limit($limit)->where($where)
+            ->orderBy('updated_at', 'desc')->offset($limit*($page-1))->get();
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
@@ -62,21 +63,21 @@ class OAuth extends Model
      * @param array $column
      * @return Collection
      */
-    public function getOauthLists($where=[],$column = ['*'])
+    public function getOauthLists($where = [], $column = ['*'])
     {
         return DB::table($this->table)->where($where)->get($column);
     }
     /**
      * TODO:查询一条记录
-     * @param string|array $field
-     * @param string|int $value
+     * @param $field
+     * @param $value
      * @param string $op
      * @param array $column
      * @return Model|Builder|null|object
      */
-    public function getResult($field, $value='',string $op='=', $column = ['*'])
+    public function getResult($field, $value = '', string $op = '=', $column = ['*'])
     {
-        return DB::table($this->table)->where($field,$op,$value)->first($column);
+        return DB::table($this->table)->where($field, $op, $value)->first($column);
     }
     /**
      * TODO:添加记录
@@ -96,10 +97,10 @@ class OAuth extends Model
      * @param string $op
      * @return int
      */
-    public function updateResult(array $data, $field='', $value='',string $op='=')
+    public function updateResult(array $data, $field = '', $value = '', string $op = '=')
     {
         $data['updated_at'] = time();
-        return DB::table($this->table)->where($field,$op,$value)->update($data);
+        return DB::table($this->table)->where($field, $op, $value)->update($data);
     }
 
     /**
@@ -109,8 +110,8 @@ class OAuth extends Model
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field,int $value,string $op='=')
+    public function deleteResult(string $field, int $value, string $op = '=')
     {
-        return DB::table($this->table)->where($field,$op,$value)->delete();
+        return DB::table($this->table)->where($field, $op, $value)->delete();
     }
 }

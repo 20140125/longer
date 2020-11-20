@@ -38,11 +38,11 @@ class LogController extends BaseController
     public function index()
     {
         $this->validatePost(['page'=>'required|integer|min:1','limit'=>'required|integer|min:15']);
-        $result = $this->logModel->getLists($this->post['page']??1,$this->post['limit']??15,'');
-        foreach ($result['data'] as &$item){
-            $item->created_at = date("Y-m-d H:i:s",$item->created_at);
+        $result = $this->logModel->getLists($this->post['page']??1, $this->post['limit']??15, '');
+        foreach ($result['data'] as &$item) {
+            $item->created_at = date("Y-m-d H:i:s", $item->created_at);
         }
-        return $this->ajax_return(Code::SUCCESS,'successfully',$result);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
     /**
@@ -51,9 +51,10 @@ class LogController extends BaseController
      */
     public function save()
     {
-        $this->post['username'] = $this->userModel->getResult('remember_token',$this->post['token'])->username ?? $this->oauthModel->getResult('remember_token',$this->post['token'])->username;
-        $result = act_log($this->post);
-        return $this->ajax_return(Code::SUCCESS,'save log successfully',$result);
+        $this->post['username'] = $this->userModel->getResult('remember_token', $this->post['token'])->username ??
+            $this->oauthModel->getResult('remember_token', $this->post['token'])->username;
+        $result = actLog($this->post);
+        return $this->ajaxReturn(Code::SUCCESS, 'save log successfully', $result);
     }
 
     /**
@@ -64,10 +65,8 @@ class LogController extends BaseController
     public function delete()
     {
         $this->validatePost(['id'=>'required|integer|min:1']);
-        $result = $this->logModel->deleteResult('id',$this->post['id'],'=');
-        if (!empty($result)){
-            return $this->ajax_return(Code::SUCCESS,'delete log successfully');
-        }
-        return $this->ajax_return(Code::ERROR,'delete log error');
+        $result = $this->logModel->deleteResult('id', $this->post['id'], '=');
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'delete log successfully') :
+            $this->ajaxReturn(Code::ERROR, 'delete log error');
     }
 }

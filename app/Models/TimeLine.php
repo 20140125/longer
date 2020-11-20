@@ -17,16 +17,16 @@ class TimeLine extends Model
      */
     public $table = 'os_timeline';
     /**
-     * @var $instance
+     * @var static $instance
      */
     protected static $instance;
 
     /**
      * @return TimeLine
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -42,7 +42,7 @@ class TimeLine extends Model
      * @param int $limit
      * @return mixed
      */
-    public function getResultLists(int $page,int $limit)
+    public function getResultLists(int $page, int $limit)
     {
         $result['data'] = DB::table($this->table)->offset($limit*($page-1))->limit($limit)->orderByDesc('id')->get();
         $result['total'] = DB::table($this->table)->count();
@@ -66,8 +66,8 @@ class TimeLine extends Model
      * @param int $value
      * @return int
      */
-    public function updateResult(array $data,string $field,int $value)
+    public function updateResult(array $data, string $field, int $value)
     {
-        return DB::table($this->table)->where($field,$value)->update($data);
+        return DB::table($this->table)->where($field, $value)->update($data);
     }
 }

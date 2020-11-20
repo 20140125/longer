@@ -61,14 +61,14 @@ class SyncClientId extends Command
     /**
      * todo:同步用户表的uuid
      */
-    protected function syncUserUUid ()
+    protected function syncUserUUid()
     {
         $userUUid = $this->userModel->getAll(['username','uuid','id']);
         Cache::forget('oauthLists');
-        Cache::forever('oauthLists',$userUUid);
+        Cache::forever('oauthLists', $userUUid);
         $bar = $this->getOutput()->createProgressBar(count($userUUid));
-        foreach ($userUUid as $key=> $uuid) {
-            $this->userModel->updateResult(['uuid'=>config('app.client_id').$uuid->id],'username',$uuid->username);
+        foreach ($userUUid as $key => $uuid) {
+            $this->userModel->updateResult(['uuid'=>config('app.client_id').$uuid->id], 'username', $uuid->username);
             $this->info('当前用户【'.$uuid->username.'】uuid同步成功');
             $bar->advance();
         }
@@ -78,12 +78,12 @@ class SyncClientId extends Command
     /**
      * todo:同步推送用户的uid
      */
-    protected function syncPushUid ()
+    protected function syncPushUid()
     {
         $userUUid = $this->userModel->getAll();
         $bar = $this->getOutput()->createProgressBar(count($userUUid));
         foreach ($userUUid as $uuid) {
-            $this->pushModel->updateResult(['uid'=>$uuid->uuid],'username',$uuid->username);
+            $this->pushModel->updateResult(['uid'=>$uuid->uuid], 'username', $uuid->username);
             $this->info('当前用户【'.$uuid->username.'】uid同步成功');
             $bar->advance();
         }

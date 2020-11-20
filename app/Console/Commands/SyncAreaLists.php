@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\Utils\RedisClient;
+use App\Models\Area;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -28,10 +29,12 @@ class SyncAreaLists extends Command
      */
     protected $description = 'Sync area lists';
     /**
-     * @var RedisClient
+     * @var RedisClient $redisClient
      */
     protected $redisClient;
-
+    /**
+     * @var Area $areaModel
+     */
     protected $areaModel;
 
     /**
@@ -61,8 +64,13 @@ class SyncAreaLists extends Command
     {
         $result = Cache::get('city_weather');
         if (empty($result)) {
-            $result = get_tree($this->areaModel->getAll(['code','info','parent_id','id','name']),1,'children','parent_id');
-            Cache::put('city_weather',json_encode($result,JSON_UNESCAPED_UNICODE),Carbon::now()->addMinutes(120));
+            $result = getTree(
+                $this->areaModel->getAll(['code','info','parent_id','id','name']),
+                1,
+                'children',
+                'parent_id'
+            );
+            Cache::put('city_weather', json_encode($result, JSON_UNESCAPED_UNICODE), Carbon::now()->addMinutes(120));
             $this->info('城市列表已经同步到Cache');
         }
     }

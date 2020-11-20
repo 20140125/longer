@@ -25,9 +25,9 @@ class Chat extends Model
     /**
      * @return Chat
      */
-    static public function getInstance()
+    public static function getInstance()
     {
-        if (!self::$instance instanceof self){
+        if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -41,9 +41,10 @@ class Chat extends Model
      * @param array $columns
      * @return mixed
      */
-    public function getResult(array $where,int $limit,int $page,array $columns=['*'])
+    public function getResult(array $where, int $limit, int $page, array $columns = ['*'])
     {
-        $result['data'] = DB::table($this->table)->limit($limit)->offset($limit*($page-1))->where($where)->orderByDesc('id')->get($columns);
+        $result['data'] = DB::table($this->table)->limit($limit)
+            ->offset($limit*($page-1))->where($where)->orderByDesc('id')->get($columns);
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
