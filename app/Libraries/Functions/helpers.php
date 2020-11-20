@@ -289,7 +289,7 @@ if (!function_exists('getFileLists')) {
                     'children' => [],
                     'path' => filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
                     'size' => md5($filePath.$file),
-                    'auth' => file_chmod($filePath.$file),
+                    'auth' => chmodFile($filePath.$file),
                     'time' => date('Y-m-d H:i:s', fileatime($filePath.$file))
                 );
                 $type[] = filetype($filePath.$file);
