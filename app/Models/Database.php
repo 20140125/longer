@@ -19,15 +19,15 @@ class Database extends Model
     /**
      * @var string $start_line
      */
-    private string $start_line;
+    private $start_line;
     /**
      * @var string $end_line
      */
-    private string $end_line;
+    private $end_line;
     /**
      * @var string $str_line
      */
-    private string $str_line;
+    private $str_line;
 
     private function __clone()
     {
@@ -87,7 +87,7 @@ class Database extends Model
         $result = DB::select(sprintf("SHOW CREATE TABLE %s", $tableName));
         $sql = $this->start_line;
         foreach ($result as $item) {
-            $item = object_to_array($item);
+            $item = objectToArray($item);
             $sql.="-- ----------------------------\n-- Table structure for {$item['Table']}\n-- ----------------------------\n";
             $sql.= sprintf("DROP TABLE IF EXISTS `%s`", $item["Table"]).";";
             $sql.= "\n".$item['Create Table'];

@@ -128,7 +128,7 @@ class ApiController extends BaseController
     public function category()
     {
         $result = $this->apiCategoryModel->getResultListsLevel2();
-        return $this->ajaxReturn(Code::SUCCESS,'successfully', ['category_tree'=>get_tree($result,0,'children'),'category'=>$result]);
+        return $this->ajaxReturn(Code::SUCCESS,'successfully', ['category_tree'=>getTree($result,0,'children'),'category'=>$result]);
     }
     /**
      * TODO:：保存APICategory数据
