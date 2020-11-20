@@ -28,7 +28,7 @@ class ResetPasswordController
     /**
      * @var array|string|null $post
      */
-    protected array|string|null $post;
+    protected $post;
     /**
      * @var Users $userModel
      */
