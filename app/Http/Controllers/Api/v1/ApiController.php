@@ -53,7 +53,7 @@ class ApiController extends BaseController
     {
         $this->validatePost(['type'=>'required|integer']);
         $result = $this->apiListsModel->getResult('type', $this->post['type']);
-        return $result ? $this->ajaxReturn(Code::ERROR, 'interface not found')
+        return empty($result) ? $this->ajaxReturn(Code::ERROR, 'interface not found')
             : $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
     /**
