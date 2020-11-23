@@ -26,8 +26,6 @@ $worker->count = 2;
 $worker->registerAddress = '127.0.0.1:1236';
 
 // 如果不是在根目录启动，则运行runAll方法
-if(!defined('GLOBAL_START'))
-{
+if (!defined('GLOBAL_START')) {
     Worker::runAll();
 }
-

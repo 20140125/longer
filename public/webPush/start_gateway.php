@@ -17,7 +17,7 @@ use \GatewayWorker\Gateway;
 require_once   '../../vendor/autoload.php';
 
 // gateway 进程
-if(in_array(PHP_OS,['WINNT','Darwin'])) {
+if (in_array(PHP_OS, ['WINNT','Darwin'])) {
     $gateway = new Gateway("websocket://0.0.0.0:7272");
 } else {
     $context = array(
@@ -27,7 +27,7 @@ if(in_array(PHP_OS,['WINNT','Darwin'])) {
             'verify_peer' => false,
         )
     );
-    $gateway = new Gateway("websocket://0.0.0.0:7272",$context);
+    $gateway = new Gateway("websocket://0.0.0.0:7272", $context);
     // 开启SSL，websocket+SSL 即wss
     $gateway->transport = 'ssl';
 }
@@ -64,8 +64,6 @@ $gateway->registerAddress = '127.0.0.1:1236';
 };*/
 
 // 如果不是在根目录启动，则运行runAll方法
-if(!defined('GLOBAL_START'))
-{
+if (!defined('GLOBAL_START')) {
     Worker::runAll();
 }
-
