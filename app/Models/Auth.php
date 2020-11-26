@@ -161,5 +161,4 @@ class Auth extends Model
     {
         return DB::table($this->table)->where($field, $op, $value)->delete();
     }
-
 }

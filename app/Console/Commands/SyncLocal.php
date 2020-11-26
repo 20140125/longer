@@ -13,7 +13,7 @@ class SyncLocal extends Command
      *
      * @var string $signature
      */
-    protected $signature = 'longer:sync_local';
+    protected $signature = 'longer:sync-local';
 
     /**
      * The console command description.

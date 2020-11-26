@@ -20,7 +20,7 @@ class SyncOauthToUsers extends Command
      *
      * @var string $signature
      */
-    protected $signature = 'longer:sync_oauth {remember_token=default}';
+    protected $signature = 'longer:sync-oauth {remember_token=default}';
 
     /**
      * The console command description.

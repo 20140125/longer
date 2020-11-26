@@ -20,7 +20,7 @@ class SyncClientId extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync_client_id';
+    protected $signature = 'longer:sync-client-id';
 
     /**
      * The console command description.

@@ -234,23 +234,4 @@ class FileController extends BaseController
         return $bool ? $this->ajaxReturn(Code::SUCCESS, 'Modify file permissions successfully')
             : $this->ajaxReturn(Code::ERROR, 'Modify file permissions failed');
     }
-
-    /**
-     * TODO:：图片预览
-     * @param string name 文件名称
-     * @return JsonResponse
-     */
-    public function preview()
-    {
-        $this->validatePost(['path'=>'required|string']);
-        if (!file_exists($this->post['path'])) {
-            return $this->ajaxReturn(Code::ERROR, 'file does not exist');
-        }
-        return !file_exists($this->post['path']) ? $this->ajaxReturn(Code::ERROR, 'file does not exist')
-            : $this->ajaxReturn(
-                Code::SUCCESS,
-                'Get the file address successfully',
-                ['src'=>imgBase64Encode($this->post['path'])]
-            );
-    }
 }

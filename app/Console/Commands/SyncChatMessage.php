@@ -18,7 +18,7 @@ class SyncChatMessage extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync_chat-message';
+    protected $signature = 'longer:sync-chat-message';
 
     /**
      * The console command description.

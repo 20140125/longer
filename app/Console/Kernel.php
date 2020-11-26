@@ -13,16 +13,17 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\Oauth',
-        'App\Console\Commands\ExpiresRule',
-        'App\Console\Commands\NormalRule',
-        'App\Console\Commands\SendPush',
+        'App\Console\Commands\SyncOauth',
+        'App\Console\Commands\SyncExpiresRule',
+        'App\Console\Commands\SyncNormalRule',
+        'App\Console\Commands\SyncSendPush',
         'App\Console\Commands\SyncAreaLists',
         'App\Console\Commands\SyncOauthToUsers',
         'App\Console\Commands\SyncLocal',
         'App\Console\Commands\SyncWeather',
         'App\Console\Commands\SyncClientId',
-        'App\Console\Commands\SyncChatMessage'
+        'App\Console\Commands\SyncChatMessage',
+        'App\Console\Commands\SyncSpiderData'
     ];
 
     /**
@@ -33,7 +34,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
     }
 
     /**
@@ -44,7 +44,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

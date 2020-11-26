@@ -20,7 +20,7 @@ class SyncAreaLists extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync_area';
+    protected $signature = 'longer:sync-area';
 
     /**
      * The console command description.

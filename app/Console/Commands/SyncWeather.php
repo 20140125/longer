@@ -13,7 +13,7 @@ class SyncWeather extends Command
      *
      * @var string $signature
      */
-    protected $signature = 'longer:sync_weather';
+    protected $signature = 'longer:sync-weather';
 
     /**
      * The console command description.
