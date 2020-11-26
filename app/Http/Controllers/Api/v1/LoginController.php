@@ -362,7 +362,7 @@ class LoginController
         }
         $lists['data'] = DB::table('os_soogif')
             ->where('type', '=', $this->post['id'])
-            ->get(['id','name as label','type','href as url']);
+            ->get(['id','name as label','type','href as url','height']);
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
         return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
     }

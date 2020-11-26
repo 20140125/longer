@@ -27,6 +27,8 @@ class SyncSpiderData extends Command
      */
     protected $description = 'sync spider data';
 
+    protected $flag;
+
     /**
      * Create a new command instance.
      *
@@ -35,6 +37,7 @@ class SyncSpiderData extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->flag = true;
     }
 
     /**
@@ -47,12 +50,30 @@ class SyncSpiderData extends Command
 
     protected function getRequestData()
     {
-        $this->getSooGif();
+        $this->setFileInfo();
+    }
+
+    protected function setFileInfo()
+    {
+        try {
+            while ($this->flag) {
+                $result = DB::table('os_soogif')->where('width', '=', null)->first();
+                $this->info("获取图片信息：\r\n".json_encode($result)."\r\n");
+                $this->flag = !empty($result);
+                $fileInfo = getimagesize($result->href);
+                DB::table('os_soogif')->where('id', '=', $result->id)->update(
+                    ['width' => $fileInfo[0], 'height' => $fileInfo[1]]
+                );
+                $this->info($result->href."\r\n图片信息修改成功\r\n".json_encode($fileInfo)."\r\n");
+            }
+        } catch (\Exception $exception) {
+            $this->error($exception->getMessage());
+        }
     }
     /**
      * todo:获取动态图
      */
-    public function getSooGif()
+    protected function getSooGif()
     {
         $result = DB::table('os_soogif_type')->where('pid', '>', 0)->get();
         $bar =  $bar = $this->output->createProgressBar(count($result));
@@ -76,10 +97,13 @@ class SyncSpiderData extends Command
                             $result = DB::table('os_soogif')
                                 ->where('href', '=', $node->attr('data-img'))
                                 ->first(['href']);
+                            $fileInfo = getimagesize($node->attr('data-img'));
                             !$result ? DB::table('os_soogif')->insert([
                                 'type' => $item->id,
                                 'href' => $node->attr('data-img'),
-                                'name' => $node->filter('.item-tools h2')->text()
+                                'name' => $node->filter('.item-tools h2')->text(),
+                                'width' => $fileInfo[0],
+                                'height' => $fileInfo[1]
                             ]) : $this->line($node->attr('data-img')." :已经存在\r\n");
                         });
                     }
