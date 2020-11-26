@@ -352,7 +352,7 @@ class LoginController
         }
         //判断用户是否是登录用户
         $res = DB::table('os_soogif_type')->where('id', '=', $this->post['id'])->first(['pid']);
-        if (!in_array($res->pid, [0, 1, 9, 45]) || empty($this->post['token'])) {
+        if (!in_array($res->pid, [0, 1, 9, 45]) && empty($this->post['token'])) {
             return ajaxReturn(Code::ERROR, 'Please Login System');
         }
         if (!empty($this->post['token'])) {
