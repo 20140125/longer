@@ -32,6 +32,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'], 'common/upload', 'v1\WxUsersController@upload');
     Route::match(['post','get'], 'common/emotion', 'v1\EmotionController@index')->name('emotion');
     Route::match(['post','get'], 'common/download', 'v1\LoginController@download')->name('download');
+    Route::match(['get','post'], 'common/image_bed', 'v1\LoginController@bed')->name('sooGif');
+
 
     /********************************************共有权限********************************************************/
 

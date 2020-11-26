@@ -335,4 +335,35 @@ class LoginController
         }
         return ajaxReturn(Code::NOT_FOUND, 'permission denied');
     }
+    /**
+     * TODO:：图床列表
+     * @param integer id
+     * @return JsonResponse
+     */
+    public function bed()
+    {
+        if (empty($this->post['id'])) {
+            $lists = getTree(DB::table('os_soogif_type')->get(['name','id','pid']), '0', 'children');
+            return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
+        }
+        $validate = Validator::make($this->post, ['id'=>'required|integer']);
+        if ($validate->fails()) {
+            return ajaxReturn(Code::ERROR, $validate->errors()->first());
+        }
+        //判断用户是否是登录用户
+        $res = DB::table('os_soogif_type')->where('id', '=', $this->post['id'])->first(['pid']);
+        if (!in_array($res->pid, [0, 1, 9, 45]) || empty($this->post['token'])) {
+            return ajaxReturn(Code::ERROR, 'Please Login System');
+        }
+        if (!empty($this->post['token'])) {
+            if (empty($this->userModel->getResult('remember_token', $this->post['token']))) {
+                return ajaxReturn(Code::ERROR, 'Please Login System');
+            }
+        }
+        $lists['data'] = DB::table('os_soogif')
+            ->where('type', '=', $this->post['id'])
+            ->get(['id','name as label','type','href as url']);
+        $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
+        return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
+    }
 }
