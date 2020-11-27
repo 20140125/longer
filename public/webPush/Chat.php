@@ -1,8 +1,4 @@
 <?php
-namespace chat;
-
-use Redis;
-
 /**
  * @author <fl140125@gmail.com>
  * Class Chat

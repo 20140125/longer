@@ -57,7 +57,7 @@ class SyncSpiderData extends Command
     {
         try {
             while ($this->flag) {
-                $result = DB::table('os_soogif')->where('width', '=', null)->first();
+                $result = DB::table('os_soogif')->where('width', '=', null)->orderByDesc('id')->first();
                 $this->info("获取图片信息：\r\n".json_encode($result)."\r\n");
                 $this->flag = !empty($result);
                 $fileInfo = getimagesize($result->href);

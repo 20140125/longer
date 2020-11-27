@@ -1,5 +1,4 @@
 <?php
-namespace chat;
 
 /**
  * This file is part of workerman.
@@ -28,6 +27,7 @@ use \Workerman\MySQL\Connection;
 
 require_once __DIR__.'/config/db.php';
 date_default_timezone_set("Asia/Shanghai");
+
 class Events
 {
     protected static $db = '';
@@ -231,7 +231,7 @@ class Events
     /**
      * 当客户端断开连接时
      * @param $client_id //客户端id
-     * @throws Exception
+     * @throws \Exception
      */
     public static function onClose($client_id)
     {
