@@ -346,7 +346,10 @@ class LoginController
             $lists = getTree(DB::table('os_soogif_type')->get(['name','id','pid']), '0', 'children');
             return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
         }
-        $validate = Validator::make($this->post, ['id'=>'required|integer']);
+        $validate = Validator::make(
+            $this->post,
+            ['id'=>'required|integer','page'=>'required|integer','limit'=>'integer|integer']
+        );
         if ($validate->fails()) {
             return ajaxReturn(Code::ERROR, $validate->errors()->first());
         }
@@ -362,7 +365,9 @@ class LoginController
         }
         $lists['data'] = DB::table('os_soogif')
             ->where('type', '=', $this->post['id'])
-            ->get(['id','name as label','type','href as url','height']);
+            ->limit($this->post['limit'])
+            ->offset($this->post['limit'] * ($this->post['page'] - 1))
+            ->get(['id','name','type','href','height','width']);
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
         return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
     }
