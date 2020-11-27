@@ -367,6 +367,7 @@ class LoginController
                 return ajaxReturn(Code::ERROR, 'Please Login System');
             }
         }
+        $this->post['limit'] = 100;
         $res = Cache::get($this->post['page'].'_'.$this->post['id']);
         if (empty($lists['data'])) {
             $res = DB::table('os_soogif')
