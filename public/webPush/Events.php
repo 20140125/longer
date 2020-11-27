@@ -308,7 +308,7 @@ class Events
             $users[$key]['room_id'] = '1200';
             $arr[$users[$key]['uid']] = $users[$key];
         }
-        array_multisort($sortArr, $arr, SORT_DESC);
+        array_multisort($sortArr, SORT_DESC);
         return $arr;
     }
     /**
