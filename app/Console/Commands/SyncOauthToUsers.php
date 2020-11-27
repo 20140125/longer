@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\CommonController;
 use App\Models\UserCenter;
 use App\Models\Users;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use App\Models\OAuth;
 
 /**
  * @author <fl140125@gmail.com>
@@ -33,7 +33,7 @@ class SyncOauthToUsers extends Command
      */
     protected $usersModel;
     /**
-     * @var \App\Models\OAuth  $oAuthModel
+     * @var OAuth  $oAuthModel
      */
     protected $oAuthModel;
     /**
@@ -50,7 +50,7 @@ class SyncOauthToUsers extends Command
     {
         parent::__construct();
         $this->usersModel = Users::getInstance();
-        $this->oAuthModel = \App\Models\OAuth::getInstance();
+        $this->oAuthModel = OAuth::getInstance();
         $this->userCenterModel = UserCenter::getInstance();
     }
 
