@@ -67,7 +67,6 @@ class SyncSpiderData extends Command
                 $this->info($result->href."\r\n图片信息修改成功\r\n".json_encode($fileInfo)."\r\n");
             }
         } catch (\Exception $exception) {
-            $this->setFileInfo();
             $this->error($exception->getMessage());
         }
     }
