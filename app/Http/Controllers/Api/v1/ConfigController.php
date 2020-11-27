@@ -91,7 +91,7 @@ class ConfigController extends BaseController
     public function delete()
     {
         $this->validatePost(['id'=>'required|integer']);
-        $result = $this->configModel->deleteResult($this->post, 'id', $this->post['id']);
+        $result = $this->configModel->deleteResult($this->post);
         return $result ? $this->ajaxReturn(Code::SUCCESS, 'remove config successfully')
             : $this->ajaxReturn(Code::ERROR, 'remove config failed');
     }

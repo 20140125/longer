@@ -67,8 +67,6 @@ class Config extends Model
      */
     public function addResult(array $data)
     {
-        $data['created_at'] = time();
-        $data['updated_at'] = time();
         return DB::table($this->table)->insertGetId($data);
     }
 
@@ -132,13 +130,22 @@ class Config extends Model
 
     /**
      * TODO: 删除一条数据
-     * @param string $field
-     * @param int $value
+     * @param $field
+     * @param $value
      * @param string $op
      * @return int
      */
-    public function deleteResult(string $field, int $value, string $op = '=')
+    public function deleteResult($field, $value = '', string $op = '=')
     {
-        return DB::table($this->table)->where($field, $op, $value)->delete();
+        $result = $this->getResult('id', $field['pid']);
+        $children = json_decode($result->children, true);
+        foreach ($children as $index => $item) {
+            if ($field['id'] === $item['id']) {
+                unset($children[$index]);
+            }
+        }
+        return DB::table($this->table)
+            ->where('id', '=', $result->id)
+            ->update(['children' => json_encode($children)]);
     }
 }
