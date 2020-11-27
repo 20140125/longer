@@ -55,6 +55,7 @@ class SyncSpiderData extends Command
 
     protected function setFileInfo()
     {
+        global $result;
         try {
             while ($this->flag) {
                 $result = DB::table('os_soogif')->where('width', '=', null)->orderByDesc('id')->first();
@@ -68,6 +69,12 @@ class SyncSpiderData extends Command
             }
         } catch (\Exception $exception) {
             $this->error($exception->getMessage());
+            preg_match("/400 Bad Request/", $exception->getMessage(), $pregResult);
+            if ($pregResult) {
+                $this->error("删除访问失败的图片地址信息\r\n".json_encode($result)."\r\n");
+                DB::table('os_soogif')->delete($result->id);
+            }
+            $this->setFileInfo();
         }
     }
     /**
