@@ -16,7 +16,7 @@ class QQController extends OAuthController
     /**
      * @var string $appid
      */
-    protected string $appid;
+    protected $appid;
     /**
      * @var string $appsecret
      */
