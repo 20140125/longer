@@ -59,19 +59,20 @@ class SyncSpiderData extends Command
         try {
             while ($this->flag) {
                 $result = DB::table('os_soogif')->where('width', '=', null)->orderByDesc('id')->first();
-                $this->info("获取图片信息：\r\n".json_encode($result)."\r\n");
-                $this->flag = !empty($result);
-                $fileInfo = getimagesize($result->href);
-                DB::table('os_soogif')->where('id', '=', $result->id)->update(
-                    ['width' => $fileInfo[0], 'height' => $fileInfo[1]]
-                );
-                $this->info($result->href."\r\n图片信息修改成功\r\n".json_encode($fileInfo)."\r\n");
+                if (!empty($result)) {
+                    $this->info("获取图片信息：\r\n".json_encode($result)."\r\n");
+                    $this->flag = !empty($result);
+                    $fileInfo = getimagesize($result->href);
+                    DB::table('os_soogif')->where('id', '=', $result->id)->update(
+                        ['width' => $fileInfo[0], 'height' => $fileInfo[1]]
+                    );
+                    $this->info($result->href."\r\n图片信息修改成功\r\n".json_encode($fileInfo)."\r\n");
+                }
             }
         } catch (\Exception $exception) {
-            $this->error($exception->getMessage());
-            preg_match("/400 Bad Request/", $exception->getMessage(), $pregResult);
-            if ($pregResult) {
-                $this->error("删除访问失败的图片地址信息\r\n".json_encode($result)."\r\n");
+            $this->error("失败原因：\r\n".$exception->getMessage()."\r\n");
+            $this->error("失败图片：\r\n".json_encode($result)."\r\n");
+            if ($result) {
                 DB::table('os_soogif')->delete($result->id);
             }
             $this->setFileInfo();
