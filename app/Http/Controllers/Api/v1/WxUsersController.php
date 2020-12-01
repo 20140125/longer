@@ -3,12 +3,14 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Models\Config;
+use App\Models\OAuth;
 use App\Models\Users;
 use Carbon\Carbon;
 use Curl\Curl;
 use Illuminate\Config\Repository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -83,8 +85,29 @@ class WxUsersController
      */
     public function login()
     {
-        Log::error(json_encode($this->post));
-        return $this->ajaxReturn(Code::SUCCESS, 'login successfully');
+        $this->validatePost([
+            'nickName'=>'required|string',
+            'avatarUrl'=>'required|string',
+            'code2Session'=>'required|Array'
+        ]);
+        $oauth = [
+            'username' => $this->post['nickName'],
+            'openid' => $this->post['code2Session']['openid'],
+            'access_token' => $this->post['code2Session']['session_key'],
+            'expire' => $this->post['code2Session']['session_key'],
+            'role_id' => 2,
+            'created_at' => time(),
+            'updated_at' => time(),
+            'remember_token' => md5(md5($this->post['nickName']).time()),
+            'oauth_type' => 'weixin',
+            'avatar_url' => $this->post['avatarUrl']
+        ];
+        $result = OAuth::getInstance()->addResult($oauth);
+        if (!empty($result)) {
+            Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
+            return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauth);
+        }
+        return  $this->ajaxReturn(Code::ERROR, 'login failed');
     }
 
     /**
