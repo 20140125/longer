@@ -79,6 +79,18 @@ class WxUsersController
         $parsedData = json_decode(trim($response), true, 512, JSON_OBJECT_AS_ARRAY);
         return $this->ajaxReturn(Code::SUCCESS, 'successfully', $parsedData);
     }
+
+    /**
+     * todo：校验登录
+     * @return JsonResponse
+     */
+    public function checkLogin()
+    {
+        $this->validatePost(['token'=>'required|string']);
+        $result = $this->userModel->getResult('remember_token', $this->post['token']);
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'successfully', $result) :
+            $this->ajaxReturn(Code::ERROR, 'failed');
+    }
     /**
      * TODO: 微信登陆信息
      * @return JsonResponse
