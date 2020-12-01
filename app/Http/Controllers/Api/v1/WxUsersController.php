@@ -92,9 +92,9 @@ class WxUsersController
         ]);
         $oauth = [
             'username' => $this->post['nickName'],
-            'openid' => $this->post['code2Session']['openid'],
-            'access_token' => $this->post['code2Session']['session_key'],
-            'expires' => $this->post['code2Session']['session_key'],
+            'openid' => $this->post['code2Session']['openid'] ?? 0,
+            'access_token' => $this->post['code2Session']['session_key'] ?? 0,
+            'expires' => time() + $this->post['code2Session']['expires_in'] ?? 0,
             'role_id' => 2,
             'created_at' => time(),
             'updated_at' => time(),
