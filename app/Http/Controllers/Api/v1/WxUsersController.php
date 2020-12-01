@@ -102,7 +102,12 @@ class WxUsersController
             'oauth_type' => 'weixin',
             'avatar_url' => $this->post['avatarUrl']
         ];
-        $result = OAuth::getInstance()->addResult($oauth);
+        $where[] = array('openid','=',$oauth['openid']);
+        $where[] = array('oauth_type','=','os_china');
+        $result = OAuth::getInstance()->getResult($where);
+        if (!empty($result)) {
+            $result = OAuth::getInstance()->addResult($oauth);
+        }
         if (!empty($result)) {
             Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
             return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauth);
@@ -169,7 +174,6 @@ class WxUsersController
     }
     public function collect()
     {
-
     }
 
     /**
