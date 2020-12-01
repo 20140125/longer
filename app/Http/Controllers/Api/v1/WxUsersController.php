@@ -77,6 +77,15 @@ class WxUsersController
         $parsedData = json_decode(trim($response), true, 512, JSON_OBJECT_AS_ARRAY);
         return $this->ajaxReturn(Code::SUCCESS, 'successfully', $parsedData);
     }
+    /**
+     * TODO: 微信登陆信息
+     * @return JsonResponse
+     */
+    public function login()
+    {
+        Log::error(json_encode($this->post));
+        return $this->ajaxReturn(Code::SUCCESS, 'login successfully');
+    }
 
     /**
      * todo:获取图片信息
@@ -138,14 +147,6 @@ class WxUsersController
     public function collect()
     {
 
-    }
-    /**
-     * TODO: 微信登陆信息
-     * @return JsonResponse
-     */
-    public function login()
-    {
-        return $this->ajaxReturn(Code::SUCCESS, 'login successfully');
     }
 
     /**
