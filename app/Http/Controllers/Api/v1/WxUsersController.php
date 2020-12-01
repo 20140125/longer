@@ -104,13 +104,12 @@ class WxUsersController
         ];
         $where[] = array('openid','=',$oauth['openid']);
         $where[] = array('oauth_type','=','os_china');
-        $result = OAuth::getInstance()->getResult($where);
-        if (!empty($result)) {
+        if (!empty(OAuth::getInstance()->getResult($where))) {
             $result = OAuth::getInstance()->addResult($oauth);
-        }
-        if (!empty($result)) {
-            Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
-            return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauth);
+            if (!empty($result)) {
+                Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
+                return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauth);
+            }
         }
         return  $this->ajaxReturn(Code::ERROR, 'login failed');
     }
