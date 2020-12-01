@@ -135,7 +135,10 @@ class WxUsersController
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
         return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
     }
+    public function collect()
+    {
 
+    }
     /**
      * TODO: 微信登陆信息
      * @return JsonResponse

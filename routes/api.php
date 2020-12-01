@@ -48,7 +48,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'], 'center/save', 'v1\UsersController@saveCenter')->name('saveCenter');
     //小程序
     Route::match(['get','post'], 'wx/login', 'v1\WxUsersController@login')->name('wxLogin');
-    Route::match(['get','post'], 'wx/get_openid', 'v1\WxUsersController@getOpenId')->name('getOpenId');
+    Route::match(['get','post'], 'wx/openid', 'v1\WxUsersController@getOpenId')->name('getOpenId');
     Route::match(['get','post'], 'wx/image/bed', 'v1\WxUsersController@imageBed')->name('imageBed');
     Route::match(['get','post'], 'wx/image/details', 'v1\WxUsersController@getImageDetails')->name('getImageDetails');
 
