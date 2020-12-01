@@ -103,7 +103,7 @@ class WxUsersController
             'avatar_url' => $this->post['avatarUrl']
         ];
         $where[] = array('openid','=',$oauth['openid']);
-        $where[] = array('oauth_type','=','os_china');
+        $where[] = array('oauth_type','=','weixin');
         if (!empty(OAuth::getInstance()->getResult($where))) {
             $result = OAuth::getInstance()->addResult($oauth);
             if (!empty($result)) {
