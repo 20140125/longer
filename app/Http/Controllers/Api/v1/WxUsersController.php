@@ -94,7 +94,7 @@ class WxUsersController
             'username' => $this->post['nickName'],
             'openid' => $this->post['code2Session']['openid'],
             'access_token' => $this->post['code2Session']['session_key'],
-            'expire' => $this->post['code2Session']['session_key'],
+            'expires' => $this->post['code2Session']['session_key'],
             'role_id' => 2,
             'created_at' => time(),
             'updated_at' => time(),
