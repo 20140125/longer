@@ -79,18 +79,6 @@ class WxUsersController
         $parsedData = json_decode(trim($response), true, 512, JSON_OBJECT_AS_ARRAY);
         return $this->ajaxReturn(Code::SUCCESS, 'successfully', $parsedData);
     }
-
-    /**
-     * todo：校验登录
-     * @return JsonResponse
-     */
-    public function checkLogin()
-    {
-        $this->validatePost(['token'=>'required|string']);
-        $result = $this->userModel->getResult('remember_token', $this->post['token']);
-        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'successfully', $result) :
-            $this->ajaxReturn(Code::ERROR, 'failed');
-    }
     /**
      * TODO: 微信登陆信息
      * @return JsonResponse
@@ -179,7 +167,7 @@ class WxUsersController
                 ->offset($this->post['limit'] * ($this->post['page'] - 1))
                 ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
                 ->get(['os_soogif.*','os_soogif_type.name as type_name']);
-            Cache::put($this->post['id'].'_wx_'.$this->post['page'], $res, Carbon::now()->addHours(2));
+            Cache::forever($this->post['id'].'_wx_'.$this->post['page'], $res);
         }
         $lists['data'] = $res;
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
