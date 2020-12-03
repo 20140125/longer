@@ -115,7 +115,6 @@ class WxUsersController
         }
         $oauthRes->remember_token = md5($oauthRes->remember_token);
         OAuth::getInstance()->updateResult(objectToArray($oauthRes), 'id', $oauthRes->id);
-        Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
         return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauthRes);
     }
 
@@ -158,7 +157,7 @@ class WxUsersController
             return ajaxReturn(Code::ERROR, 'Please Login System');
         }
         if (!empty($this->post['token'])) {
-            if (empty($this->userModel->getResult('remember_token', $this->post['token']))) {
+            if (empty(OAuth::getInstance()->getResult('remember_token', $this->post['token']))) {
                 return ajaxReturn(Code::ERROR, 'Please Login System');
             }
         }
