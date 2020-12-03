@@ -115,6 +115,7 @@ class WxUsersController
         }
         $oauthRes->remember_token = md5($oauthRes->remember_token);
         OAuth::getInstance()->updateResult(objectToArray($oauthRes), 'id', $oauthRes->id);
+        Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
         return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauthRes);
     }
 
