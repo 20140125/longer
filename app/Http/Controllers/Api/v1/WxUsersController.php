@@ -139,7 +139,7 @@ class WxUsersController
     public function imageBed()
     {
         if (empty($this->post['id'])) {
-            $lists = $lists = DB::table('os_soogif_type')->where('pid', '=', $this->post['pid'])
+            $lists = $lists = DB::table('os_soogif_type')->where('pid', '=', $this->post['pid'] ?? 0)
                 ->get(['name','id','pid']);
             return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
         }
