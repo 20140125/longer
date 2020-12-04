@@ -28,6 +28,7 @@ class SyncSpiderData extends Command
     protected $description = 'sync spider data';
 
     protected $flag;
+    protected $startPage;
 
     /**
      * Create a new command instance.
@@ -38,6 +39,7 @@ class SyncSpiderData extends Command
     {
         parent::__construct();
         $this->flag = true;
+        $this->startPage = 1;
     }
 
     /**
@@ -50,8 +52,8 @@ class SyncSpiderData extends Command
 
     protected function getRequestData()
     {
-//        $this->getFaBiaoQingType();
-        $this->getFaBiaoQingFromHeader();
+        $this->getFaBiaoQing();
+//        $this->getFaBiaoQingFromHeader();
 //        $this->setFileInfo();
     }
 
@@ -93,7 +95,7 @@ class SyncSpiderData extends Command
      */
     protected function getFaBiaoQing()
     {
-        $result = DB::table('os_soogif_type')->where('pid', '=', '105')->get();
+        $result = DB::table('os_soogif_type')->where('pid', '=', 105)->where('id','>',145)->get();
         try {
             $prefix = '/type/bq/page/';
             $client = new Client();
@@ -102,6 +104,7 @@ class SyncSpiderData extends Command
                 foreach ($arr as $id) {
                     $this->info("当前抓取链接：".$item->href.$prefix.$id.'.html');
                     $promise = $client->request('GET',$item->href.$prefix.$id.'.html');
+                    sleep(1);
                     $promise->filter('.searchbqppdiv')->each(function($node) use ($client, $item){
                         try {
                             $this->info("抓取图片地址：".str_replace('http://','https://',$node->filter('a img')->attr('data-original'))."\r\n");
@@ -130,19 +133,38 @@ class SyncSpiderData extends Command
      */
     protected function getFaBiaoQingType()
     {
-        $client = new Client();
-        //右侧标签
-//         $promise = $client->request('GET','https://fabiaoqing.com/bqb/lists');
-//         $promise->filter('.ui .labels a')->each(function ($node) use ($client){
-//         $this->info("抓取的地址：https:".$node->attr('href'));
-//            DB::table('os_soogif_type')->insert(
-//                [
-//                    'href' => "https:".$node->attr('href'),
-//                    'name' => $node->text(),
-//                    'pid' => 105
-//                ]
-//            );
-//        });
+        global $currentPage;
+        try {
+            $client = new Client();
+            //热搜榜
+            $promise = $client->request('GET','https://fabiaoqing.com/search');
+            $text = $promise->filter('#mobilepage')->text();
+            $pages = explode('/', $text);
+            $pageArr = range($this->startPage, (int)$pages[1]);
+            foreach ($pageArr as $page) {
+                $this->startPage = $page;
+                $currentPage = $page;
+                $this->info('请求的地址：'.'https://fabiaoqing.com/search/index/page/'.$this->startPage.".html\r\n");
+                $promise = $client->request('GET','https://fabiaoqing.com/search/index/page/'.$this->startPage.'.html');
+                sleep(1);
+                $promise->filter('#othersearch a')->each(function ($node) use ($client){
+                    $this->info("抓取的地址：".str_replace('http://','https://',$node->attr('href')));
+                    $result = DB::table('os_soogif_type')->where('href','=',str_replace('http://','https://',$node->attr('href')))->first();
+                    !$result ? DB::table('os_soogif_type')->insert(
+                        [
+                            'href' => str_replace('http://','https://',$node->attr('href')),
+                            'name' => $node->text(),
+                            'pid' => 105
+                        ]
+                    ) :  $this->line("地址已经存在：".str_replace('http://','https://',$node->attr('href')));
+                });
+            }
+        } catch (\Exception $exception) {
+            $this->startPage = $currentPage;
+            $this->getFaBiaoQingType();
+            $this->error($exception->getMessage());
+        }
+
         //头部导航栏
 //        $promise = $client->request('GET','https://fabiaoqing.com/bqb/lists');
 //        $promise->filter('#bqbcategory a')->each(function ($node) use ($client){
@@ -155,38 +177,38 @@ class SyncSpiderData extends Command
 //                ]
 //            );
 //        });
-        $result = DB::table('os_soogif_type')->where('id','>', 146)->get();
-        $bar = $this->output->createProgressBar(count($result));
-        try {
-            foreach ($result as $type) {
-                $promise = $client->request('GET', $type->href);
-                $text = $promise->filter('#mobilepage')->text();
-                $pages = explode('/', $text);
-                $pageArr = range(1, (int)$pages[1]);
-                foreach ($pageArr as $page) {
-                    $this->info('待抓取的地址：' . str_replace('.html', '/page/' . $page . '.html',$type->href) . "\r\n");
-                    $promise = $client->request('GET',str_replace('.html', '/page/' . $page . '.html', $type->href));
-                    sleep(1);
-                    $promise->filter('#bqblist .bqba')->each(function ($node) use ($client, $type) {
-                        $this->info($node->attr('title') . "\r\n" . "https://fabiaoqing.com" . $node->attr('href') . "\r\n");
-                        $result = DB::table('os_soogif_type')->where('href', '=', "https://fabiaoqing.com" . $node->attr('href'))->first();
-                        !$result ? DB::table('os_soogif_type')->insert(
-                            [
-                                'href' => "https://fabiaoqing.com" . $node->attr('href'),
-                                'name' => mb_substr($node->attr('title'), 0, 8)."......",
-                                'pid'  => $type->id
-                            ]
-                        ) : $this->line( "https://fabiaoqing.com" . $node->attr('href')."已经抓取\r\n");
-                    });
-                }
-            }
-            sleep(1);
-            $bar->advance();
-        } catch (\Exception $exception) {
-            $this->getFaBiaoQingType();
-            $this->error($exception->getMessage());
-        }
-        $bar->finish();
+//        $result = DB::table('os_soogif_type')->where('id','>', 146)->get();
+//        $bar = $this->output->createProgressBar(count($result));
+//        try {
+//            foreach ($result as $type) {
+//                $promise = $client->request('GET', $type->href);
+//                $text = $promise->filter('#mobilepage')->text();
+//                $pages = explode('/', $text);
+//                $pageArr = range(1, (int)$pages[1]);
+//                foreach ($pageArr as $page) {
+//                    $this->info('待抓取的地址：' . str_replace('.html', '/page/' . $page . '.html',$type->href) . "\r\n");
+//                    $promise = $client->request('GET',str_replace('.html', '/page/' . $page . '.html', $type->href));
+//                    sleep(1);
+//                    $promise->filter('#bqblist .bqba')->each(function ($node) use ($client, $type) {
+//                        $this->info($node->attr('title') . "\r\n" . "https://fabiaoqing.com" . $node->attr('href') . "\r\n");
+//                        $result = DB::table('os_soogif_type')->where('href', '=', "https://fabiaoqing.com" . $node->attr('href'))->first();
+//                        !$result ? DB::table('os_soogif_type')->insert(
+//                            [
+//                                'href' => "https://fabiaoqing.com" . $node->attr('href'),
+//                                'name' => mb_substr($node->attr('title'), 0, 8)."......",
+//                                'pid'  => $type->id
+//                            ]
+//                        ) : $this->line( "https://fabiaoqing.com" . $node->attr('href')."已经抓取\r\n");
+//                    });
+//                }
+//            }
+//            sleep(1);
+//            $bar->advance();
+//        } catch (\Exception $exception) {
+//            $this->getFaBiaoQingType();
+//            $this->error($exception->getMessage());
+//        }
+//        $bar->finish();
     }
 
     /**
