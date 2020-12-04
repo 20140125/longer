@@ -5,7 +5,6 @@ use App\Http\Controllers\Utils\Code;
 use App\Models\Config;
 use App\Models\OAuth;
 use App\Models\Users;
-use Carbon\Carbon;
 use Curl\Curl;
 use Illuminate\Config\Repository;
 use Illuminate\Http\JsonResponse;
@@ -13,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -118,6 +116,10 @@ class WxUsersController
         return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauthRes);
     }
 
+    /**
+     * todo:获取文字类型
+     * @return JsonResponse
+     */
     public function getImageType()
     {
         $this->validatePost(['name'=>'required|string']);
@@ -184,10 +186,15 @@ class WxUsersController
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
         return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
     }
-    public function collect()
+    /**
+     * todo:获取热搜关键词
+     * @return JsonResponse
+     */
+    public function hotKeWord()
     {
+        $hotKeyWord = $this->configModel->getResult('name', 'hotKeyWord', '=', ['children'])->children;
+        return ajaxReturn(Code::SUCCESS, 'successfully', explode(',', json_decode($hotKeyWord)[0]->value));
     }
-
     /**
      * TODO:数据返回
      * @param $code

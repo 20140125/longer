@@ -26,9 +26,18 @@ class SyncSpiderData extends Command
      * @var string
      */
     protected $description = 'sync spider data';
-
+    /**
+     * @var bool $flag
+     */
     protected $flag;
+    /**
+     * @var int $startPage
+     */
     protected $startPage;
+    /**
+     * @var int $startId
+     */
+    protected $startId;
 
     /**
      * Create a new command instance.
@@ -40,6 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
+        $this->startId = 146;
     }
 
     /**
@@ -61,31 +71,36 @@ class SyncSpiderData extends Command
      */
     protected function getFaBiaoQingFromHeader()
     {
-        $result = DB::table('os_soogif_type')->where('pid', '>', 146)->orderByDesc('id')->get();
-        $bar = $this->output->createProgressBar(count($result));
+        global $currentId,$bar;
         try {
+            $result = DB::table('os_soogif_type')->where('pid', '>', $this->startId)->orderByDesc('id')->get();
+            $bar = $this->output->createProgressBar(count($result));
             $client=  new Client();
             foreach ($result as $item) {
+                $this->startId = $item->pid;
+                $currentId = $this->startId;
                 $promise = $client->request('GET', $item->href);
                 sleep(1);
                 $this->info("抓取地址：".$item->href."\r\n");
-                $promise->filter('.bqppdiv1 img')->each(function ($node) use ($client,$item){
-                    $this->info("抓取图片信息：".$node->attr('alt')."\r\n".str_replace('http://','https://',$node->attr('data-original'))."\r\n");
+                $promise->filter('.bqppdiv1 img')->each(function ($node) use ($client, $item) {
+                    $href = str_replace('http://', 'https://', $node->attr('data-original'));
+                    $this->info("抓取图片信息：".$node->attr('alt')."\r\n".$href."\r\n");
                     $result = DB::table('os_soogif')
-                        ->where('href', '=', str_replace('http://','https://',$node->attr('data-original')))
+                        ->where('href', '=', $href)
                         ->first(['href']);
                     !$result ? DB::table('os_soogif')->insert([
                         'type' => $item->id,
-                        'href' => str_replace('http://','https://',$node->attr('data-original')),
+                        'href' => $href,
                         'name' => $node->attr('alt'),
                         'width' => 0,
                         'height' => 0
-                    ]) : $this->line(str_replace('http://','https://',$node->attr('data-original'))." :已经存在\r\n");
+                    ]) : $this->line($href." :已经存在\r\n");
                 });
             }
             sleep(1);
             $bar->advance();
         } catch (\Exception $exception) {
+            $this->startId = $currentId;
             $this->getFaBiaoQingFromHeader();
             $this->error($exception);
         }
@@ -97,7 +112,7 @@ class SyncSpiderData extends Command
      */
     protected function getFaBiaoQing()
     {
-        $result = DB::table('os_soogif_type')->where('pid', '=', 105)->where('id','>',145)->get();
+        $result = DB::table('os_soogif_type')->where('pid', '=', 105)->where('id', '>', 145)->get();
         try {
             $prefix = '/type/bq/page/';
             $client = new Client();
@@ -105,21 +120,22 @@ class SyncSpiderData extends Command
                 $arr = range(1, 20);
                 foreach ($arr as $id) {
                     $this->info("当前抓取链接：".$item->href.$prefix.$id.'.html');
-                    $promise = $client->request('GET',$item->href.$prefix.$id.'.html');
+                    $promise = $client->request('GET', $item->href.$prefix.$id.'.html');
                     sleep(1);
-                    $promise->filter('.searchbqppdiv')->each(function($node) use ($client, $item){
+                    $promise->filter('.searchbqppdiv')->each(function ($node) use ($client, $item) {
                         try {
-                            $this->info("抓取图片地址：".str_replace('http://','https://',$node->filter('a img')->attr('data-original'))."\r\n");
+                            $href = str_replace('http://', 'https://', $node->filter('a img')->attr('data-original'));
+                            $this->info("抓取图片地址：".$href."\r\n");
                             $result = DB::table('os_soogif')
-                                ->where('href', '=', str_replace('http://','https://',$node->filter('a img')->attr('data-original')))
+                                ->where('href', '=', $href)
                                 ->first(['href']);
                             !$result ? DB::table('os_soogif')->insert([
                                 'type' => $item->id,
-                                'href' => str_replace('http://','https://',$node->filter('a img')->attr('data-original')),
+                                'href' => $href,
                                 'name' => $item->name,
                                 'width' => 0,
                                 'height' => 0
-                            ]) : $this->line(str_replace('http://','https://',$node->filter('a img')->attr('data-original'))." :已经存在\r\n");
+                            ]) : $this->line($href." :已经存在\r\n");
                         } catch (\Exception $exception) {
                             $this->error($exception->getMessage());
                         }
@@ -138,27 +154,29 @@ class SyncSpiderData extends Command
         global $currentPage;
         try {
             $client = new Client();
-            //热搜榜
-            $promise = $client->request('GET','https://fabiaoqing.com/search');
+            $promise = $client->request('GET', 'https://fabiaoqing.com/search');
             $text = $promise->filter('#mobilepage')->text();
             $pages = explode('/', $text);
             $pageArr = range($this->startPage, (int)$pages[1]);
+            $href = 'https://fabiaoqing.com/search/index/page/';
             foreach ($pageArr as $page) {
                 $this->startPage = $page;
                 $currentPage = $page;
-                $this->info('请求的地址：'.'https://fabiaoqing.com/search/index/page/'.$this->startPage.".html\r\n");
-                $promise = $client->request('GET','https://fabiaoqing.com/search/index/page/'.$this->startPage.'.html');
+                $this->info('请求的地址：'.$href.$this->startPage.".html\r\n");
+                $promise = $client->request('GET', $href.$this->startPage.'.html');
                 sleep(1);
-                $promise->filter('#othersearch a')->each(function ($node) use ($client){
-                    $this->info("抓取的地址：".str_replace('http://','https://',$node->attr('href')));
-                    $result = DB::table('os_soogif_type')->where('href','=',str_replace('http://','https://',$node->attr('href')))->first();
+                $promise->filter('#othersearch a')->each(function ($node) use ($client) {
+                    $this->info("抓取的地址：".str_replace('http://', 'https://', $node->attr('href')));
+                    $result = DB::table('os_soogif_type')
+                        ->where('href', '=', str_replace('http://', 'https://', $node->attr('href')))
+                        ->first();
                     !$result ? DB::table('os_soogif_type')->insert(
                         [
-                            'href' => str_replace('http://','https://',$node->attr('href')),
+                            'href' => str_replace('http://', 'https://', $node->attr('href')),
                             'name' => $node->text(),
                             'pid' => 105
                         ]
-                    ) :  $this->line("地址已经存在：".str_replace('http://','https://',$node->attr('href')));
+                    ) :  $this->line("地址已经存在：".str_replace('http://', 'https://', $node->attr('href')));
                 });
             }
         } catch (\Exception $exception) {
@@ -166,51 +184,6 @@ class SyncSpiderData extends Command
             $this->getFaBiaoQingType();
             $this->error($exception->getMessage());
         }
-
-        //头部导航栏
-//        $promise = $client->request('GET','https://fabiaoqing.com/bqb/lists');
-//        $promise->filter('#bqbcategory a')->each(function ($node) use ($client){
-//            $this->info("抓取的地址：https://fabiaoqing.com".$node->attr('href'));
-//            DB::table('os_soogif_type')->insert(
-//                [
-//                    'href' => "https://fabiaoqing.com".$node->attr('href'),
-//                    'name' => $node->text(),
-//                    'pid' => 0
-//                ]
-//            );
-//        });
-//        $result = DB::table('os_soogif_type')->where('id','>', 146)->get();
-//        $bar = $this->output->createProgressBar(count($result));
-//        try {
-//            foreach ($result as $type) {
-//                $promise = $client->request('GET', $type->href);
-//                $text = $promise->filter('#mobilepage')->text();
-//                $pages = explode('/', $text);
-//                $pageArr = range(1, (int)$pages[1]);
-//                foreach ($pageArr as $page) {
-//                    $this->info('待抓取的地址：' . str_replace('.html', '/page/' . $page . '.html',$type->href) . "\r\n");
-//                    $promise = $client->request('GET',str_replace('.html', '/page/' . $page . '.html', $type->href));
-//                    sleep(1);
-//                    $promise->filter('#bqblist .bqba')->each(function ($node) use ($client, $type) {
-//                        $this->info($node->attr('title') . "\r\n" . "https://fabiaoqing.com" . $node->attr('href') . "\r\n");
-//                        $result = DB::table('os_soogif_type')->where('href', '=', "https://fabiaoqing.com" . $node->attr('href'))->first();
-//                        !$result ? DB::table('os_soogif_type')->insert(
-//                            [
-//                                'href' => "https://fabiaoqing.com" . $node->attr('href'),
-//                                'name' => mb_substr($node->attr('title'), 0, 8)."......",
-//                                'pid'  => $type->id
-//                            ]
-//                        ) : $this->line( "https://fabiaoqing.com" . $node->attr('href')."已经抓取\r\n");
-//                    });
-//                }
-//            }
-//            sleep(1);
-//            $bar->advance();
-//        } catch (\Exception $exception) {
-//            $this->getFaBiaoQingType();
-//            $this->error($exception->getMessage());
-//        }
-//        $bar->finish();
     }
 
     /**
