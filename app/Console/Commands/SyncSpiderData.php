@@ -56,7 +56,9 @@ class SyncSpiderData extends Command
 //        $this->getFaBiaoQingFromHeader();
 //        $this->setFileInfo();
     }
-
+    /**
+     * todo:获取表情包
+     */
     protected function getFaBiaoQingFromHeader()
     {
         $result = DB::table('os_soogif_type')->where('pid', '>', 146)->orderByDesc('id')->get();
