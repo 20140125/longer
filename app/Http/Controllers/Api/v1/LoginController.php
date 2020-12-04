@@ -345,11 +345,8 @@ class LoginController
     public function bed()
     {
         if (empty($this->post['id'])) {
-            $lists = Cache::get('soogif_type');
-            if (empty($lists)) {
-                $lists = getTree(DB::table('os_soogif_type')->get(['name','id','pid']), '0', 'children');
-                Cache::forever('soogif_type', $lists);
-            }
+            $lists = $lists = DB::table('os_soogif_type')->where('pid', '=', $this->post['pid'])
+                ->get(['name','id','pid']);
             return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
         }
         $validate = Validator::make(

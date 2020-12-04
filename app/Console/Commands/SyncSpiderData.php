@@ -57,7 +57,7 @@ class SyncSpiderData extends Command
 
     protected function getFaBiaoQingFromHeader()
     {
-        $result = DB::table('os_soogif_type')->where('pid', '>', 146)->get();
+        $result = DB::table('os_soogif_type')->where('pid', '>', 146)->orderByDesc('id')->get();
         $bar = $this->output->createProgressBar(count($result));
         try {
             $client=  new Client();
