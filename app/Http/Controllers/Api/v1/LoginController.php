@@ -345,7 +345,11 @@ class LoginController
     public function bed()
     {
         if (empty($this->post['id'])) {
-            $lists = getTree(DB::table('os_soogif_type')->get(['name','id','pid']), '0', 'children');
+            $lists = Cache::get('soogif_type');
+            if (empty($lists)) {
+                $lists = getTree(DB::table('os_soogif_type')->get(['name','id','pid']), '0', 'children');
+                Cache::forever('soogif_type', $lists);
+            }
             return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
         }
         $validate = Validator::make(
@@ -375,7 +379,7 @@ class LoginController
                 ->limit($this->post['limit'])
                 ->offset($this->post['limit'] * ($this->post['page'] - 1))
                 ->get(['id','name','type','href','height','width']);
-            Cache::put($this->post['id'].'_'.$this->post['page'], $res, Carbon::now()->addHours(2));
+            Cache::forever($this->post['id'].'_'.$this->post['page'], $res);
         }
         $lists['data'] = $res;
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();

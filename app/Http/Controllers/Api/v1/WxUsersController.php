@@ -139,7 +139,8 @@ class WxUsersController
     public function imageBed()
     {
         if (empty($this->post['id'])) {
-            $lists = getTree(DB::table('os_soogif_type')->get(['name','id','pid']), '0', 'children');
+            $lists = $lists = DB::table('os_soogif_type')->where('pid', '=', $this->post['pid'])
+                ->get(['name','id','pid']);
             return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
         }
         $validate = Validator::make(
