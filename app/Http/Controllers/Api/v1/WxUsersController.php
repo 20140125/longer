@@ -150,7 +150,7 @@ class WxUsersController
         $where[] = ['pid','=',105];
         if (!empty($this->post['name'])) {
             $where = [];
-            $where[] = ['os_soogif.name','=',$this->post['name']];
+            $where[] = ['os_soogif.name','like',$this->post['name']];
         }
         $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])
             ->orderByRaw('rand()')
@@ -214,8 +214,8 @@ class WxUsersController
      */
     public function hotKeWord()
     {
-        $hotKeyWord = $this->configModel->getResult('name', 'hotKeyWord', '=', ['children'])->children;
-        return ajaxReturn(Code::SUCCESS, 'successfully', explode(',', json_decode($hotKeyWord)[0]->value));
+        $hotKeyWord = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;
+        return ajaxReturn(Code::SUCCESS, 'successfully', explode(',', json_decode($hotKeyWord)[1]->value));
     }
     /**
      * TODO:数据返回
