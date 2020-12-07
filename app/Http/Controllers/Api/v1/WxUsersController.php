@@ -120,12 +120,12 @@ class WxUsersController
      * todo:获取文字类型
      * @return JsonResponse
      */
-    public function getImageType()
-    {
-        $this->validatePost(['name'=>'required|string']);
-        $result = DB::table('os_soogif_type')->where('name', 'like', $this->post['name'])->get();
-        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
-    }
+//    public function getImageType()
+//    {
+//        $this->validatePost(['name'=>'required|string']);
+//        $result = DB::table('os_soogif_type')->where('name', 'like', $this->post['name'])->get();
+//        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
+//    }
     /**
      * todo:获取图片信息
      * @return JsonResponse
@@ -150,7 +150,7 @@ class WxUsersController
         $where[] = ['pid','=',105];
         if (!empty($this->post['name'])) {
             $where = [];
-            $where[] = ['os_soogif.name','like',$this->post['name'] ?? ''];
+            $where[] = ['os_soogif.name','like','%'.$this->post['name'].'%' ?? ''];
         }
         $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])
             ->orderByRaw('rand()')
