@@ -126,7 +126,6 @@ class WxUsersController
         $result = DB::table('os_soogif_type')->where('name', 'like', $this->post['name'])->get();
         return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
-
     /**
      * todo:获取图片信息
      * @return JsonResponse
@@ -148,20 +147,17 @@ class WxUsersController
     public function getNewImageBed()
     {
         $this->validatePost(['page'=>'required|integer','limit'=>'required|integer']);
-        $res = Cache::get($this->post['page'].'_image_bed');
-        if (empty($res['data'])) {
-            $res = DB::table('os_soogif')
-                ->where('pid', '=', 105)
-                ->limit($this->post['limit'])
-                ->orderByDesc('os_soogif.id')
-                ->offset($this->post['limit'] * ($this->post['page'] - 1))
-                ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
-                ->get(['os_soogif.*','os_soogif_type.name as type_name']);
-            Cache::forever($this->post['page'].'_image_bed', $res);
+        $where[] = ['pid','=',105];
+        if (!empty($this->post['name'])) {
+            $where = [];
+            $where[] = ['os_soogif.name','=',$this->post['name']];
         }
-        $lists['data'] = $res;
-        $lists['total'] =  DB::table('os_soogif')
-            ->where('pid', '=', 105)
+        $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])
+            ->orderByRaw('rand()')
+            ->offset($this->post['limit'] * ($this->post['page'] - 1))
+            ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
+            ->get(['os_soogif.*','os_soogif_type.name as type_name']);
+        $lists['total'] =  DB::table('os_soogif')->where($where)
             ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
             ->count();
         return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
