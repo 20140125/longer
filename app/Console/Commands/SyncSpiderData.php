@@ -16,14 +16,14 @@ class SyncSpiderData extends Command
     /**
      * The name and signature of the console command.
      *
-     * @var string
+     * @var string $signature
      */
     protected $signature = 'longer:sync-spider-data';
 
     /**
      * The console command description.
      *
-     * @var string
+     * @var string $description
      */
     protected $description = 'sync spider data';
     /**
@@ -49,7 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 146;
+        $this->startId = 12374;
     }
 
     /**
@@ -63,8 +63,6 @@ class SyncSpiderData extends Command
     protected function getRequestData()
     {
         $this->getFaBiaoQing();
-//        $this->getFaBiaoQingFromHeader();
-//        $this->setFileInfo();
     }
     /**
      * todo:获取表情包
@@ -85,9 +83,7 @@ class SyncSpiderData extends Command
                 $promise->filter('.bqppdiv1 img')->each(function ($node) use ($client, $item) {
                     $href = str_replace('http://', 'https://', $node->attr('data-original'));
                     $this->info("抓取图片信息：".$node->attr('alt')."\r\n".$href."\r\n");
-                    $result = DB::table('os_soogif')
-                        ->where('href', '=', $href)
-                        ->first(['href']);
+                    $result = DB::table('os_soogif')->where('href', '=', $href)->first(['href']);
                     !$result ? DB::table('os_soogif')->insert([
                         'type' => $item->id,
                         'href' => $href,
@@ -112,11 +108,14 @@ class SyncSpiderData extends Command
      */
     protected function getFaBiaoQing()
     {
-        $result = DB::table('os_soogif_type')->where('pid', '=', 105)->where('id', '>', 145)->get();
+        global $currentId;
+        $result = DB::table('os_soogif_type')->where('id', '<=', $this->startId)->get();
         try {
             $prefix = '/type/bq/page/';
             $client = new Client();
             foreach ($result as $item) {
+                $this->startId = $item->id;
+                $currentId = $this->startId;
                 $arr = range(1, 20);
                 foreach ($arr as $id) {
                     $this->info("当前抓取链接：".$item->href.$prefix.$id.'.html');
@@ -126,10 +125,8 @@ class SyncSpiderData extends Command
                         try {
                             $href = str_replace('http://', 'https://', $node->filter('a img')->attr('data-original'));
                             $this->info("抓取图片地址：".$href."\r\n");
-                            $result = DB::table('os_soogif')
-                                ->where('href', '=', $href)
-                                ->first(['href']);
-                            !$result ? DB::table('os_soogif')->insert([
+                            $result = DB::table('os_soogif')->where('href', '=', $href)->first(['href']);
+                            !$result? DB::table('os_soogif')->insert([
                                 'type' => $item->id,
                                 'href' => $href,
                                 'name' => $item->name,
@@ -143,6 +140,8 @@ class SyncSpiderData extends Command
                 }
             }
         } catch (\Exception $exception) {
+            $this->startId = $currentId;
+            $this->getFaBiaoQing();
             $this->error($exception->getMessage());
         }
     }

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -115,7 +116,6 @@ class WxUsersController
         OAuth::getInstance()->updateResult(objectToArray($oauthRes), 'id', $oauthRes->id);
         return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauthRes);
     }
-
     /**
      * todo:获取文字类型
      * @return JsonResponse
@@ -131,7 +131,7 @@ class WxUsersController
      * todo:获取图片信息
      * @return JsonResponse
      */
-    public function getImageDetails()
+    public function getImageDetail()
     {
         $this->validatePost(['type'=>'required|integer','id'=>'required|integer']);
         $result['data'] = DB::table('os_soogif')->where('type', '=', ($this->post['type']))
@@ -139,6 +139,32 @@ class WxUsersController
         $result['type'] = DB::table('os_soogif_type')->where('id', '=', ($this->post['type']))->first(['name']);
         return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'successfully', $result) :
             $this->ajaxReturn(Code::ERROR, 'failed');
+    }
+
+    /**
+     * todo:获取最新的图片
+     * @return JsonResponse
+     */
+    public function getNewImageBed()
+    {
+        $this->validatePost(['page'=>'required|integer','limit'=>'required|integer']);
+        $res = Cache::get($this->post['page'].'_image_bed');
+        if (empty($res['data'])) {
+            $res = DB::table('os_soogif')
+                ->where('pid', '=', 105)
+                ->limit($this->post['limit'])
+                ->orderByDesc('os_soogif.id')
+                ->offset($this->post['limit'] * ($this->post['page'] - 1))
+                ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
+                ->get(['os_soogif.*','os_soogif_type.name as type_name']);
+            Cache::forever($this->post['page'].'_image_bed', $res);
+        }
+        $lists['data'] = $res;
+        $lists['total'] =  DB::table('os_soogif')
+            ->where('pid', '=', 105)
+            ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
+            ->count();
+        return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
     }
     /**
      * TODO:：图床列表
@@ -173,14 +199,14 @@ class WxUsersController
             }
         }
         $res = Cache::get($this->post['page'].'_wx_'.$this->post['id']);
-        if (empty($lists['data'])) {
+        if (empty($res['data'])) {
             $res = DB::table('os_soogif')
                 ->where('type', '=', $this->post['id'])
                 ->limit($this->post['limit'])
                 ->offset($this->post['limit'] * ($this->post['page'] - 1))
                 ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
                 ->get(['os_soogif.*','os_soogif_type.name as type_name']);
-            Cache::forever($this->post['id'].'_wx_'.$this->post['page'], $res);
+            Cache::forever($this->post['page'].'_wx_'.$this->post['id'], $res);
         }
         $lists['data'] = $res;
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
