@@ -345,8 +345,12 @@ class LoginController
     public function bed()
     {
         if (empty($this->post['id'])) {
-            $lists = $lists = DB::table('os_soogif_type')->where('pid', '=', $this->post['pid'] ?? 0)
-                ->get(['name','id','pid']);
+            $lists = Cache::get('type');
+            if (empty($lists)) {
+                $lists = getTree(DB::table('os_soogif_type')->where('id', '<', 105)
+                    ->get(['name','id','pid']), '0', 'children');
+                Cache::forever('type', $lists);
+            }
             return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
         }
         $validate = Validator::make(
@@ -370,13 +374,13 @@ class LoginController
         }
         $this->post['limit'] = 100;
         $res = Cache::get($this->post['page'].'_'.$this->post['id']);
-        if (empty($lists['data'])) {
+        if (empty($res['data'])) {
             $res = DB::table('os_soogif')
                 ->where('type', '=', $this->post['id'])
                 ->limit($this->post['limit'])
                 ->offset($this->post['limit'] * ($this->post['page'] - 1))
                 ->get(['id','name','type','href','height','width']);
-            Cache::forever($this->post['id'].'_'.$this->post['page'], $res);
+            Cache::put($this->post['page'].'_'.$this->post['id'], $res, Carbon::now()->addHours(2));
         }
         $lists['data'] = $res;
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
