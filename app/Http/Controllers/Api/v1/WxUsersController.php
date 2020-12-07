@@ -117,16 +117,6 @@ class WxUsersController
         return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauthRes);
     }
     /**
-     * todo:获取文字类型
-     * @return JsonResponse
-     */
-//    public function getImageType()
-//    {
-//        $this->validatePost(['name'=>'required|string']);
-//        $result = DB::table('os_soogif_type')->where('name', 'like', $this->post['name'])->get();
-//        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
-//    }
-    /**
      * todo:获取图片信息
      * @return JsonResponse
      */

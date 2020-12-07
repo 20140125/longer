@@ -51,7 +51,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'], 'wx/openid', 'v1\WxUsersController@getOpenId')->name('getOpenId');
     Route::match(['get','post'], 'wx/image/bed', 'v1\WxUsersController@imageBed')->name('imageBed');
     Route::match(['get','post'], 'wx/image/details', 'v1\WxUsersController@getImageDetail')->name('getImageDetail');
-    Route::match(['get','post'], 'wx/image/type', 'v1\WxUsersController@getImageType')->name('getImageType');
     Route::match(['get','post'], 'wx/image/keyword', 'v1\WxUsersController@hotKeWord')->name('hotKeWord');
     Route::match(['get','post'], 'wx/image/new', 'v1\WxUsersController@getNewImageBed')->name('getNewImageBed');
     //权限
