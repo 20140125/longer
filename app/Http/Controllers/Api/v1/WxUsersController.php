@@ -123,9 +123,9 @@ class WxUsersController
     public function getImageDetail()
     {
         $this->validatePost(['type'=>'required|integer','id'=>'required|integer']);
-        $result['data'] = DB::table('os_soogif')->where('type', '=', ($this->post['type']))
-            ->where('id', '<>', $this->post['id'])->limit(50)->orderByRaw('rand()')->get();
-        $result['type'] = DB::table('os_soogif_type')->where('id', '=', ($this->post['type']))->first(['name']);
+        $type = DB::table('os_soogif_type')->where('id', '=', ($this->post['type']))->first(['name']);
+        $result['data'] = DB::table('os_soogif')->where('type', '=', ($this->post['type']))->limit(100)
+            ->orderByRaw('rand()')->orWhere('name', '=', $type->name)->get();
         return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'successfully', $result) :
             $this->ajaxReturn(Code::ERROR, 'failed');
     }
@@ -137,19 +137,14 @@ class WxUsersController
     public function getNewImageBed()
     {
         $this->validatePost(['page'=>'required|integer','limit'=>'required|integer']);
-        $where[] = ['pid','=',105];
+        $where[] = ['type','>',105];
         if (!empty($this->post['name'])) {
             $where = [];
-            $where[] = ['os_soogif.name','like','%'.$this->post['name'].'%' ?? ''];
+            $where[] = ['name','like','%'.$this->post['name'].'%' ?? ''];
         }
-        $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])
-            ->orderByRaw('rand()')
-            ->offset($this->post['limit'] * ($this->post['page'] - 1))
-            ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
-            ->get(['os_soogif.*','os_soogif_type.name as type_name']);
-        $lists['total'] =  DB::table('os_soogif')->where($where)
-            ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
-            ->count();
+        $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])->orderByRaw('rand()')
+            ->offset($this->post['limit'] * ($this->post['page'] - 1))->get();
+        $lists['total'] =  DB::table('os_soogif')->where($where) ->count();
         return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
     }
     /**
@@ -190,8 +185,7 @@ class WxUsersController
                 ->where('type', '=', $this->post['id'])
                 ->limit($this->post['limit'])
                 ->offset($this->post['limit'] * ($this->post['page'] - 1))
-                ->leftJoin('os_soogif_type', 'os_soogif.type', '=', 'os_soogif_type.id')
-                ->get(['os_soogif.*','os_soogif_type.name as type_name']);
+                ->get();
             Cache::forever($this->post['page'].'_wx_'.$this->post['id'], $res);
         }
         $lists['data'] = $res;

@@ -49,7 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 12373;
+        $this->startId = 112437;
     }
 
     /**
@@ -109,7 +109,7 @@ class SyncSpiderData extends Command
     protected function getFaBiaoQing()
     {
         global $currentId;
-        $result = DB::table('os_soogif_type')->where('id', '>=', $this->startId)->get();
+        $result = DB::table('os_soogif_type')->where('id', '<=', $this->startId)->orderByDesc('id')->get();
         try {
             $prefix = '/type/bq/page/';
             $client = new Client();
