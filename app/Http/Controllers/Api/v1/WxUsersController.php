@@ -209,7 +209,7 @@ class WxUsersController
     public function collect()
     {
         $this->validatePost(['token'=>'required|string','post'=>'required|array','act'=>'required|integer']);
-        $users = $this->userModel->getResult('remember_token', $this->post['token']);
+        $users = OAuth::getInstance()->getResult('remember_token', $this->post['token']);
         $data = array(
             'image_id' => $this->post['post']['id'],
             'href' => $this->post['post']['href'],
