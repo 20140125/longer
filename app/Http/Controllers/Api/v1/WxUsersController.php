@@ -204,7 +204,7 @@ class WxUsersController
 
     public function collect()
     {
-        $this->validatePost(['token','required|string','post'=>'required|array','act'=>'required|string']);
+        $this->validatePost(['token'=>'required|string','post'=>'required|array','act'=>'required|string']);
         $data = array(
             'image_id' => $this->post['post']['id'],
             'href' => $this->post['post']['href'],
