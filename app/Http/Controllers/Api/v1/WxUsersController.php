@@ -209,10 +209,11 @@ class WxUsersController
     public function collect()
     {
         $this->validatePost(['token'=>'required|string','post'=>'required|array','act'=>'required|integer']);
+        $post = json_decode(json_encode($this->post['post'], JSON_UNESCAPED_UNICODE), true);
         $data = array(
-            'image_id' => $this->post['post']->id,
-            'href' => $this->post['post']->href,
-            'name' => $this->post['post']->name,
+            'image_id' => $post['id'],
+            'href' => $post['href'],
+            'name' => $post['name'],
             'user_id' => $this->userModel->getResult('remember_token', $this->post['token'], '=', ['id'])->id,
             'time' => time(),
             'status' => $this->post['act']
