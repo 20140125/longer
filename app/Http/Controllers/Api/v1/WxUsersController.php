@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -125,7 +124,7 @@ class WxUsersController
         $this->validatePost(['type'=>'required|integer','id'=>'required|integer']);
         $type = DB::table('os_soogif_type')->where('id', '=', ($this->post['type']))->first(['name']);
         $result['data'] = DB::table('os_soogif')->where('type', '=', ($this->post['type']))->limit(100)
-            ->orderByRaw('rand()')->orWhere('name', '=', $type->name)->get();
+            ->orderByRaw('rand()')->orWhere('name', '=', $type->name ?? '')->get();
         return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'successfully', $result) :
             $this->ajaxReturn(Code::ERROR, 'failed');
     }
@@ -201,6 +200,25 @@ class WxUsersController
         $num = $this->post['num'] ?? 1;
         $hotKeyWord = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;
         return ajaxReturn(Code::SUCCESS, 'successfully', explode(',', json_decode($hotKeyWord)[$num]->value));
+    }
+
+    public function collect()
+    {
+        $this->validatePost(['token','required|string','post'=>'required|array','act'=>'required|string']);
+        $data = array(
+            'image_id' => $this->post['post']['id'],
+            'href' => $this->post['post']['href'],
+            'name' => $this->post['post']['name'],
+            'user_id' => $this->userModel->getResult('remember_token', $this->post['token'], '=', ['id'])->id,
+            'time' => time(),
+            'status' => $this->post['status']
+        );
+        $result = DB::table('os_collect')->where([['user_id','=',$data['user_id']],['image_id','=',$data['image_id']]])
+            ->first();
+        $res = empty($result) ? DB::table('os_collect')->insert($data) :
+            DB::table('os_collect')->where('id', '=', $result->id)->update($data);
+        return !empty($res) ? $this->ajaxReturn(Code::SUCCESS, 'successfully') :
+            $this->ajaxReturn(Code::ERROR, 'failed');
     }
     /**
      * TODO:数据返回

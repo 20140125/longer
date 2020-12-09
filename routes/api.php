@@ -53,6 +53,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'], 'wx/image/details', 'v1\WxUsersController@getImageDetail')->name('getImageDetail');
     Route::match(['get','post'], 'wx/image/keyword', 'v1\WxUsersController@hotKeWord')->name('hotKeWord');
     Route::match(['get','post'], 'wx/image/new', 'v1\WxUsersController@getNewImageBed')->name('getNewImageBed');
+    Route::match(['get','post'], 'wx/image/collect', 'v1\WxUsersController@collect')->name('collect');
     //权限
     Route::match(['get','post'], 'auth/index', 'v1\AuthController@index');
     Route::match(['get','post'], 'auth/save', 'v1\AuthController@save');
