@@ -210,9 +210,9 @@ class WxUsersController
     {
         $this->validatePost(['token'=>'required|string','post'=>'required|array','act'=>'required|integer']);
         $data = array(
-            'image_id' => $this->post['post']['id'],
-            'href' => $this->post['post']['href'],
-            'name' => $this->post['post']['name'],
+            'image_id' => $this->post['post']->id,
+            'href' => $this->post['post']->href,
+            'name' => $this->post['post']->name,
             'user_id' => $this->userModel->getResult('remember_token', $this->post['token'], '=', ['id'])->id,
             'time' => time(),
             'status' => $this->post['act']
