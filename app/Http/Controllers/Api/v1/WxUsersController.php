@@ -214,7 +214,7 @@ class WxUsersController
             'image_id' => $post['id'],
             'href' => $post['href'],
             'name' => $post['name'],
-            'user_id' => $this->userModel->getResult('remember_token', $this->post['token'], '=', ['id'])->id,
+            'user_id' => ($this->userModel->getResult('remember_token', $this->post['token'], '=', ['id']))->id,
             'time' => time(),
             'status' => $this->post['act']
         );
