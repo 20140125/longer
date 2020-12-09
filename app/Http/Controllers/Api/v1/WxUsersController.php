@@ -202,9 +202,13 @@ class WxUsersController
         return ajaxReturn(Code::SUCCESS, 'successfully', explode(',', json_decode($hotKeyWord)[$num]->value));
     }
 
+    /**
+     * todo:图片收藏
+     * @return JsonResponse
+     */
     public function collect()
     {
-        $this->validatePost(['token'=>'required|string','post'=>'required|array','act'=>'required|string']);
+        $this->validatePost(['token'=>'required|string','post'=>'required|array','act'=>'required|integer']);
         $data = array(
             'image_id' => $this->post['post']['id'],
             'href' => $this->post['post']['href'],
