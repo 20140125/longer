@@ -211,7 +211,7 @@ class WxUsersController
             'name' => $this->post['post']['name'],
             'user_id' => $this->userModel->getResult('remember_token', $this->post['token'], '=', ['id'])->id,
             'time' => time(),
-            'status' => $this->post['status']
+            'status' => $this->post['act']
         );
         $result = DB::table('os_collect')->where([['user_id','=',$data['user_id']],['image_id','=',$data['image_id']]])
             ->first();
