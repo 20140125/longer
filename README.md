@@ -29,6 +29,8 @@ windows 下启动长链接脚本
    ![站内通知](/public/20200515174304.jpg)
 
    ![文件管理](/public/20200515174358.jpg)
+
+   ![魔盒逗图](/public/wx_program.jpg)
    
 **致谢**
 
