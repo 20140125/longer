@@ -49,7 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 105190;
+        $this->startId = 20011;
     }
 
     /**
@@ -62,7 +62,7 @@ class SyncSpiderData extends Command
 
     protected function getRequestData()
     {
-        $this->getFaBiaoQing();
+        $this->setFileInfo();
     }
     /**
      * todo:获取表情包
@@ -109,7 +109,7 @@ class SyncSpiderData extends Command
     protected function getFaBiaoQing()
     {
         global $currentId;
-        $result = DB::table('os_soogif_type')->where('id', '<=', $this->startId)->orderByDesc('id')->get();
+        $result = DB::table('os_soogif_type')->where('id', '>=', $this->startId)->orderBy('id','asc')->get();
         try {
             $prefix = '/type/bq/page/';
             $client = new Client();
@@ -194,9 +194,9 @@ class SyncSpiderData extends Command
         try {
             while ($this->flag) {
                 $result = DB::table('os_soogif')->where('width', '=', 0)->orderByDesc('id')->first();
+                $this->flag = !empty($result);
                 if (!empty($result)) {
                     $this->info("获取图片信息：\r\n".json_encode($result)."\r\n");
-                    $this->flag = !empty($result);
                     $fileInfo = getimagesize($result->href);
                     DB::table('os_soogif')->where('id', '=', $result->id)->update(
                         ['width' => $fileInfo[0], 'height' => $fileInfo[1]]
