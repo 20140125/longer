@@ -49,7 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 20011;
+        $this->startId = 20250;
     }
 
     /**
@@ -63,6 +63,7 @@ class SyncSpiderData extends Command
     protected function getRequestData()
     {
         $this->setFileInfo();
+//        $this->getFaBiaoQing();
     }
     /**
      * todo:获取表情包
