@@ -138,6 +138,16 @@ class WxUsersController
         $this->validatePost(['page'=>'required|integer','limit'=>'required|integer']);
         $where[] = ['type','>',105];
         if (!empty($this->post['name'])) {
+            $defaultShowImage = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;
+            if (!in_array($this->post['name'], explode(',', json_decode($defaultShowImage)[1]->value))
+                && empty($this->post['token'])) {
+                return ajaxReturn(Code::ERROR, 'Please Login System');
+            }
+            if (!empty($this->post['token'])) {
+                if (empty(OAuth::getInstance()->getResult('remember_token', $this->post['token']))) {
+                    return ajaxReturn(Code::ERROR, 'Please Login System');
+                }
+            }
             $where = [];
             $where[] = ['name','like','%'.$this->post['name'].'%' ?? ''];
         }
