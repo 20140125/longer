@@ -3,11 +3,8 @@
 namespace App\Console\Commands;
 
 use Facebook\WebDriver\Chrome\ChromeDriver;
-use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
-use Facebook\WebDriver\WebDriverKeys;
-use Goutte\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -45,16 +42,14 @@ class SyncWebService extends Command
         putenv('WEBDRIVER_CHROME_DRIVER=D://python/chromedriver.exe');
         $this->startGoogleService();
     }
-
-
-
     /**
      * todo：数据抓取
+     * @param string $url
      */
-    protected function startGoogleService()
+    protected function startGoogleService($url = 'https://www.jd.com')
     {
+        $driver = ChromeDriver::start();
         try {
-            $driver = ChromeDriver::start();
             //百度
 //        $driver->get('https://www.baidu.com/');
 //        $keywords = $driver->findElement(WebDriverBy::id('kw'));
@@ -93,12 +88,26 @@ class SyncWebService extends Command
             //京东商品
             $size = new WebDriverDimension(1920, 1048);
             $driver->manage()->window()->setSize($size);
-            $driver->get('https://www.jd.com');
+            $driver->get($url);
             $keywords = $driver->findElement(WebDriverBy::id('key'));
             $keywords->sendKeys(str_replace('京东自营', '', $this->argument('keywords')).'京东自营' ?? '飞天茅台京东自营');
             sleep(2);
             $driver->findElement(WebDriverBy::className('button'))->click();
             sleep(3);
+            $this->getRequestJDItems($driver);
+        } catch (\Exception $exception) {
+            $this->getRequestJDItems($driver);
+            $this->error($exception->getMessage());
+        }
+    }
+
+    /**
+     * todo:获取数据
+     * @param ChromeDriver $driver
+     */
+    protected function getRequestJDItems(ChromeDriver $driver)
+    {
+        try {
             foreach (range(1, 9, 2) as $k) {
                 sleep(2);
                 $js = "document.documentElement.scrollTop = document.documentElement.scrollHeight * {$k} / 10";
@@ -126,9 +135,13 @@ class SyncWebService extends Command
                 $this->info("\r\n");
                 $arr[] = $json;
             }
+            $driver->findElement(WebDriverBy::className('pn-next'))->click();
             $this->info($driver->getCurrentURL());
             Log::error(json_encode($arr, JSON_UNESCAPED_UNICODE));
+            sleep(5);
+            $this->getRequestJDItems($driver);
         } catch (\Exception $exception) {
+            $this->getRequestJDItems($driver);
             $this->error($exception->getMessage());
         }
     }
