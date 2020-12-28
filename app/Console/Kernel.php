@@ -23,7 +23,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\SyncWeather',
         'App\Console\Commands\SyncClientId',
         'App\Console\Commands\SyncChatMessage',
-        'App\Console\Commands\SyncSpiderData'
+        'App\Console\Commands\SyncSpiderData',
+        'App\Console\Commands\SyncWebService'
     ];
 
     /**
