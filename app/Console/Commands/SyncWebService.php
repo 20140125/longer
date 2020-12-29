@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use Facebook\WebDriver\Chrome\ChromeDriver;
+use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -49,7 +52,6 @@ class SyncWebService extends Command
     protected function startGoogleService($url = 'https://www.jd.com')
     {
         $driver = ChromeDriver::start();
-        try {
             //百度
 //        $driver->get('https://www.baidu.com/');
 //        $keywords = $driver->findElement(WebDriverBy::id('kw'));
@@ -85,20 +87,16 @@ class SyncWebService extends Command
 //            $this->info($item->getText());
 //            $this->info("\r\n");
 //        }
-            //京东商品
-            $size = new WebDriverDimension(1920, 1048);
-            $driver->manage()->window()->setSize($size);
-            $driver->get($url);
-            $keywords = $driver->findElement(WebDriverBy::id('key'));
-            $keywords->sendKeys(str_replace('京东自营', '', $this->argument('keywords')).'京东自营' ?? '飞天茅台京东自营');
-            sleep(2);
-            $driver->findElement(WebDriverBy::className('button'))->click();
-            sleep(3);
-            $this->getRequestJDItems($driver);
-        } catch (\Exception $exception) {
-            $this->getRequestJDItems($driver);
-            $this->error($exception->getMessage());
-        }
+        //京东商品
+        $size = new WebDriverDimension(1920, 1048);
+        $driver->manage()->window()->setSize($size);
+        $driver->get($url);
+        $keywords = $driver->findElement(WebDriverBy::id('key'));
+        $keywords->sendKeys($this->argument('keywords') ?? '飞天茅台');
+        sleep(2);
+        $driver->findElement(WebDriverBy::className('button'))->click();
+        sleep(3);
+        $this->getRequestJDItems($driver);
     }
 
     /**
@@ -107,42 +105,75 @@ class SyncWebService extends Command
      */
     protected function getRequestJDItems(ChromeDriver $driver)
     {
-        try {
-            foreach (range(1, 9, 2) as $k) {
-                sleep(2);
-                $js = "document.documentElement.scrollTop = document.documentElement.scrollHeight * {$k} / 10";
-                $this->info($js);
-                $driver->executeScript($js);
+        foreach (range(1, 9, 2) as $k) {
+            sleep(2);
+            $js = "document.documentElement.scrollTop = document.documentElement.scrollHeight * {$k} / 10";
+            $this->info($js);
+            $driver->executeScript($js);
+        }
+        $resource = $driver->findElements(WebDriverBy::className('gl-item'));
+        $arr = [];
+        foreach ($resource as $item) {
+            # 商品链接
+            $json['item_url'] = $this->hasElement($driver, WebDriverBy::cssSelector('.p-img a')) ?
+                $item->findElement(WebDriverBy::cssSelector('.p-img a'))->getAttribute('href') : '';
+            # 商品图片
+            $json['src'] = $this->hasElement($driver, WebDriverBy::cssSelector('.p-img img')) ?
+                $item->findElement(WebDriverBy::cssSelector('.p-img img'))->getAttribute('src') : '';
+            # 商品价格
+            $json['price'] = $this->hasElement($driver, WebDriverBy::cssSelector('.p-price i')) ?
+                $item->findElement(WebDriverBy::cssSelector('.p-price i'))->getText() : '';
+            # 商品名称
+            $json['name'] = $this->hasElement($driver, WebDriverBy::cssSelector('.p-name em')) ?
+                $item->findElement(WebDriverBy::cssSelector('.p-name em'))->getText() : '';
+            # 商品评价
+            $json['commit'] = $this->hasElement($driver, WebDriverBy::cssSelector('.p-commit strong')) ?
+                $item->findElement(WebDriverBy::cssSelector('.p-commit strong'))->getText() : '';
+            # 店铺名称
+            $json['shop_name'] = $this->hasElement($driver, WebDriverBy::cssSelector('.p-shop')) ?
+                $item->findElement(WebDriverBy::cssSelector('.p-shop'))->getText() : '';
+            # 店铺地址
+            $json['shop_url'] = '';
+            if ($json['shop_name']) {
+                $json['shop_url'] = $this->hasElement($driver, WebDriverBy::cssSelector('.p-shop a')) ?
+                    $item->findElement(WebDriverBy::cssSelector('.p-shop a'))->getAttribute('href') : '';
             }
-            $resource = $driver->findElements(WebDriverBy::className('gl-item'));
-            $arr = [];
-            foreach ($resource as $item) {
-                #商品链接
-                $json['item_url'] = $item->findElement(WebDriverBy::cssSelector('.p-img a'))->getAttribute('href');
-                #商品图片
-                $json['src'] = $item->findElement(WebDriverBy::cssSelector('.p-img img'))->getAttribute('src');
-                #商品价格
-                $json['price'] = $item->findElement(WebDriverBy::cssSelector('.p-price i'))->getText();
-                #商品名称
-                $json['name'] = $item->findElement(WebDriverBy::cssSelector('.p-name em'))->getText();
-                #商品评价
-                $json['commit'] = $item->findElement(WebDriverBy::cssSelector('.p-commit strong'))->getText();
-                #店铺名称
-                $json['shop_name'] = $item->findElement(WebDriverBy::cssSelector('.J_im_icon a'))->getText();
-                #店铺地址
-                $json['shop_url'] = $item->findElement(WebDriverBy::cssSelector('.J_im_icon a'))->getAttribute('href');
-                $this->info(json_encode($json, JSON_UNESCAPED_UNICODE));
-                $this->info("\r\n");
-                $arr[] = $json;
-            }
+            # 輸出信息
+            $this->info(json_encode($json, JSON_UNESCAPED_UNICODE));
+            $this->info("\r\n");
+            $arr[] = $json;
+        }
+        # 獲取當前頁
+        $currentPage = $driver->findElement(WebDriverBy::cssSelector('#J_bottomPage .curr'))->getText();
+        # 獲取總頁數
+        $totalPage = $driver->findElement(WebDriverBy::cssSelector('#J_bottomPage .p-skip b'))->getText();
+        if (intval($currentPage) < intval($totalPage)) {
+            Log::error(json_encode($arr, JSON_UNESCAPED_UNICODE));
             $driver->findElement(WebDriverBy::className('pn-next'))->click();
             $this->info($driver->getCurrentURL());
+            # 休息30S
+            sleep(30);
+            $this->info('休眠30秒');
+            $this->getRequestJDItems($driver);
+        } elseif (intval($currentPage) === intval($totalPage)) {
             Log::error(json_encode($arr, JSON_UNESCAPED_UNICODE));
-            sleep(5);
-            $this->getRequestJDItems($driver);
-        } catch (\Exception $exception) {
-            $this->getRequestJDItems($driver);
-            $this->error($exception->getMessage());
+            $driver->close();
+        }
+    }
+    /**
+     * 判断元素是否存在
+     * @param ChromeDriver $driver
+     * @param WebDriverBy $locator
+     * @return bool
+     */
+    protected function hasElement(ChromeDriver $driver, WebDriverBy $locator): bool
+    {
+        try {
+            $driver->findElement($locator);
+            return true;
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+            return false;
         }
     }
 }
