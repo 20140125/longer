@@ -49,18 +49,13 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 40048;
+        $this->startId = 69948;
     }
 
     /**
      * Execute the console command.
      */
     public function handle()
-    {
-        $this->getRequestData();
-    }
-
-    protected function getRequestData()
     {
 //        $this->setFileInfo();
         $this->getFaBiaoQing();
@@ -110,7 +105,7 @@ class SyncSpiderData extends Command
     protected function getFaBiaoQing()
     {
         global $currentId;
-        $result = DB::table('os_soogif_type')->where('id', '>=', $this->startId)->orderBy('id','asc')->get();
+        $result = DB::table('os_soogif_type')->where('id', '>=', $this->startId)->orderBy('id', 'asc')->get();
         try {
             $prefix = '/type/bq/page/';
             $client = new Client();
@@ -140,6 +135,7 @@ class SyncSpiderData extends Command
                     });
                 }
             }
+            unset($result);
         } catch (\Exception $exception) {
             $this->startId = $currentId;
             $this->getFaBiaoQing();

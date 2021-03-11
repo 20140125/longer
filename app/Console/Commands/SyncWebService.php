@@ -3,11 +3,7 @@
 namespace App\Console\Commands;
 
 use Facebook\WebDriver\Chrome\ChromeDriver;
-use Facebook\WebDriver\Exception\NoSuchElementException;
-use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverDimension;
-use Facebook\WebDriver\WebDriverExpectedCondition;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -43,7 +39,55 @@ class SyncWebService extends Command
     public function handle()
     {
         putenv('WEBDRIVER_CHROME_DRIVER=D://python/chromedriver.exe');
+//        system('start D://python/jd_seckill/qr_code.png');
+//        return;
         $this->startGoogleService();
+    }
+
+    protected function getVerifyCode()
+    {
+        $driver = ChromeDriver::start();
+        $driver->manage()->window()->maximize();   //全屏
+        $driver->get('https://www.fanglonger.com/login');
+        $driver->takeScreenshot('login.png');
+        sleep(4);
+        $verifyCode = $driver->findElement(WebDriverBy::cssSelector('#s-canvas'));
+        $location = $verifyCode->getLocationOnScreenOnceScrolledIntoView();
+        $imageResource = getimagesize('login.png');
+//        $right = $location['x'] + $imageResource[0];
+//        $bottom = $location['y'] + $imageResource[1];
+        $this->info(json_encode([$location,$imageResource]));
+    }
+    /**
+     * todo：自动签入签出
+     */
+    protected function startWebService()
+    {
+        /* 程序启动 */
+        $driver = ChromeDriver::start();
+        $driver->manage()->window()->maximize();   //全屏
+        $driver->get('http://om.tencent.com/attendances/check_out');
+        /* 获取文本框 */
+        $username = $driver->findElement(WebDriverBy::id('username'));
+        $username->sendKeys('v_llongfang');
+        sleep(2);
+        $password = $driver->findElement(WebDriverBy::id('password_input'));
+        $password->sendKeys('xb8062XBR');
+        sleep(2);
+        /* 点击按钮 */
+        $driver->findElement(WebDriverBy::id('rememberButton'))->click();
+        sleep(2);
+        $driver->findElement(WebDriverBy::id('login_button'))->click();
+        sleep(5);
+        if (time() >= strtotime(date('Y-m-d 19:i:s'))) {
+            $driver->findElement(WebDriverBy::id('checkout_btn'))->click();
+        } else {
+            $driver->findElement(WebDriverBy::id('checkin_btn'))->click();
+        }
+        sleep(5);
+        $driver->findElement(WebDriverBy::cssSelector('#tdialog-buttonwrap .btn-primary'))->click();
+        sleep(5);
+        $driver->close();
     }
     /**
      * todo：数据抓取
@@ -52,44 +96,8 @@ class SyncWebService extends Command
     protected function startGoogleService($url = 'https://www.jd.com')
     {
         $driver = ChromeDriver::start();
-            //百度
-//        $driver->get('https://www.baidu.com/');
-//        $keywords = $driver->findElement(WebDriverBy::id('kw'));
-//        $keywords->sendKeys('腾讯');
-//        sleep(0.5);
-//        $driver->findElement(WebDriverBy::id('su'))->click();
-//        sleep(1);
-//        $resource = $driver->findElements(WebDriverBy::cssSelector('#content_left h3 a'));
-//        foreach ($resource as $item) {
-//            $this->info($item->getAttribute('href'));
-//            $this->info($item->getText());
-//            $this->info("\r\n");
-//        }
-            //表情
-//        $driver->get('https://fabiaoqing.com/search');
-//        $resource = $driver->findElements(WebDriverBy::cssSelector('#othersearch a'));
-//        foreach ($resource as $item) {
-//            $this->info($item->getAttribute('href'));
-//            $this->info($item->getText());
-//            $this->info("\r\n");
-//        }
-            //Google
-//        $driver->get('https://www.google.com/');
-//        $keywords = $driver->findElement(WebDriverBy::name('q'));
-//        $keywords->sendKeys('腾讯');
-//        sleep(0.5);
-//        $driver->getKeyboard()->pressKey(WebDriverKeys::ENTER);
-//        $driver->getKeyboard()->releaseKey(WebDriverKeys::ENTER);
-//        sleep(0.5);
-//        $resource = $driver->findElements(WebDriverBy::cssSelector('#rso a'));
-//        foreach ($resource as $item) {
-//            $this->info($item->getAttribute('href'));
-//            $this->info($item->getText());
-//            $this->info("\r\n");
-//        }
         //京东商品
-        $size = new WebDriverDimension(1920, 1048);
-        $driver->manage()->window()->setSize($size);
+        $driver->manage()->window()->maximize();   //全屏
         $driver->get($url);
         $keywords = $driver->findElement(WebDriverBy::id('key'));
         $keywords->sendKeys($this->argument('keywords') ?? '飞天茅台');
@@ -140,7 +148,6 @@ class SyncWebService extends Command
             }
             # 輸出信息
             $this->info(json_encode($json, JSON_UNESCAPED_UNICODE));
-            $this->info("\r\n");
             $arr[] = $json;
         }
         # 獲取當前頁

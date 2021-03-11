@@ -171,21 +171,28 @@ class WxUsersController
         }
         $validate = Validator::make(
             $this->post,
-            ['id'=>'required|integer','page'=>'required|integer','limit'=>'integer|integer']
+            [
+                'id'=>'required|integer',
+                'page'=>'required|integer',
+                'limit'=>'integer|integer',
+                'source' => 'required|string|in:app,mini_program'
+            ]
         );
         if ($validate->fails()) {
             return ajaxReturn(Code::ERROR, $validate->errors()->first());
         }
-        //判断用户是否是登录用户
-        $res = DB::table('os_soogif_type')->where('id', '=', $this->post['id'])->first(['pid']);
-        $defaultShowImage = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;
-        if (!in_array($res->pid, explode(',', json_decode($defaultShowImage)[0]->value))
-            && empty($this->post['token'])) {
-            return ajaxReturn(Code::ERROR, 'Please Login System');
-        }
-        if (!empty($this->post['token'])) {
-            if (empty(OAuth::getInstance()->getResult('remember_token', $this->post['token']))) {
+        if ($this->post['source'] === 'mini_program') {
+            //判断用户是否是登录用户
+            $res = DB::table('os_soogif_type')->where('id', '=', $this->post['id'])->first(['pid']);
+            $defaultShowImage = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;
+            if (!in_array($res->pid, explode(',', json_decode($defaultShowImage)[0]->value))
+                && empty($this->post['token'])) {
                 return ajaxReturn(Code::ERROR, 'Please Login System');
+            }
+            if (!empty($this->post['token'])) {
+                if (empty(OAuth::getInstance()->getResult('remember_token', $this->post['token']))) {
+                    return ajaxReturn(Code::ERROR, 'Please Login System');
+                }
             }
         }
         $res = Cache::get($this->post['page'].'_wx_'.$this->post['id']);
