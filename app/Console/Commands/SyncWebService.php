@@ -58,7 +58,6 @@ class SyncWebService extends Command
 //        $bottom = $location['y'] + $imageResource[1];
         $this->info(json_encode([$location,$imageResource]));
     }
-
     /**
      * todo：数据抓取
      * @param string $url

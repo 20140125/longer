@@ -181,6 +181,7 @@ class WxUsersController
         if ($validate->fails()) {
             return ajaxReturn(Code::ERROR, $validate->errors()->first());
         }
+        $this->post['source'] = $this->post['source'] ?? 'app';
         if ($this->post['source'] === 'mini_program') {
             //判断用户是否是登录用户
             $res = DB::table('os_soogif_type')->where('id', '=', $this->post['id'])->first(['pid']);

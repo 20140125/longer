@@ -49,7 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 69948;
+        $this->startId = 72965;
     }
 
     /**
@@ -57,9 +57,32 @@ class SyncSpiderData extends Command
      */
     public function handle()
     {
-//        $this->setFileInfo();
-        $this->getFaBiaoQing();
+        $this->setFileInfo();
+//        $this->removeImage();
     }
+
+    /**
+     * todo:删除没有图片的关键词
+     */
+    protected function removeImage()
+    {
+        $where[] = ['id', '<=', 104];
+        $where[] = ['pid', '<>', 0];
+        $result = DB::table('os_soogif_type')->where($where)->get();
+        try {
+            foreach ($result as $item) {
+                $this->info(json_encode($item, JSON_UNESCAPED_UNICODE));
+                $images = DB::table('os_soogif')->where('type', '=', $item->id)->get();
+                if (count($images) === 0) {
+                    $this->info($item->name.'没有图片');
+                    DB::table('os_soogif_type')->where('id', '=', $item->id)->delete();
+                }
+            }
+        } catch (\Exception $exception) {
+            $this->error($exception->getMessage());
+        }
+    }
+
     /**
      * todo:获取表情包
      */
@@ -98,14 +121,13 @@ class SyncSpiderData extends Command
         }
         $bar->finish();
     }
-
     /**
      * todo:获取表情包
      */
     protected function getFaBiaoQing()
     {
         global $currentId;
-        $result = DB::table('os_soogif_type')->where('id', '>=', $this->startId)->orderBy('id', 'asc')->get();
+        $result = DB::table('os_soogif_type')->where('id', '>=', $this->startId)->orderBy('id')->get();
         try {
             $prefix = '/type/bq/page/';
             $client = new Client();
