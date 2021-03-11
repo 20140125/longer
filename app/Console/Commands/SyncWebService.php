@@ -58,37 +58,7 @@ class SyncWebService extends Command
 //        $bottom = $location['y'] + $imageResource[1];
         $this->info(json_encode([$location,$imageResource]));
     }
-    /**
-     * todo：自动签入签出
-     */
-    protected function startWebService()
-    {
-        /* 程序启动 */
-        $driver = ChromeDriver::start();
-        $driver->manage()->window()->maximize();   //全屏
-        $driver->get('http://om.tencent.com/attendances/check_out');
-        /* 获取文本框 */
-        $username = $driver->findElement(WebDriverBy::id('username'));
-        $username->sendKeys('v_llongfang');
-        sleep(2);
-        $password = $driver->findElement(WebDriverBy::id('password_input'));
-        $password->sendKeys('xb8062XBR');
-        sleep(2);
-        /* 点击按钮 */
-        $driver->findElement(WebDriverBy::id('rememberButton'))->click();
-        sleep(2);
-        $driver->findElement(WebDriverBy::id('login_button'))->click();
-        sleep(5);
-        if (time() >= strtotime(date('Y-m-d 19:i:s'))) {
-            $driver->findElement(WebDriverBy::id('checkout_btn'))->click();
-        } else {
-            $driver->findElement(WebDriverBy::id('checkin_btn'))->click();
-        }
-        sleep(5);
-        $driver->findElement(WebDriverBy::cssSelector('#tdialog-buttonwrap .btn-primary'))->click();
-        sleep(5);
-        $driver->close();
-    }
+
     /**
      * todo：数据抓取
      * @param string $url
