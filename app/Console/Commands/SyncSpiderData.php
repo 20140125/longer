@@ -49,7 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 72965;
+        $this->startId = 79263;
     }
 
     /**
@@ -59,6 +59,7 @@ class SyncSpiderData extends Command
     {
         $this->setFileInfo();
 //        $this->removeImage();
+//        $this->getFaBiaoQing();
     }
 
     /**

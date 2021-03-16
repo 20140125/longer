@@ -135,21 +135,27 @@ class WxUsersController
      */
     public function getNewImageBed()
     {
-        $this->validatePost(['page'=>'required|integer','limit'=>'required|integer']);
-        $where[] = ['type','>',105];
+        $this->validatePost(['page'=>'required|integer', 'limit'=>'required|integer', 'source' => 'required|string|in:app,mini_program']);
+        $where[] = ['type', '>', 105];
+        $this->post['source'] = $this->post['source'] ?? 'app';
         if (!empty($this->post['name'])) {
-            $defaultShowImage = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;
-            if (!in_array($this->post['name'], explode(',', json_decode($defaultShowImage)[1]->value))
-                && empty($this->post['token'])) {
-                return ajaxReturn(Code::ERROR, 'Please Login System');
-            }
-            if (!empty($this->post['token'])) {
-                if (empty(OAuth::getInstance()->getResult('remember_token', $this->post['token']))) {
+            if ($this->post['source'] === 'mini_program') {
+                $defaultShowImage = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;
+                if (!in_array($this->post['name'], explode(',', json_decode($defaultShowImage)[1]->value))
+                    && empty($this->post['token'])) {
                     return ajaxReturn(Code::ERROR, 'Please Login System');
+                }
+                if (!empty($this->post['token'])) {
+                    if (empty(OAuth::getInstance()->getResult('remember_token', $this->post['token']))) {
+                        return ajaxReturn(Code::ERROR, 'Please Login System');
+                    }
                 }
             }
             $where = [];
             $where[] = ['name','like','%'.$this->post['name'].'%' ?? ''];
+            $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])->offset($this->post['limit'] * ($this->post['page'] - 1))->get();
+            $lists['total'] =  DB::table('os_soogif')->where($where) ->count();
+            return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
         }
         $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])->orderByRaw('rand()')
             ->offset($this->post['limit'] * ($this->post['page'] - 1))->get();

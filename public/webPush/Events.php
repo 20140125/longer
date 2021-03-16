@@ -48,7 +48,7 @@ class Events
      * @param $from_client_id  //workerman 生成的client_id
      * @param $message
      * @return bool
-     * @throws \Exception
+     * @throws \Exception|boolean
      */
     public static function onMessage($from_client_id, $message)
     {
@@ -122,7 +122,11 @@ class Events
                     'page' => $message_data['page'],
                     'limit' => $message_data['limit'] + 1
                 );
-                $messageLists = ceil($redisMessage['total']/$hisMessage['limit']) > $hisMessage['page'] ? $redisMessage : self::getHisChatMessage($redisMessage, $hisMessage);
+                if (ceil($redisMessage['total'] / $hisMessage['limit']) > $hisMessage['page']) {
+                    $messageLists = $redisMessage;
+                } else {
+                    $messageLists = self::getHisChatMessage($redisMessage, $hisMessage);
+                }
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -162,7 +166,12 @@ class Events
                     //设置未读消息数
                     self::$chat->setUnreadMsgLists($message_data['from_client_id'], $message_data['to_client_id']);
                     //保存聊天记录
-                    self::$chat->setChatMsgLists($message_data['from_client_id'], $message_data['to_client_id'], '', $new_message);
+                    self::$chat->setChatMsgLists(
+                        $message_data['from_client_id'],
+                        $message_data['to_client_id'],
+                        '',
+                        $new_message
+                    );
                     $new_message['client_list'] = $clients_list;
                     //通过uid发送消息
                     Gateway::sendToUid($message_data['to_client_id'], json_encode($new_message));
@@ -187,7 +196,12 @@ class Events
                     'room_id' =>$message_data['room_id']
                 );
                 //保存聊天记录
-                self::$chat->setChatMsgLists($message_data['from_client_id'], 'all', $message_data['room_id'], $new_message);
+                self::$chat->setChatMsgLists(
+                    $message_data['from_client_id'],
+                    'all',
+                    $message_data['room_id'],
+                    $new_message
+                );
                 $new_message['client_list'] = $clients_list;
                 //发送消息到当前组
                 Gateway::sendToGroup($message_data['room_id'], json_encode($new_message));
@@ -202,10 +216,14 @@ class Events
                 self::$chat->recallMessage($message_data['recall_message']);
                 //保存聊天记录
                 unset($message_data['recall_message']);
-                self::$chat->setChatMsgLists($message_data['from_client_id'], $message_data['to_client_id'], $message_data['room_id'], $message_data);
+                self::$chat->setChatMsgLists(
+                    $message_data['from_client_id'],
+                    $message_data['to_client_id'],
+                    $message_data['room_id'],
+                    $message_data
+                );
                 self::recallOrSRemMessage($message_data, $clients_list);
                 break;
-            //消息撤回
             default:
                 break;
         }
@@ -219,7 +237,11 @@ class Events
     protected static function recallOrSRemMessage($message_data, $clients_list)
     {
         $message_data['client_list'] = $clients_list;
-        $message_data['message'] = self::$chat->getChatMsgLists($message_data['from_client_id'], $message_data['to_client_id'], $message_data['room_id']) ?? [];
+        $message_data['message'] = self::$chat->getChatMsgLists(
+            $message_data['from_client_id'],
+            $message_data['to_client_id'],
+            $message_data['room_id']
+        ) ?? [];
         if (!empty($message_data['room_id'])) {
             //发送消息到当前组
             Gateway::sendToGroup($message_data['room_id'], json_encode($message_data));
@@ -367,7 +389,9 @@ class Events
             } else {
                 //列表
                 $lists = self::$db->from('os_chat')
-                    ->where("(from_client_id = '{$message['from_client_id']}' and to_client_id = '{$message['to_client_id']}') or from_client_id = '{$message['to_client_id']}' and to_client_id = '{$message['from_client_id']}'")
+                    ->where("(from_client_id = '{$message['from_client_id']}'
+                    and to_client_id = '{$message['to_client_id']}')
+                    or from_client_id = '{$message['to_client_id']}' and to_client_id = '{$message['from_client_id']}'")
                     ->limit($message['limit'])->orderByDESC(['id'])->offset($offset)->select('content')->query();
                 foreach ($lists as $item) {
                     array_push($redisMessage['list'], json_decode($item['content']));
@@ -375,7 +399,9 @@ class Events
                 $result['list'] = $redisMessage['list'];
                 //总记录数
                 $total = self::$db->from('os_chat')
-                    ->where("(from_client_id = '{$message['from_client_id']}' and to_client_id = '{$message['to_client_id']}') or from_client_id = '{$message['to_client_id']}' and to_client_id = '{$message['from_client_id']}'")
+                    ->where("(from_client_id = '{$message['from_client_id']}'
+                    and to_client_id = '{$message['to_client_id']}')
+                    or from_client_id = '{$message['to_client_id']}' and to_client_id = '{$message['from_client_id']}'")
                     ->select('count(*) as total')->query();
                 $result['total'] = (int)$total[0]['total'] + (int)$redisMessage['total'];
             }
