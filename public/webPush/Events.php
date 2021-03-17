@@ -122,11 +122,7 @@ class Events
                     'page' => $message_data['page'],
                     'limit' => $message_data['limit'] + 1
                 );
-                if (ceil($redisMessage['total'] / $hisMessage['limit']) > $hisMessage['page']) {
-                    $messageLists = $redisMessage;
-                } else {
-                    $messageLists = self::getHisChatMessage($redisMessage, $hisMessage);
-                }
+                $messageLists = (ceil($redisMessage['total'] / $hisMessage['limit']) > $hisMessage['page']) ? $redisMessage : self::getHisChatMessage($redisMessage, $hisMessage);
                 $new_message = array(
                     'type'=>'history',
                     'from_client_name' => $message_data['from_client_name'],
@@ -166,12 +162,7 @@ class Events
                     //设置未读消息数
                     self::$chat->setUnreadMsgLists($message_data['from_client_id'], $message_data['to_client_id']);
                     //保存聊天记录
-                    self::$chat->setChatMsgLists(
-                        $message_data['from_client_id'],
-                        $message_data['to_client_id'],
-                        '',
-                        $new_message
-                    );
+                    self::$chat->setChatMsgLists($message_data['from_client_id'], $message_data['to_client_id'], '', $new_message);
                     $new_message['client_list'] = $clients_list;
                     //通过uid发送消息
                     Gateway::sendToUid($message_data['to_client_id'], json_encode($new_message));
@@ -196,12 +187,7 @@ class Events
                     'room_id' =>$message_data['room_id']
                 );
                 //保存聊天记录
-                self::$chat->setChatMsgLists(
-                    $message_data['from_client_id'],
-                    'all',
-                    $message_data['room_id'],
-                    $new_message
-                );
+                self::$chat->setChatMsgLists($message_data['from_client_id'], 'all', $message_data['room_id'], $new_message);
                 $new_message['client_list'] = $clients_list;
                 //发送消息到当前组
                 Gateway::sendToGroup($message_data['room_id'], json_encode($new_message));
@@ -216,12 +202,7 @@ class Events
                 self::$chat->recallMessage($message_data['recall_message']);
                 //保存聊天记录
                 unset($message_data['recall_message']);
-                self::$chat->setChatMsgLists(
-                    $message_data['from_client_id'],
-                    $message_data['to_client_id'],
-                    $message_data['room_id'],
-                    $message_data
-                );
+                self::$chat->setChatMsgLists($message_data['from_client_id'], $message_data['to_client_id'], $message_data['room_id'], $message_data);
                 self::recallOrSRemMessage($message_data, $clients_list);
                 break;
             default:

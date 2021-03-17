@@ -111,8 +111,11 @@ class WxUsersController
             }
             return  $this->ajaxReturn(Code::ERROR, 'login failed');
         }
-        $oauthRes->remember_token = md5($oauthRes->remember_token);
-        OAuth::getInstance()->updateResult(objectToArray($oauthRes), 'id', $oauthRes->id);
+        // 用户更新时间跟当前时间作对比
+        if ($oauthRes->updated_at + 3600 * 24 > time()) {
+            $oauthRes->remember_token = md5($oauthRes->remember_token);
+            OAuth::getInstance()->updateResult(objectToArray($oauthRes), 'id', $oauthRes->id);
+        }
         return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauthRes);
     }
     /**
@@ -123,8 +126,7 @@ class WxUsersController
     {
         $this->validatePost(['type'=>'required|integer','id'=>'required|integer']);
         $type = DB::table('os_soogif_type')->where('id', '=', ($this->post['type']))->first(['name']);
-        $result['data'] = DB::table('os_soogif')->where('type', '=', ($this->post['type']))->limit(100)
-            ->orderByRaw('rand()')->orWhere('name', '=', $type->name ?? '')->get();
+        $result['data'] = DB::table('os_soogif')->where('type', '=', ($this->post['type']))->limit(100)->orWhere('name', '=', $type->name ?? '')->get();
         return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'successfully', $result) :
             $this->ajaxReturn(Code::ERROR, 'failed');
     }

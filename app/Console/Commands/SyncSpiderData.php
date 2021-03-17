@@ -74,7 +74,7 @@ class SyncSpiderData extends Command
             foreach ($result as $item) {
                 $this->info(json_encode($item, JSON_UNESCAPED_UNICODE));
                 $images = DB::table('os_soogif')->where('type', '=', $item->id)->get();
-                if (count($images) <= 1) {
+                if (count($images) === 0) {
                     $this->info($item->name.'没有图片');
                     DB::table('os_soogif_type')->where('id', '=', $item->id)->delete();
                 }
