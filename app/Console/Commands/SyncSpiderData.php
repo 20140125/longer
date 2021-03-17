@@ -49,7 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 79263;
+        $this->startId = 81914;
     }
 
     /**
@@ -57,9 +57,9 @@ class SyncSpiderData extends Command
      */
     public function handle()
     {
-        $this->setFileInfo();
+//        $this->setFileInfo();
 //        $this->removeImage();
-//        $this->getFaBiaoQing();
+        $this->getFaBiaoQing();
     }
 
     /**
@@ -67,14 +67,14 @@ class SyncSpiderData extends Command
      */
     protected function removeImage()
     {
-        $where[] = ['id', '<=', 104];
+//        $where[] = ['id', '<=', 104];
         $where[] = ['pid', '<>', 0];
         $result = DB::table('os_soogif_type')->where($where)->get();
         try {
             foreach ($result as $item) {
                 $this->info(json_encode($item, JSON_UNESCAPED_UNICODE));
                 $images = DB::table('os_soogif')->where('type', '=', $item->id)->get();
-                if (count($images) === 0) {
+                if (count($images) <= 1) {
                     $this->info($item->name.'没有图片');
                     DB::table('os_soogif_type')->where('id', '=', $item->id)->delete();
                 }
