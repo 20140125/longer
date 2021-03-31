@@ -236,6 +236,9 @@ class WxUsersController
     {
         $this->validatePost(['token'=>'required|string','post'=>'required|array','act'=>'required|integer']);
         $users = OAuth::getInstance()->getResult('remember_token', $this->post['token']);
+        if (empty($users)) {
+            return ajaxReturn(Code::ERROR, 'Please Login System');
+        }
         $data = array(
             'image_id' => $this->post['post']['id'],
             'href' => $this->post['post']['href'],

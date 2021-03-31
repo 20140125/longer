@@ -49,7 +49,7 @@ class SyncSpiderData extends Command
         parent::__construct();
         $this->flag = true;
         $this->startPage = 1;
-        $this->startId = 81914;
+        $this->startId = 87003;
     }
 
     /**
@@ -58,8 +58,8 @@ class SyncSpiderData extends Command
     public function handle()
     {
 //        $this->setFileInfo();
-//        $this->removeImage();
-        $this->getFaBiaoQing();
+        $this->removeImage();
+//        $this->getFaBiaoQing();
     }
 
     /**
@@ -69,7 +69,7 @@ class SyncSpiderData extends Command
     {
 //        $where[] = ['id', '<=', 104];
         $where[] = ['pid', '<>', 0];
-        $result = DB::table('os_soogif_type')->where($where)->get();
+        $result = DB::table('os_soogif_type')->orderByDesc('id')->where($where)->get();
         try {
             foreach ($result as $item) {
                 $this->info(json_encode($item, JSON_UNESCAPED_UNICODE));
