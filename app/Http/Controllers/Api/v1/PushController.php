@@ -75,17 +75,15 @@ class PushController extends BaseController
                 'created_at'=>'required|string|date'
             ]
         );
-        $this->post['status'] == 1 ? $this->pushMessage() : '1';
+        $this->post['state'] = Code::WEBSOCKET_STATE[2];
+        if ($this->post['status'] == 1) {
+            $this->pushMessage();
+        }
         $this->post['created_at'] = time();
         if ($this->post['uid'] == config('app.client_id')) {
             dispatch(new OauthProcess($this->post))->onQueue('push')->delay(30);
             $this->post['username'] = 'admin';
-            $this->post['uid'] = $this->userModel->getResult(
-                'username',
-                $this->post['uid'] === config('app.client_id') ? 'admin' : $this->post['username'],
-                '=',
-                ['uuid']
-            )->uuid;
+            $this->post['uid'] = $this->userModel->getResult('username', $this->post['uid'] === config('app.client_id') ? 'admin' : $this->post['username'], '=', ['uuid'])->uuid;
             $this->pushModel->addResult($this->post);
             return $this->ajaxReturn(Code::SUCCESS, 'push message save successfully');
         }
