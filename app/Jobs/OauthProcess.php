@@ -25,11 +25,11 @@ class OauthProcess implements ShouldQueue
     /**
      * @var RedisClient $redisClient
      */
-    protected RedisClient $redisClient;
+    protected $redisClient;
     /**
      * @var Push $pushModel
      */
-    protected Push $pushModel;
+    protected $pushModel;
     /**
      * Create a new job instance.
      * @param $post
