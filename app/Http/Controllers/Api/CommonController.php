@@ -81,9 +81,8 @@ class CommonController
     public function getCityCode()
     {
         try {
-            $address = objectToArray(Amap::getInstance()
-                ->getAddress(request()->ip() == '127.0.0.1' ? getServerIp() : request()->ip()));
-            return ($address['adcode'] && $address['adcode']!=='[ ]') ? $address['adcode'] : '110000';
+            $address = objectToArray(Amap::getInstance()->getAddress(request()->ip() == '127.0.0.1' ? getServerIp() : request()->ip()));
+            return $address['adcode'] ?? '110000';
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return false;

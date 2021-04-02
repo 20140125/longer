@@ -139,7 +139,6 @@ class WxUsersController
     {
         $this->validatePost(['page'=>'required|integer', 'limit'=>'required|integer', 'source' => 'required|string|in:app,mini_program']);
         $where[] = ['type', '>', 105];
-        $this->post['source'] = $this->post['source'] ?? 'app';
         if (!empty($this->post['name'])) {
             if ($this->post['source'] === 'mini_program') {
                 $defaultShowImage = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;

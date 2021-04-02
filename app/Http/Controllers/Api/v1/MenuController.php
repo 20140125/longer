@@ -22,17 +22,50 @@ use Illuminate\Support\Facades\Log;
 class MenuController extends BaseController
 {
     /**
+     * TODO: 用户合法性(获取用户信息)
+     * @param string token 用户标识
+     * @return JsonResponse
+     */
+    public function check()
+    {
+        $role = $this->roleModel->getResult('id', $this->users->role_id ?? 0);
+        if (empty($role)) {
+            setCode(Code::NOT_ALLOW);
+            return $this->ajaxReturn(Code::NOT_ALLOW, 'permission denied');
+        }
+        /* todo:公司网络限制，访问不了高德地图的接口 */
+        $adCode = in_array(getServerIp(), ['192.168.255.10']) ? '440305' : CommonController::getInstance()->getCityCode();
+        $area = Area::getInstance()->getResult('code', $adCode, '=', ['name', 'parent_id']);
+        $province = Area::getInstance()->getResult('id', $area->parent_id, '=', ['name']);
+        return $this->ajaxReturn(
+            Code::SUCCESS,
+            'permission',
+            [
+                'auth'=>$role->auth_url ?? '',
+                'token'=>$this->users->remember_token ?? '',
+                'username'=>$this->users->username ?? '',
+                'socket'=>config('app.socket_url') ?? '',
+                'avatar_url' => $this->users->username == 'admin' ? config('app.avatar_url') : $this->users->avatar_url,
+                'websocket'=>config('app.websocket') ?? '',
+                'role_id' => md5($this->users->role_id ?? ''),
+                'uuid' => $this->users->uuid ?? '',
+                'local' => config('app.url') ?? '',
+                'adcode' => $adCode ?? '',
+                'city' => !empty($province->name) ? $province->name.$area->name : $area->name,
+                'room_id' =>'1200',
+                'room_name' => '畅所欲言',
+                'user_id'=>$this->users->id ?? '',
+                'default_client_id'=>config('app.client_id') ?? ''
+            ]
+        );
+    }
+    /**
      * TODO: 权限列表
      * @param string token 用户标识
      * @return JsonResponse
      */
     public function getMenu()
     {
-        $role = $this->roleModel->getResult('id', $this->users->role_id);
-        if (empty($role)) {
-            setCode(Code::NOT_ALLOW);
-            return $this->ajaxReturn(Code::NOT_ALLOW, 'permission denied');
-        }
         switch ($this->users->role_id) {
             case 1:
                 $authLists = $this->authModel->getAuthTree();
@@ -42,45 +75,6 @@ class MenuController extends BaseController
                 break;
         }
         return $this->ajaxReturn(Code::SUCCESS, 'successfully', $authLists);
-    }
-    /**
-     * TODO: 用户合法性
-     * @param string token 用户标识
-     * @return JsonResponse
-     */
-    public function check()
-    {
-        $role = $this->roleModel->getResult('id', $this->users->role_id);
-        if (empty($role)) {
-            setCode(Code::NOT_ALLOW);
-            return $this->ajaxReturn(Code::NOT_ALLOW, 'permission denied');
-        }
-        $adcode = in_array(getServerIp(), ['10.97.227.81','10.97.227.46']) ? '440305'
-            : CommonController::getInstance()->getCityCode(); //公司网络限制，访问不了高德地图的接口
-        $area = Area::getInstance()->getResult('code', $adcode, '=', ['name', 'parent_id']);
-        $province = Area::getInstance()->getResult('id', $area->parent_id, '=', ['name']);
-        return $this->ajaxReturn(
-            Code::SUCCESS,
-            'permission',
-            [
-                'auth'=>$role->auth_url,
-                'token'=>$this->users->remember_token,
-                'username'=>$this->users->username,
-                'socket'=>config('app.socket_url'),
-                'avatar_url' => $this->users->username == 'admin' ? config('app.avatar_url')
-                    : $this->users->avatar_url,
-                'websocket'=>config('app.websocket'),
-                'role_id' => md5($this->users->role_id),
-                'uuid' => empty($this->users->uuid) ? '' :$this->users->uuid,
-                'local' => config('app.url'),
-                'adcode' => $adcode,
-                'city' => !empty($province->name) ? $province->name.$area->name : $area->name,
-                'room_id' =>'1200',
-                'room_name' => '畅所欲言',
-                'user_id'=>$this->users->id,
-                'default_client_id'=>config('app.client_id')
-            ]
-        );
     }
 
     /**
@@ -105,8 +99,7 @@ class MenuController extends BaseController
         $this->validatePost(['adcode'=>'required']);
         $area = Area::getInstance()->getResult('code', $this->post['adcode'] ?? '440305', '=', ['name','parent_id']);
         $province = Area::getInstance()->getResult('id', $area->parent_id, '=', ['name']);
-        return $this->ajaxReturn(Code::SUCCESS, 'successfully', ['city'=>!empty($province->name) ?
-            $province->name.$area->name : $area->name]);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', ['city'=>!empty($province->name) ? $province->name.$area->name : $area->name]);
     }
     /**
      * TODO:  退出登陆
@@ -116,12 +109,7 @@ class MenuController extends BaseController
     public function logout()
     {
         $remember_token = md5(md5($this->users->remember_token).time());
-        $result = Users::getInstance()->updateResult(
-            ['remember_token'=>$remember_token],
-            'remember_token',
-            $this->users->remember_token
-        );
-        return $result ? $this->ajaxReturn(Code::SUCCESS, 'logout system successfully') :
-            $this->ajaxReturn(Code::ERROR, 'logout system error');
+        $result = Users::getInstance()->updateResult(['remember_token'=>$remember_token], 'remember_token', $this->users->remember_token);
+        return $result ? $this->ajaxReturn(Code::SUCCESS, 'logout system successfully') : $this->ajaxReturn(Code::ERROR, 'logout system error');
     }
 }

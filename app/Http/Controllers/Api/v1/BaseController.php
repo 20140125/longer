@@ -76,8 +76,7 @@ class BaseController extends Controller
     protected $defaultAuth;
 
     /**
-     * BaseController constructor.
-     * * TODO:构造函数
+     * TODO:构造函数
      * BaseController constructor.
      * @param Request $request
      */
@@ -103,44 +102,43 @@ class BaseController extends Controller
         if (!is_dir($this->backupPath)) {
             mkdir($this->backupPath);
         }
-        $this->post['token'] = $this->post['token'] ?? ($request->get('token')
-                ?? $this->redisClient->getValue('oauth_register'));
-        //判断必填字段是否为空
+        $this->post['token'] = $this->post['token'] ?? ($request->get('token') ?? $this->redisClient->getValue('oauth_register'));
+        /* todo: 判断必填字段是否为空 */
         $validate = Validator::make($this->post, ['token'=>'required|string|size:32']);
-       //获取用户信息
-        $this->users = $this->userModel->getResult('remember_token', $this->post['token'])
-            ?? $this->oauthModel->getResult('remember_token', $this->post['token']);
-        //用户第三方授权注册不验证headers
+       /* todo: 获取用户信息 */
+        $this->users = $this->userModel->getResult('remember_token', $this->post['token']) ?? $this->oauthModel->getResult('remember_token', $this->post['token']);
+        /* todo: 用户第三方授权注册不验证headers */
         if (!$this->redisClient->getValue('oauth_register')) {
-            //token不正确或为空
+            /* todo: token不正确或为空 */
             if ($validate->fails() || empty($request->header('Authorization'))) {
                 $this->setCode(Code::UNAUTHORIZED, 'Token Is Not Provided');
             }
-            //token不正确
+            /* todo: 用户不存在或者验签参数错误 */
             if (empty($this->users) || $this->post['token'] !== mb_substr($request->header('Authorization'), 32, 32)) {
                 $this->setCode(Code::UNAUTHORIZED, 'Token Is Expired');
             }
         }
-        //用户被禁用
+        /* todo: 用户被禁用 */
         if ($this->users->status!==1) {
             $this->setCode(Code::UNAUTHORIZED, 'Token Is Invalid');
         }
-        //用户不属于超级管理员
         $this->role = $this->roleModel->getResult('id', $this->users->role_id, '=', ['auth_url', 'auth_ids','status']);
-        //角色不存在
+        /* todo: 角色不存在 */
         if (empty($this->role)) {
             $this->setCode(Code::UNAUTHORIZED, 'Role Is Not Exists');
         }
-        //角色被禁用
+        /* todo: 角色被禁用 */
         if ($this->role->status === 2) {
             $this->setCode(Code::UNAUTHORIZED, 'Role Is Disabled');
         }
+        /* todo: 用户不属于超级管理员 */
         if ($this->users->role_id !== 1) {
             if (!empty($this->role) &&
                 !in_array(str_replace(['/api/v1'], ['/admin'], $url), json_decode($this->role->auth_url, true))) {
                 $this->setCode(Code::NOT_ALLOW, 'Permission denied');
             }
         }
+        /* todo：获取默认的权限 */
         $default_auth = Cache::get('default_auth');
         if (!$default_auth) {
             $default_auth = $this->authModel->getResult('pid', [100], 'in', ['href', 'id']);
