@@ -171,7 +171,7 @@ class WxUsersController
     public function imageBed()
     {
         if (empty($this->post['id'])) {
-            $lists = $lists = DB::table('os_soogif_type')->where('pid', '=', $this->post['pid'] ?? 0)
+            $lists = DB::table('os_soogif_type')->where('pid', '=', $this->post['pid'] ?? 0)
                 ->where('id', '<>', 105)
                 ->get(['name','id','pid']);
             return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
@@ -248,10 +248,8 @@ class WxUsersController
         );
         $result = DB::table('os_collect')->where([['user_id','=',$data['user_id']],['image_id','=',$data['image_id']]])
             ->first();
-        $res = empty($result) ? DB::table('os_collect')->insert($data) :
-            DB::table('os_collect')->where('id', '=', $result->id)->update($data);
-        return !empty($res) ? $this->ajaxReturn(Code::SUCCESS, 'successfully') :
-            $this->ajaxReturn(Code::ERROR, 'failed');
+        $res = empty($result) ? DB::table('os_collect')->insert($data) : DB::table('os_collect')->where('id', '=', $result->id)->update($data);
+        return !empty($res) ? $this->ajaxReturn(Code::SUCCESS, 'successfully') : $this->ajaxReturn(Code::ERROR, 'failed');
     }
     /**
      * TODO:数据返回

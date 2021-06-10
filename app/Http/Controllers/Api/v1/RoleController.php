@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * 角色管理
@@ -27,17 +25,9 @@ class RoleController extends BaseController
             $item->created_at = date("Y-m-d H:i:s", $item->created_at);
             $item->updated_at = date("Y-m-d H:i:s", $item->updated_at);
         }
-        $authLists = in_array($this->users->role_id, [1]) ?
-            DB::table('os_rule')->get(['id as key', 'name as label']) : [];
-        return $this->ajaxReturn(
-            Code::SUCCESS,
-            'successfully',
-            [
-                'role'=>$roleLists,
-                'auth'=>$authLists,
-                'defaultAuth'=>in_array($this->users->role_id, [1]) ? $this->defaultAuth : []
-            ]
-        );
+        $authLists = in_array($this->users->role_id, [1]) ? DB::table('os_rule')->get(['id as key', 'name as label']) : [];
+        $data = ['role' => $roleLists, 'auth' => $authLists, 'defaultAuth' => in_array($this->users->role_id, [1]) ? $this->defaultAuth : []];
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $data);
     }
 
     /**
@@ -58,8 +48,7 @@ class RoleController extends BaseController
         $this->post['auth_url'] = str_replace("\\", '', json_encode($auth_url));
         $this->post['auth_ids'] = json_encode($this->setDefaultAuth());
         $result = $this->roleModel->addResult($this->post);
-        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'role save successfully') :
-            $this->ajaxReturn(Code::ERROR, 'role save failed');
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'role save successfully') : $this->ajaxReturn(Code::ERROR, 'role save failed');
     }
 
     /**
@@ -73,13 +62,9 @@ class RoleController extends BaseController
     {
         if (!empty($this->post['act']) && $this->post['act'] == 'status') {
             unset($this->post['act']);
-            $this->validatePost(
-                ['status'=>'required|in:1,2', 'id'=>'required|integer|gt:1' ],
-                ['id.gt'=>'Permission denied']
-            );
+            $this->validatePost(['status'=>'required|in:1,2', 'id'=>'required|integer|gt:1' ], ['id.gt'=>'Permission denied']);
             $result = $this->roleModel->updateResult($this->post, 'id', $this->post['id']);
-            return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'role update status successfully') :
-                $this->ajaxReturn(Code::ERROR, 'role update status error');
+            return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'role update status successfully') : $this->ajaxReturn(Code::ERROR, 'role update status error');
         }
         $this->validatePost(['status'=>'required|in:1,2', 'auth_ids'=>'required|Array','role_name'=>'required|string']);
         $auth_ids = array();
@@ -98,8 +83,7 @@ class RoleController extends BaseController
         $this->post['updated_at'] = time();
         $this->post['created_at'] = strtotime($this->post['created_at']);
         $result = $this->roleModel->updateResult($this->post, 'id', $this->post['id']);
-        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'role update status successfully') :
-            $this->ajaxReturn(Code::ERROR, 'role update status error');
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'role update status successfully') : $this->ajaxReturn(Code::ERROR, 'role update status error');
     }
 
     /**
@@ -125,7 +109,6 @@ class RoleController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer|gt:1'], ['id.gt'=>'Permission denied']);
         $result = $this->roleModel->deleteResult('id', $this->post['id']);
-        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'delete role successfully') :
-            $this->ajaxReturn(Code::ERROR, 'delete role failed');
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'delete role successfully') : $this->ajaxReturn(Code::ERROR, 'delete role failed');
     }
 }

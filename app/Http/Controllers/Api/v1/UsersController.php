@@ -23,13 +23,12 @@ class UsersController extends BaseController
      */
     public function index()
     {
-        $result = $this->userModel->getResultList($this->users, $this->post['page'], $this->post['limit']);
+        $result = $this->userModel->getLists($this->users, $this->post['page'], $this->post['limit']);
         foreach ($result['data'] as &$item) {
             $item->updated_at = date("Y-m-d H:i:s", $item->updated_at);
             $item->created_at = date("Y-m-d H:i:s", $item->created_at);
         }
-        $result['roleLists'] = in_array($this->users->role_id, [1]) ?
-            $this->roleModel->getResult2('1', ['id','role_name']) : [];
+        $result['roleLists'] = in_array($this->users->role_id, [1]) ? $this->roleModel->getResult2('1', ['id','role_name']) : [];
         return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 
@@ -91,25 +90,21 @@ class UsersController extends BaseController
             $this->validatePost($this->rule(4), ['id.gt'=>'Permission denied']);
             unset($this->post['act']);
             $result = $this->userModel->updateResult($this->post, 'id', $this->post['id']);
-            return empty($result) ? $this->ajaxReturn(Code::ERROR, 'update users status error') :
-                $this->ajaxReturn(Code::SUCCESS, 'update users status successfully');
+            return empty($result) ? $this->ajaxReturn(Code::ERROR, 'update users status error') : $this->ajaxReturn(Code::SUCCESS, 'update users status successfully');
         }
         $users = $this->userModel->getResult('id', $this->post['id']);
-        $this->post['created_at'] = gettype($this->post['created_at']) === 'string' ?
-            strtotime($this->post['created_at']) : $this->post['created_at'];
+        $this->post['created_at'] = gettype($this->post['created_at']) === 'string' ? strtotime($this->post['created_at']) : $this->post['created_at'];
         $this->post['updated_at'] = time();
         try {
             DB::beginTransaction();
-            $this->post['password'] === $users->password ?
-                $this->validatePost($this->rule(1)) :  $this->validatePost($this->rule(2));
+            $this->post['password'] === $users->password ? $this->validatePost($this->rule(1)) :  $this->validatePost($this->rule(2));
             //用户修改密码
             $this->post['salt'] = getRoundNum(8);
             $this->post['password'] = md5(md5($this->post['password']) . $this->post['salt']);
             $this->post['remember_token'] = md5($this->post['password']); //用户修改密码后也修改当前token
             Artisan::call("longer:sync_oauth {$this->post['remember_token']}");
             DB::commit();
-            return empty($result) ? $this->ajaxReturn(Code::ERROR, 'update users error') :
-                $this->ajaxReturn(Code::SUCCESS, 'update users successfully');
+            return empty($result) ? $this->ajaxReturn(Code::ERROR, 'update users error') : $this->ajaxReturn(Code::SUCCESS, 'update users successfully');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             DB::rollBack();
@@ -176,8 +171,7 @@ class UsersController extends BaseController
     {
         $this->validatePost(['id'=>'required|integer|gt:1'], ['id.gt'=>'Permission denied']);
         $result = $this->userModel->deleteResult('id', $this->post['id']);
-        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'delete user successfully') :
-            $this->ajaxReturn(Code::ERROR, 'delete user error');
+        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'delete user successfully') : $this->ajaxReturn(Code::ERROR, 'delete user error');
     }
 
     /**

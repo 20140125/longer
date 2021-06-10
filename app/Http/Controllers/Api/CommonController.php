@@ -124,11 +124,7 @@ class CommonController
      */
     public function verifyMailAndCode($post, array $data)
     {
-        $result = DB::table('os_send_email')->where(['email'=>$post['email']])
-            ->where('updated_at', '>=', date('Y-m-d H:i:s', strtotime('-10 minutes')))->first();
-        return !empty($result) ? DB::table('os_send_email')
-                ->where(['code'=>$result->code, 'email'=>$post['email']])
-                ->update(['code'=>$data['code']])
-            : DB::table('os_send_email')->insert($data);
+        $result = DB::table('os_send_email')->where(['email'=>$post['email']])->where('updated_at', '>=', date('Y-m-d H:i:s', strtotime('-10 minutes')))->first();
+        return !empty($result) ? DB::table('os_send_email')->where(['code'=>$result->code, 'email'=>$post['email']])->update(['code'=>$data['code']]) : DB::table('os_send_email')->insert($data);
     }
 }

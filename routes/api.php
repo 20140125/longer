@@ -18,7 +18,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'], 'common/report', 'v1\LoginController@setVerifyCode')->name('reportCode');
     Route::match(['get','post'], 'common/login', 'v1\LoginController@index')->name('apiLogin');
     Route::match(['get','post'], 'common/config', 'v1\LoginController@config')->name('getConfig');
-    Route::match(['get','post'], 'common/download', 'v1\LoginController@download')->name('downloadFile');
     Route::match(['get','post'], 'common/send_email', 'v1\LoginController@email')->name('sendEmail');
     Route::match(['get','post'], 'common/check_code', 'v1\LoginController@code')->name('checkCode');
     Route::match(['get','post'], 'common/check_login', 'v1\MenuController@check')->name('checkLogin');
@@ -56,6 +55,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::match(['get','post'], 'center/save', 'v1\UsersController@saveCenter')->name('saveCenter');
     /* 权限 */
     Route::match(['get','post'], 'auth/index', 'v1\AuthController@index');
+    Route::match(['get','post'], 'auth/get', 'v1\AuthController@getAuthLevel');
     Route::match(['get','post'], 'auth/save', 'v1\AuthController@save');
     Route::match(['get','post'], 'auth/update', 'v1\AuthController@update');
     Route::match(['get','post'], 'auth/delete', 'v1\AuthController@delete');

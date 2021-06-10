@@ -70,7 +70,7 @@ class OauthProcess implements ShouldQueue
             }
             DB::commit();
         } catch (\Exception $exception) {
-            Log::error('站内通知对列执行错误：'.$exception->getMessage());
+            Log::error('站内通知对列执行错误：'.$exception);
             DB::rollBack();
         }
     }

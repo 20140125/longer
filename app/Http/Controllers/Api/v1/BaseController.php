@@ -161,13 +161,8 @@ class BaseController extends Controller
     protected function setCode($code, $message)
     {
         setCode($code);
-        exit(json_encode(
-            array(
-                'code'=>$code,
-                'msg'=>$message,
-                'url'=>str_replace('/', '', config('app.url')).request()->getRequestUri()
-            )
-        ));
+        $data =  array('code'=>$code, 'msg'=>$message, 'url'=>str_replace('/', '', config('app.url')).request()->getRequestUri());
+        exit(json_encode($data));
     }
 
     /**
@@ -237,13 +232,13 @@ class BaseController extends Controller
                     if (webPush($this->post['info'])) {
                         $this->post['state'] = Code::WEBSOCKET_STATE[0];
                     }
-                    return ;
+                    return;
                 }
                 //推送给个人
                 if ($this->redisClient->sIsMember(config('app.redis_user_key'), $this->post['uid'])) {
                     if (webPush($this->post['info'], $this->post['uid'])) {
                         $this->post['state'] = Code::WEBSOCKET_STATE[0];
-                        return ;
+                        return;
                     }
                     return;
                 }

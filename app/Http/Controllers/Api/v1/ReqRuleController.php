@@ -50,7 +50,16 @@ class ReqRuleController extends BaseController
             $item->expires = empty($item->expires) ? '' : date('Y-m-d H:i:s', $item->expires);
             $item->ruleLists = $this->setAuth($item->user_id);
         }
-        $result['userLists'] = $this->userModel->getAll([], ['id','username']);
+        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
+    }
+
+    /**
+     * todo:
+     * @return JsonResponse
+     */
+    public function getUserLists()
+    {
+        $result = $this->userModel->getAll([], ['id','username']);
         return $this->ajaxReturn(Code::SUCCESS, 'successfully', $result);
     }
 

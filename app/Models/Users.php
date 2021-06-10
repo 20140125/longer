@@ -62,17 +62,14 @@ class Users extends Model
         $request['salt'] = getRoundNum(8);
         $request['password'] = md5(md5($data['password']).$request['salt']);
         $request['remember_token'] = md5(md5($request['password']).$request['salt']);
-        $this->updateResult($request, 'id', $result->id); //修改用户标识
-        $admin['token'] = $request['remember_token'];
+        $this->updateResult($request, 'id', $result->id);
+        $admin['remember_token'] = $request['remember_token'];
         $admin['username'] = $result->username;
         $admin['role_id'] = md5($result->role_id);
         $admin['uuid'] = $result->uuid;
         $admin['avatar_url'] = $result->avatar_url;
         $where[] = array('u_name',$result->username);
-        UserCenter::getInstance()->updateResult(
-            array('token'=>$admin['token'], 'type'=>'login'),
-            $where
-        );     //修改用户中心标识
+        UserCenter::getInstance()->updateResult(array('token'=>$admin['remember_token'], 'type'=>'login'), $where);
         $admin['logInfo'] = 'account and password login successfully';
         return $admin;
     }
@@ -84,28 +81,29 @@ class Users extends Model
      * @param int $limit
      * @return mixed
      */
-    public function getResultList($user, int $page = 1, int $limit = 15)
+    public function getLists($user, int $page = 1, int $limit = 15)
     {
         $where = [];
         if (!in_array($user->role_id, [1])) {
             $id = empty($user->oauth_type) ? $user->id : $user->uid;
-            $where[] = ['os_users.id',$id];
+            $where[] = ['os_users.id', $id];
         }
         $result['data'] = DB::table($this->table)->join('os_role', $this->table.'.role_id', '=', 'os_role.id')
-            ->limit($limit)->offset($limit*($page-1))
+            ->limit($limit)->offset($limit * ($page - 1))
             ->orderByDesc('updated_at')
             ->where($where)
-            ->get(['os_users.*','os_role.id as role_id']);
+            ->get(['os_users.*', 'os_role.id as role_id']);
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }
 
     /**
+     * todo: 获取所有用户信息
      * @param array $where
      * @param string[] $column
      * @return Collection
      */
-    public function getAll($where=[], $column = ['uuid','username'])
+    public function getAll($where = [], $column = ['uuid','username'])
     {
         return DB::table($this->table)->where($where)->get($column);
     }

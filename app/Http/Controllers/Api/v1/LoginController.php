@@ -54,7 +54,7 @@ class LoginController
         $this->redisClient = RedisClient::getInstance();
         $this->commonControl = CommonController::getInstance();
         $this->post = $request->post();
-        date_default_timezone_set("Asia/Shanghai");
+        date_default_timezone_set('Asia/Shanghai');
     }
 
     /**
@@ -89,17 +89,12 @@ class LoginController
         }
         switch ($this->post['loginType']) {
             case 'password':
-                $validate = Validator::make(
-                    $this->post,
-                    ['email' =>'required|between:8,64|email', 'password' =>'required|between:6,32|string',
-                     'verify_code'=>'required|size:6|string']
-                );
+                $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email', 'password' =>'required|between:6,32|string', 'verify_code'=>'required|size:6|string']);
                 if ($validate->fails()) {
                     return ajaxReturn(Code::ERROR, $validate->errors()->first());
                 }
                 //不区分大小写(图片验证码)
-                if (true != $this->redisClient->getValue($this->post['verify_code']) &&
-                    strtoupper($this->post['verify_code'])!= $this->redisClient->getValue($this->post['verify_code'])) {
+                if (true != $this->redisClient->getValue($this->post['verify_code']) && strtoupper($this->post['verify_code'])!= $this->redisClient->getValue($this->post['verify_code'])) {
                     return ajaxReturn(Code::ERROR, 'verify code validate error');
                 }
                 //删除redis缓存的验证码 (防止恶意访问接口)
@@ -107,10 +102,7 @@ class LoginController
                 $result = $this->userModel->loginSYS($this->post);
                 break;
             case 'mail':
-                $validate = Validator::make(
-                    $this->post,
-                    ['email' =>'required|between:8,64|email', 'verify_code' =>'required|size:8|string']
-                );
+                $validate = Validator::make($this->post, ['email' =>'required|between:8,64|email', 'verify_code' =>'required|size:8|string']);
                 if ($validate->fails()) {
                     return ajaxReturn(Code::ERROR, $validate->errors()->first());
                 }
@@ -133,11 +125,7 @@ class LoginController
                 $res = ajaxReturn(Code::SERVER_ERROR, 'server error');
                 break;
             default:
-                $info = [
-                    'href' => '/v1/login',
-                    'msg' => $result['logInfo'],
-                    'username' => $result['username']
-                ];
+                $info = [ 'href' => '/v1/login', 'msg' => $result['logInfo'], 'username' => $result['username'] ];
                 actLog($info);
                 $res = ajaxReturn(Code::SUCCESS, 'login successfully', $this->setUserInfo($result));
                 break;
@@ -152,14 +140,14 @@ class LoginController
     private function setUserInfo($users)
     {
         return [
-            'token'=>$users['token'],
+            'token'=>$users['remember_token'],
             'username'=>$users['username'],
             'socket'=>config('app.socket_url'),
             'avatar_url' => empty($users['avatar_url']) ? $this->getRandomUsersAvatarUrl() : $users['avatar_url'],
             'websocket'=>config('app.websocket'),
             'role_id' => md5($users['role_id']),
             'uuid' => empty($users['uuid']) ? '' :$users['uuid'],
-            'local' => config('app.url'),
+            'local' => config('app.url')
         ];
     }
 
@@ -185,8 +173,7 @@ class LoginController
      */
     private function emailLogin()
     {
-        if (true != $this->redisClient->getValue($this->post['email'])
-            && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
+        if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
             return Code::VERIFY_CODE;
         }
         DB::beginTransaction();
@@ -199,17 +186,13 @@ class LoginController
                 $result->salt = getRoundNum(8);
                 $result->password = md5(md5($result->password).$result->salt);
                 $result->remember_token = md5(md5($result->password).$result->salt);
-                $result->logInfo = 'email login successfully';
                 $this->userModel->updateResult(objectToArray($result), 'id', $result->id);
                 UserCenter::getInstance()->updateResult(['token'=>$result->remember_token], 'uid', $result->id);
+                $result->logInfo = 'email login successfully';
                 return objectToArray($result);
             }
             //注册
-            $request = array(
-                'ip_address' =>request()->ip(),
-                'updated_at' =>time(),'role_id'=>2,
-                'avatar_url'=>$this->getRandomUsersAvatarUrl()
-            );
+            $request = array('ip_address' =>request()->ip(), 'updated_at' =>time(),'role_id'=>2, 'avatar_url'=>$this->getRandomUsersAvatarUrl());
             $request['salt'] = getRoundNum(8);
             $request['password'] = md5(md5(getRoundNum(32)).$request['salt']);
             $request['remember_token'] = md5(md5($request['password']).$request['salt']);
@@ -222,14 +205,8 @@ class LoginController
             $id = $this->userModel->addResult($request);
             //新用户注册生成client_id
             $this->userModel->updateResult(['uuid'=>$request['uuid'].$id], 'id', $id);
-            UserCenter::getInstance()->addResult(
-                [
-                    'u_name'=>$request['username'],
-                    'uid'=>$id,'token'=>$request['remember_token'],
-                    'notice_status'=>1,
-                    'user_status'=>1
-                ]
-            );
+            $userCenter = [ 'u_name'=>$request['username'], 'uid'=>$id,'token'=>$request['remember_token'], 'notice_status'=>1, 'user_status'=>1 ];
+            UserCenter::getInstance()->addResult($userCenter);
             $request['token'] = $request['remember_token'];
             //更新用户画像
             CommonController::getInstance()->updateUserAvatarUrl();
@@ -264,8 +241,7 @@ class LoginController
             return ajaxReturn(Code::ERROR, 'email not exists');
         }
         $result = $this->commonControl->sendMail($this->post);
-        return $result ? ajaxReturn(Code::SUCCESS, 'email send successfully', $hasEmail)
-            : ajaxReturn(Code::ERROR, 'email send failed');
+        return $result ? ajaxReturn(Code::SUCCESS, 'email send successfully', $hasEmail) : ajaxReturn(Code::ERROR, 'email send failed');
     }
 
     /**
@@ -280,15 +256,11 @@ class LoginController
         if ($request->isMethod('get')) {
             return ajaxReturn(Code::METHOD_ERROR, 'method not allowed');
         }
-        $validate = Validator::make(
-            $this->post,
-            ['email'=>'required|string|email', 'verify_code'=>'required|string|size:8']
-        );
+        $validate = Validator::make($this->post, ['email'=>'required|string|email', 'verify_code'=>'required|string|size:8']);
         if ($validate->fails()) {
             return ajaxReturn(Code::ERROR, $validate->errors()->first());
         }
-        if (true != $this->redisClient->getValue($this->post['email'])
-            && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
+        if (true != $this->redisClient->getValue($this->post['email']) && $this->post['verify_code']!= $this->redisClient->getValue($this->post['email'])) {
             return ajaxReturn(Code::ERROR, 'code verify error');
         }
         return ajaxReturn(Code::SUCCESS, 'code verify successfully');
@@ -347,24 +319,19 @@ class LoginController
         if (empty($this->post['id'])) {
             $lists = Cache::get('type');
             if (empty($lists)) {
-                $lists = getTree(DB::table('os_soogif_type')->where('id', '<', 105)
-                    ->get(['name','id','pid']), '0', 'children');
+                $lists = getTree(DB::table('os_soogif_type')->where('id', '<', 105)->get(['name','id','pid']), '0', 'children');
                 Cache::forever('type', $lists);
             }
             return ajaxReturn(Code::SUCCESS, 'successfully', $lists);
         }
-        $validate = Validator::make(
-            $this->post,
-            ['id'=>'required|integer','page'=>'required|integer','limit'=>'integer|integer']
-        );
+        $validate = Validator::make($this->post, ['id'=>'required|integer','page'=>'required|integer','limit'=>'integer|integer']);
         if ($validate->fails()) {
             return ajaxReturn(Code::ERROR, $validate->errors()->first());
         }
         //判断用户是否是登录用户
         $res = DB::table('os_soogif_type')->where('id', '=', $this->post['id'])->first(['pid']);
         $defaultShowImage = $this->configModel->getResult('name', 'ImageBed', '=', ['children'])->children;
-        if (!in_array($res->pid, explode(',', json_decode($defaultShowImage)[0]->value))
-            && empty($this->post['token'])) {
+        if (!in_array($res->pid, explode(',', json_decode($defaultShowImage)[0]->value)) && empty($this->post['token'])) {
             return ajaxReturn(Code::ERROR, 'Please Login System');
         }
         if (!empty($this->post['token'])) {
