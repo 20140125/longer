@@ -22,7 +22,7 @@ class RedisClient
      */
     protected $password = '';
     /**
-     * @var \Redis $redisClient
+     * @var $redisClient
      */
     protected $redisClient;
     /**

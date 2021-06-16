@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,8 @@ return [
     'redis_password' => env('REDIS_PASSWORD', null),
     'redis_port' => env('REDIS_PORT', '6379'),
     'avatar_url' => env('AVATAR_URL', ''),
-    'websocket' =>env('WEBSOCKET_URL', 'ws://127.0.0.1:7272'),
+    'websocket' => env('WEBSOCKET_URL', 'ws://127.0.0.1:7272'),
+    'app_refresh_login_time' => env('APP_REFRESH_LOGIN_TIME', 259200000),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -138,26 +139,32 @@ return [
     | 第三方授权登录
     |--------------------------------------------------------------------------
     */
-    'amap_key' => env('AMAP_KEY', ''),
-    'program_appid' => env('APPKEY', ''),
-    'program_secret' => env('APPSECRET', ''),
+    'a_map_key' => env('A_MAP_KEY', null),
+    'program_appid' => env('APP_KEY', ''),
+    'program_secret' => env('APP_SECRET', ''),
 
-    'aliyun_appid' => env('ALIYUN_APPID', ''),
-    'aliyun_secret' => env('ALIYUN_APPSECRET', ''),
+    'a_li_yun_appid' => env('A_LI_YUN_APPID', ''),
+    'a_li_yun_secret' => env('A_LI_YUN_APP_SECRET', ''),
 
     'qq_appid' => env('QQ_APPID', ''),
-    'qq_secret' => env('QQ_APPSECRET', ''),
+    'qq_secret' => env('QQ_APP_SECRET', ''),
+
     'github_appid' => env('GITHUB_APPID', ''),
-    'github_secret' => env('GITHUB_APPSECRET', ''),
+    'github_secret' => env('GITHUB_APP_SECRET', ''),
+
     'weibo_appid' => env('WEIBO_APPID', ''),
-    'weibo_secret' => env('WEIBO_APPSECRET', ''),
+    'weibo_secret' => env('WEIBO_APP_SECRET', ''),
+
     'gitee_appid' => env('GITEE_APPID', ''),
-    'gitee_secret' => env('GITEE_APPSECRET', ''),
+    'gitee_secret' => env('GITEE_APP_SECRET', ''),
+
     'baidu_appid' => env('BAIDU_APPID', ''),
-    'baidu_secret' => env('BAIDU_APPSECRET', ''),
+    'baidu_secret' => env('BAIDU_APP_SECRET', ''),
+
     'os_china_appid' => env('OS_CHINA_APPID', ''),
-    'os_china_secret' => env('OS_CHINA_APPSECRET', ''),
-    'database' => env('DB_DATABASE', ''),
+    'os_china_secret' => env('OS_CHINA_APP_SECRET', ''),
+
+    'database' => env('DB_DATABASE', null),
     /*
      |--------------------------------------------------------------------------
      | 第三方授权登录
@@ -204,7 +211,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -218,7 +224,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\HelperServiceProvider::class,
+        App\Providers\HelperServiceProvider::class
 
     ],
 
@@ -246,12 +252,14 @@ return [
         'Config' => Illuminate\Support\Facades\Config::class,
         'Cookie' => Illuminate\Support\Facades\Cookie::class,
         'Crypt' => Illuminate\Support\Facades\Crypt::class,
+        'Date' => Illuminate\Support\Facades\Date::class,
         'DB' => Illuminate\Support\Facades\DB::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
+        'Http' => Illuminate\Support\Facades\Http::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
@@ -270,7 +278,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 
