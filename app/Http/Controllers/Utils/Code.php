@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Utils;
 
-class Code
+use App\Http\Controllers\Controller;
+
+class Code extends Controller
 {
     /* todo:成功 */
     const SUCCESS = 20000;
@@ -20,6 +22,8 @@ class Code
     const METHOD_ERROR = 40005;
     /* todo:服务器错误 */
     const SERVER_ERROR = 50000;
+    /* todo:站内信息推送的状态 (成功 失败 离线) */
+    const WEBSOCKET_STATE = array( 'successfully', 'failed', 'offline');
     /**
      * @var static $instance
      */

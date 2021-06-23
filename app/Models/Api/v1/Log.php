@@ -41,7 +41,7 @@ class Log extends Base
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOne($where, $columns = ['*'])
+    public function getOne($where, array $columns = ['*'])
     {
         return $this->getResult($this->table, $where, $columns);
     }
@@ -80,12 +80,12 @@ class Log extends Base
     /**
      * todo:获取数据列表
      * @param $where
-     * @param int[] $pagination
-     * @param string[] $order
-     * @param string[] $column
+     * @param array|int[] $pagination
+     * @param array|string[] $order
+     * @param array|string[] $column
      * @return array
      */
-    public function getLists($where, $pagination = ['page' => 1, 'limit' => 10], $order = ['order' => 'id', 'direction' => 'desc'], $column = ['*'])
+    public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $column = ['*'])
     {
         $result['data'] = DB::table($this->table)->where($where)
             ->limit($pagination['limit'])

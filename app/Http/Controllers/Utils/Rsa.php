@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Utils;
 
+use App\Http\Controllers\Controller;
+
 /**
  * Class Rsa
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Utils
  */
-class Rsa
+class Rsa extends Controller
 {
     /**
      * @var static $instance

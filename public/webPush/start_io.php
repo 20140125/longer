@@ -19,9 +19,10 @@ $oauth_last_count = 0;
 $online_user_count = 0;
 //时间跨度
 $times = 15;
-// PHPSocketIO服务  // window/苹果系统
+/*todo: PHPSocketIO服务*/
 if (in_array(PHP_OS, ['WINNT','Darwin'])) {
-    $sender_io = new SocketIO(2120); //接收消息推送端口
+    /* todo:接收消息推送端口 */
+    $sender_io = new SocketIO(2120);
 } else {
     $context = array(
         'ssl' => array(
@@ -32,17 +33,22 @@ if (in_array(PHP_OS, ['WINNT','Darwin'])) {
     );
     $sender_io = new SocketIO(2120, $context);
 }
+echo PHP_OS;
 // Redis 链接
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
 //数据库连接
 $db = new Connection(HOST, PORT, USERNAME, PASSWORD, DBNAME);
-$day = range(strtotime(date('Ymd', strtotime("-{$times} day"))), strtotime(date('Ymd')), 24*60*60);
+$day = range(strtotime(date('Ymd', strtotime("-{$times} day"))), strtotime(date('Ymd')), 24 * 60 * 60);
 foreach ($day as &$item) {
     $item = date('Ymd', $item);
 }
-// 客户端发起连接事件时，设置连接socket的各种事件回调
+
+echo "\r\n-------------开始链接-------------\r\n";
+
+/*  客户端发起连接事件时，设置连接socket的各种事件回调 */
 $sender_io->on('connection', function ($socket) {
+    echo json_encode($socket);
     // 当客户端发来登录事件时触发
     $socket->on('login', function ($uid) use ($socket) {
         global $redis,$online_user_count;
@@ -65,19 +71,20 @@ $sender_io->on('connection', function ($socket) {
     $total['day'] = $day;
     //每天的日志总量
     $logCount = getLogCount();
-    $log_last_count = $logCount[intval(count($logCount)-1)];
+    $log_last_count = $logCount[count($logCount)-1];
     //每天的通知总量
     $pushCount = getPushCount();
-    $push_last_count = $pushCount[intval(count($pushCount)-1)];
+    $push_last_count = $pushCount[count($pushCount)-1];
     //授权用户总量
     $oauthCount = getOauthCount();
-    $oauth_last_count = $oauthCount[intval(count($oauthCount)-1)];
+    $oauth_last_count = $oauthCount[count($oauthCount)-1];
     //推送到图表数据
-    $total['total'] = array('log' => $logCount,'push'=>$pushCount,'oauth'=>$oauthCount);
+    $total['total'] = array('log' => $logCount, 'push' => $pushCount, 'oauth' => $oauthCount);
     $sender_io->emit('charts', $total);
 
     //用户离线
     $socket->on('disconnect', function () use ($socket) {
+        echo json_encode($socket);
         global $redis;
         if (!$redis->sIsMember(REDIS_KEY, $socket->uid)) {
             return ;
@@ -86,9 +93,9 @@ $sender_io->on('connection', function ($socket) {
         $redis->sREM(REDIS_KEY, $socket->uid);
     });
 });
-// 当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据
+/*  当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据 */
 $sender_io->on('workerStart', function () {
-    // 监听一个http端口
+    /* 监听一个http端口 */
     if (in_array(PHP_OS, ['WINNT','Darwin'])) {
         $inner_http_worker = new Worker('http://0.0.0.0:2121');
     } else {
@@ -102,25 +109,24 @@ $sender_io->on('workerStart', function () {
         $inner_http_worker = new Worker('http://0.0.0.0:2121', $context);
         $inner_http_worker->transport = 'ssl';
     }
-    // 当http客户端发来数据时触发
+    /* 当http客户端发来数据时触发 */
     $inner_http_worker->onMessage = function (TcpConnection $http_connection, Request $request) {
-        $post = $request->post();
-        $post = $post ? $post : $request->get();
+        $post = $request->post() ?: $request->get();
         switch (@$post['type']) {
             case 'publish':
                 global $sender_io, $redis;
                 $to = @$post['to'];
                 $post['content'] = trim(htmlspecialchars(@$post['content']));
-                // http接口返回，如果用户离线socket返回fail
+                /* todo:http接口返回，如果用户离线socket返回fail */
                 if ($to && !$redis->sIsMember(REDIS_KEY, $to)) {
                     return $http_connection->send('offline');
                 }
                 if ($to) {
-                    //向uid所在socket组发送数据
-                    $sender_io->to($to)->emit('new_msg', $post['content']);
+                    /* todo:向uid所在socket组发送数据 */
+                    $sender_io->to($to)->emit('new_message', $post['content']);
                 } else {
-                    // 向所有uid推送数据
-                    $sender_io->emit('new_msg', @$post['content']);
+                    /* todo:向所有uid推送数据 */
+                    $sender_io->emit('new_message', @$post['content']);
                 }
                 return $http_connection->send('successfully');
         }
@@ -152,9 +158,9 @@ $sender_io->on('workerStart', function () {
         $pushCount = getPushCount();
         $oauthCount = getOauthCount();
         $total['total'] = array('log' => $logCount,'push'=>$pushCount,'oauth'=>$oauthCount);
-        if ($log_last_count != $logCount[intval(count($logCount)-1)] ||
-            $push_last_count != $pushCount[intval(count($pushCount)-1)] ||
-            $oauth_last_count != $oauthCount[intval(count($oauthCount)-1)]) {
+        if ($log_last_count != $logCount[count($logCount)-1] ||
+            $push_last_count != $pushCount[count($pushCount)-1] ||
+            $oauth_last_count != $oauthCount[count($oauthCount)-1]) {
             //数据统计推送
             $sender_io->emit('charts', $total);
         }
@@ -167,8 +173,7 @@ $sender_io->on('workerStart', function () {
     function pushData($user)
     {
         global $db;
-        return $db->select('*')->from('os_push')->where("uid = '{$user}' ")
-            ->orderByDESC(['created_at'])->limit(10)->query();
+        return $db->select('*')->from('os_push')->where("uuid = '{$user}' ")->orderByDESC(['created_at'])->limit(10)->query();
     }
     /**
      * TODO:获取日志信息
@@ -177,9 +182,7 @@ $sender_io->on('workerStart', function () {
     function getLogCount()
     {
         global $db, $day,$times;
-        $log = $db->select("day,count(*) as total")->from('os_system_log')
-            ->where("day>=" . date('Ymd', strtotime("-{$times} day")))
-            ->groupBy(['day'])->query();
+        $log = $db->select("day,count(*) as total")->from('os_system_log')->where("day>=" . date('Ymd', strtotime("-{$times} day")))->groupBy(['day'])->query();
         $logDay = $logTotal = array();
         foreach ($log as $value) {
             array_push($logDay, intval($value['day']));

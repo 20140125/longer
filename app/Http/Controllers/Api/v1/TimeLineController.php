@@ -11,6 +11,7 @@ class TimeLineController extends BaseController
      */
     public function getLists()
     {
-        return ajaxReturn($this->timeLineService->getLists(['page' => 1, 'limit' => 10], ['order' => 'id' ,'direction' => 'desc'], false));
+        $result = $this->timeLineService->getLists(['page' => 1, 'limit' => 10], ['order' => 'id' ,'direction' => 'desc'], false);
+        return ajaxReturn($result);
     }
 }

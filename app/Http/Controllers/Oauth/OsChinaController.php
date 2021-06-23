@@ -96,7 +96,7 @@ class OsChinaController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = objectToArray($result);
+        $result = (array)$result;
         return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
@@ -121,7 +121,7 @@ class OsChinaController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = objectToArray($result);
+        $result = (array)$result;
         return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
@@ -140,7 +140,7 @@ class OsChinaController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = objectToArray($result);
+        $result = (array)$result;
         return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 
@@ -163,7 +163,7 @@ class OsChinaController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = objectToArray($result);
+        $result = (array)$result;
         return isset($result['error']) ? $this->error(Code::ERROR, $result['error_description']) : $result;
     }
 }

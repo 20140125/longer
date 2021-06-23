@@ -22,6 +22,26 @@ class UserService extends BaseService
         }
         return self::$instance;
     }
+
+    /**
+     * todo:获取用户列表
+     * @param $user
+     * @param array|int[] $pagination
+     * @param array|string[] $order
+     * @param bool $getAll
+     * @param array|string[] $column
+     * @return array
+     */
+    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
+    {
+        $this->return['lists'] = $this->userModel->getLists($user, $pagination, $order, $getAll, $column);
+        foreach ($this->return['lists']['data'] as &$item) {
+            $item->created_at = date('Y-m-d H:i:s', $item->created_at);
+            $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
+        }
+        return $this->return;
+    }
+
     /**
      * todo:用户登录
      * @param $form

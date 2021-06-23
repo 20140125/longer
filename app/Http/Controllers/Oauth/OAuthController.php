@@ -35,9 +35,9 @@ class OAuthController extends Controller
      * @param int $length
      * @return string
      */
-    public function getState($length = 32)
+    public function getState(int $length = 32)
     {
-        $this->state = substr(md5(getRoundNum($length).time().uniqid()), 0, $length);
+        $this->state = substr(md5(getRoundNum($length ,'all').time().uniqid()), 0, $length);
         return $this->state;
     }
     /**
@@ -69,12 +69,12 @@ class OAuthController extends Controller
      */
     public function error($code, $message)
     {
-        return array('code'=>$code,'message'=>$message);
+        return array('code' => $code, 'message' => $message);
     }
 
     /**
      * @param $data
-     * @return array|bool
+     * @return array
      */
     public function __getAccessToken($data)
     {
@@ -82,7 +82,7 @@ class OAuthController extends Controller
         $paramsArr = array();
         foreach ($queryParts as $param) {
             $item = explode('=', $param);
-            if (is_array($item) && !empty($item)) {
+            if (is_array($item) && count($item) > 0) {
                 $paramsArr[$item[0]] = $item[1];
             }
         }

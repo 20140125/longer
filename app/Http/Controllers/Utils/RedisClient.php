@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Utils;
 
+use App\Http\Controllers\Controller;
+
 /**
  * Class RedisClient
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Utils
  */
-class RedisClient
+class RedisClient extends Controller
 {
     /**
      * @var string $host

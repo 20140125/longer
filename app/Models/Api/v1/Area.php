@@ -5,6 +5,8 @@ namespace App\Models\Api\v1;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class Area extends Base
 {
@@ -64,5 +66,20 @@ class Area extends Base
     public function saveOne($form)
     {
         return $this->saveResult($this->table, $form);
+    }
+
+    /**
+     * todo:获取列表
+     * @param $where
+     * @param bool $getAll
+     * @param string[] $columns
+     * @return Collection
+     */
+    public function getAreaLists($where, bool $getAll = false, array $columns = ['*'])
+    {
+        if ($getAll) {
+            return DB::table($this->table)->get($columns);
+        }
+        return DB::table($this->table)->where($where)->get($columns);
     }
 }

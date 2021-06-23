@@ -115,7 +115,7 @@ class GithubController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = objectToArray($result);
+        $result = (array)$result;
         return isset($result['message']) ? $this->error(Code::ERROR, $result['message']) : $result;
     }
 
@@ -133,7 +133,7 @@ class GithubController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = objectToArray($result);
+        $result = (array)$result;
         return isset($result['message']) ? $this->error(Code::ERROR, $result['message']) : $result;
     }
 }

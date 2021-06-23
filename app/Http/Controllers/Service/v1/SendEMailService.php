@@ -26,29 +26,35 @@ class SendEMailService extends BaseService
 
     /**
      * todo:邮件发送
-     * @param $post
-     * @return false
+     * @param $form
+     * @return array
      */
-    public function sendMail($post)
+    public function sendMail($form)
     {
-        $post['verify_code'] = getRoundNum(8, 'number');
+        $form['verify_code'] = getRoundNum(8, 'number');
         //验证码保存到redis，10分钟有效
-        $this->setVerifyCode($post['email'], $post['verify_code'], 600);
+        $this->setVerifyCode($form['email'], $form['verify_code'], 600);
         try {
-            Mail::to($post['email'])->send(new Login($post));
+            Mail::to($form['email'])->send(new Login($form));
             if (!Mail::failures()) {
                 $data = array(
-                    'email' => $post['email'],
-                    'code'  => $post['verify_code'],
+                    'email' => $form['email'],
+                    'code'  => $form['verify_code'],
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 );
-                return $this->checkVerifyCode($data);
+                $result = $this->checkVerifyCode($data);
+                if (!$result) {
+                    $this->return['code'] = Code::ERROR;
+                    $this->return['message'] = 'Failed send mail';
+                    return $this->return;
+                }
+                $this->return['lists'] = $form;
+                return $this->return;
             }
-            return false;
+            return array('code' => Code::ERROR, 'message' => Mail::failures());
         } catch (\Exception $exception) {
-            Log::error($exception->getMessage());
-            return false;
+            return array('code' => Code::ERROR, 'message' => $exception->getMessage());
         }
     }
 

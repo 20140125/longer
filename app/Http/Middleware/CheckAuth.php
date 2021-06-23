@@ -56,6 +56,10 @@ class CheckAuth extends Base
 //                return $next($request);
 //            }
 //        }
+        /* todo:存储在线用户 */
+        if (!$this->redisClient->sIsMember(config('app.redis_user_key'), $_user->uuid)) {
+            $this->redisClient->sAdd(config('app.redis_user_key'), $_user->uuid);
+        }
         $request->merge(array('role' => $_role, 'unauthorized' => $_user));
         return $next($request);
     }

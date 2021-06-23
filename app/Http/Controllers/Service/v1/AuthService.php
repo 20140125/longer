@@ -37,7 +37,7 @@ class AuthService extends BaseService
      * @param array $attr
      * @return array
      */
-    public function getLists($form, $columns = ['*'], $getAll = false, $attr = ['key' => 'id', 'ids' => array()])
+    public function getLists($form, array $columns = ['*'], bool $getAll = false, array $attr = ['key' => 'id', 'ids' => array()])
     {
         if ($getAll) {
             $this->return['lists'] =  $this->authModel->getLists([], $columns, $attr);

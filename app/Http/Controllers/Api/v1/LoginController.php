@@ -55,4 +55,15 @@ class LoginController extends BaseController
         $this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']);
         return ajaxReturn(array('lists' => array('code' => $this->post['verify_code']), 'message' => 'set verify code successfully', 'code' => Code::SUCCESS ));
     }
+
+    /**
+     * todo:发送邮件
+     * @return JsonResponse
+     */
+    public function sendMail()
+    {
+        validatePost($this->post, ['email' => 'required|between:8,64|email']);
+        $result = $this->sendEMailService->sendMail($this->post);
+        return ajaxReturn($result);
+    }
 }

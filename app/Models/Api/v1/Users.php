@@ -70,23 +70,23 @@ class Users extends Base
 
     /**
      * todo:获取用户列表
-     * @param $pagination
      * @param $user
-     * @param $order
-     * @param $getAll
-     * @param $column
+     * @param array|int[] $pagination
+     * @param array|string[] $order
+     * @param bool $getAll
+     * @param array|string[] $column
      * @return array|Collection
      */
-    public function getLists($user, $pagination = ['page' => 1, 'limit' => 10], $order = ['order' => 'id', 'direction' => 'asc'], $getAll = false, $column = ['*'])
+    public function getLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
     {
         if ($getAll) {
             return DB::table($this->table)->get($column);
         }
         $where = [];
-        if (count($user) > 1 && !in_array($user->role_id, [1])) {
-            $where[] = ['os_users.id', empty($user->oauth_type) ? $user->id : $user->uid];
+        if (!empty($user) && !in_array($user->role_id, [1])) {
+            $where[] = ['os_users.id', $user->id];
         }
-        $result['lists'] = DB::table($this->table)->join('os_role', $this->table.'.role_id', '=', 'os_role.id')
+        $result['data'] = DB::table($this->table)->join('os_role', $this->table.'.role_id', '=', 'os_role.id')
             ->limit($pagination['limit'])->offset($pagination['limit'] * ($pagination['page'] - 1))
             ->orderBy($order['order'],$order['direction'])
             ->where($where)

@@ -99,7 +99,7 @@ class WeiBoController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = objectToArray($result);
+        $result = (array)$result;
         return isset($result['error_code']) ? $this->error(Code::ERROR, $result['error']) : $result;
     }
 
@@ -116,7 +116,7 @@ class WeiBoController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        $result = objectToArray($result);
+        $result = (array)$result;
         return isset($result['error_code']) ? $this->error(Code::ERROR, $result['error']) : $result;
     }
 }
