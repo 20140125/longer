@@ -62,10 +62,46 @@ class SystemConfigService extends BaseService
      */
     public function saveSystemConfig($form)
     {
+        foreach ($form['children'] as &$item) {
+            $item['created_at'] = date('Y-m-d H:i:s', time());
+            $item['updated_at'] = date('Y-m-d H:i:s', time());
+        }
+        $form['children'] = json_encode($form['children'], JSON_UNESCAPED_UNICODE);
         $result = $this->systemConfigModel->saveOne($form);
+        /* 更新PID */
+        $form['children'] = json_decode($form['children'], true);
+        foreach ($form['children'] as $key => &$item) {
+            $item['pid'] = $result;
+            $item['id'] = $item['id'] ?? $result * 1000 + $key + 1;
+        }
+        $result = $this->systemConfigModel->updateOne(['id' => $result], $form);
         if (empty($result)) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'save system config failed';
+            return $this->return;
+        }
+        $this->return['lists'] = $form;
+        return $this->return;
+    }
+
+    /**
+     * todo:更新配置
+     * @param $form
+     * @return array
+     */
+    public function updateSystemConfig($form)
+    {
+        foreach ($form['children'] as $key => &$item) {
+            $item['updated_at'] = date('Y-m-d H:i:s', time());
+            $item['id'] = $item['id'] ?? $form['id'] * 1000 + $key + 1;
+        }
+        $form['children'] = json_encode($form['children'], JSON_UNESCAPED_UNICODE);
+        $form['created_at'] = strtotime($form['created_at']);
+        $form['updated_at'] = time();
+        $result = $this->systemConfigModel->updateOne(['id' => $form['id']], $form);
+        if (empty($result)) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'update system config failed';
             return $this->return;
         }
         $this->return['lists'] = $form;

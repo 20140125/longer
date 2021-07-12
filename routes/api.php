@@ -32,35 +32,37 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     });
     /* todo:登录后 */
     Route::middleware('common') -> group(function() {
-        /* 首页权限 */
+        /* todo:首页权限 */
         Route::match(['get','post'], 'common/menu',  [App\Http\Controllers\Api\v1\HomeController::class, 'getMenu'])->name('getMenu');
         Route::match(['get','post'], 'timeline/index',  [App\Http\Controllers\Api\v1\TimeLineController::class, 'getLists'])->name('getPlan');
-        /* 全部用户 */
+        /* todo:全部用户 */
         Route::match(['get','post'], 'user/index',  [App\Http\Controllers\Api\v1\UsersController::class, 'getUsersLists'])->name('getUsersLists');
-        /* 个人信息 */
+        Route::match(['get','post'], 'user/cache',  [App\Http\Controllers\Api\v1\UsersController::class, 'getCacheUserLists'])->name('getCacheUserLists');
+
+        /* todo:个人信息 */
         Route::match(['get','post'], 'userCenter/detail',  [App\Http\Controllers\Api\v1\UserCenterController::class, 'getUserInfo'])->name('getUserInfo');
         Route::match(['get','post'], 'userCenter/update',  [App\Http\Controllers\Api\v1\UserCenterController::class, 'updateUserInfo'])->name('updateUserInfo');
-        /* 授权用户 */
+        /* todo:授权用户 */
         Route::match(['get','post'], 'oauth/index',  [App\Http\Controllers\Api\v1\OauthController::class, 'getOAuthLists'])->name('getOAuthLists');
-        /* 权限管理 */
+        /* todo:权限管理 */
         Route::match(['get','post'], 'auth/index',  [App\Http\Controllers\Api\v1\AuthController::class, 'getAuthLists'])->name('getAuthLists');
         Route::match(['get','post'], 'auth/tree',  [App\Http\Controllers\Api\v1\AuthController::class, 'getAuthTree'])->name('getAuthTree');
         Route::match(['get','post'], 'auth/save',  [App\Http\Controllers\Api\v1\AuthController::class, 'insertAuth'])->name('insertAuth');
         Route::match(['get','post'], 'auth/update',  [App\Http\Controllers\Api\v1\AuthController::class, 'updateAuth'])->name('updateAuth');
-        /* 日志管理 */
+        /* todo:日志管理 */
         Route::match(['get','post'], 'log/index',  [App\Http\Controllers\Api\v1\LogController::class, 'getLogLists'])->name('getLogLists');
         Route::match(['get','post'], 'log/delete',  [App\Http\Controllers\Api\v1\LogController::class, 'removeLog'])->name('removeLog');
-        /* 角色管理 */
+        /* todo:角色管理 */
         Route::match(['get','post'], 'role/index',  [App\Http\Controllers\Api\v1\RoleController::class, 'getRoleLists'])->name('getRoleLists');
         Route::match(['get','post'], 'role/auth',  [App\Http\Controllers\Api\v1\RoleController::class, 'getRoleAuth'])->name('getRoleAuth');
         Route::match(['get','post'], 'role/update',  [App\Http\Controllers\Api\v1\RoleController::class, 'updateRole'])->name('updateRole');
         Route::match(['get','post'], 'role/save',  [App\Http\Controllers\Api\v1\RoleController::class, 'saveRole'])->name('saveRole');
-        /* 申请权限 */
+        /* todo:申请权限 */
         Route::match(['get','post'], 'requestAuth/index',  [App\Http\Controllers\Api\v1\RequestAuthController::class, 'getRequestAuthLists'])->name('getRequestAuthLists');
         Route::match(['get','post'], 'requestAuth/get',  [App\Http\Controllers\Api\v1\RequestAuthController::class, 'getUserAuth'])->name('getUserAuth');
         Route::match(['get','post'], 'requestAuth/update',  [App\Http\Controllers\Api\v1\RequestAuthController::class, 'updateRequestAuth'])->name('updateRequestAuth');
         Route::match(['get','post'], 'requestAuth/save',  [App\Http\Controllers\Api\v1\RequestAuthController::class, 'saveRequestAuth'])->name('saveRequestAuth');
-        /* 文件列表 */
+        /* todo:文件列表 */
         Route::match(['get','post'], 'file/index',  [App\Http\Controllers\Api\v1\FileController::class, 'getFileLists'])->name('getFileLists');
         Route::match(['get','post'], 'file/read',  [App\Http\Controllers\Api\v1\FileController::class, 'readFile'])->name('readFile');
         Route::match(['get','post'], 'file/update',  [App\Http\Controllers\Api\v1\FileController::class, 'updateFile'])->name('updateFile');
@@ -71,26 +73,27 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'file/chmod',  [App\Http\Controllers\Api\v1\FileController::class, 'setFileAuth'])->name('setFileAuth');
         Route::match(['get','post'], 'file/rename',  [App\Http\Controllers\Api\v1\FileController::class, 'renameFile'])->name('renameFile');
         Route::match(['get','post'], 'file/save',  [App\Http\Controllers\Api\v1\FileController::class, 'createFile'])->name('createFile');
-        /* 系统配置 */
+        /* todo:系统配置 */
         Route::match(['get','post'], 'config/index',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfigLists'])->name('getSystemConfigLists');
-        Route::match(['get','post'], 'config/detail',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfigLists'])->name('getSystemConfigLists');
-
-        /* 站内通知 */
+        Route::match(['get','post'], 'config/detail',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getConfig'])->name('getConfig');
+        Route::match(['get','post'], 'config/save',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'saveSystemConfig'])->name('saveSystemConfig');
+        Route::match(['get','post'], 'config/update',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'updateSystemConfig'])->name('updateSystemConfig');
+        /* todo:站内通知 */
         Route::match(['get','post'], 'push/index',  [App\Http\Controllers\Api\v1\PushController::class, 'getPushLists'])->name('getPushLists');
         Route::match(['get','post'], 'push/save',  [App\Http\Controllers\Api\v1\PushController::class, 'savePush'])->name('savePush');
         Route::match(['get','post'], 'push/update',  [App\Http\Controllers\Api\v1\PushController::class, 'updatePush'])->name('updatePush');
         Route::match(['get','post'], 'push/delete',  [App\Http\Controllers\Api\v1\PushController::class, 'removePush'])->name('removePush');
-        /* 接口分类 */
+        /* todo:接口分类 */
         Route::match(['get','post'], 'interface/index',  [App\Http\Controllers\Api\v1\ApiController::class, 'interfaceLists'])->name('interfaceLists');
         Route::match(['get','post'], 'interface/detail',  [App\Http\Controllers\Api\v1\ApiController::class, 'getInterface'])->name('getInterface');
         Route::match(['get','post'], 'interface/save',  [App\Http\Controllers\Api\v1\ApiController::class, 'saveInterface'])->name('saveInterface');
         Route::match(['get','post'], 'interface/update',  [App\Http\Controllers\Api\v1\ApiController::class, 'updateInterface'])->name('updateInterface');
         Route::match(['get','post'], 'interface/delete',  [App\Http\Controllers\Api\v1\ApiController::class, 'removeInterface'])->name('removeInterface');
-        /* 城市管理 */
+        /* todo:城市管理 */
         Route::match(['get','post'], 'area/cache',  [App\Http\Controllers\Api\v1\AreaController::class, 'getCacheArea'])->name('getCacheArea');
         Route::match(['get','post'], 'area/index',  [App\Http\Controllers\Api\v1\AreaController::class, 'getAreaLists'])->name('getAreaLists');
         Route::match(['get','post'], 'area/weather',  [App\Http\Controllers\Api\v1\AreaController::class, 'getAreaWeather'])->name('getAreaWeather');
-        /* 数据表管理 */
+        /* todo:数据表管理 */
         Route::match(['get','post'], 'database/index',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'getDatabaseLists'])->name('getDatabaseLists');
         Route::match(['get','post'], 'database/backup',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'backUpTable'])->name('backUpTable');
         Route::match(['get','post'], 'database/optimize',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'optimizeTabled'])->name('optimizeTabled');

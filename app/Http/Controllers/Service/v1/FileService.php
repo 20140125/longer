@@ -67,6 +67,7 @@ class FileService extends BaseService
         }
         $result = writeFile($form['path'], $form['content']);
         !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
+        $this->return['message'] = !empty($result['code']) ? $this->return['message'] = $result['message']: 'update file successfully';
         return $this->return;
     }
 
@@ -119,16 +120,12 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:文件删除
+     * todo:文件添加
      * @param $form
      * @return array|bool
      */
     public function createFile($form)
     {
-        if (!file_exists($form['path'])) {
-            $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'File does not exist';
-        }
         $result = createFile($form['path']);
         !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
         return $this->return;
@@ -205,16 +202,16 @@ class FileService extends BaseService
             $this->return['message'] = 'Unsupported file format';
             return $this->return;
         }
-        /* todo：覆盖上传文件名称 */
+        /* todo：文件名称随机 */
         if (in_array(strtolower($ext), $imgExt) && !empty($form['round_name'])) {
-            $filename = date('Ymd') . DIRECTORY_SEPARATOR . time() . '.' . $ext;
+            $filename = date('Ymd') . '/' . time() . '.' . $ext;
             Storage::disk('public')->put($filename, file_get_contents($path));
             $this->return['code'] = Code::SUCCESS;
             $this->return['message'] = 'upload file successfully';
-            $this->return['lists'] = array('src'=>config('app.url').'storage/'.$filename);
+            $this->return['lists'] = array('src'=>config('app.url').'storage/'.$filename, 'file_type' => $form['file_type'] ?? '');
             return $this->return;
         }
-        /* todo: 上传文件名字不覆盖 */
+        /* todo：覆盖上传文件名称 */
         $imgExt[] = 'php';
         if (in_array(strtolower($ext), $imgExt) && empty($form['round_name'])) {
             /* todo:获取文件名 */

@@ -15,8 +15,9 @@ class RoleController extends BaseController
      */
     public function getRoleLists(Request $request)
     {
+        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
-        $result = $this->roleService->getLists($_user, ['page' => 1, 'limit' => 10], ['order' => 'id', 'direction' => 'desc'], ['id', 'role_name', 'status', 'auth_ids', 'created_at', 'updated_at']);
+        $result = $this->roleService->getLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'id', 'direction' => 'desc'], ['id', 'role_name', 'status', 'auth_ids', 'created_at', 'updated_at']);
         return ajaxReturn($result);
     }
     /**
@@ -25,8 +26,8 @@ class RoleController extends BaseController
      */
     public function getRoleAuth()
     {
-        $_authLists = $this->authService->getLists([], ['id as key', 'name as label'], true);
-        return ajaxReturn(['authLists' => $_authLists['lists'], 'defaultAuth' => $this->authService->getDefaultAuth()]);
+        $result = $this->authService->getLists([], ['id as key', 'name as label'], true);
+        return ajaxReturn($result);
     }
 
     /**

@@ -81,7 +81,7 @@ class TimeLine extends Base
         if ($getAll) {
             return DB::table($this->table)->get($column);
         }
-        $result['lists'] = DB::table($this->table)
+        $result['data'] = DB::table($this->table)
             ->limit($pagination['limit'])
             ->offset($pagination['limit'] * ($pagination['page'] - 1))
             ->orderBy($order['order'],$order['direction'])

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class UserService extends BaseService
 {
@@ -179,17 +181,32 @@ class UserService extends BaseService
      */
     public function updateUsersAvatarImage()
     {
-        $_column = ['username as client_name', 'avatar_url as client_img', 'uuid as uid', 'id'];
+        $_column = ['username as client_name', 'avatar_url as client_img', 'uuid', 'id'];
         $users = $this->userModel->getLists([], [], [], true, $_column);
         foreach ($users as &$user) {
             $user->centerInfo = $this->userCenterModel->getOne(['uid' => $user->id], ['desc','tags','ip_address','local']);
-            $user->id = md5($user->id);
+            $user->id = encrypt($user->id);
         }
         if ($this->redisClient->sMembers(config('app.chat_user_key'))) {
             $this->redisClient->del(config('app.chat_user_key'));
         }
         return $this->redisClient->sAdd(config('app.chat_user_key'), json_encode($users, JSON_UNESCAPED_UNICODE));
     }
+
+    /**
+     * todo:获取推送用户列表
+     * @return array
+     */
+    public function getCacheUserList()
+    {
+        $this->return['lists'] = Cache::get('_user_lists');
+        if (empty($this->return['lists'])) {
+            $this->return['lists'] = $this->userModel->getLists('', [], [], true, ['id', 'username','uuid']);
+            Cache::put('_user_lists', $this->return['lists'], Carbon::now()->addHours(2));
+        }
+        return $this->return;
+    }
+
     /**
      * todo:获取用户
      * @param $where

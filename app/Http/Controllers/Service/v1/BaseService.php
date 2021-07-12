@@ -72,17 +72,29 @@ class BaseService
      * @var Log $logModel
      */
     protected $logModel;
-
+    /**
+     * @var RequestAuth $requestAuthModel
+     */
     protected $requestAuthModel;
-
+    /**
+     * @var SystemConfig $systemConfigModel
+     */
     protected $systemConfigModel;
-
+    /**
+     * @var Push $pushModel
+     */
     protected $pushModel;
-
+    /**
+     * @var ApiCategory $apiCategoryModel
+     */
     protected $apiCategoryModel;
-
+    /**
+     * @var ApiDoc $apiDocModel
+     */
     protected $apiDocModel;
-
+    /**
+     * @var ApiLists $apiListsModel
+     */
     protected $apiListsModel;
     /**
      * @var $return
@@ -132,7 +144,7 @@ class BaseService
     public function getVerifyCode($key, $value)
     {
         $_bool = $this->redisClient->getValue($key) && strtoupper($value) === $this->redisClient->getValue($key);
-        return $_bool ? ['code' => Code::SUCCESS, 'message' => 'Get verify code successfully'] : ['code' => Code::VERIFY_CODE_ERROR, 'message' => 'Get verify code failed'];
+        return $_bool ? ['code' => Code::SUCCESS, 'message' => 'Get access token successfully'] : ['code' => Code::VERIFY_CODE_ERROR, 'message' => 'Get access token failed'];
     }
 
     /**

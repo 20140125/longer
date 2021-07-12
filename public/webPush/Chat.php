@@ -32,7 +32,7 @@ class Chat
     public function setChatMsgLists($from, $to, $room_id, $message)
     {
         $value = str_replace('\\', '', json_encode($message, JSON_UNESCAPED_UNICODE));
-        $keyName = $to == 'all' ? 'receive_all_'.$room_id : "receive_{$from}_{$to}";
+        $keyName = $to == 'all' ? 'receive_all_'.$room_id : "receive_{$from}_$to";
         return $this ->redisClient-> lPush($keyName, $value);
     }
     /**
@@ -44,7 +44,7 @@ class Chat
      * @param int $limit
      * @return array
      */
-    public function getChatMsgLists($from, $to, $room_id, $page = 1, $limit = 19)
+    public function getChatMsgLists($from, $to, $room_id, int $page = 1, int $limit = 19)
     {
         $message = array();
         $time = array();
@@ -53,35 +53,32 @@ class Chat
         if (!empty($room_id)) {
             $recName = 'receive_all_'.$room_id;
             $num = $this->getMsgLen($recName);
-            $recList = $offset + $limit >= $num ? $this ->redisClient-> lRange($recName, $offset, $num) :
-                $this->redisClient->lRange($recName, $offset, $offset+$limit);
+            $recList = $offset + $limit >= $num ? $this ->redisClient-> lRange($recName, $offset, $num) : $this->redisClient->lRange($recName, $offset, $offset+$limit);
             foreach ($recList as $item) {
                 array_push($message, json_decode($item, true));
                 $time[] = json_decode($item, true)['time'];
             }
             array_multisort($message, $time, SORT_ASC);
-            return array('list' => $message, 'total' => $num);
+            return array('lists' => $message, 'total' => $num);
         }
         //接受的消息
-        $recName =  "receive_{$from}_{$to}";
+        $recName =  "receive_{$from}_$to";
         $recNum = $this->getMsgLen($recName);
-        $recList = $offset + $limit >= $recNum ? $this ->redisClient-> lRange($recName, $offset, $recNum) :
-            $this->redisClient->lRange($recName, $offset, $offset+$limit);
+        $recList = $offset + $limit >= $recNum ? $this ->redisClient-> lRange($recName, $offset, $recNum) : $this->redisClient->lRange($recName, $offset, $offset+$limit);
         foreach ($recList as $item) {
             array_push($message, json_decode($item, true));
             $time[] = json_decode($item, true)['time'];
         }
         //发送的消息
-        $sendName = "receive_{$to}_{$from}";
+        $sendName = "receive_{$to}_$from";
         $sendNum = $this->getMsgLen($sendName);
-        $sendLists = $offset + $limit >= $sendNum ? $this ->redisClient-> lRange($sendName, $offset, $sendNum) :
-            $this->redisClient->lRange($sendName, $offset, $offset+$limit);
+        $sendLists = $offset + $limit >= $sendNum ? $this ->redisClient-> lRange($sendName, $offset, $sendNum) : $this->redisClient->lRange($sendName, $offset, $offset+$limit);
         foreach ($sendLists as $item) {
             array_push($message, json_decode($item, true));
             $time[] = json_decode($item, true)['time'];
         }
         array_multisort($message, $time, SORT_ASC);
-        return array('list' => $message, 'total' => $recNum + $sendNum);
+        return array('lists' => $message, 'total' => $recNum + $sendNum);
     }
     /**
      * todo:消息撤回：删除redis缓存数据并告知用户/消息删除：直接删除消息
@@ -89,10 +86,9 @@ class Chat
      */
     public function recallMessage($message)
     {
-        $receiveKey = empty($message['room_id']) ? "receive_{$message['from_client_id']}_{$message['to_client_id']}" :
-            "receive_all_{$message['room_id']}";
+        $receiveKey = empty($message['room_id']) ? "receive_{$message['from_client_id']}_{$message['to_client_id']}" : "receive_all_{$message['room_id']}";
         $num = $this->getMsgLen($receiveKey);
-        $recList = $this ->redisClient-> lRange($receiveKey, 0, (int)($num));
+        $recList = $this ->redisClient-> lRange($receiveKey, 0, $num);
         $newRecList = array();
         foreach ($recList as $index => $item) {
             if (!$this->compareJson(json_encode($message, JSON_UNESCAPED_UNICODE), $item)) {
@@ -110,10 +106,10 @@ class Chat
      * todo:json字符串比较
      * @param $jsonA
      * @param $jsonB
-     * @param $field
+     * @param array $field
      * @return bool
      */
-    protected function compareJson($jsonA, $jsonB, $field = ['type'])
+    protected function compareJson($jsonA, $jsonB, array $field = ['type'])
     {
         $jsonA = json_decode($jsonA, true);
         $jsonB = json_decode($jsonB, true);
@@ -168,7 +164,7 @@ class Chat
     {
         $countArr = $this -> getUnreadMsgAllCount($to);
         $count = $countArr[$from];
-        $keyName = "receive_{$from}_{$to}";
+        $keyName = "receive_{$from}_$to";
         return $this ->redisClient -> lRange($keyName, 0, (int)($count));
     }
     /**
@@ -228,7 +224,7 @@ class Chat
      * @param int $timeout
      * @return bool
      */
-    public function setValue($key, $value, $timeout = 0)
+    public function setValue($key, $value, int $timeout = 0)
     {
         return $this->redisClient->set($key, $value, $timeout);
     }

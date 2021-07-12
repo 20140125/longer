@@ -246,19 +246,20 @@ if (!function_exists('getFileLists')) {
             while ($file = readdir($openDir)) {
                 if (!in_array($file, $_defaultPermission) && str_replace('/', '\\', $filePath.$file) != public_path('storage')) {
                     $fileArr[] = array(
-                        'label' => $file,
-                        'fileType' => filetype($filePath.$file),
+                        'filename' => $file,
+                        'file_type' => filetype($filePath.$file),
                         'children' => [],
                         'path' => filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
-                        'size' => md5($filePath.$file),
+                        'md5' => md5($filePath.$file),
                         'auth' => chmodFile($filePath.$file),
-                        'time' => date('Y-m-d H:i:s', fileatime($filePath.$file))
+                        'time' => date('Y-m-d H:i:s', fileatime($filePath.$file)),
+                        'size' => formatBates(filesize($filePath.$file))
                     );
                     $fileType[] = filetype($filePath.$file);
                 }
             }
             foreach ($fileArr as &$item) {
-                if ($item['fileType'] === 'dir') {
+                if ($item['file_type'] === 'dir') {
                     $item['children'] = getFileLists($item['path'], $permissionFile);
                 }
             }
@@ -410,13 +411,16 @@ if (!function_exists('unGZipFile')) {
             if (!file_exists($path)) return false;
             $zip = new ZipArchive();
             $arr = explode('.', basename($path));
-            if (!in_array($arr[1], ['zip','ZIP'])) return false;
-            $filePath = str_replace(basename($path), '', $path).(empty($resource) ? $arr [0] : $resource);
-            if (!is_dir($filePath)) mkdir($filePath, 0777, true);
-            //打开zip文件返回bool值，将完整的归档或给定文件提取到指定的目标
-            if ($zip->open($path))  $zip->extractTo($filePath);
-            //关闭资源
-            $zip->close();
+            if (in_array($arr[1], ['zip','ZIP'])) {
+                $filePath = str_replace(basename($path), '', $path).$resource;
+                if (!is_dir($filePath)) {
+                    mkdir($filePath, 0777, true);
+                }
+                /* 打开zip文件返回bool值，将完整的归档或给定文件提取到指定的目标 */
+                if ($zip->open($path))  $zip->extractTo($filePath);
+                /* 关闭资源 */
+                $zip->close();
+            }
             return !$removeResource || removeFiles($path);
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];

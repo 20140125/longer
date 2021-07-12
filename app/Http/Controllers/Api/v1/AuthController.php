@@ -15,8 +15,7 @@ class AuthController extends BaseController
      */
     public function getAuthLists()
     {
-        validatePost($this->post, ['id' => 'required|integer']);
-        $result = $this->authService->getLists(['id' => $this->post['id']]);
+        $result = $this->authService->getLists([], ['*'], true);
         return ajaxReturn($result);
     }
 

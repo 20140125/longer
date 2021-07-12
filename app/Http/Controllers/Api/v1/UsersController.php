@@ -20,4 +20,14 @@ class UsersController extends BaseController
         $result = $this->userService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);
         return ajaxReturn($result);
     }
+
+    /**
+     * todo:获取缓存用户列表
+     * @return JsonResponse
+     */
+    public function getCacheUserLists()
+    {
+        $result = $this->userService->getCacheUserList();
+        return ajaxReturn($result);
+    }
 }

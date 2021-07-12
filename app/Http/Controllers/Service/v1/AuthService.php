@@ -103,7 +103,7 @@ class AuthService extends BaseService
      */
     public function updateAuth($form)
     {
-        if (!empty($form['hasChildren'])) unset($form['hasChildren']);
+        if (!empty($form['children'])) unset($form['children']);
         /* todo:修改权限状态 */
         if (!empty($form['act'])) {
             unset($form['act']);

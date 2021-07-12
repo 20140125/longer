@@ -34,10 +34,25 @@ class SystemConfigController extends BaseController
         return ajaxReturn($result);
     }
 
+    /**
+     * todo:保存系统配置
+     * @return JsonResponse
+     */
     public function saveSystemConfig()
     {
-        validatePost($this->post, ['name'=>'required|string|unique:os_config']);
+        validatePost($this->post, ['name'=>'required|string|unique:os_system_config', 'children'=> 'required|array', 'status'=>'required|integer|in:1,2']);
         $result = $this->systemConfigService->saveSystemConfig($this->post);
+        return ajaxReturn($result);
+    }
+
+    /**
+     * todo:更新系统配置
+     * @return JsonResponse
+     */
+    public function updateSystemConfig()
+    {
+        validatePost($this->post, ['name'=>'required|string', 'children'=> 'required|array', 'status'=>'required|integer|in:1,2']);
+        $result = $this->systemConfigService->updateSystemConfig($this->post);
         return ajaxReturn($result);
     }
 }

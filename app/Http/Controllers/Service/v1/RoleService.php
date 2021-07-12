@@ -71,9 +71,10 @@ class RoleService extends BaseService
         $result = $this->roleModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'failed';
+            $this->return['message'] = 'save role failed';
         }
         $this->return['lists'] = $form;
+        $this->return['message'] = 'save role successfully';
         return $this->return;
     }
 
@@ -92,9 +93,10 @@ class RoleService extends BaseService
         $result = $this->roleModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'failed';
+            $this->return['message'] = 'update role failed';
         }
         $this->return['lists'] = $form;
+        $this->return['message'] = 'update role successfully';
         return $this->return;
     }
 
