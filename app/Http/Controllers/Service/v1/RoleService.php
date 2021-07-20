@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class RoleService extends BaseService
 {
@@ -108,12 +105,12 @@ class RoleService extends BaseService
     protected function __initRole($form)
     {
         $_auth_ids = $this->getDefaultAuth($form['auth_ids']);
-        $_authLists = $this->authModel->getLists([], ['href'], ['key' => 'id', 'ids' => $_auth_ids]);
-        $_auth_url = array();
+        $_authLists = $this->authModel->getLists([], ['href', 'api'], ['key' => 'id', 'ids' => $_auth_ids]);
+        $_auth_api = array();
         foreach ($_authLists as $item) {
-            $_auth_url[] = $item->href;
+            $_auth_api[] = $item->api;
         }
-        $form['auth_url'] = str_replace("\\", '', json_encode($_auth_url, JSON_UNESCAPED_UNICODE));
+        $form['auth_api'] = str_replace("\\", '', json_encode($_auth_api, JSON_UNESCAPED_UNICODE));
         $form['auth_ids'] = json_encode($_auth_ids, JSON_UNESCAPED_UNICODE);
         $form['updated_at'] = time();
         return $form;

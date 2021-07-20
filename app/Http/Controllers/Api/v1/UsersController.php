@@ -17,7 +17,7 @@ class UsersController extends BaseController
     {
         validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
-        $result = $this->userService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);
+        $result = $this->userService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'updated_at' ,'direction' => 'desc']);
         return ajaxReturn($result);
     }
 
@@ -28,6 +28,30 @@ class UsersController extends BaseController
     public function getCacheUserLists()
     {
         $result = $this->userService->getCacheUserList();
+        return ajaxReturn($result);
+    }
+
+    /**
+     * todo:更新用户
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateUsers(Request $request)
+    {
+        $rules = [
+            'username' => 'required|string',
+            'email' => 'required|string|email',
+            'phone_number' => 'required|string',
+            'avatar_url' => 'required|string|url',
+            'id' => 'required|integer',
+            'role_id' => 'required|integer',
+            'status' => 'required|in:1,2|integer',
+            'password' => 'required|string|between:6,32'
+        ];
+        validatePost($this->post, $rules);
+        $_user = $request->get('unauthorized');
+        $user = $_user->id === $this->post['id'] ? $_user : $this->userService->getUser(['id' => $this->post['id']]);
+        $result = $this->userService->updateUsers($this->post, $user, 'updated users successfully');
         return ajaxReturn($result);
     }
 }

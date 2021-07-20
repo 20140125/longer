@@ -76,7 +76,7 @@ class Auth extends Base
      * @param string[] $order
      * @return Collection
      */
-    public function getLists($where = [], $column = ['*'], $attr = ['key' => 'id', 'ids' => array()], $order = ['order' => 'id', 'direction' => 'asc'])
+    public function getLists(array $where = [], array $column = ['*'], array $attr = ['key' => 'id', 'ids' => array()], array $order = ['order' => 'id', 'direction' => 'asc'])
     {
         if (count($attr['ids']) > 0) {
             return DB::table($this->table)->where($where)->whereIn($attr['key'], $attr['ids'])->orderBy($order['order'], $order['direction'])->get($column);

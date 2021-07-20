@@ -7,6 +7,7 @@ use App\Http\Controllers\Service\v1\AuthService;
 use App\Http\Controllers\Service\v1\OauthService;
 use App\Http\Controllers\Service\v1\RoleService;
 use App\Http\Controllers\Service\v1\UserService;
+use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use Closure;
 use Illuminate\Http\Request;
@@ -60,11 +61,11 @@ class Base
     public function handle(Request $request, Closure $next)
     {
         if ($request->getMethod() === 'GET') {
-            setCode(405);
+            setCode(Code::METHOD_ERROR);
             exit();
         }
         if (empty($this->post['token'])) {
-            setCode(403);
+            setCode(Code::FORBIDDEN);
             exit();
         }
     }

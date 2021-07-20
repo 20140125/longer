@@ -37,10 +37,7 @@ if (!function_exists('validatePost')) {
             setCode($_code);
             $_data =  array(
                 'code' => $_code,
-                'item' => array(
-                    'code' => Code::ERROR,
-                    'message' => $_validate->errors()->first(),
-                ),
+                'item' => array('code' => Code::ERROR, 'message' => $_validate->errors()->first()),
                 'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).request()->getRequestUri()
             );
             exit(json_encode($_data,JSON_UNESCAPED_UNICODE));

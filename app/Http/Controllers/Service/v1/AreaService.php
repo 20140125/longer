@@ -29,13 +29,26 @@ class AreaService extends BaseService
     /**
      * todo:获取城市列表
      * @param $form
+     * @param bool $getAll
      * @return array
      */
-    public function getAreaLists($form)
+    public function getAreaLists($form, bool $getAll = false, $columns = ['id','parent_id as pid', 'name', 'code', 'info', 'forecast'])
     {
-        $this->return['lists'] = $this->areaModel->getAreaLists(['parent_id' => $form['parent_id']], false, ['id','parent_id as pid', 'name', 'code', 'info', 'forecast']);
+        if ($getAll) {
+            $result = Cache::get('__cache_area');
+            if(!empty($result)) {
+                $this->return['lists'] = json_decode($result, true);
+                return $this->return;
+            }
+            $this->return['lists'] = $this->areaModel->getAreaLists(['parent_id' => $form['parent_id']], $columns);
+            Cache::forever('__cache_area', json_encode($this->return['lists'], JSON_UNESCAPED_UNICODE));
+            return $this->return;
+        }
+        $this->return['lists'] = $this->areaModel->getAreaLists(['parent_id' => $form['parent_id']], $columns);
         foreach ($this->return['lists'] as &$item) {
             $item->hasChildren = false;
+            $item->info = json_decode($item->info, true);
+            $item->forecast = json_decode($item->forecast, true);
             if ($this->areaModel->getOne(['parent_id' => $item->id])) {
                 $item->hasChildren = true;
             }
@@ -85,15 +98,15 @@ class AreaService extends BaseService
      */
     public function getCacheArea(array $form = [], bool $getAll = true)
     {
-        $attr = !empty($form['type']) ? ['_cache_val' => 'Weather', 'fields' => ['code', 'info', 'parent_id', 'id', 'name'], 'timeout' => 1] : ['_cache_val' => 'Center', 'fields' => ['parent_id', 'id', 'name'], 'timeout' => 0];
-        $result = Cache::get($attr['_cache_val']);
+        $attr = !empty($form['type']) ? ['__cache_val' => '_weather', 'fields' => ['code', 'info', 'parent_id', 'id', 'name'], 'timeout' => 1] : ['__cache_val' => '_center', 'fields' => ['parent_id', 'id', 'name'], 'timeout' => 0];
+        $result = Cache::get($attr['__cache_val']);
         if(!empty($result)) {
             $this->return['lists'] = json_decode($result, true);
             return $this->return;
         }
         $where = [['id' ,'>' , 0]];
-        $result = $this->areaModel->getAreaLists($where, $getAll, $attr['fields']);
-        $attr['timeout'] ? Cache::put($attr['_cache_val'],json_encode($result, 256), Carbon::now()->addHours(2)) : Cache::forever($attr['_cache_val'], json_encode($result, JSON_UNESCAPED_UNICODE));;
+        $result = $this->areaModel->getAreaLists($where, $attr['fields']);
+        $attr['timeout'] ? Cache::put($attr['__cache_val'],json_encode($result, 256), Carbon::now()->addHours(2)) : Cache::forever($attr['__cache_val'], json_encode($result, JSON_UNESCAPED_UNICODE));
         $this->return['lists'] = $result;
         return $this->return;
     }
@@ -103,7 +116,7 @@ class AreaService extends BaseService
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getArea($where, $columns = ['*'])
+    public function getArea($where, array $columns = ['*'])
     {
         return $this->areaModel->getOne($where, $columns);
     }

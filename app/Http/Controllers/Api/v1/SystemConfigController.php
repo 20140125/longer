@@ -19,11 +19,11 @@ class SystemConfigController extends BaseController
     }
 
     /**
-     * todo:获取系统配置
+     * todo:获取系统配置(登录态或未登录)
      * @param Request $request
      * @return JsonResponse
      */
-    public function getConfig(Request $request)
+    public function getSystemConfig(Request $request)
     {
         validatePost($this->post, ['name' => 'required|string', 'login' => 'required|string|in:before,after']);
         $_user = $request->get('unauthorized');

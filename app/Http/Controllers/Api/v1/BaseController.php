@@ -10,8 +10,8 @@ use App\Http\Controllers\Service\v1\DatabaseService;
 use App\Http\Controllers\Service\v1\FileService;
 use App\Http\Controllers\Service\v1\LogService;
 use App\Http\Controllers\Service\v1\OauthService;
+use App\Http\Controllers\Service\v1\PermissionApplyService;
 use App\Http\Controllers\Service\v1\PushService;
-use App\Http\Controllers\Service\v1\RequestAuthService;
 use App\Http\Controllers\Service\v1\RoleService;
 use App\Http\Controllers\Service\v1\SendEMailService;
 use App\Http\Controllers\Service\v1\SystemConfigService;
@@ -51,9 +51,9 @@ class BaseController extends Controller
      */
     protected $roleService;
     /**
-     * @var RequestAuthService $requestAuthService
+     * @var PermissionApplyService $permissionApplyService
      */
-    protected $requestAuthService;
+    protected $permissionApplyService;
     /**
      * @var FileService $fileService
      */
@@ -95,7 +95,7 @@ class BaseController extends Controller
         $this->sendEMailService = SendEMailService::getInstance();
         $this->userService = UserService::getInstance();
         $this->roleService = RoleService::getInstance();
-        $this->requestAuthService = RequestAuthService::getInstance();
+        $this->permissionApplyService = PermissionApplyService::getInstance();
         $this->fileService = FileService::getInstance();
         $this->systemConfigService = SystemConfigService::getInstance();
         $this->pushService = PushService::getInstance();

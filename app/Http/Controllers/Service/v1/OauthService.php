@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Utils\Code;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -40,6 +41,23 @@ class OauthService extends BaseService
             $item->created_at = date('Y-m-d H:i:s', $item->created_at);
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
         }
+        return $this->return;
+    }
+
+    /**
+     * todo:邮箱账号绑定
+     * @param $form
+     * @return array
+     */
+    public function bindEmailAction($form)
+    {
+        $result = $this->oauthModel->updateOne(['id' => $form['id']], $form);
+        if (!$result) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'bind email failed';
+            return $this->return;
+        }
+        $this->return['lists'] = $form;
         return $this->return;
     }
 

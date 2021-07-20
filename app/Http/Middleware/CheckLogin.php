@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -19,10 +20,11 @@ class CheckLogin extends Base
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
-        if ($this->userService->getVerifyCode($this->post['token'], $this->post['token'])){
+        $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
+        if ($authorization['code'] === Code::SUCCESS){
             return $next($request);
         }
-        setCode(403);
+        setCode(Code::FORBIDDEN);
         exit();
     }
 }

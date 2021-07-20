@@ -84,13 +84,13 @@ class Oauth extends Base
         }
         $where = [];
         if (!empty($user) && !in_array($user->role_id, [1])) {
-            $where[] = ['os_oauth.id', $user->uid];
+            $where[] = ['uid', $user->id];
         }
-        $result['data'] = DB::table($this->table)->join('os_role', $this->table.'.role_id', '=', 'os_role.id')
+        $result['data'] = DB::table($this->table)
             ->limit($pagination['limit'])->offset($pagination['limit'] * ($pagination['page'] - 1))
             ->orderBy($order['order'],$order['direction'])
             ->where($where)
-            ->get(['os_oauth.*', 'os_role.id as role_id']);
+            ->get($column);
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
     }

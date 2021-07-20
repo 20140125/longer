@@ -16,7 +16,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     /* todo:登录前验证 */
     Route::middleware('checkLogin')->group(function () {
         /* todo:用户登录 */
-        Route::match(['get','post'], 'common/login',  [App\Http\Controllers\Api\v1\LoginController::class, 'login'])->name('login');
+        Route::match(['get','post'], 'account/login',  [App\Http\Controllers\Api\v1\LoginController::class, 'login'])->name('login');
         /* todo:验证码上报 */
         Route::match(['get','post'], 'report/code',  [App\Http\Controllers\Api\v1\LoginController::class, 'reportCode'])->name('reportCode');
         /* todo:校验登录 */
@@ -24,7 +24,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         /* todo:发送验证码 */
         Route::match(['get','post'], 'mail/send',  [App\Http\Controllers\Api\v1\LoginController::class, 'sendMail'])->name('sendMail');
         /* todo:授权登录信息 */
-        Route::match(['get','post'], 'oauth/config',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getConfig'])->name('getConfig');
+        Route::match(['get','post'], 'oauth/config',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfig'])->name('getSystemConfig');
     });
     /* todo:鉴权 */
     Route::middleware('checkAuth')->group(function () {
@@ -36,18 +36,19 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'common/menu',  [App\Http\Controllers\Api\v1\HomeController::class, 'getMenu'])->name('getMenu');
         Route::match(['get','post'], 'timeline/index',  [App\Http\Controllers\Api\v1\TimeLineController::class, 'getLists'])->name('getPlan');
         /* todo:全部用户 */
-        Route::match(['get','post'], 'user/index',  [App\Http\Controllers\Api\v1\UsersController::class, 'getUsersLists'])->name('getUsersLists');
-        Route::match(['get','post'], 'user/cache',  [App\Http\Controllers\Api\v1\UsersController::class, 'getCacheUserLists'])->name('getCacheUserLists');
-
+        Route::match(['get','post'], 'users/index',  [App\Http\Controllers\Api\v1\UsersController::class, 'getUsersLists'])->name('getUsersLists');
+        Route::match(['get','post'], 'users/update',  [App\Http\Controllers\Api\v1\UsersController::class, 'updateUsers'])->name('updateUsers');
+        Route::match(['get','post'], 'users/cache',  [App\Http\Controllers\Api\v1\UsersController::class, 'getCacheUserLists'])->name('getCacheUserLists');
         /* todo:个人信息 */
-        Route::match(['get','post'], 'userCenter/detail',  [App\Http\Controllers\Api\v1\UserCenterController::class, 'getUserInfo'])->name('getUserInfo');
+        Route::match(['get','post'], 'userCenter/index',  [App\Http\Controllers\Api\v1\UserCenterController::class, 'getUserInfo'])->name('getUserInfo');
         Route::match(['get','post'], 'userCenter/update',  [App\Http\Controllers\Api\v1\UserCenterController::class, 'updateUserInfo'])->name('updateUserInfo');
         /* todo:授权用户 */
         Route::match(['get','post'], 'oauth/index',  [App\Http\Controllers\Api\v1\OauthController::class, 'getOAuthLists'])->name('getOAuthLists');
+        Route::match(['get','post'], 'oauth/update',  [App\Http\Controllers\Api\v1\OauthController::class, 'bindEmail'])->name('bindEmail');
         /* todo:权限管理 */
         Route::match(['get','post'], 'auth/index',  [App\Http\Controllers\Api\v1\AuthController::class, 'getAuthLists'])->name('getAuthLists');
         Route::match(['get','post'], 'auth/tree',  [App\Http\Controllers\Api\v1\AuthController::class, 'getAuthTree'])->name('getAuthTree');
-        Route::match(['get','post'], 'auth/save',  [App\Http\Controllers\Api\v1\AuthController::class, 'insertAuth'])->name('insertAuth');
+        Route::match(['get','post'], 'auth/save',  [App\Http\Controllers\Api\v1\AuthController::class, 'saveAuth'])->name('saveAuth');
         Route::match(['get','post'], 'auth/update',  [App\Http\Controllers\Api\v1\AuthController::class, 'updateAuth'])->name('updateAuth');
         /* todo:日志管理 */
         Route::match(['get','post'], 'log/index',  [App\Http\Controllers\Api\v1\LogController::class, 'getLogLists'])->name('getLogLists');
@@ -58,10 +59,10 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'role/update',  [App\Http\Controllers\Api\v1\RoleController::class, 'updateRole'])->name('updateRole');
         Route::match(['get','post'], 'role/save',  [App\Http\Controllers\Api\v1\RoleController::class, 'saveRole'])->name('saveRole');
         /* todo:申请权限 */
-        Route::match(['get','post'], 'requestAuth/index',  [App\Http\Controllers\Api\v1\RequestAuthController::class, 'getRequestAuthLists'])->name('getRequestAuthLists');
-        Route::match(['get','post'], 'requestAuth/get',  [App\Http\Controllers\Api\v1\RequestAuthController::class, 'getUserAuth'])->name('getUserAuth');
-        Route::match(['get','post'], 'requestAuth/update',  [App\Http\Controllers\Api\v1\RequestAuthController::class, 'updateRequestAuth'])->name('updateRequestAuth');
-        Route::match(['get','post'], 'requestAuth/save',  [App\Http\Controllers\Api\v1\RequestAuthController::class, 'saveRequestAuth'])->name('saveRequestAuth');
+        Route::match(['get','post'], 'permission/index',  [App\Http\Controllers\Api\v1\PermissionApplyController::class, 'getPermissionApplyLists'])->name('getPermissionApplyLists');
+        Route::match(['get','post'], 'permission/get',  [App\Http\Controllers\Api\v1\PermissionApplyController::class, 'getUserAuth'])->name('getUserAuth');
+        Route::match(['get','post'], 'permission/update',  [App\Http\Controllers\Api\v1\PermissionApplyController::class, 'updatePermissionApply'])->name('updatePermissionApply');
+        Route::match(['get','post'], 'permission/save',  [App\Http\Controllers\Api\v1\PermissionApplyController::class, 'savePermissionApply'])->name('savePermissionApply');
         /* todo:文件列表 */
         Route::match(['get','post'], 'file/index',  [App\Http\Controllers\Api\v1\FileController::class, 'getFileLists'])->name('getFileLists');
         Route::match(['get','post'], 'file/read',  [App\Http\Controllers\Api\v1\FileController::class, 'readFile'])->name('readFile');
@@ -75,7 +76,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'file/save',  [App\Http\Controllers\Api\v1\FileController::class, 'createFile'])->name('createFile');
         /* todo:系统配置 */
         Route::match(['get','post'], 'config/index',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfigLists'])->name('getSystemConfigLists');
-        Route::match(['get','post'], 'config/detail',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getConfig'])->name('getConfig');
+        Route::match(['get','post'], 'config/detail',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfig'])->name('getSystemConfig');
         Route::match(['get','post'], 'config/save',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'saveSystemConfig'])->name('saveSystemConfig');
         Route::match(['get','post'], 'config/update',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'updateSystemConfig'])->name('updateSystemConfig');
         /* todo:站内通知 */

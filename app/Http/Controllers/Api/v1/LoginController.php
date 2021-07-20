@@ -22,9 +22,9 @@ class LoginController extends BaseController
             return ajaxReturn(array('code' => Code::ERROR, 'message' => 'required params missing'));
         }
         /* 校验Redis内验证码是否存在 */
-        $_bool = $this->sendEMailService->getVerifyCode($this->post['verify_code'], $this->post['verify_code']);
-        if ($_bool['code'] === Code::VERIFY_CODE_ERROR) {
-            return ajaxReturn($_bool);
+        $verifyCode = $this->sendEMailService->getVerifyCode($this->post['verify_code'], $this->post['verify_code']);
+        if ($verifyCode['code'] === Code::VERIFY_CODE_ERROR) {
+            return ajaxReturn($verifyCode);
         }
         $rules = ['email' =>'required|between:8,64|email', 'verify_code' =>'required|size:8|string'];
         if ($this->post['loginType'] === 'password') {

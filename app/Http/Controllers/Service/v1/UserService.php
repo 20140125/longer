@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class UserService
+ * @package App\Http\Controllers\Service\v1
+ */
 class UserService extends BaseService
 {
     /**
@@ -41,6 +45,7 @@ class UserService extends BaseService
             $item->created_at = date('Y-m-d H:i:s', $item->created_at);
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
         }
+        $this->return['message'] = 'successfully';
         return $this->return;
     }
 
@@ -104,13 +109,14 @@ class UserService extends BaseService
      * @param $message
      * @return array
      */
-    protected function updateUsers($form, $user, $message)
+    public function updateUsers($form, $user, $message)
     {
         /* 更新用户信息 */
         $form['salt'] = getRoundNum(8, 'all');
-        $form['password'] = md5(md5($form['password']).$form['salt']);
-        $form['remember_token'] = encrypt($user->password);
+        $form['password'] = md5(md5($form['password']).$form['salt']) === $user->password ? $user->password : md5(md5($form['password']).$form['salt']);
+        $form['remember_token'] = encrypt($form['password']);
         $form['ip_address'] = getServerIp();
+        $form['created_at'] = !empty($form['created_at']) ? strtotime($form['created_at']) : time();
         $form['updated_at'] = time();
         $this->userModel->updateOne(['id' => $user->id], $form);
         /* 设置用户标识 */
@@ -199,11 +205,12 @@ class UserService extends BaseService
      */
     public function getCacheUserList()
     {
-        $this->return['lists'] = Cache::get('_user_lists');
+        $this->return['lists'] = Cache::get('_users_lists');
         if (empty($this->return['lists'])) {
             $this->return['lists'] = $this->userModel->getLists('', [], [], true, ['id', 'username','uuid']);
-            Cache::put('_user_lists', $this->return['lists'], Carbon::now()->addHours(2));
+            Cache::put('_users_lists', $this->return['lists'], Carbon::now()->addHours(2));
         }
+        $this->return['message'] = 'successfully';
         return $this->return;
     }
 

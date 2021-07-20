@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Utils\Code;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use phpDocumentor\Reflection\Types\This;
 
 class DatabaseService extends BaseService
 {
@@ -58,6 +55,7 @@ class DatabaseService extends BaseService
     public function backUpTable($form)
     {
         function_exists('set_time_limit') && set_time_limit(0);
+        $s_time = time();
         $tablePath = base_path('database/backup');
         if (!is_dir($tablePath)) {
             mkdir($tablePath);
@@ -73,11 +71,9 @@ class DatabaseService extends BaseService
         if ($form['form'] === 'all') {
             $content = $this->createTable($form['name']).$this->sourceTable($form['name']);
         }
-        $s_time = time();
         $result = writeFile($savaFilePath, $content);
         $form['time'] = time() - $s_time;
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
-        return $this->return;
+        return !empty($result['code']) ? $result : ['code' => Code::SUCCESS, 'message' => 'backup table successfully', 'lists' => $form];
     }
     /**
      * TODO:创建数据表SQL
@@ -132,7 +128,13 @@ class DatabaseService extends BaseService
      */
     public function repairTable($form)
     {
-        $this->return['lists'] = DB::select(sprintf('REPAIR TABLE %s',  $form['name']));
+        $result = DB::select(sprintf('REPAIR TABLE %s',  $form['name']));
+        if (!$result) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'repair table failed';
+        }
+        $this->return['lists'] = $form;
+        $this->return['message'] = 'repair table successfully';
         return $this->return;
     }
 
@@ -143,7 +145,13 @@ class DatabaseService extends BaseService
      */
     public function optimizeTable($form)
     {
-        $this->return['lists'] = $form['engine'] == 'MyISAM' ? DB::select(sprintf('OPTIMIZE TABLE %s', $form['name'])) : DB::select(sprintf('ANALYZE TABLE %s', $form['name'])) ;
+        $result = $form['engine'] == 'MyISAM' ? DB::select(sprintf('OPTIMIZE TABLE %s', $form['name'])) : DB::select(sprintf('ANALYZE TABLE %s', $form['name'])) ;
+        if (!$result) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'optimize table failed';
+        }
+        $this->return['lists'] = $form;
+        $this->return['message'] = 'optimize table successfully';
         return $this->return;
     }
     /**
@@ -153,7 +161,13 @@ class DatabaseService extends BaseService
      */
     public function commentTable($form)
     {
-        $this->return['lists'] = DB::select(sprintf("ALTER TABLE %s COMMENT %s", $form['name'], $form['comment']));
+        $result = DB::select(sprintf("ALTER TABLE %s COMMENT '%s'", $form['name'], $form['comment']));
+        if (!$result) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'update table failed';
+        }
+        $this->return['lists'] = $form;
+        $this->return['message'] = 'update table successfully';
         return $this->return;
     }
 }

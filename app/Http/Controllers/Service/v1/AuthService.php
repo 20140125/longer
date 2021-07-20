@@ -40,7 +40,7 @@ class AuthService extends BaseService
     public function getLists($form, array $columns = ['*'], bool $getAll = false, array $attr = ['key' => 'id', 'ids' => array()])
     {
         if ($getAll) {
-            $this->return['lists'] =  $this->authModel->getLists([], $columns, $attr);
+            $this->return['lists'] =  $this->authModel->getLists([], $columns, $attr, ['order' => 'path', 'direction' => 'asc']);
             return $this->return;
         }
         $where = [['status', $form['status'] ?? 1], ['level', '<', $form['level'] ?? 2]];
@@ -73,6 +73,7 @@ class AuthService extends BaseService
      */
     public function saveAuth($form)
     {
+        $form['api'] = str_replace('/admin/', '/api/v1/', $form['href']);
         $id = $this->authModel->saveOne($form);
         if (!$id) {
             $this->return['code'] = Code::ERROR;

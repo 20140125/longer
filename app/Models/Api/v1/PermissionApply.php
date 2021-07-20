@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-class RequestAuth extends Base
+class PermissionApply extends Base
 {
     use HasFactory;
     /**
      * @var string $table
      */
-    public $table = 'os_req_auth';
+    public $table = 'os_permission_apply';
     /**
      * @var static $instance
      */

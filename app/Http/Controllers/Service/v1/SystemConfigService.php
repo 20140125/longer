@@ -66,6 +66,8 @@ class SystemConfigService extends BaseService
             $item['created_at'] = date('Y-m-d H:i:s', time());
             $item['updated_at'] = date('Y-m-d H:i:s', time());
         }
+        $form['created_at'] = time();
+        $form['updated_at'] = time();
         $form['children'] = json_encode($form['children'], JSON_UNESCAPED_UNICODE);
         $result = $this->systemConfigModel->saveOne($form);
         /* 更新PID */

@@ -11,8 +11,9 @@ use App\Models\Api\v1\Area;
 use App\Models\Api\v1\Auth;
 use App\Models\Api\v1\Log;
 use App\Models\Api\v1\Oauth;
+use App\Models\Api\v1\PermissionApplyLog;
 use App\Models\Api\v1\Push;
-use App\Models\Api\v1\RequestAuth;
+use App\Models\Api\v1\PermissionApply;
 use App\Models\Api\v1\Role;
 use App\Models\Api\v1\SendEMail;
 use App\Models\Api\v1\SystemConfig;
@@ -20,7 +21,6 @@ use App\Models\Api\v1\TimeLine;
 use App\Models\Api\v1\UserCenter;
 use App\Models\Api\v1\Users;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -73,9 +73,13 @@ class BaseService
      */
     protected $logModel;
     /**
-     * @var RequestAuth $requestAuthModel
+     * @var PermissionApply $permissionApplyModel
      */
-    protected $requestAuthModel;
+    protected $permissionApplyModel;
+    /**
+     * @var PermissionApplyLog $permissionApplyLogModel
+     */
+    protected $permissionApplyLogModel;
     /**
      * @var SystemConfig $systemConfigModel
      */
@@ -113,7 +117,8 @@ class BaseService
         $this->areaModel = Area::getInstance();
         $this->timeLineModel = TimeLine::getInstance();
         $this->logModel = Log::getInstance();
-        $this->requestAuthModel = RequestAuth::getInstance();
+        $this->permissionApplyModel = PermissionApply::getInstance();
+        $this->permissionApplyLogModel = PermissionApplyLog::getInstance();
         $this->systemConfigModel = SystemConfig::getInstance();
         $this->pushModel = Push::getInstance();
         $this->apiCategoryModel = ApiCategory::getInstance();
@@ -129,10 +134,18 @@ class BaseService
      * @param $key
      * @param $value
      * @param int $timeout
+     * @return array
      */
-    public function setVerifyCode($key, $value, $timeout = 120)
+    public function setVerifyCode($key, $value, int $timeout = 120)
     {
-        $this->redisClient->setValue($key, strtoupper($value), ['EX' => $timeout]);
+        $result = $this->redisClient->setValue($key, strtoupper($value), ['EX' => $timeout]);
+        if ($result) {
+            $this->return['message'] = 'Set verify code failed';
+            return $this->return;
+        }
+        $this->return['message'] = 'Set verify code successfully';
+        $this->return['lists'] = array('key' => $key, 'value' => $value, 'timeout' => $timeout);
+        return $this->return;
     }
 
     /**
@@ -143,8 +156,15 @@ class BaseService
      */
     public function getVerifyCode($key, $value)
     {
-        $_bool = $this->redisClient->getValue($key) && strtoupper($value) === $this->redisClient->getValue($key);
-        return $_bool ? ['code' => Code::SUCCESS, 'message' => 'Get access token successfully'] : ['code' => Code::VERIFY_CODE_ERROR, 'message' => 'Get access token failed'];
+        $result = $this->redisClient->getValue($key) && strtoupper($value) === $this->redisClient->getValue($key);
+        if ($result) {
+            $this->return['code'] = Code::VERIFY_CODE_ERROR;
+            $this->return['message'] = 'Get verify code failed';
+            return $this->return;
+        }
+        $this->return['message'] = 'Get verify code successfully';
+        $this->return['lists'] = array('key' => $key, 'value' => $value);
+        return $this->return;
     }
 
     /**
@@ -156,10 +176,10 @@ class BaseService
     public function setUnauthorized($_user, $_role)
     {
         $adCode = in_array(getServerIp(), ['192.168.255.10']) ? '440305' : getCityCode();
-        $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info']);
+        $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info', 'forecast']);
         $province = $this->areaModel->getOne(['id' => $area->parent_id], ['name']);
         $this->return['lists'] = array(
-            'auth' => $_role->auth_url ?? '',
+            'auth' => json_decode($_role->auth_api, true),
             'remember_token' => $_user->remember_token ?? '',
             'username' => $_user->username ?? '',
             'socket' => config('app.socket_url') ?? '',
@@ -172,9 +192,11 @@ class BaseService
             'city' => !empty($province->name) ? $province->name.$area->name : $area->name,
             'room_id' =>'1200',
             'room_name' => '畅所欲言',
-            'user_id' => encrypt($_user->id ?? ''),
+            'id' => $_user->id ?? '',
             'default_client_id' => config('app.client_id') ?? '',
-            'weather' => $area->info
+            'weather' => json_decode($area->info, true),
+            'forecast' => json_decode($area->forecast, true),
+            'email' => $_user->email ?? ''
         );
         return $this->return;
     }
@@ -182,22 +204,27 @@ class BaseService
     /**
      * todo:设置默认的权限
      * @param array $authIds
-     * @return Collection|mixed
+     * @return array
      */
-    public function getDefaultAuth(array $authIds = [])
+    protected function getDefaultAuth(array $authIds = [])
     {
         /* todo：获取默认的权限 */
-        $_defaultAuth = Cache::get('_defaultAuth');
+        $_defaultAuth = Cache::get('_default_permission');
         if (empty($_defaultAuth)) {
-            $_defaultAuth = $this->authModel->getLists([], ['id'], ['key' => 'pid', 'ids' => array(100)]);
-            Cache::put('_defaultAuth', $_defaultAuth, Carbon::now()->addHours(2));
-        }
-        foreach ($_defaultAuth as $auth) {
-            if (!in_array($auth->id, $authIds)) {
-                $auth_ids[] = (int)$auth->id;
+            $commonPermissions = $this->systemConfigModel->getOne(['name' => 'CommonPermission'], ['children']);
+            $attr = ['key' => 'id', 'ids' => array()];
+            foreach (json_decode($commonPermissions->children, true) as $item) {
+                $attr = ['key' => $item['name'], 'ids' => explode(',', $item['value'])];
             }
+            $_defaultAuth = $this->authModel->getLists([], ['id'], $attr);
+            Cache::put('_default_permission', $_defaultAuth, Carbon::now()->addHours(2));
         }
         $_authIds = [];
+        foreach ($_defaultAuth as $auth) {
+            if (!in_array($auth->id, $authIds)) {
+                $_authIds[] = (int)$auth->id;
+            }
+        }
         foreach ($authIds as $id) {
             if (!in_array($id, $_authIds)) {
                 $_authIds[] = (int)$id;
@@ -216,27 +243,18 @@ class BaseService
         /* todo:获取用户信息 */
         $_user = $this->userModel->getOne(['id' => $userId], ['role_id']);
         /* todo:获取角色信息 */
-        $_role = $this->roleModel->getOne(['id' => $_user->role_id], ['auth_url']);
-        $_userAuth = json_decode($_role->auth_url, true);
+        $_role = $this->roleModel->getOne(['id' => $_user->role_id], ['auth_api']);
+        $_userAuth = json_decode($_role->auth_api, true);
         /* todo:获取所有权限 */
-        $_authLists = Cache::get('auth_lists');
-        if (empty($_userLists)) {
-            $_authLists = $this->authModel->getLists([], ['href', 'name', 'level'], ['key' => 'id', 'ids' => array()]);
-            Cache::put('auth_lists', $_authLists, Carbon::now()->addHour());
-        }
+        $_authLists = $this->authModel->getLists([], ['api', 'name', 'level'], ['key' => 'id', 'ids' => array()], ['order' => 'path', 'direction' => 'asc']);
         foreach ($_authLists as &$item) {
             $item->disable = false;
-            if (in_array($item->href, $_userAuth)) {
+            if (in_array($item->api, $_userAuth)) {
                 $item->disable = true;
             }
         }
-        /* todo:获取所有用户 */
-        $_userLists = Cache::get('_user_lists');
-        if (empty($_userLists)) {
-            $_userLists = $this->userModel->getLists('', [], [], true, ['id', 'username','uuid']);
-            Cache::put('_user_lists', $_userLists, Carbon::now()->addHours(2));
-        }
-        return ['authLists' => $_authLists, 'userLists' => $_userLists, 'user_id' => $userId];
+        $this->return['lists'] = ['authLists' => $_authLists, 'user_id' => $userId];
+        return $this->return;
     }
 
     /**
@@ -245,23 +263,23 @@ class BaseService
      * @param int $status
      * @return array
      */
-    public function getRoleAuth($requestAuthID, int $status)
+    protected function getRoleAuth($requestAuthID, int $status)
     {
         /* todo:獲取当前记录的信息 */
-        $_requestAuth = $this->requestAuthModel->getOne(['id' => $requestAuthID], ['user_id', 'href']);
+        $_requestAuth = $this->permissionApplyModel->getOne(['id' => $requestAuthID], ['user_id', 'href']);
         /* todo:获取当前用户权限 */
         $_user = $this->userModel->getOne(['id' => $_requestAuth->user_id], ['role_id', 'id', 'username']);
         /* todo；获取用户的角色信息 */
         $_role_authIds = json_decode($this->roleModel->getOne(['id' => $_user->role_id], ['auth_ids'])->auth_ids, true);
         /* todo:根据地址获取权限信息 */
-        $_auth_id = $this->authModel->getOne(['href' => $_requestAuth->href], ['id'])->id;
+        $_auth = $this->authModel->getOne(['api' => $_requestAuth->href], ['id']);
         /* todo:更新角色信息 */
         $_authIds = [];
         /* todo:权限续期 */
         if ($status == 1) {
-            array_push($_role_authIds, $_auth_id);
+            array_push($_role_authIds, $_auth->id);
             foreach ($_role_authIds as $item) {
-                if (!in_array($_auth_id, $_authIds)) {
+                if (!in_array($_auth->id, $_authIds)) {
                     $_authIds[] = (int)$item;
                 }
             }
@@ -269,18 +287,18 @@ class BaseService
         /* todo:权限收回 */
         if ($status == 2) {
             foreach ($_role_authIds as $item) {
-                if ($item != $_auth_id) {
+                if ($item != $_auth->id) {
                     $_authIds[] = (int)$item;
                 }
             }
         }
         array_multisort($_authIds, SORT_ASC);
-        $_authLists = $this->authModel->getLists([], ['href'], ['key' => 'id', 'ids' => $_authIds]);
-        $_auth_url = array();
+        $_authLists = $this->authModel->getLists([], ['api'], ['key' => 'id', 'ids' => $_authIds]);
+        $_auth_api = array();
         foreach ($_authLists as $item) {
-            $_auth_url[] = $item->href;
+            $_auth_api[] = $item->api;
         }
-        $form['auth_url'] = str_replace("\\", '', json_encode($_auth_url, JSON_UNESCAPED_UNICODE));
+        $form['auth_api'] = str_replace("\\", '', json_encode($_auth_api, JSON_UNESCAPED_UNICODE));
         $form['auth_ids'] = json_encode($_authIds, JSON_UNESCAPED_UNICODE);
         $form['updated_at'] = time();
         return ['form' => $form, 'request_auth_id' => $requestAuthID, 'user' => $_user];
@@ -294,14 +312,14 @@ class BaseService
     protected function webPushMessage($form)
     {
         try {
-            $form['state'] = Code::WEBSOCKET_STATE[1];
+            $form['state'] = Code::WEBSOCKET_STATE[2];
             /* todo:推送给所有人 */
             if ($form['uuid'] == config('app.client_id')) {
                 if (webPush($form['info'])) $form['state'] = Code::WEBSOCKET_STATE[0];
             }
             /* todo: 推送给个人 */
             if ($this->redisClient->sIsMember(config('app.redis_user_key'), $form['uuid'])) {
-                $form['state'] = webPush($form['info'], $form['uuid']) ? Code::WEBSOCKET_STATE[0] : Code::WEBSOCKET_STATE[2];
+                $form['state'] = webPush($form['info'], $form['uuid']) ? Code::WEBSOCKET_STATE[0] : Code::WEBSOCKET_STATE[1];
             }
             return $form;
         } catch (\Exception $exception) {

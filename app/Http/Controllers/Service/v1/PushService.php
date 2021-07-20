@@ -59,7 +59,7 @@ class PushService extends BaseService
     {
         $form['state'] = Code::WEBSOCKET_STATE[2];
         $form['created_at'] = time();
-        $form = intval($form['status']) == 1 ? $this->webPushMessage($form) : $form;
+        $form = intval($form['status']) === 1 ? $this->webPushMessage($form) : $form;
         if ($form['uuid'] != config('app.client_id')) {
             $result = $this->pushModel->saveOne($form);
             if (!$result) {

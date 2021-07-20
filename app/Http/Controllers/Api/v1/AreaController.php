@@ -15,7 +15,7 @@ class AreaController extends BaseController
     public function getAreaLists()
     {
         validatePost($this->post, ['parent_id' => 'required|integer']);
-        $result = $this->areaService->getAreaLists($this->post);
+        $result = $this->areaService->getAreaLists($this->post, false, ['*']);
         return ajaxReturn($result);
     }
 

@@ -38,20 +38,21 @@ class UserCenterService extends BaseService
         foreach ($this->json as $item) {
             $this->return['lists']->$item = empty($this->return['lists']->$item) ? [] : json_decode($this->return['lists']->$item, true);
         }
-        $this->return['lists']->email = $form->email;
          return  $this->return;
     }
 
     /**
      * todo:保存用户信息
      * @param $form
+     * @param $_user
      * @return array
      */
-    public function saveUserInfo($form)
+    public function saveUserInfo($form, $_user)
     {
         foreach ($this->json as $item) {
             $form[$item] = json_encode($form[$item] ?? [], JSON_UNESCAPED_UNICODE);
         }
+        $form['token'] = $_user->remember_token;
         $result = $this->userCenterModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
@@ -73,7 +74,7 @@ class UserCenterService extends BaseService
         foreach ($this->json as $item) {
             $form[$item] = json_encode($form[$item] ?? [], JSON_UNESCAPED_UNICODE);
         }
-        if (!empty($form['email'])) unset($form['email']);
+        $form['token'] = $_user->remember_token;
         $result = $this->userCenterModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
@@ -82,6 +83,7 @@ class UserCenterService extends BaseService
         }
         /* todo：执行用户相关信息 */
         dispatch(new UserCenterProcess(array('_personal' => $form, '_user' => $_user)))->onQueue('personal')->delay(5);
+        $this->return['message'] = 'Successfully updated user center';
         $this->return['lists'] = $form;
         return $this->return;
     }

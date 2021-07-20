@@ -3,18 +3,16 @@
 namespace App\Models\Api\v1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class Area extends Base
+class PermissionApplyLog extends Base
 {
     use HasFactory;
     /**
      * @var string $table
      */
-    public $table = 'os_china_area';
+    public $table = 'os_permission_apply_log';
     /**
      * @var static $instance
      */
@@ -37,28 +35,6 @@ class Area extends Base
     }
 
     /**
-     * todo:根据条件查询数据
-     * @param $where
-     * @param string[] $columns
-     * @return Model|Builder|object|null
-     */
-    public function getOne($where, $columns = ['*'])
-    {
-        return $this->getResult($this->table, $where, $columns);
-    }
-
-    /**
-     * todo:保存数据
-     * @param $where
-     * @param $form
-     * @return int
-     */
-    public function updateOne($where, $form)
-    {
-        return $this->updateResult($this->table, $where, $form);
-    }
-
-    /**
      * todo:添加数据
      * @param $form
      * @return int
@@ -69,13 +45,14 @@ class Area extends Base
     }
 
     /**
-     * todo:获取列表
-     * @param $where
+     * todo:获取申请权限列表
+     * @param array $where
+     * @param string[] $order
      * @param string[] $columns
      * @return Collection
      */
-    public function getAreaLists($where, array $columns = ['*'])
+    public function getLists(array $where = [], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
-        return DB::table($this->table)->where($where)->get($columns);
+        return DB::table($this->table)->orderBy($order['order'],$order['direction'])->where($where)->limit(100)->get($columns);
     }
 }
