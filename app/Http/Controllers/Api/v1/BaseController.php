@@ -8,6 +8,7 @@ use App\Http\Controllers\Service\v1\AreaService;
 use App\Http\Controllers\Service\v1\AuthService;
 use App\Http\Controllers\Service\v1\DatabaseService;
 use App\Http\Controllers\Service\v1\FileService;
+use App\Http\Controllers\Service\v1\InterfaceCategoryService;
 use App\Http\Controllers\Service\v1\LogService;
 use App\Http\Controllers\Service\v1\OauthService;
 use App\Http\Controllers\Service\v1\PermissionApplyService;
@@ -78,8 +79,12 @@ class BaseController extends Controller
      * @var UserCenterService $userCenterService
      */
     protected $userCenterService;
-
+    /**
+     * @var DatabaseService $databaseService
+     */
     protected $databaseService;
+
+    protected $interfaceCategoryService;
     /**
      * @var array|string|null $post
      */
@@ -103,6 +108,7 @@ class BaseController extends Controller
         $this->oAuthService = OauthService::getInstance();
         $this->userCenterService = UserCenterService::getInstance();
         $this->databaseService = DatabaseService::getInstance();
+        $this->interfaceCategoryService = InterfaceCategoryService::getInstance();
 
         $this->post = $request->post();
         unset($this->post['token']);

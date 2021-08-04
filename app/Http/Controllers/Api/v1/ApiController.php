@@ -3,27 +3,18 @@
 namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ApiController extends BaseController
 {
-    /**
-     * todo:获取接口列表
-     * @return JsonResponse
-     */
-    public function interfaceLists()
-    {
-        $result = $this->apiService->getCategoryLists([], ['order' => 'id', 'direction' => 'asc']);
-        return ajaxReturn($result);
-    }
-
     /**
      * todo:获取接口详情
      * @return JsonResponse
      */
     public function getInterface()
     {
-        validatePost($this->post, ['id' => 'required|integer', 'source' => 'required|string|in:markdown,text']);
-        $result = $this->post['source'] === 'text' ? $this->apiService->getApiList($this->post) : $this->apiService->getMarkDownList($this->post);
+        validatePost($this->post, ['id' => 'required|integer', 'source' => 'required|string|in:markdown,json']);
+        $result = $this->post['source'] === 'json' ? $this->apiService->getApiList($this->post) : $this->apiService->getMarkDownList($this->post);
         return ajaxReturn($result);
     }
 
@@ -31,11 +22,12 @@ class ApiController extends BaseController
      * todo:添加接口
      * @return JsonResponse
      */
-    public function saveInterface()
+    public function saveInterface(Request $request)
     {
-        validatePost($this->post, ['source' => 'required|string|in:markdown,text']);
-        validatePost($this->post, $this->setRules($this->post['type'], 'save'));
-        $result = $this->post['source'] === 'text' ? $this->apiService->saveApiLists($this->post) : $this->apiService->saveMarkDown($this->post);
+        validatePost($this->post, ['source' => 'required|string|in:markdown,json']);
+        validatePost($this->post, $this->setRules($this->post['source'], 'save'));
+        $user = $request->get('unauthorized');
+        $result = $this->post['source'] === 'json' ? $this->apiService->saveApiLists($this->post, $user) : $this->apiService->saveMarkDown($this->post, $user);
         return ajaxReturn($result);
     }
 
@@ -43,25 +35,14 @@ class ApiController extends BaseController
      * todo:更新接口
      * @return JsonResponse
      */
-    public function updateInterface()
+    public function updateInterface(Request $request)
     {
-        validatePost($this->post, ['source' => 'required|string|in:markdown,text']);
+        validatePost($this->post, ['source' => 'required|string|in:markdown,json']);
         validatePost($this->post, $this->setRules($this->post['source'], 'update'));
-        $result = $this->post['source'] === 'text' ? $this->apiService->updateApiLists($this->post) : $this->apiService->updateMarkDown($this->post);
+        $user = $request->get('unauthorized');
+        $result = $this->post['source'] === 'json' ? $this->apiService->updateApiLists($this->post, $user) : $this->apiService->updateMarkDown($this->post, $user);
         return ajaxReturn($result);
     }
-
-    /**
-     * todo：删除接口
-     * @return JsonResponse
-     */
-    public function removeInterface()
-    {
-        validatePost($this->post, ['id' => 'required|integer']);
-        $result = $this->apiService->removeCategory($this->post);
-        return ajaxReturn($result);
-    }
-
     /**
      * todo:设置验证规则
      * @param $source
@@ -70,10 +51,10 @@ class ApiController extends BaseController
      */
     private function setRules($source, $action)
     {
-        $rules = $source === 'text' ?
+        $rules = $source === 'json' ?
             [
                 'desc' => 'required|string',
-                'type' => 'required|integer',
+                'api_id' => 'required|integer',
                 'href' => 'required|url',
                 'request' => 'required|array',
                 'response' => 'required|array',

@@ -85,11 +85,14 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'push/update',  [App\Http\Controllers\Api\v1\PushController::class, 'updatePush'])->name('updatePush');
         Route::match(['get','post'], 'push/delete',  [App\Http\Controllers\Api\v1\PushController::class, 'removePush'])->name('removePush');
         /* todo:接口分类 */
-        Route::match(['get','post'], 'interface/index',  [App\Http\Controllers\Api\v1\ApiController::class, 'interfaceLists'])->name('interfaceLists');
+        Route::match(['get','post'], 'interfaceCategory/index',  [App\Http\Controllers\Api\v1\InterfaceCategoryController::class, 'categoryLists'])->name('categoryLists');
+        Route::match(['get','post'], 'interfaceCategory/save',  [App\Http\Controllers\Api\v1\InterfaceCategoryController::class, 'saveCategory'])->name('saveCategory');
+        Route::match(['get','post'], 'interfaceCategory/update',  [App\Http\Controllers\Api\v1\InterfaceCategoryController::class, 'updateCategory'])->name('updateCategory');
+        Route::match(['get','post'], 'interfaceCategory/delete',  [App\Http\Controllers\Api\v1\InterfaceCategoryController::class, 'removeCategory'])->name('removeCategory');
+        /* todo:接口详情 */
         Route::match(['get','post'], 'interface/detail',  [App\Http\Controllers\Api\v1\ApiController::class, 'getInterface'])->name('getInterface');
         Route::match(['get','post'], 'interface/save',  [App\Http\Controllers\Api\v1\ApiController::class, 'saveInterface'])->name('saveInterface');
         Route::match(['get','post'], 'interface/update',  [App\Http\Controllers\Api\v1\ApiController::class, 'updateInterface'])->name('updateInterface');
-        Route::match(['get','post'], 'interface/delete',  [App\Http\Controllers\Api\v1\ApiController::class, 'removeInterface'])->name('removeInterface');
         /* todo:城市管理 */
         Route::match(['get','post'], 'area/cache',  [App\Http\Controllers\Api\v1\AreaController::class, 'getCacheArea'])->name('getCacheArea');
         Route::match(['get','post'], 'area/index',  [App\Http\Controllers\Api\v1\AreaController::class, 'getAreaLists'])->name('getAreaLists');

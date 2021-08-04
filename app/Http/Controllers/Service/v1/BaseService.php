@@ -7,6 +7,7 @@ use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Api\v1\ApiCategory;
 use App\Models\Api\v1\ApiDoc;
 use App\Models\Api\v1\ApiLists;
+use App\Models\Api\v1\ApiLog;
 use App\Models\Api\v1\Area;
 use App\Models\Api\v1\Auth;
 use App\Models\Api\v1\Log;
@@ -101,6 +102,10 @@ class BaseService
      */
     protected $apiListsModel;
     /**
+     * @var ApiLog $apiLogModel
+     */
+    protected $apiLogModel;
+    /**
      * @var $return
      */
     protected $return;
@@ -124,6 +129,7 @@ class BaseService
         $this->apiCategoryModel = ApiCategory::getInstance();
         $this->apiDocModel = ApiDoc::getInstance();
         $this->apiListsModel = ApiLists::getInstance();
+        $this->apiLogModel = ApiLog::getInstance();
 
         /* todo:信息输出 */
         $this->return = array('code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => []);

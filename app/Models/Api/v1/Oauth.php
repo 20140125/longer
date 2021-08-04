@@ -42,7 +42,7 @@ class Oauth extends Base
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOne($where, $columns = ['*'])
+    public function getOne($where, array $columns = ['*'])
     {
         return $this->getResult($this->table, $where, $columns);
     }
@@ -83,7 +83,7 @@ class Oauth extends Base
             return DB::table($this->table)->get($column);
         }
         $where = [];
-        if (!empty($user) && !in_array($user->role_id, [1])) {
+        if (!empty($user) && $user->role_id != 1) {
             $where[] = ['uid', $user->id];
         }
         $result['data'] = DB::table($this->table)

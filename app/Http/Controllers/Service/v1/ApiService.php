@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utils\Code;
-use App\Http\Middleware\Base;
-use Illuminate\Http\Request;
 
+/**
+ * Class ApiService
+ * @package App\Http\Controllers\Service\v1
+ */
 class ApiService extends BaseService
 {
     /**
      * @var static $instance
      */
     private static $instance;
+
+    protected $json_str = ['request', 'response', 'response_string'];
     /**
      * @return static
      */
@@ -23,18 +26,6 @@ class ApiService extends BaseService
         }
         return self::$instance;
     }
-    /**
-     * todo:获取分类列表
-     * @param array $where
-     * @param array|string[] $order
-     * @param array|string[] $columns
-     * @return array
-     */
-    public function getCategoryLists(array $where = [], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
-    {
-        $this->return['lists'] = $this->apiCategoryModel->getLists($where, $order, $columns);
-        return $this->return;
-    }
 
     /**
      * todo：获取编辑器格式接口详情
@@ -43,7 +34,21 @@ class ApiService extends BaseService
      */
     public function getApiList($form)
     {
-        $this->return['lists'] = $this->apiListsModel->getOne(['type' => $form['id']]);
+        $this->return['lists'] = $this->apiListsModel->getOne(['api_id' => $form['id']]);
+        if(!$this->return['lists']) {
+            $this->return['lists'] = (object)array();
+            return $this->return;
+        }
+        foreach ($this->json_str as $item) {
+            $this->return['lists']->$item = json_decode($this->return['lists']->$item, JSON_UNESCAPED_UNICODE);
+        }
+        $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->id, 'source' => 2], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
+        foreach ($apiLog as &$item) {
+            $item->json = json_decode($item->json, true);
+            $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
+        }
+        $this->return['lists']->apiLog = $apiLog;
+        $this->return['lists']->source = 'json';
         return $this->return;
     }
 
@@ -54,28 +59,41 @@ class ApiService extends BaseService
      */
     public function getMarkDownList($form)
     {
-        $this->return['lists'] = $this->apiDocModel->getOne(['type' => $form['id']]);
+        $this->return['lists'] = $this->apiDocModel->getOne(['api_id' => $form['id']]);
+        if(!$this->return['lists']) {
+            $this->return['lists'] = (object)array();
+            return $this->return;
+        }
+        $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->id, 'source' => 1], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
+        foreach ($apiLog as &$item) {
+            $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
+        }
+        $this->return['lists']->apiLog = $apiLog;
+        $this->return['lists']->source = 'markdown';
         return $this->return;
     }
 
     /**
      * todo:保存API接口详情
      * @param $form
+     * @param $user
      * @return array
      */
-    public function saveApiLists($form)
+    public function saveApiLists($form, $user)
     {
         if (!empty($form['source'])) unset($form['source']);
-        $json_str = ['request', 'response', 'response_string'];
-        foreach ($json_str as $item) {
+        if (!empty($form['apiLog'])) unset($form['apiLog']);
+        foreach ($this->json_str as $item) {
             $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
         }
         $result = $this->apiListsModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Failed saving text interface details';
+            $this->return['message'] = 'Error saving json interface details';
             return $this->return;
         }
+        $form['source'] = 2;
+        $this->saveApiLog($form, $user);
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -83,21 +101,24 @@ class ApiService extends BaseService
     /**
      * todo:更新API接口详情
      * @param $form
+     * @param $user
      * @return array
      */
-    public function updateApiLists($form)
+    public function updateApiLists($form, $user)
     {
         if (!empty($form['source'])) unset($form['source']);
-        $json_str = ['request', 'response', 'response_string'];
-        foreach ($json_str as $item) {
+        if (!empty($form['apiLog'])) unset($form['apiLog']);
+        foreach ($this->json_str as $item) {
             $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
         }
         $result = $this->apiListsModel->updateOne(['id' => $form['id']],$form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Error update text interface details';
+            $this->return['message'] = 'Error update json interface details';
             return $this->return;
         }
+        $form['source'] = 2;
+        $this->saveApiLog($form, $user);
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -105,17 +126,21 @@ class ApiService extends BaseService
     /**
      * todo:保存markdown
      * @param $form
+     * @param $user
      * @return array
      */
-    public function saveMarkDown($form)
+    public function saveMarkDown($form, $user)
     {
         if (!empty($form['source'])) unset($form['source']);
+        if (!empty($form['apiLog'])) unset($form['apiLog']);
         $result = $this->apiDocModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Failed saving markdown interface details';
+            $this->return['message'] = 'Error saving markdown interface details';
             return $this->return;
         }
+        $form['source'] = 1;
+        $this->saveApiLog($form, $user);
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -123,84 +148,38 @@ class ApiService extends BaseService
     /**
      * todo:更新markdown
      * @param $form
+     * @param $user
      * @return array
      */
-    public function updateMarkDown($form)
+    public function updateMarkDown($form, $user)
     {
         if (!empty($form['source'])) unset($form['source']);
+        if (!empty($form['apiLog'])) unset($form['apiLog']);
         $result = $this->apiDocModel->updateOne(['id' => $form['id']],$form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Error update markdown interface details';
             return $this->return;
         }
-        $this->return['lists'] = $form;
-        return $this->return;
-    }
-
-    /**
-     * todo:数据添加
-     * @param $form
-     * @return array
-     */
-    public function saveCategory($form)
-    {
-        $id = $this->apiCategoryModel->saveOne($form);
-        if (!$id) {
-            $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'save category failed';
-            return $this->return;
-        }
-        $parent_result = $this->apiCategoryModel->getOne(['id' => $form['pid']], ['path']);
-        $form['path'] = $id;
-        $form['level'] = 0;
-        if (!empty($parent_result)) {
-            $form['path'] = $parent_result->path.'-'.$id;
-            $form['level'] = substr_count($form['path'], '-');
-        }
-        $result = $this->apiCategoryModel->updateOne(['id' => $id], $form);
-        if (!$result) {
-            $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'save category failed';
-            return $this->return;
-        }
+        $form['source'] = 1;
+        $this->saveApiLog($form, $user);
         $this->return['lists'] = $form;
         return $this->return;
     }
     /**
-     * todo:数据更新
+     * todo:保存操作日志
      * @param $form
-     * @return array
+     * @param $user
      */
-    public function updateCategory($form)
+    protected function saveApiLog($form, $user)
     {
-        $parent_result = $this->apiCategoryModel->getOne(['id' => $form['pid']], ['path']);
-        $form['path'] = !empty($parent_result->path) ? $parent_result->path.'-'.$form['id'] : $form['id'];
-        $form['level'] = substr_count($form['path'], '-');
-        $result = $this->apiCategoryModel->updateOne(['id' => $form['id']], $form);
-        if (!$result) {
-            $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'update category failed';
-            return $this->return;
-        }
-        $this->return['lists'] = $form;
-        return $this->return;
-    }
-    /**
-     * todo:删除记录
-     * @param $form
-     * @return array
-     */
-    public function removeCategory($form)
-    {
-        $result = $this->apiCategoryModel->removeOne(['id' => $form['id']]);
-        if (!$result) {
-            $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'update category failed';
-            return $this->return;
-        }
-        /* todo:删除接口详情 */
-        $this->return['lists'] = $form;
-        return $this->return;
+        $this->apiLogModel->saveOne([
+            'username' => $user->username,
+            'api_id' => $form['api_id'],
+            'updated_at' => time(),
+            'source' => $form['source'],
+            'desc' => '编辑'.($form['desc'] ?? $this->apiCategoryModel->getOne(['id' => $form['api_id']], ['name'])->name),
+            'json' => $form['source'] === 2 ? json_encode($form, JSON_UNESCAPED_UNICODE) : $form['markdown']
+        ]);
     }
 }

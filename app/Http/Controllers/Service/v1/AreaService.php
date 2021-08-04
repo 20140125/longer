@@ -30,6 +30,7 @@ class AreaService extends BaseService
      * todo:获取城市列表
      * @param $form
      * @param bool $getAll
+     * @param string[] $columns
      * @return array
      */
     public function getAreaLists($form, bool $getAll = false, $columns = ['id','parent_id as pid', 'name', 'code', 'info', 'forecast'])
@@ -85,18 +86,12 @@ class AreaService extends BaseService
             return ['code' => Code::ERROR, 'message' => $exception->getMessage()];
         }
     }
-
-    public function updateArea($form)
-    {
-
-    }
     /**
      * todo:获取城市缓存
      * @param array $form
-     * @param bool $getAll
      * @return array
      */
-    public function getCacheArea(array $form = [], bool $getAll = true)
+    public function getCacheArea(array $form = [])
     {
         $attr = !empty($form['type']) ? ['__cache_val' => '_weather', 'fields' => ['code', 'info', 'parent_id', 'id', 'name'], 'timeout' => 1] : ['__cache_val' => '_center', 'fields' => ['parent_id', 'id', 'name'], 'timeout' => 0];
         $result = Cache::get($attr['__cache_val']);
@@ -106,12 +101,12 @@ class AreaService extends BaseService
         }
         $where = [['id' ,'>' , 0]];
         $result = $this->areaModel->getAreaLists($where, $attr['fields']);
-        $attr['timeout'] ? Cache::put($attr['__cache_val'],json_encode($result, 256), Carbon::now()->addHours(2)) : Cache::forever($attr['__cache_val'], json_encode($result, JSON_UNESCAPED_UNICODE));
+        $attr['timeout'] ? Cache::put($attr['__cache_val'],json_encode($result, 256), Carbon::now()->addDay()) : Cache::forever($attr['__cache_val'], json_encode($result, 256));
         $this->return['lists'] = $result;
         return $this->return;
     }
     /**
-     * todo:获取用户
+     * todo:获取天气
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null

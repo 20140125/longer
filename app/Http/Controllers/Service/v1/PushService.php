@@ -40,7 +40,7 @@ class PushService extends BaseService
         if (!empty($form['status'])) {
             $where[] = ['status', $form['status']];
         }
-        if (!in_array($user->role_id, [1])) {
+        if ($user->role_id != 1) {
             $where[] = ['uid', $user->uuid];
         }
         $this->return['lists'] = $this->pushModel->getLists($where, $pagination, $order, $columns);
