@@ -6,7 +6,6 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Throwable;
-use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -45,21 +44,20 @@ class Handler extends ExceptionHandler
 
     /**
      * Render an exception into an HTTP response.
-     *
      * @param Request $request
-     * @param Exception $exception
+     * @param Throwable $e
      * @return Response
      * @throws Throwable
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $e)
     {
         // 解决vue history 地址丢失问题
-        if($exception instanceof NotFoundHttpException)
+        if($e instanceof NotFoundHttpException)
         {
-            if ($exception->getStatusCode() == 404) {
+            if ($e->getStatusCode() == 404) {
                 return response()->view('welcome');
             }
         }
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }
