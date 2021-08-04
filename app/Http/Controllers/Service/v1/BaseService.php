@@ -163,7 +163,7 @@ class BaseService
     public function getVerifyCode($key, $value)
     {
         $result = $this->redisClient->getValue($key) && strtoupper($value) === $this->redisClient->getValue($key);
-        if ($result) {
+        if (!$result) {
             $this->return['code'] = Code::VERIFY_CODE_ERROR;
             $this->return['message'] = 'Get verify code failed';
             return $this->return;

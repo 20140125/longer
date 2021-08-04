@@ -20,6 +20,9 @@ class CheckLogin extends Base
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
+        if(!$this->post['token']) {
+            return $next($request);
+        }
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] === Code::SUCCESS){
             return $next($request);
