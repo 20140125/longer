@@ -104,4 +104,24 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'database/repair',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'repairTable'])->name('repairTable');
         Route::match(['get','post'], 'database/alter',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'alterTable'])->name('alterTable');
     });
+    /******************************************第三方登陆**********************************************************/
+    /* QQ */
+    Route::get('oauth/login/qq', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'QQ'])->name('qqLogin');
+    Route::get('callback/qq', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'QQ'])->name('qqCallback');
+    /* Github */
+    Route::get('oauth/login/github', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'gitHub'])->name('gitHubLogin');
+    Route::get('callback/github', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'gitHub'])->name('gitHubCallback');
+    /* WeiBo */
+    Route::get('oauth/login/weibo', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'weibo'])->name('weiboLogin');
+    Route::get('callback/weibo', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'weibo'])->name('weiboCallback');
+    /* Gitee */
+    Route::get('oauth/login/gitee', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'gitee'])->name('giteeLogin');
+    Route::get('callback/gitee', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'gitee'])->name('giteeCallback');
+    /* Baidu */
+    Route::get('oauth/login/baidu', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'baidu'])->name('baiduLogin');
+    Route::get('callback/baidu', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'baidu'])->name('baiduCallback');
+    /* osChina */
+    Route::get('oauth/login/osChina', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'osChina'])->name('osChinaLogin');
+    Route::get('callback/osChina', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'osChina'])->name('osChinaCallback');
+    /******************************************第三方登陆**********************************************************/
 });
