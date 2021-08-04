@@ -64,9 +64,5 @@ class Base
             setCode(Code::METHOD_ERROR);
             exit();
         }
-        if (empty($this->post['token'])) {
-            setCode(Code::FORBIDDEN);
-            exit();
-        }
     }
 }
