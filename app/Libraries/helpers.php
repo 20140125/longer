@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Utils\Amap;
+use App\Http\Controllers\Utils\AMap;
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
