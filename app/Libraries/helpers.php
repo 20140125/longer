@@ -61,7 +61,7 @@ if (!function_exists('saveLog')) {
             $data = array(
                 'username' => $_user->username ?? 'tourist',
                 'url' =>  $form['url'],
-                'ip_address' =>getServerIp(),
+                'ip_address' =>request()->getClientIp(),
                 'created_at' =>time(),
                 'day' => date('Ymd'),
                 'log' => json_encode(['message' => $form['message'], 'request_params' => $_post], JSON_UNESCAPED_UNICODE)
@@ -80,7 +80,7 @@ if (!function_exists('getCityCode')) {
     function getCityCode()
     {
         try {
-            $address = (array)(Amap::getInstance()->getAddress(request()->ip()));
+            $address = (array)(Amap::getInstance()->getAddress(request()->getClientIp()));
             return $address['adcode'] ?? '110000';
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
