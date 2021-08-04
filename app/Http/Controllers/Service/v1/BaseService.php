@@ -181,7 +181,7 @@ class BaseService
      */
     public function setUnauthorized($_user, $_role)
     {
-        $adCode = in_array(getServerIp(), ['192.168.255.10']) ? '440305' : getCityCode();
+        $adCode = in_array(getServerIp(), ['192.168.255.10', '127.0.0.1']) ? '440305' : getCityCode();
         $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info', 'forecast']);
         $province = $this->areaModel->getOne(['id' => $area->parent_id], ['name']);
         $this->return['lists'] = array(
