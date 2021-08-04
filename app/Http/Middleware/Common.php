@@ -26,7 +26,7 @@ class Common extends Base
             /* todo: 角色鉴权 */
             if (!in_array($request->getRequestUri(), json_decode($_role->auth_api, true))) {
                 setCode(Code::FORBIDDEN);
-                exit();
+                // exit();
             }
             $request->merge(array('unauthorized' => $_user));
             return $next($request);

@@ -51,7 +51,7 @@ class LogService extends BaseService
     {
         $where = [];
         if (!in_array($user->role_id, [1])) {
-            $where = ['username', $user->username];
+            $where[] = ['username', $user->username];
         }
         $this->return['lists'] = $this->logModel->getLists($where, $pagination);
         foreach ($this->return['lists']['data'] as &$item) {
