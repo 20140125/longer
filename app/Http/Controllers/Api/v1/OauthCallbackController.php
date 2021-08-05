@@ -280,8 +280,8 @@ class OauthCallbackController extends Controller
             $oauthRes =  $this->oauthModel->updateOne($where, $data);
             if (!empty($oauthRes)) {
                 // 同步用户数据
-//                Artisan::call("longer:sync-oauth {$data['remember_token']}");
-                return strlen($this->state) == 32 ? redirect('/admin/index/'.$data['remember_token'])->send() : redirect('/admin/oauth/index')->send();
+                Artisan::call("longer:sync-oauth {$data['remember_token']}");
+                return strlen($this->state) == 32 ? redirect('/admin/home/index/'.$data['remember_token'])->send() : redirect('/admin/oauth/index')->send();
             }
             return redirect('/login')->send();
         }
@@ -290,7 +290,7 @@ class OauthCallbackController extends Controller
         $data['role_id'] = 2;
         $oauthRes =  $this->oauthModel->saveOne($data);
         if (!empty($oauthRes)) {
-//            Artisan::call("longer:sync-oauth {$data['remember_token']}");
+            Artisan::call("longer:sync-oauth {$data['remember_token']}");
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
