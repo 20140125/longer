@@ -111,7 +111,7 @@ class WxUsersController
      */
     public function getImageDetail()
     {
-        $this->validatePost(['type'=>'required|integer','id'=>'required|integer']);
+        $this->validatePost(['type'=>'required|integer']);
         $type = DB::table('os_soogif_type')->where('id', '=', ($this->post['type']))->first(['name']);
         $result['data'] = DB::table('os_soogif')->where('type', '=', ($this->post['type']))->limit(100)->orWhere('name', '=', $type->name ?? '')->get();
         return !empty($result) ? $this->ajaxReturn(200, 'successfully', $result) :
