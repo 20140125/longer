@@ -62,13 +62,14 @@ class LoginService extends BaseService
                 'oauth_type' => 'weixin',
                 'avatar_url' => $form['avatarUrl']
             ];
-            $where = [['openid' => $oauth['openid'], ['oauth_type' => 'weixin']]];
+            $where[] = array('openid', '=', $oauth['openid']);
+            $where[] = array('oauth_type', '=', 'weixin');
             $result = $this->oauthModel->getOne($where);
             if (!empty($result)) {
                 if ($result->updated_at + 3600 * 24 > time()) {
-                    $result->remember_token = encrypt($result->remember_token);
-                    $this->oauthModel->updateOne(['id' => $result->id], (array)$result);
+                    $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' => encrypt($result->remember_token)]);
                 }
+                 $this->return['lists'] = $result;
                 return $this->return;
             }
             if (!$this->oauthModel->saveOne($oauth)) {
@@ -77,6 +78,7 @@ class LoginService extends BaseService
                 return $this->return;
             }
             Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
+            $this->return['lists'] = $oauth;
             return $this->return;
         } catch (\Exception $exception) {
             $this->return['code'] = Code::SERVER_ERROR;
