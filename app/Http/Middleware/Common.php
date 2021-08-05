@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class Common extends Base
 {
@@ -31,6 +32,7 @@ class Common extends Base
             $request->merge(array('unauthorized' => $_user));
             return $next($request);
         }
+        Log::error(json_encode($authorization));
         setCode(Code::FORBIDDEN);
         exit();
     }
