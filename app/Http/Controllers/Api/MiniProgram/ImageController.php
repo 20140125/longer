@@ -40,13 +40,13 @@ class ImageController extends BaseController
     }
 
     /**
-     * todo:获取图片详情（展示相关图片）
+     * todo:获取关键词图片
      * @return JsonResponse
      */
-    public function getImageDetail()
+    public function getHotImageLists()
     {
-        validatePost($this->post, ['type' => 'required|integer']);
-        $result = $this->imageService->getImageLists($this->post, ['page' => 1, 'limit' => 100], ['order' => 'rand', 'direction' => 'desc']);
+        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string', 'name' => 'required|string']);
+        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);
         return ajaxReturn($result);
     }
 
