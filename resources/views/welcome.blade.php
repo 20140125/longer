@@ -30,25 +30,25 @@
     <link href="/css/chunk-741560ff.0c65cad8.css" rel="prefetch" />
     <link href="/css/chunk-9ceacaa2.c76548f8.css" rel="prefetch" />
     <link href="/css/chunk-c3b00904.bb5df0d1.css" rel="prefetch" />
-    <script type="text/javascript" src="/js/chunk-08c34318.12fe6bf9.js"></script>
-    <script type="text/javascript" src="/js/chunk-11cc9a46.6598d212.js"></script>
-    <script type="text/javascript" src="/js/chunk-29cfb7bb.5b798f11.js"></script>
-    <script type="text/javascript" src="/js/chunk-2bc080a1.f9084052.js"></script>
-    <script type="text/javascript" src="/js/chunk-2d4fc60c.6b033114.js"></script>
-    <script type="text/javascript" src="/js/chunk-30f50f1a.1099e916.js"></script>
-    <script type="text/javascript" src="/js/chunk-34761d0b.b9256273.js"></script>
-    <script type="text/javascript" src="/js/chunk-34e5ce82.7df214c4.js"></script>
-    <script type="text/javascript" src="/js/chunk-3b63f688.f77fdc31.js"></script>
-    <script type="text/javascript" src="/js/chunk-48313e7b.2f6b569f"></script>
-    <script type="text/javascript" src="/js/chunk-502d2fdd.59c254bd"></script>
-    <script type="text/javascript" src="/js/chunk-5bcc2985.a43d64f1"></script>
-    <script type="text/javascript" src="/js/chunk-62fc455c.9dcb5c0a"></script>
-    <script type="text/javascript" src="/js/chunk-631e9f83.6f677539"></script>
-    <script type="text/javascript" src="/js/chunk-6cc4fa90.925916ca"></script>
-    <script type="text/javascript" src="/js/chunk-6d4bfa19.db75a8b1"></script>
-    <script type="text/javascript" src="/js/chunk-741560ff.31c4b039"></script>
-    <script type="text/javascript" src="/js/chunk-9ceacaa2.fe1cc346"></script>
-    <script type="text/javascript" src="/js/chunk-c3b00904.1e99b892"></script>
+    <script type="text/javascript" src="/js/chunk-08c34318.12fe6bf9.js" />
+    <script type="text/javascript" src="/js/chunk-11cc9a46.6598d212.js"/>
+    <script type="text/javascript" src="/js/chunk-29cfb7bb.5b798f11.js"/>
+    <script type="text/javascript" src="/js/chunk-2bc080a1.f9084052.js"/>
+    <script type="text/javascript" src="/js/chunk-2d4fc60c.6b033114.js"/>
+    <script type="text/javascript" src="/js/chunk-30f50f1a.1099e916.js"/>
+    <script type="text/javascript" src="/js/chunk-34761d0b.b9256273.js"/>
+    <script type="text/javascript" src="/js/chunk-34e5ce82.7df214c4.js"/>
+    <script type="text/javascript" src="/js/chunk-3b63f688.f77fdc31.js"/>
+    <script type="text/javascript" src="/js/chunk-48313e7b.2f6b569f"/>
+    <script type="text/javascript" src="/js/chunk-502d2fdd.59c254bd"/>
+    <script type="text/javascript" src="/js/chunk-5bcc2985.a43d64f1"/>
+    <script type="text/javascript" src="/js/chunk-62fc455c.9dcb5c0a"/>
+    <script type="text/javascript" src="/js/chunk-631e9f83.6f677539"/>
+    <script type="text/javascript" src="/js/chunk-6cc4fa90.925916ca"/>
+    <script type="text/javascript" src="/js/chunk-6d4bfa19.db75a8b1"/>
+    <script type="text/javascript" src="/js/chunk-741560ff.31c4b039"/>
+    <script type="text/javascript" src="/js/chunk-9ceacaa2.fe1cc346"/>
+    <script type="text/javascript" src="/js/chunk-c3b00904.1e99b892"/>
     <link href="/css/app.7dc7cdc5.css" rel="preload" as="style" />
     <link href="/css/chunk-vendors.93fa63fb.css" rel="preload" as="style" />
     <script type="text/javascript" src="/js/app.cf78696a.js"></script>
