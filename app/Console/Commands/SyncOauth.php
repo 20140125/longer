@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Service\v1\BaseService;
 use App\Http\Controllers\Service\v1\UserService;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Api\v1\Oauth;
@@ -76,6 +77,7 @@ class SyncOauth extends Command
                 $this->error('Remember token is invalid');
                 return false;
             }
+            BaseService::getInstance()->setVerifyCode($this->argument('remember_token'), $this->argument('remember_token'), config('app.app_refresh_login_time'));
             $users = Users::getInstance()->getOne(['id' => $oauth->uid]);
             if ($users) {
                 /* todo：更新用户信息 */

@@ -66,15 +66,17 @@ class SyncCityWeather extends Command
                     continue;
                 }
                 $forecast = !empty($_weather['info']) ? ($_weather['info'] == 'OK' ? $_weather['forecasts'][0] : '') : '';
-                if($forecast) {
-                    $info = array(
-                        'city' => $forecast->city ?? '',
-                        'adcode' => $forecast->adcode ??  '',
-                        'province' => $forecast->province ??  '',
-                        'reporttime' => $forecast->reporttime ?? '',
-                        'casts' => $forecast->casts ? $forecast->casts[0] : ''
-                    );
+                if(empty($forecast)) {
+                    $this->error('Failed get weather info');
+                    continue;
                 }
+                $info = array(
+                    'city' => $forecast->city ?? '',
+                    'adcode' => $forecast->adcode ??  '',
+                    'province' => $forecast->province ??  '',
+                    'reporttime' => $forecast->reporttime ?? '',
+                    'casts' => $forecast->casts ? $forecast->casts[0] : ''
+                );
                 $form['updated_at'] = date('Y-m-d H:i:s');
                 $form['info'] = json_encode($info, JSON_UNESCAPED_UNICODE);
                 $form['forecast'] = json_encode($forecast, JSON_UNESCAPED_UNICODE);

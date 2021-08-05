@@ -26,11 +26,11 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         /* todo:授权登录信息 */
         Route::match(['get','post'], 'oauth/config',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfig'])->name('getSystemConfig');
     });
-    /* todo:鉴权 */
+    /* todo:实时鉴权 */
     Route::middleware('checkAuth')->group(function () {
         Route::match(['get','post'], 'check/authorized',  [App\Http\Controllers\Api\v1\LoginController::class, 'checkAuthorized'])->name('checkAuthorized');
     });
-    /* todo:登录后 */
+    /* todo:登录后鉴权 */
     Route::middleware('common') -> group(function() {
         /* todo:首页权限 */
         Route::match(['get','post'], 'common/menu',  [App\Http\Controllers\Api\v1\HomeController::class, 'getMenu'])->name('getMenu');
@@ -104,24 +104,22 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'database/repair',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'repairTable'])->name('repairTable');
         Route::match(['get','post'], 'database/alter',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'alterTable'])->name('alterTable');
     });
-    /******************************************第三方登陆**********************************************************/
-    /* QQ */
+    /* todo:QQ授权登录 */
     Route::get('oauth/login/qq', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'QQ'])->name('qqLogin');
     Route::get('callback/qq', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'QQ'])->name('qqCallback');
-    /* Github */
+    /* todo:Github授权登录 */
     Route::get('oauth/login/github', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'gitHub'])->name('gitHubLogin');
     Route::get('callback/github', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'gitHub'])->name('gitHubCallback');
-    /* WeiBo */
+    /* todo:WeiBo授权登录 */
     Route::get('oauth/login/weibo', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'weibo'])->name('weiboLogin');
     Route::get('callback/weibo', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'weibo'])->name('weiboCallback');
-    /* Gitee */
+    /* todo:Gitee授权登录 */
     Route::get('oauth/login/gitee', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'gitee'])->name('giteeLogin');
     Route::get('callback/gitee', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'gitee'])->name('giteeCallback');
-    /* Baidu */
+    /* todo:Baidu授权登录 */
     Route::get('oauth/login/baidu', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'baidu'])->name('baiduLogin');
     Route::get('callback/baidu', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'baidu'])->name('baiduCallback');
-    /* osChina */
+    /* todo:osChina授权登录 */
     Route::get('oauth/login/osChina', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'osChina'])->name('osChinaLogin');
     Route::get('callback/osChina', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'osChina'])->name('osChinaCallback');
-    /******************************************第三方登陆**********************************************************/
 });

@@ -70,14 +70,23 @@ class AreaService extends BaseService
                 $this->return = $_weather;
                 return $this->return;
             }
-            $form['forecast'] = !empty($_weather['info']) ? ($_weather['info'] == 'OK' ? $_weather['forecasts'][0] : '') : '';
-            $form['info'] = $form['forecast'];
-            $form['info']['casts'] = ($form['info']['casts'] ?? [])[0] || '';
-            $json = ['info', 'forecast'];
-            $form['updated_at'] = date('Y-m-d H:i:s');
-            foreach ($json as $item) {
-                $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
+            $forecast = !empty($_weather['info']) ? ($_weather['info'] == 'OK' ? $_weather['forecasts'][0] : '') : '';
+            if(empty($forecast)) {
+                $this->return['code'] = Code::ERROR;
+                $this->return['message'] = 'Failed get weather info';
+                return $this->return;
             }
+            $info = array(
+                'city' => $forecast->city ?? '',
+                'adcode' => $forecast->adcode ??  '',
+                'province' => $forecast->province ??  '',
+                'reporttime' => $forecast->reporttime ?? '',
+                'casts' => $forecast->casts ? $forecast->casts[0] : ''
+            );
+            $form['updated_at'] = date('Y-m-d H:i:s');
+            $form['created_at'] = strtotime($form['created_at']);
+            $form['info'] = json_encode($info, JSON_UNESCAPED_UNICODE);
+            $form['forecast'] = json_encode($forecast, JSON_UNESCAPED_UNICODE);
             $this->areaModel->updateOne(['code' => $form['code']], $form);
             $this->redisClient->setValue($form['code'], ['info' => $form['info'], 'forecast' => $form['forecast']], ['EX' => 3600]);
             $this->return['lists'] = $form;
