@@ -257,7 +257,7 @@ class OauthCallbackController extends Controller
             'remember_token' => encrypt(md5($userInfo['name'] ?? '').$userInfo['id'] ?? ''.time()),
         );
         $where[] = array('openid', '=', (string)$userInfo['id']);
-        $where[] = array('oauth_type', '=', 'os_china');
+        $where[] = array('oauth_type', '=', 'osChina');
         return $this->oauth($data, $where);
     }
 
