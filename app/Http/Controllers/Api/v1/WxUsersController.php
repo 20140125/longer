@@ -62,7 +62,7 @@ class WxUsersController
         $curl = new Curl();
         $response = $curl->post($url.http_build_query($data));
         $parsedData = json_decode(trim($response), true, 512, JSON_OBJECT_AS_ARRAY);
-        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $parsedData);
+        return $this->ajaxReturn(200, 'successfully', $parsedData);
     }
     /**
      * TODO: 微信登陆信息
@@ -94,16 +94,16 @@ class WxUsersController
             $result = \App\Models\Api\v1\Oauth::getInstance()->saveOne($oauth);
             if (!empty($result)) {
                 Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
-                return $this->ajaxReturn(Code::SUCCESS, 'login successfully', $oauth);
+                return $this->ajaxReturn(200, 'login successfully', $oauth);
             }
-            return  $this->ajaxReturn(Code::ERROR, 'login failed');
+            return  $this->ajaxReturn(201, 'login failed');
         }
         // 用户更新时间跟当前时间作对比
         if ($oauthRes->updated_at + 3600 * 24 > time()) {
             $oauthRes->remember_token = encrypt($oauthRes->remember_token);
             \App\Models\Api\v1\Oauth::getInstance()->updateOne(['id' => $oauthRes->id], (array)$oauthRes);
         }
-        return $this->ajaxReturn(Code::SUCCESS, 'login successfully', (array)$oauthRes);
+        return $this->ajaxReturn(200, 'login successfully', (array)$oauthRes);
     }
     /**
      * todo:获取图片信息
@@ -114,8 +114,8 @@ class WxUsersController
         $this->validatePost(['type'=>'required|integer','id'=>'required|integer']);
         $type = DB::table('os_soogif_type')->where('id', '=', ($this->post['type']))->first(['name']);
         $result['data'] = DB::table('os_soogif')->where('type', '=', ($this->post['type']))->limit(100)->orWhere('name', '=', $type->name ?? '')->get();
-        return !empty($result) ? $this->ajaxReturn(Code::SUCCESS, 'successfully', $result) :
-            $this->ajaxReturn(Code::ERROR, 'failed');
+        return !empty($result) ? $this->ajaxReturn(200, 'successfully', $result) :
+            $this->ajaxReturn(201, 'failed');
     }
 
     /**
@@ -130,11 +130,11 @@ class WxUsersController
             if ($this->post['source'] === 'mini_program') {
                 $defaultShowImage = SystemConfig::getInstance()->getOne(['name' => 'ImageBed'], ['children'])->children;
                 if (!in_array($this->post['name'], explode(',', json_decode($defaultShowImage)[1]->value)) && empty($this->post['token'])) {
-                    return $this->ajaxReturn(Code::ERROR, 'Please Login System');
+                    return $this->ajaxReturn(201, 'Please Login System');
                 }
                 if (!empty($this->post['token'])) {
                     if (empty(\App\Models\Api\v1\Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]))) {
-                        return $this->ajaxReturn(Code::ERROR, 'Please Login System');
+                        return $this->ajaxReturn(201, 'Please Login System');
                     }
                 }
             }
@@ -142,11 +142,11 @@ class WxUsersController
             $where[] = ['name','like','%'.$this->post['name'].'%' ?? ''];
             $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])->offset($this->post['limit'] * ($this->post['page'] - 1))->get();
             $lists['total'] =  DB::table('os_soogif')->where($where) ->count();
-            return $this->ajaxReturn(Code::SUCCESS, 'successfully', $lists);
+            return $this->ajaxReturn(200, 'successfully', $lists);
         }
         $lists['data'] = DB::table('os_soogif')->where($where)->limit($this->post['limit'])->orderByRaw('rand()')->offset($this->post['limit'] * ($this->post['page'] - 1))->get();
         $lists['total'] =  DB::table('os_soogif')->where($where) ->count();
-        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $lists);
+        return $this->ajaxReturn(200, 'successfully', $lists);
     }
     /**
      * TODO:：图床列表
@@ -159,7 +159,7 @@ class WxUsersController
             $lists = DB::table('os_soogif_type')->where('pid', '=', $this->post['pid'] ?? 0)
                 ->where('id', '<>', 105)
                 ->get(['name','id','pid']);
-            return $this->ajaxReturn(Code::SUCCESS, 'successfully', (array)$lists);
+            return $this->ajaxReturn(200, 'successfully', (array)$lists);
         }
         $validate = Validator::make(
             $this->post,
@@ -171,7 +171,7 @@ class WxUsersController
             ]
         );
         if ($validate->fails()) {
-            return $this->ajaxReturn(Code::ERROR, $validate->errors()->first());
+            return $this->ajaxReturn(201, $validate->errors()->first());
         }
         $this->post['source'] = $this->post['source'] ?? 'app';
         if ($this->post['source'] === 'mini_program') {
@@ -180,11 +180,11 @@ class WxUsersController
             $defaultShowImage = SystemConfig::getInstance()->getOne(['name' => 'ImageBed'], ['children'])->children;
             if (!in_array($res->pid, explode(',', json_decode($defaultShowImage)[0]->value))
                 && empty($this->post['token'])) {
-                return $this->ajaxReturn(Code::ERROR, 'Please Login System');
+                return $this->ajaxReturn(201, 'Please Login System');
             }
             if (!empty($this->post['token'])) {
                 if (empty(\App\Models\Api\v1\Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]))) {
-                    return $this->ajaxReturn(Code::ERROR, 'Please Login System');
+                    return $this->ajaxReturn(201, 'Please Login System');
                 }
             }
         }
@@ -199,7 +199,7 @@ class WxUsersController
         }
         $lists['data'] = $res;
         $lists['total'] =  DB::table('os_soogif')->where('type', '=', $this->post['id'])->count();
-        return $this->ajaxReturn(Code::SUCCESS, 'successfully', $lists);
+        return $this->ajaxReturn(200, 'successfully', $lists);
     }
     /**
      * todo:获取热搜关键词
@@ -209,7 +209,7 @@ class WxUsersController
     {
         $num = $this->post['num'] ?? 1;
         $hotKeyWord = SystemConfig::getInstance()->getOne(['name' => 'ImageBed'], ['children'])->children;
-        return $this->ajaxReturn(Code::SUCCESS, 'successfully', explode(',', json_decode($hotKeyWord)[$num]->value));
+        return $this->ajaxReturn(200, 'successfully', explode(',', json_decode($hotKeyWord)[$num]->value));
     }
 
     /**
@@ -221,7 +221,7 @@ class WxUsersController
         $this->validatePost(['token'=>'required|string','post'=>'required|array','act'=>'required|integer']);
         $users = \App\Models\Api\v1\Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]);
         if (empty($users)) {
-            return $this->ajaxReturn(Code::ERROR, 'Please Login System');
+            return $this->ajaxReturn(201, 'Please Login System');
         }
         $data = array(
             'image_id' => $this->post['post']['id'],
@@ -234,7 +234,7 @@ class WxUsersController
         $result = DB::table('os_collect')->where([['user_id','=',$data['user_id']],['image_id','=',$data['image_id']]])
             ->first();
         $res = empty($result) ? DB::table('os_collect')->insert($data) : DB::table('os_collect')->where('id', '=', $result->id)->update($data);
-        return !empty($res) ? $this->ajaxReturn(Code::SUCCESS, 'successfully') : $this->ajaxReturn(Code::ERROR, 'failed');
+        return !empty($res) ? $this->ajaxReturn(200, 'successfully') : $this->ajaxReturn(201, 'failed');
     }
     /**
      * TODO:数据返回
@@ -265,7 +265,7 @@ class WxUsersController
             if ($validate->errors()->first() == 'Permission denied') {
                 $this->setCode(Code::FORBIDDEN, $validate->errors()->first());
             }
-            $this->setCode(Code::ERROR, $validate->errors()->first());
+            $this->setCode(201, $validate->errors()->first());
         }
     }
     /**
