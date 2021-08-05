@@ -131,13 +131,4 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::post( 'image/newLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getNewImageLists'])->name('getNewImageLists');
     Route::post( 'image/hotLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotImageLists'])->name('getHotImageLists');
     Route::post( 'image/hotKeyWord', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotKeyWords'])->name('getHotKeyWords');
-
-
-    Route::match(['get','post'], 'wx/login', [App\Http\Controllers\Api\v1\WxUsersController::class, 'login'])->name('wxLogin');
-    Route::match(['get','post'], 'wx/openid', [App\Http\Controllers\Api\v1\WxUsersController::class, 'getOpenId'])->name('getOpenId');
-    Route::match(['get','post'], 'wx/image/bed', [App\Http\Controllers\Api\v1\WxUsersController::class, 'imageBed'])->name('imageBed');
-    Route::match(['get','post'], 'wx/image/details', [App\Http\Controllers\Api\v1\WxUsersController::class, 'getImageDetail'])->name('getImageDetail');
-    Route::match(['get','post'], 'wx/image/keyword', [App\Http\Controllers\Api\v1\WxUsersController::class, 'hotKeWord'])->name('hotKeWord');
-    Route::match(['get','post'], 'wx/image/new', [App\Http\Controllers\Api\v1\WxUsersController::class, 'getNewImageBed'])->name('getNewImageBed');
-    Route::match(['get','post'], 'wx/image/collect', [App\Http\Controllers\Api\v1\WxUsersController::class, 'collect'])->name('collect');
 });
