@@ -53,7 +53,7 @@ class LoginController extends BaseController
     public function reportCode()
     {
         $this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']);
-        return ajaxReturn(array('lists' => array('code' => $this->post['verify_code']), 'message' => 'set verify code successfully', 'code' => Code::SUCCESS ));
+        return ajaxReturn(array('lists' => array('code' => $this->post['verify_code']), 'message' => 'successfully', 'code' => Code::SUCCESS ));
     }
 
     /**
