@@ -9,6 +9,7 @@ use App\Http\Controllers\Oauth\GithubController;
 use App\Http\Controllers\Oauth\OsChinaController;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiBoController;
+use App\Http\Controllers\Service\v1\BaseService;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Mail\Register;
@@ -281,6 +282,7 @@ class OauthCallbackController extends Controller
             if (!empty($oauthRes)) {
                 // 同步用户数据
                 Artisan::call("longer:sync-oauth {$data['remember_token']}");
+                BaseService::getInstance()->setVerifyCode($data['remember_token'], $data['remember_token'], config('app.app_refresh_login_time'));
                 return strlen($this->state) == 32 ? redirect('/admin/home/index/'.$data['remember_token'])->send() : redirect('/admin/oauth/index')->send();
             }
             return redirect('/login')->send();
@@ -291,6 +293,7 @@ class OauthCallbackController extends Controller
         $oauthRes =  $this->oauthModel->saveOne($data);
         if (!empty($oauthRes)) {
             Artisan::call("longer:sync-oauth {$data['remember_token']}");
+            BaseService::getInstance()->setVerifyCode($data['remember_token'], $data['remember_token'], config('app.app_refresh_login_time'));
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
