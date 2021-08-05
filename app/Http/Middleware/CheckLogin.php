@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class checkLogin
@@ -28,7 +27,6 @@ class CheckLogin extends Base
         if ($authorization['code'] === Code::SUCCESS){
             return $next($request);
         }
-        Log::error($request->getRequestUri());
         setCode(Code::FORBIDDEN);
         exit();
     }
