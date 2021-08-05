@@ -67,9 +67,10 @@ class LoginService extends BaseService
             $result = $this->oauthModel->getOne($where);
             if (!empty($result)) {
                 if ($result->updated_at + 3600 * 24 > time()) {
-                    $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' => encrypt($result->remember_token)]);
+                    $result->remember_token = encrypt($result->remember_token);
+                    $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' =>  $result->remember_token]);
                 }
-                 $this->return['lists'] = $result;
+                 $this->return['lists'] = $oauth;
                 return $this->return;
             }
             if (!$this->oauthModel->saveOne($oauth)) {
