@@ -64,8 +64,13 @@ class SyncCityWeather extends Command
                     continue;
                 }
                 $form['forecast'] = !empty($_weather['info']) ? ($_weather['info'] == 'OK' ? $_weather['forecasts'][0] : '') : '';
-                $form['info'] = $form['forecast'];
-                $form['info']['casts'] = $form['info']['casts'] ? $form['info']['casts'][0] : [];
+                $form['info'] = array(
+                    'city' => !empty($form['forecast']['city']) ? $form['forecast']['city'] : '',
+                    'adcode' => !empty($form['forecast']['adcode']) ? $form['forecast']['adcode'] : '',
+                    'province' => !empty($form['forecast']['province']) ? $form['forecast']['province'] : '',
+                    'reporttime' => !empty($form['forecast']['reporttime']) ? $form['forecast']['reporttime'] : '',
+                    'casts' => !empty($form['forecast']['casts']) ? $form['forecast']['casts'][0] : ''
+                );
                 $json = ['info', 'forecast'];
                 $form['updated_at'] = date('Y-m-d H:i:s');
                 foreach ($json as $str) {
