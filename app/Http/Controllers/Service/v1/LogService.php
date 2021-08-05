@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Service\v1;
 
+use App\Http\Controllers\Utils\Code;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 
@@ -45,12 +46,13 @@ class LogService extends BaseService
     /**
      * todo:獲取日志列表
      * @param $user
+     * @param $pagination
      * @return array
      */
     public function getLists($user, $pagination)
     {
         $where = [];
-        if (!in_array($user->role_id, [1])) {
+        if ($user->role_id != 1) {
             $where[] = ['username', $user->username];
         }
         $this->return['lists'] = $this->logModel->getLists($where, $pagination);
@@ -65,14 +67,21 @@ class LogService extends BaseService
      * todo:删除日志
      * @param $user
      * @param $form
-     * @return int
+     * @return array
      */
     public function removeLog($user,$form)
     {
         $where[] = ['id', $form['id']];
-        if (!in_array($user->role_id, [1])) {
+        if ($user->role_id != 1) {
             $where[] = ['username', $user->username];
         }
-        return $this->logModel->removeOne($where);
+        $result = $this->logModel->removeOne($where);
+        if (!$result) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'Failed remove system log';
+            return $this->return;
+        }
+        $this->return['lists'] = $form;
+        return $this->return;
     }
 }
