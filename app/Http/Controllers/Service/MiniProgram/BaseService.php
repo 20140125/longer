@@ -54,8 +54,8 @@ class BaseService extends Controller
 
     public function __construct()
     {
-        $this->appid = config('app.program_appid');
-        $this->appsecret = config('app.program_secret');
+        $this->appid = config('app.mini_program_appid');
+        $this->appsecret = config('app.mini_program_secret');
         $this->oauthModel = Oauth::getInstance();
         $this->systemConfigModel = SystemConfig::getInstance();
         $this->sooGifModel = SooGif::getInstance();

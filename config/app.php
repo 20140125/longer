@@ -140,8 +140,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'a_map_key' => env('A_MAP_KEY', null),
-    'program_appid' => env('APP_KEY', ''),
-    'program_secret' => env('APP_SECRET', ''),
+    'mini_program_appid' => env('MINI_PROGRAM_APP_KEY', ''),
+    'mini_program_secret' => env('MINI_PROGRAM_APP_SECRET', ''),
 
     'a_li_yun_appid' => env('A_LI_YUN_APPID', ''),
     'a_li_yun_secret' => env('A_LI_YUN_APP_SECRET', ''),
