@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class Common extends Base
 {
@@ -24,8 +25,11 @@ class Common extends Base
             /* todo：获取用户角色信息 */
             $_role = $this->roleService->getRole(['id' => $_user->role_id], ['auth_api']);
             /* todo: 角色鉴权 */
+            Log::error($request->getRequestUri());
+            Log::error($_role->auth_api);
             if (!in_array($request->getRequestUri(), json_decode($_role->auth_api, true))) {
                 setCode(Code::FORBIDDEN);
+                Log::error(json_encode($_user));
                 exit();
             }
             $request->merge(array('unauthorized' => $_user));
