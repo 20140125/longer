@@ -268,6 +268,8 @@ class OauthCallbackController extends Controller
      */
     protected function oauth($data, $where)
     {
+        $data['created_at'] = time();
+        $data['updated_at'] = time();
         $oauth = $this->oauthModel->getOne($where);
         // 授权用户存在直接跳转到欢迎页
         if (!empty($oauth)) {
@@ -277,6 +279,7 @@ class OauthCallbackController extends Controller
             }
             unset($data['username']);
             unset($data['avatar_url']);
+            $data['created_at'] = strtotime($oauth['created_at']);
             $oauthRes =  $this->oauthModel->updateOne($where, $data);
             if (!empty($oauthRes)) {
                 // 同步用户数据
@@ -294,7 +297,7 @@ class OauthCallbackController extends Controller
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
-                return redirect('/admin/user/bind/'.$data['remember_token'])->send();
+                return redirect('/admin/home/index/'.$data['remember_token'])->send();
             }
             /* todo:授权列表 (账户绑定成功) */
             return redirect('/admin/oauth/index')->send();

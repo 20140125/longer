@@ -34,7 +34,7 @@ class OauthService extends BaseService
      * @param array|string[] $column
      * @return array
      */
-    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
+    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'updated_at', 'direction' => 'desc'], bool $getAll = false, array $column = ['*'])
     {
         $this->return['lists'] = $this->oauthModel->getLists($user, $pagination, $order, $getAll, $column);
         foreach ($this->return['lists']['data'] as &$item) {

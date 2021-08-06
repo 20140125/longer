@@ -63,7 +63,7 @@ class SyncOauth extends Command
         $clientLists = RedisClient::getInstance()->sMembers(config('app.chat_user_key'));
         foreach ($clientLists as $item) {
             foreach (json_decode($item, true) as $client) {
-                $this->info('userInfo：'.json_encode($client)."\r\n");
+                $this->info('userInfo：'.json_encode($client, 256)."\r\n");
             }
         }
         $this->info('Finished synchronizing the client user list');
@@ -99,7 +99,7 @@ class SyncOauth extends Command
             }
             $this->saveUsers($oauth);
             sleep(1);
-            $this->saveUserCenter($users);
+            $this->saveUserCenter($oauth);
             DB::commit();
         } catch (\Exception $exception) {
             $this->error($exception->getMessage());
@@ -123,7 +123,7 @@ class SyncOauth extends Command
             'salt' => $salt,
             'password' => md5(md5('123456789') . $salt),
             'role_id' => $oauth->role_id,
-            'ip_address' => getServerIp(),
+            'ip_address' => request()->ip(),
             'created_at' => time(),
             'updated_at' => time(),
             'status' => $oauth->status,
@@ -142,12 +142,12 @@ class SyncOauth extends Command
 
     /**
      * todo:添加用户中心记录
-     * @param $users
+     * @param $oauth
      */
-    protected function saveUserCenter($users)
+    protected function saveUserCenter($oauth)
     {
-        $arr = ['u_name' => $users->username, 'token' => $users->remember_token, 'uid' => $users->id, 'notice_status' => 1, 'user_status' => 1];
+        $arr = ['u_name' => $oauth->username, 'token' => $oauth->remember_token, 'uid' => $oauth->uid, 'notice_status' => 1, 'user_status' => 1];
         $id = UserCenter::getInstance()->saveOne($arr);
-        $this->error($id ? 'successfully save user center '. $users->username : 'Failed save user center ' . $users->username);
+        $id ? $this->info('successfully save user center '. $oauth->username) : $this->error('Failed save user center ' . $users->username);
     }
 }
