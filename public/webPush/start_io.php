@@ -104,7 +104,7 @@ $sender_io->on('workerStart', function () {
     }
     /* 当http客户端发来数据时触发 */
     $inner_http_worker->onMessage = function (TcpConnection $http_connection, Request $request) {
-        $post = $request->post() ?? $request->get();
+        $post = !empty($request->post()) ? $request->post() : $request->get();
         switch (@$post['type']) {
             case 'publish':
                 global $sender_io, $redis;

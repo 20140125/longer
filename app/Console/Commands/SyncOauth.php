@@ -45,23 +45,28 @@ class SyncOauth extends Command
      */
     public function handle()
     {
+        $this->syncClientList();
         if ($this->argument('remember_token') === 'default') {
-            $this->error('Request remember token is required');
+            $this->warn('Request remember token is required');
             return false;
         }
         $this->info('Start synchronizing the oauth list');
         $this->syncOauth();
         $this->info('Finished synchronizing the oauth list');
         sleep(1);
+    }
+
+    protected function syncClientList()
+    {
         $this->info('Start synchronizing the client user list');
         UserService::getInstance()->updateUsersAvatarImage();
-        $this->info('Finished synchronizing the client user list');
         $clientLists = RedisClient::getInstance()->sMembers(config('app.chat_user_key'));
         foreach ($clientLists as $item) {
             foreach (json_decode($item, true) as $client) {
                 $this->info('userInfo：'.json_encode($client)."\r\n");
             }
         }
+        $this->info('Finished synchronizing the client user list');
     }
 
     /**

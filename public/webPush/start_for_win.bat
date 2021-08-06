@@ -1,8 +1,8 @@
 CHCP 65001
 
-php artisan longer:sync-oauth
-
 cd ../../
+
+php artisan longer:sync-oauth
 
 cd public/webPush
 
