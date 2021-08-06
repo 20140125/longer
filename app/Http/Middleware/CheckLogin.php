@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class checkLogin

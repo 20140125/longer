@@ -19,6 +19,10 @@ class CheckAuth extends Base
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
+        if(!$this->post['token']) {
+            setCode(Code::UNAUTHORIZED);
+            exit();
+        }
         /* todo：鉴权获取用户信息 */
         $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
         if (!$this->redisClient->getValue('oauth_register')) {
