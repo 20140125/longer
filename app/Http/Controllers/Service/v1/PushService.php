@@ -71,12 +71,7 @@ class PushService extends BaseService
         }
         $form['username'] = 'admin';
         $form['uuid'] = config('app.client_id').'1';
-        $result = $this->pushModel->saveOne($form);
         dispatch(new PushProcess($form))->onQueue('webPush')->delay(15);
-        if (!$result) {
-            $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'web push save failed';
-        }
         $this->return['lists'] = $form;
         return $this->return;
     }
