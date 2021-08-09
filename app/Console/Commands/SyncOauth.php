@@ -25,7 +25,7 @@ class SyncOauth extends Command
      *
      * @var string
      */
-    protected $description = 'sync users';
+    protected $description = 'synchronizing user from oauth provider';
 
     /**
      * Create a new command instance.

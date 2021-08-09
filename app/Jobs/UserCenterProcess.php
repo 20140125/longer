@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
 class UserCenterProcess implements ShouldQueue
@@ -41,13 +42,7 @@ class UserCenterProcess implements ShouldQueue
     public function handle()
     {
         try {
-            Log::error(json_encode($this->post));
-            /* todo: 更新聊天框用户列表信息 */
-            UserService::getInstance()->updateUsersAvatarImage();
-            /* todo: 更新用户信息 */
-//            $_user = array('username' => $this->post['_personal']['u_name'], 'avatar_url' => $this->post['_user']->avatar_url);
-//            Users::getInstance()->updateOne(['id' => $this->post['_personal']['uid']], $_user);
-//            Oauth::getInstance()->updateOne(['uid' => $this->post['_personal']['uid']], $_user);
+            Artisan::call("longer:sync-users {$this->post['remember_token']}");
         } catch (\Exception $exception) {
             Log::error(json_encode(['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()]));
         }
