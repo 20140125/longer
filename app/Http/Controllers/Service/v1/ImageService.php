@@ -37,7 +37,7 @@ class ImageService extends BaseService
             $where[] = ['type', $form['id']];
         }
         if (!empty($form['name'])) {
-            $where[] = ['type',  SooGifType::getInstance()->getOne(['name' => $form['name']], ['id'])->id];
+            $where[] = ['type',  SooGifType::getInstance()->getOne([['name', 'like', "%{$form['name']}%"]], ['id'])->id];
         }
         $this->return['lists'] = SooGif::getInstance()->getLists($where, $pagination, $order, $columns);
         return $this->return;
