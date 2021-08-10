@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Service\MiniProgram;
 
+use App\Http\Controllers\Utils\Code;
+
 class ImageService extends BaseService
 {
     /**
@@ -48,6 +50,9 @@ class ImageService extends BaseService
      */
     public function getImageLists($form, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
+        $this->return['code'] = Code::ERROR;
+        $this->return['message'] = '系统升级中....';
+        return $this->return;
         $where = [];
         if (!empty($form['id'])) {
             $where[] = ['type', $form['id']];
