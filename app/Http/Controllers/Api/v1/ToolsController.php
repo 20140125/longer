@@ -24,7 +24,7 @@ class ToolsController extends BaseController
     public function getWeather()
     {
         validatePost($this->post, ['city_name' => 'required|string']);
-        $result = $this->toolService->getAddress($this->post);
+        $result = $this->toolService->getWeather($this->post);
         return ajaxReturn($result);
     }
 }
