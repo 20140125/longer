@@ -16,4 +16,14 @@ class ToolsController extends BaseController
         $result = $this->toolService->getAddress($this->post);
         return ajaxReturn($result);
     }
+
+    /**
+     * todo:获取城市天气
+     * @return JsonResponse
+     */
+    public function getWeather()
+    {
+        $result = $this->areaService->getCacheArea(['type' => 'weather']);
+        return ajaxReturn($result);
+    }
 }

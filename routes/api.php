@@ -104,6 +104,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'database/alter',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'alterTable'])->name('alterTable');
         /* todo:工具管理 */
         Route::match(['get','post'], 'tools/getAddress',  [App\Http\Controllers\Api\v1\ToolsController::class, 'getAddress'])->name('getAddress');
+        Route::match(['get','post'], 'tools/getWeather',  [App\Http\Controllers\Api\v1\ToolsController::class, 'getWeather'])->name('getAddress');
     });
     /* todo:QQ授权登录 */
     Route::get('oauth/login/qq', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'QQ'])->name('qqLogin');

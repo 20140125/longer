@@ -95,6 +95,22 @@ class AMap extends Controller
     }
 
     /**
+     * TODO:根据IP地位
+     * @param string $ipAddress
+     * @return int|mixed|null
+     */
+    public function getAddress2(string $ipAddress = '127.0.0.1')
+    {
+        try {
+            $this->data['ip'] = $ipAddress;
+            $this->data['type'] = 4;
+            return $this->Curl->get('https://restapi.amap.com/v5/ip?parameters', $this->data);
+        } catch (\Exception $exception) {
+            return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
+        }
+    }
+
+    /**
      * TODO:地理/逆地理编码
      * @param $city
      * @param string $address

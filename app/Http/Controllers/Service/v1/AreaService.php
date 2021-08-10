@@ -102,7 +102,7 @@ class AreaService extends BaseService
      */
     public function getCacheArea(array $form = [])
     {
-        $attr = !empty($form['type']) ? ['__cache_val' => '_weather', 'fields' => ['code', 'info', 'parent_id', 'id', 'name'], 'timeout' => 1] : ['__cache_val' => '_center', 'fields' => ['parent_id', 'id', 'name'], 'timeout' => 0];
+        $attr = !empty($form['type']) ? ['__cache_val' => '_weather', 'fields' => ['code', 'info', 'parent_id', 'id', 'name', 'forecast'], 'timeout' => 1] : ['__cache_val' => '_center', 'fields' => ['parent_id', 'id', 'name'], 'timeout' => 0];
         $result = Cache::get($attr['__cache_val']);
         if(!empty($result)) {
             $this->return['lists'] = json_decode($result, true);
