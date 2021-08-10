@@ -23,7 +23,8 @@ class ToolsController extends BaseController
      */
     public function getWeather()
     {
-        $result = $this->areaService->getCacheArea(['type' => 'weather']);
+        validatePost($this->post, ['city_name' => 'required|string']);
+        $result = $this->toolService->getAddress($this->post);
         return ajaxReturn($result);
     }
 }

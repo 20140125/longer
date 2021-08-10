@@ -40,4 +40,16 @@ class ToolsService extends BaseService
         $this->return['lists'] = $result;
         return $this->return;
     }
+
+    public function getWeather($form)
+    {
+        $result = $this->areaModel->getOne(['name' => $form['city_name']], ['forecast']);
+        if (!$result) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'Failed get weather info';
+            return $this->return;
+        }
+        $this->return['lists'] = $result;
+        return $this->return;
+    }
 }
