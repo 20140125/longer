@@ -28,8 +28,8 @@ class ToolsService extends BaseService
      */
     public function getAddress($form)
     {
-        $result = $this->aMapUtils->getAddress($form['ip_address']);
-        if ($result['code'] === Code::ERROR) {
+        $result = (array)$this->aMapUtils->getAddress($form['ip_address']);
+        if (!empty($result['code'])) {
             return $result;
         }
         if(gettype($result) === 'boolean') {
@@ -37,7 +37,7 @@ class ToolsService extends BaseService
             $this->return['message'] = 'Failed get Address';
             return $this->return;
         }
-        $this->return['list'] = $result;
+        $this->return['lists'] = $result;
         return $this->return;
     }
 }
