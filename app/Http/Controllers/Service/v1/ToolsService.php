@@ -41,6 +41,11 @@ class ToolsService extends BaseService
         return $this->return;
     }
 
+    /**
+     * todo:获取天气
+     * @param $form
+     * @return array
+     */
     public function getWeather($form)
     {
         $result = $this->areaModel->getOne(['name' => $form['city_name']], ['forecast']);

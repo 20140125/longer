@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Api\v1\SooGif;
+use App\Models\Api\v1\SooGifType;
 
 class ImageService extends BaseService
 {
@@ -20,5 +20,26 @@ class ImageService extends BaseService
             self::$instance = new static();
         }
         return self::$instance;
+    }
+
+    /**
+     * todo:获取图片列表
+     * @param $form
+     * @param int[] $pagination
+     * @param string[] $order
+     * @param string[] $columns
+     * @return array
+     */
+    public function getImageLists($form, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    {
+        $where = [];
+        if (!empty($form['id'])) {
+            $where[] = ['type', $form['id']];
+        }
+        if (!empty($form['name'])) {
+            $where[] = ['type',  SooGifType::getInstance()->getOne(['name' => $form['name']], ['id'])->id];
+        }
+        $this->return['lists'] = SooGif::getInstance()->getLists($where, $pagination, $order, $columns);
+        return $this->return;
     }
 }

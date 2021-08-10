@@ -27,4 +27,15 @@ class ToolsController extends BaseController
         $result = $this->toolService->getWeather($this->post);
         return ajaxReturn($result);
     }
+
+    /**
+     * todo:获取图片列表
+     * @return JsonResponse
+     */
+    public function getImageLists()
+    {
+        validatePost($this->post, ['name' => 'required|string']);
+        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'] || 1, 'limit' => $this->post['limit'] ?? 100]);
+        return ajaxReturn($result);
+    }
 }
