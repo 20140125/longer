@@ -26,6 +26,8 @@ class CheckLogin extends Base
         }
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] === Code::SUCCESS){
+            $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
+            $request->merge(array('unauthorized' => $_user));
             return $next($request);
         }
         setCode(Code::FORBIDDEN);

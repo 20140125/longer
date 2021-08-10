@@ -76,7 +76,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'file/save',  [App\Http\Controllers\Api\v1\FileController::class, 'createFile'])->name('createFile');
         /* todo:系统配置 */
         Route::match(['get','post'], 'config/index',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfigLists'])->name('getSystemConfigLists');
-        Route::match(['get','post'], 'config/detail',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfig'])->name('getSystemConfig');
         Route::match(['get','post'], 'config/save',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'saveSystemConfig'])->name('saveSystemConfig');
         Route::match(['get','post'], 'config/update',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'updateSystemConfig'])->name('updateSystemConfig');
         /* todo:站内通知 */
@@ -103,6 +102,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'database/optimize',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'optimizeTabled'])->name('optimizeTabled');
         Route::match(['get','post'], 'database/repair',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'repairTable'])->name('repairTable');
         Route::match(['get','post'], 'database/alter',  [App\Http\Controllers\Api\v1\DatabaseController::class, 'alterTable'])->name('alterTable');
+        /* todo:工具管理 */
+        Route::match(['get','post'], 'tools/getAddress',  [App\Http\Controllers\Api\v1\ToolsController::class, 'getAddress'])->name('getAddress');
     });
     /* todo:QQ授权登录 */
     Route::get('oauth/login/qq', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'QQ'])->name('qqLogin');

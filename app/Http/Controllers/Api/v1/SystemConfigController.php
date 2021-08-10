@@ -25,7 +25,7 @@ class SystemConfigController extends BaseController
      */
     public function getSystemConfig(Request $request)
     {
-        validatePost($this->post, ['name' => 'required|string', 'login' => 'required|string|in:before,after']);
+        validatePost($this->post, ['name' => 'required|string']);
         $_user = $request->get('unauthorized');
         if (!$_user) {
             $this->post['name'] = 'Oauth';

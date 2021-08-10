@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Service\v1;
 
+use App\Http\Controllers\Utils\AMap;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Api\v1\ApiCategory;
@@ -120,6 +121,10 @@ class BaseService
      */
     protected $apiLogModel;
     /**
+     * @var AMap $aMapUtils
+     */
+    protected $aMapUtils;
+    /**
      * @var $return
      */
     protected $return;
@@ -144,6 +149,7 @@ class BaseService
         $this->apiDocModel = ApiDoc::getInstance();
         $this->apiListsModel = ApiLists::getInstance();
         $this->apiLogModel = ApiLog::getInstance();
+        $this->aMapUtils = AMap::getInstance();
 
         /* todo:信息输出 */
         $this->return = array('code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => []);
@@ -196,7 +202,7 @@ class BaseService
      */
     public function setUnauthorized($_user, $_role)
     {
-        $adCode = in_array(getServerIp(), ['192.168.255.10', '127.0.0.1']) ? '440305' : getCityCode();
+        $adCode = request()->ip() === '127.0.0.1' ? '440305' : getCityCode();
         $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info', 'forecast']);
         $province = $this->areaModel->getOne(['id' => $area->parent_id], ['name']);
         $this->return['lists'] = array(
@@ -217,7 +223,8 @@ class BaseService
             'default_client_id' => config('app.client_id') ?? '',
             'weather' => json_decode($area->info, true),
             'forecast' => json_decode($area->forecast, true),
-            'email' => $_user->email ?? ''
+            'email' => $_user->email ?? '',
+            'ip_address' => request()->ip()
         );
         return $this->return;
     }

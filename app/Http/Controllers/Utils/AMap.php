@@ -100,7 +100,7 @@ class AMap extends Controller
      * @param string $address
      * @return int|mixed|null
      */
-    public function geoCode($city, string $address)
+    public function geoCode($city, string $address = '')
     {
         try {
             $geoUrl = 'geocode/geo';
@@ -137,7 +137,7 @@ class AMap extends Controller
      * @param string $city 可选值：citycode、adcode
      * @return int|mixed|null
      */
-    public function inputTips(string $keywords, string $location, string $city)
+    public function inputTips(string $keywords, string $location = '', string $city = '')
     {
         try {
             $assistantUrl = 'assistant/inputtips';

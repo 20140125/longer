@@ -16,6 +16,7 @@ use App\Http\Controllers\Service\v1\PushService;
 use App\Http\Controllers\Service\v1\RoleService;
 use App\Http\Controllers\Service\v1\SendEMailService;
 use App\Http\Controllers\Service\v1\SystemConfigService;
+use App\Http\Controllers\Service\v1\ToolsService;
 use App\Http\Controllers\Service\v1\UserCenterService;
 use App\Http\Controllers\Service\v1\UserService;
 use App\Http\Controllers\Service\v1\TimeLineService;
@@ -85,6 +86,8 @@ class BaseController extends Controller
     protected $databaseService;
 
     protected $interfaceCategoryService;
+
+    protected $toolService;
     /**
      * @var array|string|null $post
      */
@@ -109,6 +112,7 @@ class BaseController extends Controller
         $this->userCenterService = UserCenterService::getInstance();
         $this->databaseService = DatabaseService::getInstance();
         $this->interfaceCategoryService = InterfaceCategoryService::getInstance();
+        $this->toolService = ToolsService::getInstance();
 
         $this->post = $request->post();
         unset($this->post['token']);
