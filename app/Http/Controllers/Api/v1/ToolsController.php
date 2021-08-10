@@ -35,7 +35,7 @@ class ToolsController extends BaseController
     public function getImageLists()
     {
         validatePost($this->post, ['name' => 'required|string']);
-        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'] ?? 1, 'limit' => $this->post['limit'] ?? 100], ['order' => 'id', 'direction' => 'desc'], ['id as key' , 'href as src']);
+        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'] ?? 1, 'limit' => $this->post['limit'] ?? 100]);
         return ajaxReturn($result);
     }
 }
