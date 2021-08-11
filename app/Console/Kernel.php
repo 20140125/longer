@@ -18,7 +18,8 @@ class Kernel extends ConsoleKernel
         'SyncWebPush' => 'App\Console\Commands\SyncWebPush',
         'SyncCityWeather' => 'App\Console\Commands\SyncCityWeather',
         'SyncSpiderImage' => 'App\Console\Commands\SyncSpiderImage',
-        'SyncSpiderImageType' => 'App\Console\Commands\SyncSpiderImageType'
+        'SyncSpiderImageType' => 'App\Console\Commands\SyncSpiderImageType',
+        'SyncWebDriveService' => 'App\Console\Commands\SyncWebDriveService'
     ];
 
     /**
