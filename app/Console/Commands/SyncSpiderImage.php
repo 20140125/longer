@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Api\v1\SooGif;
+use App\Models\Api\v1\SooGifType;
+use Goutte\Client;
 use Illuminate\Console\Command;
 
 class SyncSpiderImage extends Command
@@ -11,7 +14,7 @@ class SyncSpiderImage extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image';
+    protected $signature = 'longer:sync-spider_image { startId=1 }';
 
     /**
      * The console command description.
@@ -19,7 +22,10 @@ class SyncSpiderImage extends Command
      * @var string
      */
     protected $description = 'synchronize image';
-
+    /**
+     * @var string $baseUrl
+     */
+    protected $baseUrl;
     /**
      * Create a new command instance.
      *
@@ -28,15 +34,47 @@ class SyncSpiderImage extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->baseUrl = 'https://www.fabiaoqing.com';
     }
 
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      */
     public function handle()
     {
-        return 0;
+        $this->spiderImage();
+    }
+
+    /**
+     * todo:爬取图片
+     */
+    protected function spiderImage()
+    {
+        global $currentId;
+        try {
+            $currentId = $this->argument('startId');
+            $result = SooGifType::getInstance()->getLists([['id' ,'>=', $currentId]]);
+            $bar = $this->output->createProgressBar(count($result));
+            $client = new Client();
+            foreach ($result as $item) {
+                $currentId = $item->id;
+                $this->info('current spider image url：' .$item->href);
+                $promise = $client->request('GET', $item->href);
+                sleep(1);
+                $promise->filter('.bqpp .bqppdiv1')->each(function($node) use ($client) {
+                    SooGif::getInstance()->saveOne(['href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')), 'name' => $node->text()]);
+                    $this->info('successfully save image： '. $node->filter('img')->attr('data-original'));
+                });
+                $this->info('successfully spider image url： ' .$item->href);
+                $bar->advance();
+                $this->info("\r\n");
+            }
+            $bar->finish();
+        } catch (\Exception $exception) {
+            $this->spiderImage();
+            $this->error($exception->getMessage());
+        }
     }
 }
