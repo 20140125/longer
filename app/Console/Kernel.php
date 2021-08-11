@@ -16,7 +16,9 @@ class Kernel extends ConsoleKernel
         'Test' => 'App\Console\Commands\Test',
         'SyncOauth' => 'App\Console\Commands\SyncOauth',
         'SyncWebPush' => 'App\Console\Commands\SyncWebPush',
-        'SyncCityWeather' => 'App\Console\Commands\SyncCityWeather'
+        'SyncCityWeather' => 'App\Console\Commands\SyncCityWeather',
+        'SyncSpiderImage' => 'App\Console\Commands\SyncSpiderImage',
+        'SyncSpiderImageType' => 'App\Console\Commands\SyncSpiderImageType'
     ];
 
     /**

@@ -6,9 +6,12 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-curl": "*",
         "ext-json": "*",
+        "ext-openssl": "*",
         "ext-redis": "*",
         "ext-zip": "*",
+        "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -16,14 +19,12 @@
         "laravel/tinker": "^2.5",
         "maatwebsite/excel": "^3.1",
         "php-curl-class/php-curl-class": "^9.1",
-        "php-webdriver/webdriver": "^1.9",
+        "php-webdriver/webdriver": "^1.11",
         "predis/predis": "^1.1",
         "workerman/gateway-worker": "^3.0.0",
         "workerman/globaldata": "^1.0",
         "workerman/mysql": "^1.0",
-        "workerman/phpsocket.io": "^1.1",
-        "ext-curl": "*",
-        "ext-openssl": "*"
+        "workerman/phpsocket.io": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
