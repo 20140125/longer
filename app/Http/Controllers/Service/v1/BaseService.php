@@ -209,7 +209,7 @@ class BaseService
         $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info', 'forecast']);
         $province = $this->areaModel->getOne(['id' => $area->parent_id], ['name']);
         $this->return['lists'] = array(
-            'auth' => json_decode((string)($_role->auth_api || ''), true),
+            'auth' => json_decode(($_role->auth_api ?? ''), true),
             'remember_token' => $_user->remember_token ?? '',
             'username' => $_user->username ?? '',
             'socket' => config('app.socket_url') ?? '',
