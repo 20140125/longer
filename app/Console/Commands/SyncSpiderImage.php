@@ -14,7 +14,7 @@ class SyncSpiderImage extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image';
+    protected $signature = 'longer:sync-spider_image { id=0 }';
 
     /**
      * The console command description.
@@ -26,8 +26,6 @@ class SyncSpiderImage extends Command
      * @var string $baseUrl
      */
     protected $baseUrl;
-
-    protected $startId;
     /**
      * Create a new command instance.
      *
@@ -37,7 +35,6 @@ class SyncSpiderImage extends Command
     {
         parent::__construct();
         $this->baseUrl = 'https://www.fabiaoqing.com';
-        $this->startId = 26;
     }
 
     /**
@@ -47,22 +44,23 @@ class SyncSpiderImage extends Command
      */
     public function handle()
     {
-        $this->spiderImage();
+        $startId = $this->argument('id');
+        $this->spiderImage($startId);
     }
 
     /**
      * todo:爬取图片
+     * @param $startId
      */
-    protected function spiderImage()
+    protected function spiderImage($startId)
     {
         global $currentId;
         try {
-            $result = SooGifType::getInstance()->getLists([['id' ,'>=', $this->startId]]);
+            $result = SooGifType::getInstance()->getLists([['id' ,'>=', $startId]]);
             $bar = $this->output->createProgressBar(count($result));
             $client = new Client();
             foreach ($result as $item) {
                 $currentId = $item->id;
-                $this->startId = $currentId;
                 $this->info('current spider image url：' .$item->href);
                 $promise = $client->request('GET', $item->href);
                 sleep(1);
@@ -84,8 +82,7 @@ class SyncSpiderImage extends Command
             $bar->finish();
         } catch (\Exception $exception) {
             $this->error($exception->getMessage().' currentId：'.$currentId);
-            $this->startId = $currentId;
-            $this->spiderImage();
+            $this->spiderImage($currentId);
         }
     }
 }

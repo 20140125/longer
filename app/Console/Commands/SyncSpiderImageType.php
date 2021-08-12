@@ -34,17 +34,12 @@ class SyncSpiderImageType extends Command
      * @var string $baseUrl
      */
     protected $baseUrl;
-    /**
-     * @var array $sensitiveKeywords
-     */
-    protected $sensitiveKeywords;
 
     public function __construct()
     {
         parent::__construct();
         $this->startPage = 1;
         $this->baseUrl = 'https://www.fabiaoqing.com';
-        $this->sensitiveKeywords = ['渣男', '渣女', '萌娃', '权律二'];
     }
 
     /**
