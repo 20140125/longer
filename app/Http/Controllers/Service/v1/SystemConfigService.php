@@ -57,14 +57,15 @@ class SystemConfigService extends BaseService
     }
 
     /**
+     * todo:数据保存
      * @param $form
      * @return array
      */
     public function saveSystemConfig($form)
     {
         foreach ($form['children'] as &$item) {
-            $item['created_at'] = date('Y-m-d H:i:s', time());
-            $item['updated_at'] = date('Y-m-d H:i:s', time());
+            $item['created_at'] = !empty($item['created_at']) ? strtotime($item['created_at']) : time();
+            $item['updated_at'] = !empty($item['updated_at']) ? strtotime($item['updated_at']) : time();
         }
         $form['created_at'] = time();
         $form['updated_at'] = time();
@@ -94,11 +95,12 @@ class SystemConfigService extends BaseService
     public function updateSystemConfig($form)
     {
         foreach ($form['children'] as $key => &$item) {
-            $item['updated_at'] = date('Y-m-d H:i:s', time());
+            $item['created_at'] = !empty($item['created_at']) ? strtotime($item['created_at']) : time();
+            $item['updated_at'] = !empty($item['updated_at']) ? strtotime($item['updated_at']) : time();
             $item['id'] = $item['id'] ?? $form['id'] * 1000 + $key + 1;
         }
         $form['children'] = json_encode($form['children'], JSON_UNESCAPED_UNICODE);
-        $form['created_at'] = strtotime($form['created_at']);
+        $form['created_at'] = !empty($form['created_at']) ? strtotime($form['created_at']) : time();
         $form['updated_at'] = time();
         $result = $this->systemConfigModel->updateOne(['id' => $form['id']], $form);
         if (empty($result)) {
