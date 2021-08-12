@@ -71,11 +71,7 @@ class BaseService extends Controller
      */
     public function getImageConfiguration()
     {
-        $this->systemConfig = Cache::get('mini_program_configuration');
-        if (!$this->systemConfig ) {
-            $this->systemConfig  = $this->systemConfigModel->getOne(['name' => 'ImageBed'], ['children'])->children;
-            Cache::put('mini_program_configuration', $this->systemConfig, Carbon::now()->addHour());
-        }
+        $this->systemConfig  = $this->systemConfigModel->getOne(['name' => 'ImageBed'], ['children'])->children;
         return $this->systemConfig ;
     }
 
