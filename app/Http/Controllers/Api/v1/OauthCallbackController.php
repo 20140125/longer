@@ -279,7 +279,7 @@ class OauthCallbackController extends Controller
             }
             unset($data['username']);
             unset($data['avatar_url']);
-            $data['created_at'] = strtotime($oauth['created_at']);
+            $data['created_at'] = strtotime($oauth->created_at);
             $oauthRes =  $this->oauthModel->updateOne($where, $data);
             if (!empty($oauthRes)) {
                 // 同步用户数据
