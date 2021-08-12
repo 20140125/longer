@@ -52,7 +52,6 @@ class SyncWebDriveService extends Command
      */
     protected function getImageLists($url)
     {
-        global $currenURL;
         try {
             $driver = ChromeDriver::start();
             $driver->manage()->window()->maximize();
@@ -63,11 +62,8 @@ class SyncWebDriveService extends Command
                 $driver->executeScript($js);
             }
             $this->spiderImage($driver);
-            $currenURL = $driver->getCurrentURL();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
-            putenv('WEBDRIVER_CHROME_DRIVER='.public_path('chromedriver.exe'));
-            $this->getImageLists($currenURL);
         }
     }
     /**
