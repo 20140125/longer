@@ -14,7 +14,8 @@ class SyncWebDriveService extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-web_drive';
+    /* https://www.fabiaoqing.com/tag/detail/id/?.html ? ID变量  */
+    protected $signature = 'longer:sync-web_drive {url=https://www.fabiaoqing.com/biaoqing/lists/page/1.html}';
 
     /**
      * The console command description.
@@ -49,7 +50,7 @@ class SyncWebDriveService extends Command
         try {
             $driver = ChromeDriver::start();
             $driver->manage()->window()->maximize();
-            $driver->get('https://www.fabiaoqing.com/biaoqing/lists/page/1.html');
+            $driver->get($this->argument('url'));
             foreach (range(1, 9, 2) as $k) {
                 sleep(1);
                 $js = "document.documentElement.scrollTop = document.documentElement.scrollHeight * {$k} / 10";
@@ -66,6 +67,7 @@ class SyncWebDriveService extends Command
      */
     protected function spiderImage(ChromeDriver $driver)
     {
+        $this->info($driver->getCurrentURL());
         $source = $driver->findElements(WebDriverBy::cssSelector('.segment .tagbqppdiv'));
         foreach ($source as $item) {
             $arr = [
@@ -73,7 +75,7 @@ class SyncWebDriveService extends Command
                 'name' => $item->findElement(WebDriverBy::cssSelector('.image'))->getAttribute('alt')
             ];
             if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $arr['href'])])) {
-                $this->warn('image is already exists '. str_replace('http', 'https', $arr['href']));
+                $this->warn('image is already exists: '. str_replace('http', 'https', $arr['href']));
             } else {
                 SooGif::getInstance()->saveOne(['href' => str_replace('http', 'https', $arr['href']), 'name' => mb_substr($arr['name'], 0, 50)]);
                 $this->info('successfully save image： '. str_replace('http', 'https', $arr['href']));
@@ -90,7 +92,7 @@ class SyncWebDriveService extends Command
         foreach($pageButton as $item) {
             if ($item->getText() === '下一页') {
                 $item->click();
-                sleep(4);
+                sleep(5);
                 $this->spiderImage($driver);
             }
         }

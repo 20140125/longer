@@ -32,10 +32,9 @@ class ImageService extends BaseService
         $where = [];
         foreach ($systemConfig as $item) {
             if ($item['name'] === 'NOT_EQUAL_TO_TYPE') {
-                $where[] = ['id', '<>', (int)$item['value']];
+                $where[] = ['id', '=', (int)$item['value']];
             }
         }
-        $where[] = ['pid', '=', $form['parent_id'] ?? 0];
         $this->return['lists'] = $this->sooGifTypeModel->getLists($where);
         return $this->return;
     }
