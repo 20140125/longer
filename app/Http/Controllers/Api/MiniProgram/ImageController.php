@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\MiniProgram;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class ImageController extends BaseController
 {
@@ -47,6 +48,7 @@ class ImageController extends BaseController
     {
         validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string', 'name' => 'required|string']);
         $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('sensitiveKeywords'));
+        Log::error(json_encode($sensitiveKeywords, 256));
         if (in_array($this->post['name'], $sensitiveKeywords)) {
             return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => ['data' => [], 'total' => 0]]);
         }
