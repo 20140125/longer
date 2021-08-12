@@ -81,7 +81,7 @@ if (!function_exists('getCityCode')) {
     {
         try {
             $address = (array)(Amap::getInstance()->getAddress(request()->getClientIp()));
-            return $address['adcode'] ?? '110000';
+            return $address['adcode'] ?? 110000;
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
         }
