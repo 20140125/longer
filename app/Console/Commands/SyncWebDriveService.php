@@ -42,23 +42,32 @@ class SyncWebDriveService extends Command
     public function handle()
     {
         putenv('WEBDRIVER_CHROME_DRIVER='.public_path('chromedriver.exe'));
-        $this->getImageLists();
+        $url = $this->argument('url');
+        $this->getImageLists($url);
     }
 
-    protected function getImageLists()
+    /**
+     * todo:获取图片
+     * @param $url
+     */
+    protected function getImageLists($url)
     {
+        global $currenURL;
         try {
             $driver = ChromeDriver::start();
             $driver->manage()->window()->maximize();
-            $driver->get($this->argument('url'));
+            $driver->get($url);
             foreach (range(1, 9, 2) as $k) {
                 sleep(1);
                 $js = "document.documentElement.scrollTop = document.documentElement.scrollHeight * {$k} / 10";
                 $driver->executeScript($js);
             }
             $this->spiderImage($driver);
+            $currenURL = $driver->getCurrentURL();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
+            putenv('WEBDRIVER_CHROME_DRIVER='.public_path('chromedriver.exe'));
+            $this->getImageLists($currenURL);
         }
     }
     /**
