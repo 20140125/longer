@@ -46,7 +46,8 @@ class ImageController extends BaseController
     public function getHotImageLists()
     {
         validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string', 'name' => 'required|string']);
-        if (in_array($this->post['name'], ['老公','老婆','小孩','萌娃','渣男','渣女','亲吻', '亲亲','脱衣服','抱抱','宝宝'])) {
+        $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('sensitiveKeywords'));
+        if (in_array($this->post['name'], $sensitiveKeywords)) {
             return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => ['data' => [], 'total' => 0]]);
         }
         $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);

@@ -95,7 +95,6 @@ class SystemConfigService extends BaseService
     public function updateSystemConfig($form)
     {
         foreach ($form['children'] as $key => &$item) {
-            $item['created_at'] = date('Y-m-d H:i:s', time());
             $item['updated_at'] = date('Y-m-d H:i:s', time());
             $item['id'] = $item['id'] ?? $form['id'] * 1000 + $key + 1;
         }

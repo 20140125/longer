@@ -80,17 +80,29 @@ class BaseService extends Controller
     }
 
     /**
+     * todo:获取配置
+     * @param $key
+     * @return mixed|string
+     */
+    public function getSystemConfig($key)
+    {
+        $value = '';
+        $systemConfig = json_decode($this->systemConfig, true);
+        foreach ($systemConfig as $item) {
+            if ($item['name'] === $key) {
+                $value = $item['value'];
+            }
+        }
+        return $value;
+    }
+
+    /**
      * todo:获取关键词
      * @return string[]
      */
     public function getHotKeyWords()
     {
-        $systemConfig = json_decode($this->systemConfig, true);
-        foreach ($systemConfig as $item) {
-            if ($item['name'] === 'hotKeyWord') {
-                $this->hotKeyWords = $item['value'];
-            }
-        }
+        $this->hotKeyWords = $this->getSystemConfig('hotKeyWord');
         $this->return['lists'] = explode(',', $this->hotKeyWords);
         return $this->return;
     }
