@@ -25,6 +25,14 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get','post'], 'mail/send',  [App\Http\Controllers\Api\v1\LoginController::class, 'sendMail'])->name('sendMail');
         /* todo:授权登录信息 */
         Route::match(['get','post'], 'oauth/config',  [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfig'])->name('getSystemConfig');
+        /* todo:小程序 */
+        Route::post( 'mini_program/login', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'login'])->name('wxLogin');
+        Route::post( 'mini_program/openid', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'getOpenId'])->name('getOpenId');
+        Route::post( 'image/type', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageType'])->name('getImageType');
+        Route::post( 'image/lists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageLists'])->name('getImageLists');
+        Route::post( 'image/newLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getNewImageLists'])->name('getNewImageLists');
+        Route::post( 'image/hotLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotImageLists'])->name('getHotImageLists');
+        Route::post( 'image/hotKeyWord', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotKeyWords'])->name('getHotKeyWords');
     });
     /* todo:实时鉴权 */
     Route::middleware('checkAuth')->group(function () {
@@ -126,13 +134,4 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     /* todo:osChina授权登录 */
     Route::get('oauth/login/osChina', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'osChina'])->name('osChinaLogin');
     Route::get('callback/osChina', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'osChina'])->name('osChinaCallback');
-
-    /* todo:小程序 */
-    Route::post( 'mini_program/login', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'login'])->name('wxLogin');
-    Route::post( 'mini_program/openid', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'getOpenId'])->name('getOpenId');
-    Route::post( 'image/type', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageType'])->name('getImageType');
-    Route::post( 'image/lists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageLists'])->name('getImageLists');
-    Route::post( 'image/newLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getNewImageLists'])->name('getNewImageLists');
-    Route::post( 'image/hotLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotImageLists'])->name('getHotImageLists');
-    Route::post( 'image/hotKeyWord', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotKeyWords'])->name('getHotKeyWords');
 });

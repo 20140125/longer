@@ -9,10 +9,12 @@ use App\Http\Controllers\Oauth\GithubController;
 use App\Http\Controllers\Oauth\OsChinaController;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiBoController;
+use App\Http\Controllers\Service\v1\BaseService;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Mail\Register;
 use App\Models\Api\v1\Oauth;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -67,7 +69,7 @@ class OauthCallbackController extends Controller
      * TODO：QQ授权登录回调地址
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
-     * @throws \Exception
+     * @throws Exception
      */
     public function QQ(Request $request)
     {
@@ -100,7 +102,7 @@ class OauthCallbackController extends Controller
      * TODO：gitHub授权回调
      * @param Request $request （code，state）
      * @return RedirectResponse|Redirector
-     * @throws \Exception
+     * @throws Exception
      */
     public function gitHub(Request $request)
     {
@@ -133,7 +135,7 @@ class OauthCallbackController extends Controller
      * TODO：Weibo授权回调
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
-     * @throws \Exception
+     * @throws Exception
      */
     public function gitee(Request $request)
     {
@@ -166,7 +168,7 @@ class OauthCallbackController extends Controller
      * TODO：Weibo授权回调
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
-     * @throws \Exception
+     * @throws Exception
      */
     public function weibo(Request $request)
     {
@@ -231,7 +233,7 @@ class OauthCallbackController extends Controller
      *  TODO：OsChina授权回调
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
-     * @throws \Exception
+     * @throws Exception
      */
     public function osChina(Request $request)
     {
@@ -271,7 +273,9 @@ class OauthCallbackController extends Controller
         $data['created_at'] = time();
         $data['updated_at'] = time();
         $oauth = $this->oauthModel->getOne($where);
-        // 授权用户存在直接跳转到欢迎页
+        /* 换成用户登录标识（脚本缓存有时间延时） */
+        BaseService::getInstance()->setVerifyCode($data['remember_token'], $data['remember_token'], config('app.app_refresh_login_time'));
+        /* 授权用户存在直接跳转到欢迎页 */
         if (!empty($oauth)) {
             if (!empty($this->users)) {
                 $data['uid'] = $this->users->id;
@@ -282,7 +286,7 @@ class OauthCallbackController extends Controller
             $data['created_at'] = strtotime($oauth->created_at);
             $oauthRes =  $this->oauthModel->updateOne($where, $data);
             if (!empty($oauthRes)) {
-                // 同步用户数据
+                /*  同步用户数据 */
                 Artisan::call("longer:sync-oauth {$data['remember_token']}");
                 return strlen($this->state) == 32 ? redirect('/admin/home/index/'.$data['remember_token'])->send() : redirect('/admin/oauth/index')->send();
             }

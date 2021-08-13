@@ -86,7 +86,7 @@ class SyncWebDriveService extends Command
                 $this->info('successfully save image： '. str_replace('http', 'https', $arr['href']));
             }
         }
-        sleep(1);
+        sleep(5);
         /* todo:页码切换 */
         $this->currentPageChange($driver);
     }

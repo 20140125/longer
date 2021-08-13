@@ -82,7 +82,6 @@ class SyncOauth extends Command
                 $this->error('Remember token is invalid');
                 return false;
             }
-            BaseService::getInstance()->setVerifyCode($this->argument('remember_token'), $this->argument('remember_token'), config('app.app_refresh_login_time'));
             $users = Users::getInstance()->getOne(['id' => $oauth->uid]);
             if ($users) {
                 /* todo：更新用户信息 */
@@ -148,6 +147,6 @@ class SyncOauth extends Command
     {
         $arr = ['u_name' => $oauth->username, 'token' => $oauth->remember_token, 'uid' => $oauth->uid, 'notice_status' => 1, 'user_status' => 1];
         $id = UserCenter::getInstance()->saveOne($arr);
-        $id ? $this->info('successfully save user center '. $oauth->username) : $this->error('Failed save user center ' . $users->username);
+        $id ? $this->info('successfully save user center '. $oauth->username) : $this->error('Failed save user center ' . $oauth->username);
     }
 }
