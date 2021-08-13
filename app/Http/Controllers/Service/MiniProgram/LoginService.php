@@ -73,7 +73,7 @@ class LoginService extends BaseService
                     \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($result->remember_token, $result->remember_token, config('app.app_refresh_login_time'));
                     Artisan::call("longer:sync-oauth $result->remember_token");
                 }
-                $this->return['lists'] = $oauth;
+                $this->return['lists'] = $result;
                 return $this->return;
             }
             if (!$this->oauthModel->saveOne($oauth)) {
