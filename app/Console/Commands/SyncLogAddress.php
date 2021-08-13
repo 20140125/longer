@@ -54,8 +54,10 @@ class SyncLogAddress extends Command
                 if (in_array($item->ip_address, ['127.0.0.1', '192.168.255.10'])) {
                     $item->local = '中华人民共和国';
                 } else {
-                    $city = (array)AMap::getInstance()->getAddress($item->ip_address);
-                    $item->local = $city['province'].','.$city['city'];
+                    $res = (array)AMap::getInstance()->getAddress($item->ip_address);
+                    $provice = gettype($res['province']) === 'string' ? $res['province'] : '中华人民共和国';
+                    $city = gettype($res['city']) === 'string' ? $res['city'] : '';
+                    $item->local = $provice.','.$city;
                 }
                 if (!empty(Log::getInstance()->updateOne(['id' => $item->id], ['local' => $item->local]))) {
                     $this->info('Successfully updated location：'.$item->local);
