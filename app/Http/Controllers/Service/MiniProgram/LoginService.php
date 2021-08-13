@@ -66,7 +66,7 @@ class LoginService extends BaseService
             $where[] = array('oauth_type', '=', 'weixin');
             $result = $this->oauthModel->getOne($where);
             if (!empty($result)) {
-                $result->remember_token =  encrypt(md5($form['nickName']).time());
+                $result->remember_token =  encrypt($result->username.time());
                 $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' =>  $result->remember_token]);
                 /* 换成用户登录标识（脚本缓存有时间延时） */
                 \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($result->remember_token, $result->remember_token, config('app.app_refresh_login_time'));
