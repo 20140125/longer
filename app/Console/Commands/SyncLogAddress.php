@@ -49,10 +49,10 @@ class SyncLogAddress extends Command
     {
         try {
             $lists = Log::getInstance()->getLists(['day' => date('Ymd', time())], ['page' => 1, 'limit' => 10], true);
-            $bar = $this->output->createProgressBar($lists['total']);
-            foreach ($lists['data'] as &$item) {
+            $bar = $this->output->createProgressBar(count($lists));
+            foreach ($lists as &$item) {
                 if (in_array($item->ip_address, ['127.0.0.1', '192.168.255.10'])) {
-                    $item->local = 'localhost';
+                    $item->local = '中华人民共和国';
                 } else {
                     $city = (array)AMap::getInstance()->getAddress($item->ip_address);
                     $item->local = $city['province'].','.$city['city'];
