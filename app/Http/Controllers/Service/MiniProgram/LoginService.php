@@ -65,12 +65,13 @@ class LoginService extends BaseService
             $where[] = array('openid', '=', $oauth['openid']);
             $where[] = array('oauth_type', '=', 'weixin');
             $result = $this->oauthModel->getOne($where);
-            /* 换成用户登录标识（脚本缓存有时间延时） */
-            \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
             if (!empty($result)) {
                 if ($result->updated_at + 3600 * 24 > time()) {
                     $result->remember_token = encrypt($result->remember_token);
                     $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' =>  $result->remember_token]);
+                    /* 换成用户登录标识（脚本缓存有时间延时） */
+                    \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($result->remember_token, $result->remember_token, config('app.app_refresh_login_time'));
+                    Artisan::call("longer:sync-oauth $result->remember_token");
                 }
                 $this->return['lists'] = $oauth;
                 return $this->return;
@@ -80,6 +81,8 @@ class LoginService extends BaseService
                 $this->return['message'] = 'Failed login system';
                 return $this->return;
             }
+            /* 换成用户登录标识（脚本缓存有时间延时） */
+            \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
             Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
             $this->return['lists'] = $oauth;
             return $this->return;
