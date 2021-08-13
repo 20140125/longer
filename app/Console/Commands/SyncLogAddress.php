@@ -48,7 +48,7 @@ class SyncLogAddress extends Command
     protected function syncLogAddress()
     {
         try {
-            $lists = Log::getInstance()->getLists(['day' => date('Ymd', time())], ['page' => 1, 'limit' => 10000]);
+            $lists = Log::getInstance()->getLists(['day' => date('Ymd', time())], ['page' => 1, 'limit' => 20]);
             $bar = $this->output->createProgressBar($lists['total']);
             foreach ($lists['data'] as &$item) {
                 if (in_array($item->ip_address, ['127.0.0.1', '192.168.255.10'])) {
