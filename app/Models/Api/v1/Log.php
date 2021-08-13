@@ -5,6 +5,7 @@ namespace App\Models\Api\v1;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Log extends Base
@@ -81,12 +82,16 @@ class Log extends Base
      * todo:获取数据列表
      * @param $where
      * @param array|int[] $pagination
+     * @param bool $getAll
      * @param array|string[] $order
      * @param array|string[] $column
-     * @return array
+     * @return Collection | array
      */
-    public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $column = ['*'])
+    public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], bool $getAll = false, array $order = ['order' => 'id', 'direction' => 'desc'], array $column = ['*'])
     {
+        if ($getAll) {
+            return DB::table($this->table)->where($where)->whereRaw('local is null')->get();
+        }
         $result['data'] = DB::table($this->table)->where($where)
             ->limit($pagination['limit'])
             ->offset($pagination['limit'] * ($pagination['page'] - 1))
