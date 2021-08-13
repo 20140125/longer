@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Service\MiniProgram;
 
-use App\Http\Controllers\Utils\Code;
 
 class ImageService extends BaseService
 {
@@ -20,25 +19,6 @@ class ImageService extends BaseService
         }
         return self::$instance;
     }
-
-    /**
-     * todo:获取图片类型
-     * @param $form
-     * @return array
-     */
-    public function getImageTypeLists($form)
-    {
-        $systemConfig = json_decode($this->systemConfig, true);
-        $where = [];
-        foreach ($systemConfig as $item) {
-            if ($item['name'] === 'NOT_EQUAL_TO_TYPE') {
-                $where[] = ['id', '=', (int)$item['value']];
-            }
-        }
-        $this->return['lists'] = $this->sooGifTypeModel->getLists($where);
-        return $this->return;
-    }
-
     /**
      * todo:获取图片列表
      * @param $form

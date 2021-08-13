@@ -28,7 +28,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         /* todo:小程序 */
         Route::post( 'mini_program/login', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'login'])->name('wxLogin');
         Route::post( 'mini_program/openid', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'getOpenId'])->name('getOpenId');
-        Route::post( 'image/type', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageType'])->name('getImageType');
         Route::post( 'image/lists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageLists'])->name('getImageLists');
         Route::post( 'image/newLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getNewImageLists'])->name('getNewImageLists');
         Route::post( 'image/hotLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotImageLists'])->name('getHotImageLists');

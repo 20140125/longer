@@ -3,20 +3,25 @@
 namespace App\Http\Controllers\Api\MiniProgram;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class ImageController extends BaseController
 {
     /**
-     * todo：获取图片列表
-     * @return JsonResponse
+     * todo:构造方法覆盖重写
+     * @param Request $request
      */
-    public function getImageType()
+    public function __construct(Request $request)
     {
-        validatePost($this->post, ['parent_id'=>'required|integer']);
-        $result = $this->imageService->getImageTypeLists($this->post);
-        return ajaxReturn($result);
-    }
+        parent::__construct($request);
+        if (empty($this->post['token'])) {
+            if (!empty($this->post['page'])) {
+                if ($this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
+                    return ajaxReturn(['code' => 200001, 'message' => 'Please login']);
+                }
+            }
+        }
+     }
 
     /**
      * todo:获取图片列表
