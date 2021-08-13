@@ -66,7 +66,7 @@ class LoginService extends BaseService
             $where[] = array('oauth_type', '=', 'weixin');
             $result = $this->oauthModel->getOne($where);
             /* 换成用户登录标识（脚本缓存有时间延时） */
-            BaseService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
+            \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
             if (!empty($result)) {
                 if ($result->updated_at + 3600 * 24 > time()) {
                     $result->remember_token = encrypt($result->remember_token);
