@@ -57,10 +57,10 @@ class SyncLogAddress extends Command
                     $city = (array)AMap::getInstance()->getAddress($item->ip_address);
                     $item->local = $city['province'].','.$city['city'];
                 }
-                if (Log::getInstance()->updateOne(['id' => $item->id], ['local' => $item->local])) {
-                    $this->info('Successfully updated location：【'.json_encode($item, 256).'】');
+                if (!empty(Log::getInstance()->updateOne(['id' => $item->id], ['local' => $item->local]))) {
+                    $this->info('Successfully updated location：'.$item->local);
                 } else {
-                    $this->info('Failed updated location：【'.json_encode($item, 256).'】');
+                    $this->info('Failed updated location：'.$item->local);
                 }
                 usleep(rand(500000, 700000));
                 $bar->advance();
