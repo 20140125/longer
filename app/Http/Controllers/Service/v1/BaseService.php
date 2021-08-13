@@ -190,7 +190,7 @@ class BaseService
             return $this->return;
         }
         $this->return['message'] = 'Get verify code successfully';
-        $this->return['lists'] = array('key' => $key, 'value' => $value);
+        $this->return['lists'] = array('key' => $key, 'value' => strtoupper($value));
         return $this->return;
     }
 
