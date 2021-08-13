@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Service\MiniProgram;
 
-use App\Http\Controllers\Service\v1\BaseService;
 use App\Http\Controllers\Utils\Code;
 use Curl\Curl;
 use Illuminate\Support\Facades\Artisan;
