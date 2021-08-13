@@ -66,7 +66,7 @@ class SyncSpiderImage extends Command
                 sleep(1);
                 $promise->filter('.bqpp .bqppdiv1')->each(function($node) use ($client) {
                     if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $node->filter('img')->attr('data-original'))])) {
-                        $this->warn('image is already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')));
+                        $this->warn('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')));
                     } else {
                         SooGif::getInstance()->saveOne([
                             'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),

@@ -80,7 +80,7 @@ class SyncWebDriveService extends Command
                 'name' => $item->findElement(WebDriverBy::cssSelector('.image'))->getAttribute('alt')
             ];
             if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $arr['href'])])) {
-                $this->warn('image is already exists: '. str_replace('http', 'https', $arr['href']));
+                $this->warn('image already exists: '. str_replace('http', 'https', $arr['href']));
             } else {
                 SooGif::getInstance()->saveOne(['href' => str_replace('http', 'https', $arr['href']), 'name' => mb_substr($arr['name'], 0, 50)]);
                 $this->info('successfully save image： '. str_replace('http', 'https', $arr['href']));

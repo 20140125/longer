@@ -69,10 +69,10 @@ class SyncSpiderImageType extends Command
                 $hotPromise = $client->request('GET', $url);
                 $hotPromise->filter('.bqba')->each(function ($node) use ($client) {
                     if (SooGifType::getInstance()->getOne(['href' => $this->baseUrl.$node->attr('href')])) {
-                        $this->warn('link address is already exists '. $this->baseUrl.$node->attr('href'));
+                        $this->warn('link address already exists '. $this->baseUrl.$node->attr('href'));
                     } else {
                         SooGifType::getInstance()->saveOne(['href' => $this->baseUrl.$node->attr('href'), 'name' => $node->filter('.header')->text() ]);
-                        $this->info('successfully add link address： '. $this->baseUrl.$node->attr('href'));
+                        $this->info('successfully save link address： '. $this->baseUrl.$node->attr('href'));
                     }
                 });
                 $this->info('successfully spider image url： ' .$url);
