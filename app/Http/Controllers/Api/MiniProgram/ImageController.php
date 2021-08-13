@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\MiniProgram;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ImageController extends BaseController
 {
@@ -17,6 +18,7 @@ class ImageController extends BaseController
         if (empty($this->post['token'])) {
             if (!empty($this->post['page'])) {
                 if ($this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
+                    Log::error($this->imageService->getSystemConfig('NoLoginMaxPageNum'));
                     return ajaxReturn(['code' => 200001, 'message' => 'Please login']);
                 }
             }
