@@ -41,7 +41,7 @@ class SyncWebDriveService extends Command
      */
     public function handle()
     {
-        putenv('WEBDRIVER_CHROME_DRIVER='.public_path('chromedriver.exe'));
+        putenv('WEBDRIVER_CHROME_DRIVER=D://python/chromedriver.exe');
         $url = $this->argument('url');
         $this->getImageLists($url);
     }
