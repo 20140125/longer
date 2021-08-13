@@ -68,7 +68,7 @@ class SyncLogAddress extends Command
             $this->info('Successfully synchronized location');
             $bar->finish();
         } catch (\Exception $exception) {
-            $this->error($exception->getMessage());
+            $this->error($exception);
         }
     }
 }
