@@ -38,9 +38,9 @@ class SyncImageTypeProcess implements ShouldQueue
     public function handle()
     {
         try {
-            Artisan::call("longer:sync-spider_image_type {$this->post['keywords']}}");
+            Artisan::call("longer:sync-spider_image_type {$this->post['keywords']} {$this->post['uuid']}}");
         } catch (\Exception $exception) {
-            WebPush($exception->getMessage(), 'longer7f00000108fc00000001', 'command');
+            WebPush($exception->getMessage(), $this->post['uuid'], 'command');
             Log::error(json_encode(['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()]));
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ToolsController extends BaseController
 {
@@ -32,10 +33,11 @@ class ToolsController extends BaseController
      * todo:获取图片列表
      * @return JsonResponse
      */
-    public function syncImageType()
+    public function syncImageType(Request $request)
     {
         validatePost($this->post, ['keywords' => 'required|string']);
-        $result = $this->toolService->syncImageType($this->post);
+        $_user = $request->get('unauthorized');
+        $result = $this->toolService->syncImageType(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
     }
 }

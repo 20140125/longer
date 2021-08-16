@@ -278,6 +278,7 @@ class Events
             $users[$key]['unread_count'] = 0;
             $users[$key]['type'] = 'login';
             $users[$key]['room_id'] = '1200';
+            $users[$key]['online'] = false;
             foreach ($redisUser as $redis) {
                 $users[$key]['online'] = $redis === $users[$key]['uuid'];
             }
