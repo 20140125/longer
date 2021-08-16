@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Api\v1\SooGifType;
 use Goutte\Client;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class SyncSpiderImageType extends Command
 {
@@ -68,6 +67,7 @@ class SyncSpiderImageType extends Command
                 $url = $this->baseUrl."/bqb/lists/type/$type/page/$item.html";
                 $this->info('current spider image url：' .$url);
                 webPush('current spider image url：' .$url, $this->argument('uuid'), 'command');
+                webPush($type,$this->argument('uuid'), 'command');
                 sleep(1);
                 $hotPromise = $client->request('GET', $url);
                 $hotPromise->filter('.bqba')->each(function ($node) use ($client) {
@@ -84,6 +84,7 @@ class SyncSpiderImageType extends Command
                 webPush('successfully spider image url： ' .$url, $this->argument('uuid'), 'command');
                 $bar->advance();
                 $this->info("\r\n");
+                sleep(1);
             }
             $bar->finish();
         } catch (\Exception $exception) {
