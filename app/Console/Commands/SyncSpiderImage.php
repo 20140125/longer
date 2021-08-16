@@ -14,7 +14,7 @@ class SyncSpiderImage extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image_id { id=0 }';
+    protected $signature = 'longer:sync-spider_image_id {id=0} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -62,20 +62,24 @@ class SyncSpiderImage extends Command
             foreach ($result as $item) {
                 $currentId = $item->id;
                 $this->info('current spider image url：' .$item->href);
+                WebPush('current spider image url：' .$item->href, $this->argument('uuid'), 'command');
                 $promise = $client->request('GET', $item->href);
                 sleep(1);
                 $promise->filter('.bqpp .bqppdiv1')->each(function($node) use ($client) {
                     if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $node->filter('img')->attr('data-original'))])) {
                         $this->warn('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')));
+                        WebPush('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')), $this->argument('uuid'), 'command');
                     } else {
                         SooGif::getInstance()->saveOne([
                             'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),
                             'name' => mb_substr($node->text(), 0, 50)
                         ]);
                         $this->info('successfully save image： '. $node->filter('img')->attr('data-original'));
+                        WebPush('successfully save image： '. $node->filter('img')->attr('data-original'), $this->argument('uuid'), 'command');
                     }
                 });
                 $this->info('successfully spider image url： ' .$item->href);
+                WebPush('successfully spider image url： ' .$item->href, $this->argument('uuid'), 'command');
                 $bar->advance();
                 $this->info("\r\n");
             }

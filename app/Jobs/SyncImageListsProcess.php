@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -40,7 +39,7 @@ class SyncImageListsProcess implements ShouldQueue
     {
         try {
             is_numeric($this->post['keywords']) ? Artisan::call("longer:sync-spider_image_id {$this->post['keywords']} {$this->post['uuid']}") :
-                Artisan::call("longer:sync-spider_image_href {$this->post['keywords']} {$this->post['uuid']}");
+                Artisan::call("longer:sync-spider_image_url {$this->post['keywords']} {$this->post['uuid']}");
         } catch (\Exception $exception) {
             WebPush($exception->getMessage(), $this->post['uuid'], 'command');
             Log::error(json_encode(['code' => Code::SERVER_ERROR, 'message' => $exception]));

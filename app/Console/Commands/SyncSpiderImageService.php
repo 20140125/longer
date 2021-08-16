@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Api\v1\SooGif;
-use App\Models\Api\v1\SooGifType;
 use Goutte\Client;
 use Illuminate\Console\Command;
 
@@ -14,7 +13,7 @@ class SyncSpiderImageService extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image_url { href=https://www.fabiaoqing.com/bqb/detail/id/54557.html }';
+    protected $signature = 'longer:sync-spider_image_url {href=https://www.fabiaoqing.com/bqb/detail/id/54557.html} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -57,20 +56,24 @@ class SyncSpiderImageService extends Command
         try {
             $client = new Client();
             $this->info('current spider image url：' .$href);
+            WebPush('current spider image url：' .$href, $this->argument('uuid'), 'command');
             $promise = $client->request('GET', $href);
             sleep(1);
             $promise->filter('.bqpp .bqppdiv1')->each(function($node) use ($client) {
                 if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $node->filter('img')->attr('data-original'))])) {
                     $this->warn('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')));
+                    WebPush('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')), $this->argument('uuid'), 'command');
                 } else {
                     SooGif::getInstance()->saveOne([
                         'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),
                         'name' => mb_substr($node->text(), 0, 50)
                     ]);
                     $this->info('successfully save image： '. $node->filter('img')->attr('data-original'));
+                    WebPush('successfully save image： '. $node->filter('img')->attr('data-original'), 'command');
                 }
             });
             $this->info('successfully spider image url： ' .$href);
+            WebPush('successfully spider image url：' .$href, $this->argument('uuid'), 'command');
         } catch (\Exception $exception) {
             $this->error($exception->getMessage());
         }
