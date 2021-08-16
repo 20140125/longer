@@ -63,7 +63,7 @@ class SyncSpiderImageType extends Command
             $pageRange = range($this->startPage, explode('/', $pageSize)[1]);
             $bar = $this->output->createProgressBar(explode('/', $pageSize)[1]);
             foreach ($pageRange as $item) {
-                $url = sprintf('https://www.fabiaoqing.com/bqb/lists/type/%s/page/%s.html', $this->argument('type'), $item);
+                $url = sprintf('https://www.fabiaoqing.com/bqb/lists/type/%s/page/%s.html',$this->argument('type'),$item);
                 $this->info('current spider image url：' .$url);
                 webPush('current spider image url：' .$url, $this->argument('uuid'), 'command');
                 sleep(1);
