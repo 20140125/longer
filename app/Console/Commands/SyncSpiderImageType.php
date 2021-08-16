@@ -56,7 +56,7 @@ class SyncSpiderImageType extends Command
      */
     protected function getImageType()
     {
-        $type = str_replace('}',  '', $this->argument('type'));
+        $type = $this->argument('type');
         try {
             $client = new Client();
             $promise = $client->request('GET', $this->baseUrl."/bqb/lists/type/$type.html");
