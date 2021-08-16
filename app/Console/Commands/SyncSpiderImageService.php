@@ -14,7 +14,7 @@ class SyncSpiderImageService extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image { href=https://www.fabiaoqing.com/bqb/detail/id/54557.html }';
+    protected $signature = 'longer:sync-spider_image_url { href=https://www.fabiaoqing.com/bqb/detail/id/54557.html }';
 
     /**
      * The console command description.

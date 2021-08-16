@@ -14,7 +14,7 @@ class SyncSpiderImage extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image { id=0 }';
+    protected $signature = 'longer:sync-spider_image_id { id=0 }';
 
     /**
      * The console command description.
