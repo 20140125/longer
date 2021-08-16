@@ -66,7 +66,7 @@ class ToolsService extends BaseService
      */
     public function syncImageType($form)
     {
-        Artisan::call("sync-spider_image_type type={$form['keywords']}}");
+        Artisan::call("longer:sync-spider_image_type type={$form['keywords']}}");
         return $this->return;
     }
 }
