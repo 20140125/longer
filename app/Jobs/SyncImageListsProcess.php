@@ -38,8 +38,12 @@ class SyncImageListsProcess implements ShouldQueue
     public function handle()
     {
         try {
-            is_numeric($this->post['keywords']) ? Artisan::call("longer:sync-spider_image_id {$this->post['keywords']} {$this->post['uuid']}") :
+            if (is_numeric($this->post['keywords'])) {
+                $keywords = intval($this->post['keywords']);
+                Artisan::call("longer:sync-spider_image_id $keywords {$this->post['uuid']}");
+            } else {
                 Artisan::call("longer:sync-spider_image_url {$this->post['keywords']} {$this->post['uuid']}");
+            }
         } catch (\Exception $exception) {
             WebPush($exception->getMessage(), $this->post['uuid'], 'command');
             Log::error(json_encode(['code' => Code::SERVER_ERROR, 'message' => $exception]));
