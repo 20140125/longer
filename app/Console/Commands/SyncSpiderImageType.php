@@ -83,7 +83,6 @@ class SyncSpiderImageType extends Command
                 webPush('successfully spider image url： ' .$url, $this->argument('uuid'), 'command');
                 $bar->advance();
                 $this->info("\r\n");
-                sleep(1);
             }
             $bar->finish();
         } catch (\Exception $exception) {
