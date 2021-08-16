@@ -106,6 +106,7 @@ $sender_io->on('workerStart', function () {
     $inner_http_worker->onMessage = function (TcpConnection $http_connection, Request $request) {
         $post = !empty($request->post()) ? $request->post() : $request->get();
         switch (@$post['type']) {
+            /*todo：站内通知*/
             case 'publish':
                 global $sender_io, $redis;
                 $to = @$post['to'];
@@ -121,6 +122,18 @@ $sender_io->on('workerStart', function () {
                     /* todo:向所有uid推送数据 */
                     $sender_io->emit('new_message', @$post['content']);
                 }
+                return $http_connection->send('successfully');
+            /*todo：脚本数据通知*/
+            case 'command':
+                global $sender_io, $redis;
+                $to = @$post['to'];
+                $post['content'] = trim(htmlspecialchars(@$post['content']));
+                /* todo:http接口返回，如果用户离线socket返回fail */
+                if ($to && !$redis->sIsMember(REDIS_KEY, $to)) {
+                    return $http_connection->send('offline');
+                }
+                /* todo:向uid所在socket组发送数据 */
+                $sender_io->to($to)->emit('web_command', $post['content']);
                 return $http_connection->send('successfully');
         }
         return $http_connection->send('failed');

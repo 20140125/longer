@@ -546,14 +546,15 @@ if (!function_exists('webPush')) {
     /**
      * TODO:站内消息推送
      * @param $content
+     * @param string $type
      * @param string $uid
      * @return bool | array
      */
-    function webPush($content, string $uid = '')
+    function webPush($content, string $uid = '', string $type = 'publish')
     {
         try {
             $push_api_url = config('app.push_url');
-            $post_data = array('type' => 'publish', 'content' => htmlspecialchars($content), 'to' => $uid ?? '');
+            $post_data = array('type' => $type, 'content' => htmlspecialchars($content), 'to' => $uid ?? '');
             $curl = new \Curl\Curl();
             $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
             $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
