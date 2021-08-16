@@ -56,7 +56,7 @@ class SyncSpiderImageType extends Command
      */
     protected function getImageType()
     {
-        $type = $this->argument('type');
+        $type = str_replace('}',  '', $this->argument('type'));
         try {
             $client = new Client();
             $promise = $client->request('GET', $this->baseUrl."/bqb/lists/type/$type.html");
@@ -67,7 +67,6 @@ class SyncSpiderImageType extends Command
                 $url = $this->baseUrl."/bqb/lists/type/$type/page/$item.html";
                 $this->info('current spider image url：' .$url);
                 webPush('current spider image url：' .$url, $this->argument('uuid'), 'command');
-                webPush($type,$this->argument('uuid'), 'command');
                 sleep(1);
                 $hotPromise = $client->request('GET', $url);
                 $hotPromise->filter('.bqba')->each(function ($node) use ($client) {
