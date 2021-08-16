@@ -34,7 +34,7 @@ class ToolsController extends BaseController
      */
     public function syncImageType()
     {
-        validatePost($this->post, ['name' => 'required|string']);
+        validatePost($this->post, ['keywords' => 'required|string']);
         $result = $this->toolService->syncImageType($this->post);
         return ajaxReturn($result);
     }
