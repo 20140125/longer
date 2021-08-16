@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Jobs\SyncImageTypeProcess;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
@@ -66,9 +67,7 @@ class ToolsService extends BaseService
      */
     public function syncImageType($form)
     {
-        Log::error("longer:sync-spider_image_type {$form['keywords']}}");
-        Artisan::call("longer:sync-spider_image_type {$form['keywords']}}");
-        Log::error('222222');
+        dispatch(new SyncImageTypeProcess($form))->onQueue('syncImageType');
         return $this->return;
     }
 }
