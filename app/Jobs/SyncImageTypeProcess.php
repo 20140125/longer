@@ -42,7 +42,7 @@ class SyncImageTypeProcess implements ShouldQueue
             Artisan::call("longer:sync-spider_image_type $this->post['keywords'] $this->post['uuid']");
         } catch (\Exception $exception) {
             WebPush($exception->getMessage(), $this->post['uuid'], 'command');
-            Log::error(json_encode(['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()]));
+            Log::error(json_encode(['code' => Code::SERVER_ERROR, 'message' => $exception]));
         }
     }
 }
