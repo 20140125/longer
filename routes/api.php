@@ -112,7 +112,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         /* todo:工具管理 */
         Route::match(['get','post'], 'tools/getAddress',  [App\Http\Controllers\Api\v1\ToolsController::class, 'getAddress'])->name('getAddress');
         Route::match(['get','post'], 'tools/getWeather',  [App\Http\Controllers\Api\v1\ToolsController::class, 'getWeather'])->name('getAddress');
-        Route::match(['get','post'], 'tools/getImageLists',  [App\Http\Controllers\Api\v1\ToolsController::class, 'getImageLists'])->name('getImageLists');
+        Route::match(['get','post'], 'tools/syncImageType',  [App\Http\Controllers\Api\v1\ToolsController::class, 'syncImageType'])->name('syncImageType');
 
     });
     /* todo:QQ授权登录 */

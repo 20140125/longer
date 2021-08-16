@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
 class ToolsService extends BaseService
@@ -55,6 +56,17 @@ class ToolsService extends BaseService
             return $this->return;
         }
         $this->return['lists'] = $result;
+        return $this->return;
+    }
+
+    /**
+     * todo:同步图片类型
+     * @param $form
+     * @return array
+     */
+    public function syncImageType($form)
+    {
+        Artisan::call("sync-spider_image_type type={$form['keywords']}}");
         return $this->return;
     }
 }

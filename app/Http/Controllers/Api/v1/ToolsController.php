@@ -32,10 +32,10 @@ class ToolsController extends BaseController
      * todo:获取图片列表
      * @return JsonResponse
      */
-    public function getImageLists()
+    public function syncImageType()
     {
         validatePost($this->post, ['name' => 'required|string']);
-        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'] ?? 1, 'limit' => $this->post['limit'] ?? 100]);
+        $result = $this->toolService->syncImageType($this->post);
         return ajaxReturn($result);
     }
 }
