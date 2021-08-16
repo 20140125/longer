@@ -58,12 +58,12 @@ class SyncSpiderImageType extends Command
     {
         try {
             $client = new Client();
-            $promise = $client->request('GET', sprintf($this->baseUrl.'/bqb/lists/type/%s.html', $this->argument('type')));
+            $promise = $client->request('GET', $this->baseUrl."/bqb/lists/type/{$this->argument('type')}.html");
             $pageSize = $promise->filter('#mobilepage')->text();
             $pageRange = range($this->startPage, explode('/', $pageSize)[1]);
             $bar = $this->output->createProgressBar(explode('/', $pageSize)[1]);
             foreach ($pageRange as $item) {
-                $url = sprintf('https://www.fabiaoqing.com/bqb/lists/type/%s/page/%s.html',$this->argument('type'),$item);
+                $url = $this->baseUrl."/bqb/lists/type/{$this->argument('type')}/page/$item.html";
                 $this->info('current spider image url：' .$url);
                 webPush('current spider image url：' .$url, $this->argument('uuid'), 'command');
                 sleep(1);
