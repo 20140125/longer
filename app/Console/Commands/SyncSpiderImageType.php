@@ -13,7 +13,7 @@ class SyncSpiderImageType extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image_type { type=hot, uuid=longer7f00000108fc00000001 }';
+    protected $signature = 'longer:sync-spider_image_type {type=hot} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
