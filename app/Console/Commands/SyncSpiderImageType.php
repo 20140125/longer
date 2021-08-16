@@ -48,6 +48,8 @@ class SyncSpiderImageType extends Command
      */
     public function handle()
     {
+        $this->info($this->argument('type'));
+        $this->info($this->argument('uuid'));
         $this->getImageType();
     }
 
