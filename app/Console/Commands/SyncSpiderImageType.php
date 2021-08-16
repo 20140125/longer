@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Api\v1\SooGifType;
 use Goutte\Client;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SyncSpiderImageType extends Command
 {
@@ -48,8 +49,8 @@ class SyncSpiderImageType extends Command
      */
     public function handle()
     {
-        $this->info($this->argument('type'));
-        $this->info($this->argument('uuid'));
+        Log::error($this->argument('type'));
+        Log::error($this->argument('uuid'));
         $this->getImageType();
     }
 
@@ -66,6 +67,7 @@ class SyncSpiderImageType extends Command
             $bar = $this->output->createProgressBar(explode('/', $pageSize)[1]);
             foreach ($pageRange as $item) {
                 $url = $this->baseUrl."/bqb/lists/type/{$this->argument('type')}/page/$item.html";
+                Log::error($url);
                 $this->info('current spider image url：' .$url);
                 webPush('current spider image url：' .$url, $this->argument('uuid'), 'command');
                 sleep(1);
