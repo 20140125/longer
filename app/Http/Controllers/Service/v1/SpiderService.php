@@ -14,8 +14,8 @@ class SpiderService extends BaseService
      */
     public function getSpiderConfig()
     {
-        $this->return['lists'] = $this->systemConfigModel->getOne(['name' => 'SpiderConfig'], ['children'])->children;
-        foreach ( $this->return['lists'] as &$item) {
+        $this->return['lists'] = json_decode($this->systemConfigModel->getOne(['name' => 'SpiderConfig'], ['children'])->children || [], true);
+        foreach ($this->return['lists'] as &$item) {
             $item->value = json_decode($item->value, true);
         }
         return $this->return;
