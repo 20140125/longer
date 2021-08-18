@@ -14,7 +14,7 @@ class SyncImageSize extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-image_size';
+    protected $signature = 'longer:sync-image_size {id=0} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -58,17 +58,22 @@ class SyncImageSize extends Command
                     $fileInfo = getimagesize($result->href);
                     if(SooGif::getInstance()->updateOne(['id' => $result->id], ['width' => $fileInfo[0], 'height' => $fileInfo[1]])) {
                         $this->info('Successfully update image size：'.json_encode($result, 256));
+                        WebPush('Successfully update image size：'.json_encode($result, 256), $this->argument('uuid'), 'command');
                     } else {
                         $this->error('Failed update image size：'.json_encode($result, 256));
+                        WebPush('Failed update image size：'.json_encode($result, 256), $this->argument('uuid'), 'command');
                     }
                 }
             }
         } catch (\Exception $exception) {
             $this->error('Failed update image size：'.json_encode($result, 256));
+            WebPush('Failed update image size：'.json_encode($result, 256), $this->argument('uuid'), 'command');
             $this->error('error_description：'.$exception->getMessage());
+            WebPush('error_description：'.$exception->getMessage(), $this->argument('uuid'), 'command');
             if ($result) {
                 SooGif::getInstance()->removeOne(['id' => $result->id]);
             }
+            sleep(1);
             $this->setFileInfo();
         }
     }

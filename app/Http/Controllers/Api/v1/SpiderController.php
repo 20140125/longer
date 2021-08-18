@@ -31,4 +31,12 @@ class SpiderController extends BaseController
         $result = $this->spiderService->syncImageLists(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
     }
+
+    public function syncImageSize(Request $request)
+    {
+        validatePost($this->post, ['keywords' => 'required|integer']);
+        $_user = $request->get('unauthorized');
+        $result = $this->spiderService->syncImageSize(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
+        return ajaxReturn($result);
+    }
 }
