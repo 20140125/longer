@@ -32,6 +32,11 @@ class SpiderController extends BaseController
         return ajaxReturn($result);
     }
 
+    /**
+     * todo:同步图片宽高
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function syncImageSize(Request $request)
     {
         validatePost($this->post, ['keywords' => 'required|integer']);

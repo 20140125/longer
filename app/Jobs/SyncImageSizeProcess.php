@@ -38,7 +38,7 @@ class SyncImageSizeProcess implements ShouldQueue
     public function handle()
     {
         try {
-            Artisan::call("longer:sync-spider_image_szie {$this->post['keywords']} {$this->post['uuid']}");
+            Artisan::call("longer:sync-spider_image_size {$this->post['keywords']} {$this->post['uuid']}");
         } catch (\Exception $exception) {
             WebPush($exception->getMessage(), $this->post['uuid'], 'command');
             Log::error(json_encode(['code' => Code::SERVER_ERROR, 'message' => $exception]));

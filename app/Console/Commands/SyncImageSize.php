@@ -14,7 +14,7 @@ class SyncImageSize extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-image_size {id=0} {uuid=longer7f00000108fc00000001}';
+    protected $signature = 'longer:sync-spider_image_size {id=1} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -52,7 +52,7 @@ class SyncImageSize extends Command
         global $result;
         try {
             while ($this->flag) {
-                $result = SooGif::getInstance()->getOne(['width' => 0]);
+                $result = SooGif::getInstance()->getOne(['width' => 0, ['id', '>=', $this->argument('id')]]);
                 $this->flag = !empty($result);
                 if (!empty($result)) {
                     $fileInfo = getimagesize($result->href);
@@ -60,9 +60,11 @@ class SyncImageSize extends Command
                         $this->info('Successfully update image size：'.json_encode($result, 256));
                         WebPush('Successfully update image size：'.json_encode($result, 256), $this->argument('uuid'), 'command');
                     } else {
-                        $this->error('Failed update image size：'.json_encode($result, 256));
-                        WebPush('Failed update image size：'.json_encode($result, 256), $this->argument('uuid'), 'command');
+                        $this->error('Image size already updated：'.json_encode($result, 256));
+                        WebPush('Image size already updated：'.json_encode($result, 256), $this->argument('uuid'), 'command');
                     }
+                } else {
+                    WebPush('Successfully spider image size', $this->argument('uuid'), 'command');
                 }
             }
         } catch (\Exception $exception) {
@@ -73,7 +75,7 @@ class SyncImageSize extends Command
             if ($result) {
                 SooGif::getInstance()->removeOne(['id' => $result->id]);
             }
-            sleep(1);
+            usleep(rand(500000, 700000));
             $this->setFileInfo();
         }
     }
