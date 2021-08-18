@@ -112,10 +112,9 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         /* todo:工具管理 */
         Route::match(['get','post'], 'tools/getAddress',  [App\Http\Controllers\Api\v1\ToolsController::class, 'getAddress'])->name('getAddress');
         Route::match(['get','post'], 'tools/getWeather',  [App\Http\Controllers\Api\v1\ToolsController::class, 'getWeather'])->name('getAddress');
-        Route::match(['get','post'], 'tools/syncImageType',  [App\Http\Controllers\Api\v1\ToolsController::class, 'syncImageType'])->name('syncImageType');
-        Route::match(['get','post'], 'tools/syncImageLists',  [App\Http\Controllers\Api\v1\ToolsController::class, 'syncImageLists'])->name('syncImageLists');
-
-
+        /*  todo：爬虫管理 */
+        Route::match(['get','post'], 'spider/syncImageType',  [App\Http\Controllers\Api\v1\SpiderController::class, 'syncImageType'])->name('syncImageType');
+        Route::match(['get','post'], 'spider/syncImageLists',  [App\Http\Controllers\Api\v1\SpiderController::class, 'syncImageLists'])->name('syncImageLists');
     });
     /* todo:QQ授权登录 */
     Route::get('oauth/login/qq', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'QQ'])->name('qqLogin');

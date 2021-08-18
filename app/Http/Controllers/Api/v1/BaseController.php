@@ -16,6 +16,7 @@ use App\Http\Controllers\Service\v1\PermissionApplyService;
 use App\Http\Controllers\Service\v1\PushService;
 use App\Http\Controllers\Service\v1\RoleService;
 use App\Http\Controllers\Service\v1\SendEMailService;
+use App\Http\Controllers\Service\v1\SpiderService;
 use App\Http\Controllers\Service\v1\SystemConfigService;
 use App\Http\Controllers\Service\v1\ToolsService;
 use App\Http\Controllers\Service\v1\UserCenterService;
@@ -91,6 +92,8 @@ class BaseController extends Controller
     protected $toolService;
 
     protected $imageService;
+
+    protected $spiderService;
     /**
      * @var array|string|null $post
      */
@@ -117,6 +120,7 @@ class BaseController extends Controller
         $this->interfaceCategoryService = InterfaceCategoryService::getInstance();
         $this->toolService = ToolsService::getInstance();
         $this->imageService = ImageService::getInstance();
+        $this->spiderService = SpiderService::getInstance();
 
         $this->post = $request->post();
         unset($this->post['token']);
