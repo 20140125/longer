@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Service\v1;
 use App\Jobs\SyncImageListsProcess;
 use App\Jobs\SyncImageSizeProcess;
 use App\Jobs\SyncImageTypeProcess;
+use Illuminate\Support\Facades\Log;
 
 class SpiderService extends BaseService
 {
@@ -17,6 +18,7 @@ class SpiderService extends BaseService
         $result = $this->systemConfigModel->getOne(['name' => 'SpiderConfig'], ['children'])->children;
         $this->return['lists'] = json_decode($result ?? (Object)[], true);
         foreach ($this->return['lists'] as &$item) {
+            Log::error(json_encode($item));
             $item['value'] = json_decode($item['value'], true);
         }
         return $this->return;
