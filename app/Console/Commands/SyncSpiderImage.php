@@ -14,14 +14,14 @@ class SyncSpiderImage extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image_id {id=0} {uuid=longer7f00000108fc00000001}';
+    protected $signature = 'longer:sync-spider_image_id {id=1} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'synchronize image';
+    protected $description = 'synchronizing image from id';
     /**
      * @var string $baseUrl
      */

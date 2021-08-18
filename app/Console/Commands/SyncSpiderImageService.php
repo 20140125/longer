@@ -20,7 +20,7 @@ class SyncSpiderImageService extends Command
      *
      * @var string
      */
-    protected $description = 'synchronize image service';
+    protected $description = 'synchronizing image from url';
     /**
      * @var string $baseUrl
      */

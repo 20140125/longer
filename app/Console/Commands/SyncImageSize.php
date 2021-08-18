@@ -21,7 +21,7 @@ class SyncImageSize extends Command
      *
      * @var string
      */
-    protected $description = 'synchronize image';
+    protected $description = 'synchronizing image size';
 
     protected $flag;
     /**

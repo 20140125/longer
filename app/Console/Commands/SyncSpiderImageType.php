@@ -20,7 +20,7 @@ class SyncSpiderImageType extends Command
      *
      * @var string
      */
-    protected $description = 'synchronize image type';
+    protected $description = 'synchronizing image type';
 
     /**
      * Create a new command instance.
