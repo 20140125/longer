@@ -47,10 +47,14 @@ class SystemConfigService extends BaseService
     /**
      * todo:获取系统配置
      * @param $form
+     * @param $user
      * @return array
      */
-    public function getConfig($form)
+    public function getConfig($form, $user)
     {
+        if (empty($user)) {
+            $form['name'] = 'Oauth';
+        }
         $this->return['lists'] = $this->systemConfigModel->getOne(['name' => $form['name']], ['children']);
         $this->return['lists']->children = json_decode($this->return['lists']->children, true);
         return $this->return;
