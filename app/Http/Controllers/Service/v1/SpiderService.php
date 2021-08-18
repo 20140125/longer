@@ -9,6 +9,18 @@ use App\Jobs\SyncImageTypeProcess;
 class SpiderService extends BaseService
 {
     /**
+     * todo:获取爬虫配置
+     * @return array
+     */
+    public function getSpiderConfig()
+    {
+        $this->return['lists'] = $this->systemConfigModel->getOne(['name' => 'SpiderConfig'], ['children'])->children;
+        foreach ( $this->return['lists'] as &$item) {
+            $item->value = json_decode($item->value, true);
+        }
+        return $this->return;
+    }
+    /**
      * todo:同步图片类型
      * @param $form
      * @return array

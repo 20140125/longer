@@ -9,6 +9,16 @@ use Illuminate\Http\Request;
 class SpiderController extends BaseController
 {
     /**
+     * todo:获取系统配置
+     * @return JsonResponse
+     */
+    public function getSpiderConfig()
+    {
+        $result = $this->spiderService->getSpiderConfig();
+        return ajaxReturn($result);
+    }
+
+    /**
      * todo:获取图片列表
      * @return JsonResponse
      */
