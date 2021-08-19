@@ -21,20 +21,18 @@ class SpiderController extends BaseController
     /**
      * todo:执行脚本
      * @param Request $request
+     * @return JsonResponse|void
      */
     public function runningSpider(Request $request)
     {
         validatePost($this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
         switch ($this->post['method']) {
             case 'syncImageType':
-                $this->syncImageType($request);
-                break;
+                return $this->syncImageType($request);
             case 'syncImageLists':
-                $this->syncImageLists($request);
-                break;
+                return $this->syncImageLists($request);
             case 'syncImageSize':
-                $this->syncImageSize($request);
-                break;
+                return $this->syncImageSize($request);
         }
     }
 
