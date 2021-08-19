@@ -57,19 +57,19 @@ class SyncImageSize extends Command
                 if (!empty($result)) {
                     $fileInfo = getimagesize($result->href);
                     if(SooGif::getInstance()->updateOne(['id' => $result->id], ['width' => $fileInfo[0], 'height' => $fileInfo[1]])) {
-                        $this->info('Successfully update image size：'.json_encode($result, 256));
-                        WebPush('Successfully update image size：'.json_encode($result, 256), $this->argument('uuid'), 'command');
+                        $this->info('Successfully update image size：'.$result->href);
+                        WebPush('Successfully update image size：'.$result->href, $this->argument('uuid'), 'command');
                     } else {
-                        $this->error('Image size already updated：'.json_encode($result, 256));
-                        WebPush('Image size already updated：'.json_encode($result, 256), $this->argument('uuid'), 'command');
+                        $this->error('Image size already updated：'.$result->href);
+                        WebPush('Image size already updated：'.$result->href, $this->argument('uuid'), 'command');
                     }
                 } else {
                     WebPush('Successfully spider image size', $this->argument('uuid'), 'command');
                 }
             }
         } catch (\Exception $exception) {
-            $this->error('Failed update image size：'.json_encode($result, 256));
-            WebPush('Failed update image size：'.json_encode($result, 256), $this->argument('uuid'), 'command');
+            $this->error('Failed update image size：'.$result->href);
+            WebPush('Failed update image size：'.$result->href, $this->argument('uuid'), 'command');
             $this->error('error_description：'.$exception->getMessage());
             WebPush('error_description：'.$exception->getMessage(), $this->argument('uuid'), 'command');
             if ($result) {
