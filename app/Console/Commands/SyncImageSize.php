@@ -60,8 +60,8 @@ class SyncImageSize extends Command
                         $this->info('Successfully update image size：'.$result->href);
                         WebPush('Successfully update image size：'.$result->href, $this->argument('uuid'), 'command');
                     } else {
-                        $this->error('Image size already updated：'.$result->href);
-                        WebPush('Image size already updated：'.$result->href, $this->argument('uuid'), 'command');
+                        $this->error('Failed update image size：'.$result->href);
+                        WebPush('Failed update image size：'.$result->href, $this->argument('uuid'), 'command');
                     }
                 } else {
                     WebPush('Successfully spider image size', $this->argument('uuid'), 'command');
