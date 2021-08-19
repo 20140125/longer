@@ -18,7 +18,7 @@ class SyncOauth extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-oauth { remember_token=default }';
+    protected $signature = 'longer:sync-oauth {remember_token=default} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -41,32 +41,41 @@ class SyncOauth extends Command
     /**
      * Execute the console command.
      *
-     * @return false|void
+     * @return void|boolean
      */
     public function handle()
     {
         $this->syncClientList();
         if ($this->argument('remember_token') === 'default') {
             $this->warn('Request remember token is required');
+            WebPush('Request remember token is required', $this->argument('uuid'), 'command');
             return false;
         }
-        $this->info('Start synchronizing the oauth list');
+        $this->info('Starting synchronizing the oauth list');
+        WebPush('Starting synchronizing the oauth list', $this->argument('uuid'), 'command');
         $this->syncOauth();
         $this->info('Finished synchronizing the oauth list');
+        WebPush('Finished synchronizing the oauth list', $this->argument('uuid'), 'command');
         sleep(1);
     }
 
+    /**
+     * todo:同步客户端用户列表
+     */
     protected function syncClientList()
     {
-        $this->info('Start synchronizing the client user list');
+        $this->info('Starting synchronizing the client user list');
+        WebPush('Starting synchronizing the client user list', $this->argument('uuid'), 'command');
         UserService::getInstance()->updateUsersAvatarImage();
         $clientLists = RedisClient::getInstance()->sMembers(config('app.chat_user_key'));
         foreach ($clientLists as $item) {
             foreach (json_decode($item, true) as $client) {
-                $this->info('userInfo：'.json_encode($client, 256)."\r\n");
+                $this->info('userInfo：'.json_encode($client, 256));
+                WebPush('Successfully GetClient user：'.json_encode($client, 256), $this->argument('uuid'), 'command');
             }
         }
         $this->info('Finished synchronizing the client user list');
+        WebPush('Finished synchronizing the client user list', $this->argument('uuid'), 'command');
     }
 
     /**
@@ -80,19 +89,21 @@ class SyncOauth extends Command
             $oauth = Oauth::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]);
             if (!$oauth) {
                 $this->error('Remember token is invalid');
+                WebPush('Remember token is invalid', $this->argument('uuid'), 'command');
                 return false;
             }
             $users = Users::getInstance()->getOne(['id' => $oauth->uid]);
             if ($users) {
                 /* todo：更新用户信息 */
                 Users::getInstance()->updateOne(['id' => $oauth->uid], ['remember_token' => $this->argument('remember_token')]);
-                $this->info('Successfully updated users '. $users->username);
+                $this->info('Successfully updated users： '. $users->username);
+                WebPush('Successfully updated users： '. $users->username, $this->argument('uuid'), 'command');
                 /* todo：更新用户个人中心 */
                 $userCenter = UserCenter::getInstance()->getOne(['uid' => $oauth->uid]);
                 if ($userCenter) {
                     UserCenter::getInstance()->updateOne(['id' => $userCenter->id], ['token' => $this->argument('remember_token'), 'u_name' => $oauth->username]);
-                    $this->info('Successfully updated users center ' . $users->username);
-                    return false;
+                    $this->info('Successfully updated users center： ' . $users->username);
+                    WebPush('Successfully updated users center： ' . $users->username, $this->argument('uuid'), 'command');
                 }
                 return false;
             }
@@ -132,11 +143,13 @@ class SyncOauth extends Command
         $userId = Users::getInstance()->saveOne($userArray);
         if (!$userId) {
             $this->error('Failed save users ' . $oauth->username);
+            WebPush('Failed save users ' . $oauth->username, $this->argument('uuid'), 'command');
             return false;
         }
         Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id').$userId]);
         Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId]);
         $this->info('Successfully synchronizing oauth ' . $oauth->username);
+        WebPush('Successfully synchronizing oauth ' . $oauth->username, $this->argument('uuid'), 'command');
     }
 
     /**
@@ -147,6 +160,12 @@ class SyncOauth extends Command
     {
         $arr = ['u_name' => $oauth->username, 'token' => $oauth->remember_token, 'uid' => $oauth->uid, 'notice_status' => 1, 'user_status' => 1];
         $id = UserCenter::getInstance()->saveOne($arr);
-        $id ? $this->info('successfully save user center '. $oauth->username) : $this->error('Failed save user center ' . $oauth->username);
+        if ($id) {
+            $this->info('Successfully save user center： '. $oauth->username);
+            WebPush('Successfully save user center： ' . $oauth->username, $this->argument('uuid'), 'command');
+        } else {
+            $this->error('Failed save user center： ' . $oauth->username);
+            WebPush('Failed save user center： ' . $oauth->username, $this->argument('uuid'), 'command');
+        }
     }
 }

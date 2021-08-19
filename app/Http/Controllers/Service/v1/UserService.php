@@ -220,7 +220,7 @@ class UserService extends BaseService
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getUser($where, $columns = ['*'])
+    public function getUser($where, array $columns = ['*'])
     {
         return $this->userModel->getOne($where, $columns);
     }

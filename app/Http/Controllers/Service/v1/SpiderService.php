@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Service\v1;
 use App\Jobs\SyncImageListsProcess;
 use App\Jobs\SyncImageSizeProcess;
 use App\Jobs\SyncImageTypeProcess;
+use App\Jobs\SyncOauthProcess;
 
 class SpiderService extends BaseService
 {
@@ -49,6 +50,16 @@ class SpiderService extends BaseService
     public function syncImageSize($form)
     {
         dispatch(new SyncImageSizeProcess($form))->onQueue('spider');
+        return $this->return;
+    }
+    /**
+     * todo:同步图片
+     * @param $form
+     * @return array
+     */
+    public function syncOauth($form)
+    {
+        dispatch(new SyncOauthProcess($form))->onQueue('users');
         return $this->return;
     }
 }

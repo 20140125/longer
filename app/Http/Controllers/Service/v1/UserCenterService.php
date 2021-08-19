@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utils\Code;
-use App\Jobs\UserCenterProcess;
+use App\Jobs\SyncUserCenterProcess;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -59,7 +59,7 @@ class UserCenterService extends BaseService
             return $this->return;
         }
         /* todo：执行用户相关信息 */
-        dispatch(new UserCenterProcess($form))->onQueue('userCenter')->delay(5);
+        dispatch(new SyncUserCenterProcess($form))->onQueue('users');
         $this->return['message'] = 'Successfully updated user center';
         $this->return['lists'] = $form;
         return $this->return;

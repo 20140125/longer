@@ -12,13 +12,13 @@ use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Service\v1\BaseService;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
+use App\Jobs\SyncOauthProcess;
 use App\Mail\Register;
 use App\Models\Api\v1\Oauth;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -287,7 +287,7 @@ class OauthCallbackController extends Controller
             $oauthRes =  $this->oauthModel->updateOne($where, $data);
             if (!empty($oauthRes)) {
                 /*  同步用户数据 */
-                Artisan::call("longer:sync-oauth {$data['remember_token']}");
+                dispatch(new SyncOauthProcess(['remember_token' => $data['remember_token']]))->onQueue('users');
                 return strlen($this->state) == 32 ? redirect('/admin/home/index/'.$data['remember_token'])->send() : redirect('/admin/oauth/index')->send();
             }
             return redirect('/login')->send();
@@ -297,7 +297,7 @@ class OauthCallbackController extends Controller
         $data['role_id'] = 2;
         $oauthRes =  $this->oauthModel->saveOne($data);
         if (!empty($oauthRes)) {
-            Artisan::call("longer:sync-oauth {$data['remember_token']}");
+            dispatch(new SyncOauthProcess(['remember_token' => $data['remember_token']]))->onQueue('users');
             Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
