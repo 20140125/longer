@@ -61,19 +61,19 @@ class SyncSpiderImageService extends Command
             sleep(1);
             $promise->filter('.bqpp .bqppdiv1')->each(function($node) use ($client) {
                 if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $node->filter('img')->attr('data-original'))])) {
-                    $this->warn('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')));
-                    WebPush('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')), $this->argument('uuid'), 'command');
+                    $this->warn('Image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')));
+                    WebPush('Image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')), $this->argument('uuid'), 'command');
                 } else {
                     SooGif::getInstance()->saveOne([
                         'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),
                         'name' => mb_substr($node->text(), 0, 50)
                     ]);
-                    $this->info('successfully save image： '. $node->filter('img')->attr('data-original'));
-                    WebPush('successfully save image： '. $node->filter('img')->attr('data-original'), 'command');
+                    $this->info('Successfully save image： '. $node->filter('img')->attr('data-original'));
+                    WebPush('Successfully save image： '. $node->filter('img')->attr('data-original'), 'command');
                 }
             });
-            $this->info('successfully spider image url： ' .$href);
-            WebPush('successfully spider image url：' .$href, $this->argument('uuid'), 'command');
+            $this->info('Successfully spider image url： ' .$href);
+            WebPush('Successfully spider image url：' .$href, $this->argument('uuid'), 'command');
         } catch (\Exception $exception) {
             $this->error($exception->getMessage());
         }

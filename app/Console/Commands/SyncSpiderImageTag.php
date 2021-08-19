@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Api\v1\SooGif;
-use App\Models\Api\v1\SooGifType;
 use Goutte\Client;
 use Illuminate\Console\Command;
 
@@ -80,17 +79,17 @@ class SyncSpiderImageTag extends Command
                         'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),
                         'name' => mb_substr($node->filter('img')->attr('alt'), 0, 50)
                     ];
-                    if (SooGifType::getInstance()->getOne(['href' =>$arr['href']])) {
-                        $this->warn('link address already exists: ' . $arr['href']);
-                        webPush('link address already exists: ' . $arr['href'], $this->argument('uuid'), 'command');
+                    if (SooGif::getInstance()->getOne(['href' =>$arr['href']])) {
+                        $this->warn('Image already exists: ' . $arr['href']);
+                        webPush('Image already exists: ' . $arr['href'], $this->argument('uuid'), 'command');
                     } else {
                         SooGif::getInstance()->saveOne($arr);
-                        $this->info('successfully save link address： ' .$arr['href']);
-                        webPush('successfully save link address： ' . $arr['href'], $this->argument('uuid'), 'command');
+                        $this->info('Successfully save image： ' .$arr['href']);
+                        webPush('Successfully save image： ' . $arr['href'], $this->argument('uuid'), 'command');
                     }
                 });
-                $this->info('successfully spider image url： ' . $url);
-                webPush('successfully spider image url： ' . $url, $this->argument('uuid'), 'command');
+                $this->info('Successfully spider image url： ' . $url);
+                webPush('Successfully spider image url： ' . $url, $this->argument('uuid'), 'command');
                 $bar->advance();
             }
             $bar->finish();
