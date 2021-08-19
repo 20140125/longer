@@ -59,9 +59,9 @@ class SpiderService extends BaseService
      * @param $form
      * @return array
      */
-    public function syncOauth($form)
+    public function syncImageListsForTags($form)
     {
-        dispatch(new SyncOauthProcess($form))->onQueue('users');
+        dispatch(new SyncImageListsForTagsProcess($form))->onQueue('spider');
         return $this->return;
     }
     /**
@@ -69,9 +69,9 @@ class SpiderService extends BaseService
      * @param $form
      * @return array
      */
-    public function syncImageListsForTags($form)
+    public function syncOauth($form)
     {
-        dispatch(new SyncImageListsForTagsProcess($form))->onQueue('users');
+        dispatch(new SyncOauthProcess($form))->onQueue('users');
         return $this->return;
     }
 }
