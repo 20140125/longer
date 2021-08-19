@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
-use App\Jobs\PushProcess;
+use App\Jobs\SyncPushProcess;
 
 class PushService extends BaseService
 {
@@ -71,7 +71,7 @@ class PushService extends BaseService
         }
         $form['username'] = 'admin';
         $form['uuid'] = config('app.client_id').'1';
-        dispatch(new PushProcess($form))->onQueue('webPush')->delay(15);
+        dispatch(new SyncPushProcess($form))->onQueue('webPush')->delay(15);
         $this->return['lists'] = $form;
         return $this->return;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Service\v1;
 
+use App\Jobs\SyncCityWeatherProcess;
+use App\Jobs\SyncImageListsForTagsProcess;
 use App\Jobs\SyncImageListsProcess;
 use App\Jobs\SyncImageSizeProcess;
 use App\Jobs\SyncImageTypeProcess;
@@ -33,7 +35,7 @@ class SpiderService extends BaseService
         return $this->return;
     }
     /**
-     * todo:同步图片
+     * todo:同步图片列表
      * @param $form
      * @return array
      */
@@ -43,7 +45,7 @@ class SpiderService extends BaseService
         return $this->return;
     }
     /**
-     * todo:同步图片
+     * todo:同步图片大小
      * @param $form
      * @return array
      */
@@ -53,13 +55,23 @@ class SpiderService extends BaseService
         return $this->return;
     }
     /**
-     * todo:同步图片
+     * todo:同步授权用户
      * @param $form
      * @return array
      */
     public function syncOauth($form)
     {
         dispatch(new SyncOauthProcess($form))->onQueue('users');
+        return $this->return;
+    }
+    /**
+     * todo:同步授权用户
+     * @param $form
+     * @return array
+     */
+    public function syncImageListsForTags($form)
+    {
+        dispatch(new SyncImageListsForTagsProcess($form))->onQueue('users');
         return $this->return;
     }
 }

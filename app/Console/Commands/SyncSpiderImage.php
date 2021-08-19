@@ -81,7 +81,6 @@ class SyncSpiderImage extends Command
                 $this->info('successfully spider image url： ' .$item->href);
                 WebPush('successfully spider image url： ' .$item->href, $this->argument('uuid'), 'command');
                 $bar->advance();
-                $this->info("\r\n");
             }
             $bar->finish();
         } catch (\Exception $exception) {
