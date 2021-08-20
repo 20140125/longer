@@ -82,7 +82,7 @@ class ApiService extends BaseService
     public function saveApiLists($form, $user)
     {
         if (!empty($form['source'])) unset($form['source']);
-        if (!empty($form['apiLog'])) unset($form['apiLog']);
+        if (count($form['apiLog']) >= 0) unset($form['apiLog']);
         foreach ($this->json_str as $item) {
             $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
         }
@@ -107,7 +107,7 @@ class ApiService extends BaseService
     public function updateApiLists($form, $user)
     {
         if (!empty($form['source'])) unset($form['source']);
-        if (!empty($form['apiLog'])) unset($form['apiLog']);
+        if (count($form['apiLog']) >= 0) unset($form['apiLog']);
         foreach ($this->json_str as $item) {
             $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
         }
@@ -132,7 +132,7 @@ class ApiService extends BaseService
     public function saveMarkDown($form, $user)
     {
         if (!empty($form['source'])) unset($form['source']);
-        if (!empty($form['apiLog'])) unset($form['apiLog']);
+        if (count($form['apiLog']) >= 0) unset($form['apiLog']);
         $result = $this->apiDocModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
@@ -154,7 +154,7 @@ class ApiService extends BaseService
     public function updateMarkDown($form, $user)
     {
         if (!empty($form['source'])) unset($form['source']);
-        if (!empty($form['apiLog'])) unset($form['apiLog']);
+        if (count($form['apiLog']) >= 0) unset($form['apiLog']);
         $result = $this->apiDocModel->updateOne(['id' => $form['id']],$form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
