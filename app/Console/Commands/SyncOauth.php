@@ -56,7 +56,6 @@ class SyncOauth extends Command
         $this->syncOauth();
         $this->info('Finished synchronizing the oauth list');
         WebPush('Finished synchronizing the oauth list', $this->argument('uuid'), 'command');
-        sleep(1);
     }
 
     /**
