@@ -87,7 +87,6 @@ class LoginService extends BaseService
             $this->return['lists'] = $oauth;
             return $this->return;
         } catch (\Exception $exception) {
-            Log::error($exception);
             $this->return['code'] = Code::SERVER_ERROR;
             $this->return['message'] = $exception->getMessage();
             return $this->return;
