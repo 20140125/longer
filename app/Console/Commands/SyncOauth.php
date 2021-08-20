@@ -69,8 +69,8 @@ class SyncOauth extends Command
         $clientLists = RedisClient::getInstance()->sMembers(config('app.chat_user_key'));
         foreach ($clientLists as $item) {
             foreach (json_decode($item, true) as $client) {
-                $this->info('userInfo：'.$client['username']);
-                WebPush('Successfully GetClient user：'.$client['username'], $this->argument('uuid'), 'command');
+                $this->info('userInfo：'.json_encode($client, 256));
+                WebPush('Successfully synchronizing GetClient user：'.$client['username'], $this->argument('uuid'), 'command');
             }
         }
         $this->info('Finished synchronizing the client user list');
