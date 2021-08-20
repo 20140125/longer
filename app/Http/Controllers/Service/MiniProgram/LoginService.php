@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Service\MiniProgram;
 
 use App\Http\Controllers\Utils\Code;
+use App\Jobs\SyncOauthProcess;
 use Curl\Curl;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class LoginService extends BaseService
 {
@@ -70,7 +72,7 @@ class LoginService extends BaseService
                 $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' =>  $result->remember_token]);
                 /* 换成用户登录标识（脚本缓存有时间延时） */
                 \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($result->remember_token, $result->remember_token, config('app.app_refresh_login_time'));
-                Artisan::call("longer:sync-oauth $result->remember_token");
+                dispatch(new SyncOauthProcess(['remember_token' => $result->remember_token]))->onQueue('users');
                 $this->return['lists'] = $result;
                 return $this->return;
             }
@@ -81,10 +83,11 @@ class LoginService extends BaseService
             }
             /* 换成用户登录标识（脚本缓存有时间延时） */
             \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
-            Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
+            dispatch(new SyncOauthProcess(['remember_token' => $oauth['remember_token']]))->onQueue('users');
             $this->return['lists'] = $oauth;
             return $this->return;
         } catch (\Exception $exception) {
+            Log::error($exception);
             $this->return['code'] = Code::SERVER_ERROR;
             $this->return['message'] = $exception->getMessage();
             return $this->return;
