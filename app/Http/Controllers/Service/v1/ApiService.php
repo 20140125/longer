@@ -42,7 +42,7 @@ class ApiService extends BaseService
         foreach ($this->json_str as $item) {
             $this->return['lists']->$item = json_decode($this->return['lists']->$item, JSON_UNESCAPED_UNICODE);
         }
-        $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->id, 'source' => 2], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
+        $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->api_id, 'source' => 2], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
         foreach ($apiLog as &$item) {
             $item->json = json_decode($item->json, true);
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
@@ -64,7 +64,7 @@ class ApiService extends BaseService
             $this->return['lists'] = (object)array();
             return $this->return;
         }
-        $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->id, 'source' => 1], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
+        $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->api_id, 'source' => 1], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
         foreach ($apiLog as &$item) {
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
         }
