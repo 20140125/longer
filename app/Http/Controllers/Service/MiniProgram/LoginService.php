@@ -70,7 +70,7 @@ class LoginService extends BaseService
             if (!empty($result)) {
                 $result->remember_token =  encrypt($oauth['username'].time());
                 $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' =>  $result->remember_token]);
-                /* 换成用户登录标识（脚本缓存有时间延时） */
+                /* 缓存用户登录标识（脚本缓存有时间延时） */
                 \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($result->remember_token, $result->remember_token, config('app.app_refresh_login_time'));
                 dispatch(new SyncOauthProcess(['remember_token' => $result->remember_token]))->onQueue('users');
                 $this->return['lists'] = $result;
@@ -81,7 +81,7 @@ class LoginService extends BaseService
                 $this->return['message'] = 'Failed login system';
                 return $this->return;
             }
-            /* 换成用户登录标识（脚本缓存有时间延时） */
+            /* 缓存用户登录标识（脚本缓存有时间延时） */
             \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
             dispatch(new SyncOauthProcess(['remember_token' => $oauth['remember_token']]))->onQueue('users');
             $this->return['lists'] = $oauth;
