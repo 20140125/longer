@@ -70,7 +70,7 @@ class SyncOauth extends Command
         foreach ($clientLists as $item) {
             foreach (json_decode($item, true) as $client) {
                 $this->info('userInfo：' . json_encode($client, 256));
-                WebPush('Successfully synchronizing GetClient user：' . $client['username'], $this->argument('uuid'), 'command');
+                WebPush('Successfully synchronizing GetClient user：' . $client[0]['username'], $this->argument('uuid'), 'command');
             }
         }
         $this->info('Finished synchronizing the client user list');
