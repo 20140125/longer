@@ -8,6 +8,7 @@ use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\UserCenter;
 use App\Models\Api\v1\Users;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -84,7 +85,7 @@ class SyncOauth extends Command
     {
         DB::beginTransaction();
         try {
-            $oauth = Oauth::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]);
+            $oauth = Oauth::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]) ?? Users::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]);
             if (!$oauth) {
                 $this->error('Remember token is invalid');
                 WebPush('Remember token is invalid', $this->argument('uuid'), 'command');
