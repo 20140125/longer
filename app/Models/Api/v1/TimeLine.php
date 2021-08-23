@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class TimeLine extends Base
 {
     use HasFactory;
+
     /**
      * @var string $table
      */
@@ -84,7 +85,7 @@ class TimeLine extends Base
         $result['data'] = DB::table($this->table)
             ->limit($pagination['limit'])
             ->offset($pagination['limit'] * ($pagination['page'] - 1))
-            ->orderBy($order['order'],$order['direction'])
+            ->orderBy($order['order'], $order['direction'])
             ->get($column);
         $result['total'] = DB::table($this->table)->count();
         return $result;

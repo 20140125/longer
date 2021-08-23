@@ -49,6 +49,7 @@ class AMap extends Controller
         }
         return self::$instance;
     }
+
     /**
      * AMap constructor.
      */
@@ -56,7 +57,7 @@ class AMap extends Controller
     {
         $this->a_map_key = config('app.a_map_key');
         $this->url = 'https://restapi.amap.com/v3/';
-        $this->data = array('key' =>$this->a_map_key, 'output' =>'json');
+        $this->data = array('key' => $this->a_map_key, 'output' => 'json');
         $this->Curl = new  Curl();
     }
 
@@ -72,7 +73,7 @@ class AMap extends Controller
             $weatherUrl = 'weather/weatherInfo';
             $this->data['city'] = $ad_code;
             $this->data['extensions'] = $extensions;
-            return $this->Curl->get($this->url.$weatherUrl, $this->data);
+            return $this->Curl->get($this->url . $weatherUrl, $this->data);
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
         }
@@ -88,7 +89,7 @@ class AMap extends Controller
         try {
             $ipUrl = 'ip';
             $this->data['ip'] = $ipAddress;
-            return $this->Curl->get($this->url.$ipUrl, $this->data);
+            return $this->Curl->get($this->url . $ipUrl, $this->data);
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
         }
@@ -122,7 +123,7 @@ class AMap extends Controller
             $geoUrl = 'geocode/geo';
             $this->data['city'] = $city;
             $this->data['address'] = $address;
-            return $this->Curl->get($this->url.$geoUrl, $this->data);
+            return $this->Curl->get($this->url . $geoUrl, $this->data);
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
         }
@@ -130,8 +131,8 @@ class AMap extends Controller
 
     /**
      * TODO:路径规划
-     * @param string $origin  出发点 规则： lon，lat（经度，纬度）， “,”分割，如117.500244, 40.417801     经纬度小数点不超过6位
-     * @param  string $destination  目的地  规则： lon，lat（经度，纬度）， “,”分割，如117.500244, 40.417801     经纬度小数点不超过6位
+     * @param string $origin 出发点 规则： lon，lat（经度，纬度）， “,”分割，如117.500244, 40.417801     经纬度小数点不超过6位
+     * @param string $destination 目的地  规则： lon，lat（经度，纬度）， “,”分割，如117.500244, 40.417801     经纬度小数点不超过6位
      * @return int|mixed|null
      */
     public function direction(string $origin, string $destination)
@@ -140,7 +141,7 @@ class AMap extends Controller
             $directionUrl = 'direction/walking';
             $this->data['origin'] = $origin;
             $this->data['destination'] = $destination;
-            return $this->Curl->get($this->url.$directionUrl, $this->data);
+            return $this->Curl->get($this->url . $directionUrl, $this->data);
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
         }
@@ -160,7 +161,7 @@ class AMap extends Controller
             $this->data['keywords'] = $keywords;
             $this->data['location'] = $location;
             $this->data['city'] = $city;
-            return $this->Curl->get($this->url.$assistantUrl, $this->data);
+            return $this->Curl->get($this->url . $assistantUrl, $this->data);
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
         }

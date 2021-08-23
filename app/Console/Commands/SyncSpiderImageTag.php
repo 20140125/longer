@@ -58,7 +58,7 @@ class SyncSpiderImageTag extends Command
         try {
             if (stristr($url, 'page')) {
                 $this->startPage = intval(explode('.', substr($url, strrpos($url, '/') + 1))[0]);
-                $url =  substr($url, 0, strrpos($url, '/') - 5).'.html';
+                $url = substr($url, 0, strrpos($url, '/') - 5) . '.html';
             }
             $client = new Client();
             $promise = $client->request('GET', $url);
@@ -67,9 +67,9 @@ class SyncSpiderImageTag extends Command
             $bar = $this->output->createProgressBar(explode('/', $pageSize)[1]);
             foreach ($pageRange as $item) {
                 if (stristr($url, 'page')) {
-                    $url =  substr($url, 0, strrpos($url, '/') - 5).'.html';
+                    $url = substr($url, 0, strrpos($url, '/') - 5) . '.html';
                 }
-                $url = str_replace('.html', '/page/'.$item . '.html', $url);
+                $url = str_replace('.html', '/page/' . $item . '.html', $url);
                 $this->info('current spider image url：' . $url);
                 webPush('current spider image url：' . $url, $this->argument('uuid'), 'command');
                 sleep(1);
@@ -79,12 +79,12 @@ class SyncSpiderImageTag extends Command
                         'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),
                         'name' => mb_substr($node->filter('img')->attr('alt'), 0, 50)
                     ];
-                    if (SooGif::getInstance()->getOne(['href' =>$arr['href']])) {
+                    if (SooGif::getInstance()->getOne(['href' => $arr['href']])) {
                         $this->warn('Image already exists: ' . $arr['href']);
                         webPush('Image already exists: ' . $arr['href'], $this->argument('uuid'), 'command');
                     } else {
                         SooGif::getInstance()->saveOne($arr);
-                        $this->info('Successfully save image： ' .$arr['href']);
+                        $this->info('Successfully save image： ' . $arr['href']);
                         webPush('Successfully save image： ' . $arr['href'], $this->argument('uuid'), 'command');
                     }
                 });

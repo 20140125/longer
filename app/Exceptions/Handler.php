@@ -52,8 +52,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         // 解决vue history 地址丢失问题
-        if($e instanceof NotFoundHttpException)
-        {
+        if ($e instanceof NotFoundHttpException) {
             if ($e->getStatusCode() == 404) {
                 return response()->view('welcome');
             }

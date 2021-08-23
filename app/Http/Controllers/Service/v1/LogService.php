@@ -12,6 +12,7 @@ class LogService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -22,6 +23,7 @@ class LogService extends BaseService
         }
         return self::$instance;
     }
+
     /**
      * todo:获取日志
      * @param $where
@@ -32,6 +34,7 @@ class LogService extends BaseService
     {
         return $this->areaModel->getOne($where, $columns);
     }
+
     /**
      * todo:保存日志
      * @param $form
@@ -69,7 +72,7 @@ class LogService extends BaseService
      * @param $form
      * @return array
      */
-    public function removeLog($user,$form)
+    public function removeLog($user, $form)
     {
         $where[] = ['id', $form['id']];
         if ($user->role_id != 1) {

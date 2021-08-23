@@ -28,6 +28,7 @@ class Base extends Model
     {
         return DB::table($table)->where($where)->first($columns);
     }
+
     /**
      * todo:删除一条记录
      * @param $table

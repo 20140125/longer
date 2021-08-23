@@ -69,8 +69,8 @@ class SyncOauth extends Command
         $clientLists = RedisClient::getInstance()->sMembers(config('app.chat_user_key'));
         foreach ($clientLists as $item) {
             foreach (json_decode($item, true) as $client) {
-                $this->info('userInfo：'.json_encode($client, 256));
-                WebPush('Successfully synchronizing GetClient user：'.$client['username'], $this->argument('uuid'), 'command');
+                $this->info('userInfo：' . json_encode($client, 256));
+                WebPush('Successfully synchronizing GetClient user：' . $client['username'], $this->argument('uuid'), 'command');
             }
         }
         $this->info('Finished synchronizing the client user list');
@@ -95,8 +95,8 @@ class SyncOauth extends Command
             if ($users) {
                 /* todo：更新用户信息 */
                 Users::getInstance()->updateOne(['id' => $oauth->uid], ['remember_token' => $this->argument('remember_token')]);
-                $this->info('Successfully updated users： '. $users->username);
-                WebPush('Successfully updated users： '. $users->username, $this->argument('uuid'), 'command');
+                $this->info('Successfully updated users： ' . $users->username);
+                WebPush('Successfully updated users： ' . $users->username, $this->argument('uuid'), 'command');
                 /* todo：更新用户个人中心 */
                 $userCenter = UserCenter::getInstance()->getOne(['uid' => $oauth->uid]);
                 if ($userCenter) {
@@ -125,19 +125,19 @@ class SyncOauth extends Command
     {
         $salt = getRoundNum(8, 'all');
         $userArray = [
-            'username' => $oauth->username,
-            'avatar_url' => $oauth->avatar_url,
+            'username'       => $oauth->username,
+            'avatar_url'     => $oauth->avatar_url,
             'remember_token' => $oauth->remember_token,
-            'email' => $oauth->email ?? '',
-            'salt' => $salt,
-            'password' => md5(md5('123456789') . $salt),
-            'role_id' => $oauth->role_id,
-            'ip_address' => request()->ip(),
-            'created_at' => time(),
-            'updated_at' => time(),
-            'status' => $oauth->status,
-            'phone_number' => '',
-            'uuid' => ''
+            'email'          => $oauth->email ?? '',
+            'salt'           => $salt,
+            'password'       => md5(md5('123456789') . $salt),
+            'role_id'        => $oauth->role_id,
+            'ip_address'     => request()->ip(),
+            'created_at'     => time(),
+            'updated_at'     => time(),
+            'status'         => $oauth->status,
+            'phone_number'   => '',
+            'uuid'           => ''
         ];
         $userId = Users::getInstance()->saveOne($userArray);
         if (!$userId) {
@@ -145,7 +145,7 @@ class SyncOauth extends Command
             WebPush('Failed save users ' . $oauth->username, $this->argument('uuid'), 'command');
             return false;
         }
-        Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id').$userId]);
+        Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id') . $userId]);
         Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId]);
         $this->info('Successfully synchronizing oauth ' . $oauth->username);
         WebPush('Successfully synchronizing oauth ' . $oauth->username, $this->argument('uuid'), 'command');
@@ -160,7 +160,7 @@ class SyncOauth extends Command
         $arr = ['u_name' => $oauth->username, 'token' => $oauth->remember_token, 'uid' => $oauth->uid, 'notice_status' => 1, 'user_status' => 1];
         $id = UserCenter::getInstance()->saveOne($arr);
         if ($id) {
-            $this->info('Successfully save user center： '. $oauth->username);
+            $this->info('Successfully save user center： ' . $oauth->username);
             WebPush('Successfully save user center： ' . $oauth->username, $this->argument('uuid'), 'command');
         } else {
             $this->error('Failed save user center： ' . $oauth->username);

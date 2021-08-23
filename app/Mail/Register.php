@@ -10,10 +10,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class Register extends Mailable
 {
     use Queueable, SerializesModels;
+
     /**
      * @var $oauth
      */
     protected $request;
+
     /**
      * Create a new message instance.
      * @param $request
@@ -36,6 +38,6 @@ class Register extends Mailable
      */
     public function build()
     {
-        return $this->view('email.register')->with(['name'=>$this->request['name']]);
+        return $this->view('email.register')->with(['name' => $this->request['name']]);
     }
 }

@@ -5,18 +5,24 @@
 -- Table structure for os_api_doc
 -- ----------------------------
 DROP TABLE IF EXISTS `os_api_doc`;
-CREATE TABLE `os_api_doc` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` int(10) NOT NULL,
-  `html` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `markdown` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='接口详情列表';
- -- ;
+CREATE TABLE `os_api_doc`
+(
+    `id`       int(10) unsigned                NOT NULL AUTO_INCREMENT,
+    `type`     int(10)                         NOT NULL,
+    `html`     text COLLATE utf8mb4_unicode_ci NOT NULL,
+    `markdown` text COLLATE utf8mb4_unicode_ci NOT NULL,
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 15
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci
+  ROW_FORMAT = COMPACT COMMENT ='接口详情列表';
+-- ;
 -- ----------------------------
 -- Records of os_api_doc
 -- ----------------------------
-INSERT INTO os_api_doc VALUES ('1','1','<ul>
+INSERT INTO os_api_doc
+VALUES ('1', '1', '<ul>
 <li>
 <h6><a id="__httpswwwfanglongercomhttpswwwfanglongercom_0"></a>服务器域名：  <a href="https://www.fanglonger.com" target="_blank">https://www.fanglonger.com</a></h6>
 </li>
@@ -184,11 +190,11 @@ INSERT INTO os_api_doc VALUES ('1','1','<ul>
 <td>页面不存在 （NOT FOUND）</td>
 </tr>
 </tbody>
-</table>','- ###### 服务器域名：  [https://www.fanglonger.com](https://www.fanglonger.com)
+</table>', '- ###### 服务器域名：  [https://www.fanglonger.com](https://www.fanglonger.com)
 - ###### 需要设置：Authorization
 
 #### 权限管理
-   - [x] 1. 权限列表  
+   - [x] 1. 权限列表
       - [x] 1. 更新权限
       - [x] 2. 保存权限
       - [x] 3. 删除权限
@@ -199,11 +205,11 @@ INSERT INTO os_api_doc VALUES ('1','1','<ul>
    - [ ] 3. 角色列表
       - [ ] 1. 更新角色列表
       - [ ] 2. 保存角色列表
-      - [ ] 3. 删除角色列表 
+      - [ ] 3. 删除角色列表
    - [ ] 4. 授权用户列表
       - [ ] 1. 更新授权用户列表
       - [ ] 2. 保存授权用户列表
-      - [ ] 3. 删除授权用户列表 
+      - [ ] 3. 删除授权用户列表
    - [ ] 5. 申请授权列表
       - [ ] 1. 更新申请授权列表
       - [ ] 2. 保存申请授权列表
@@ -227,7 +233,7 @@ INSERT INTO os_api_doc VALUES ('1','1','<ul>
     - [ ] 3. 数据表修复
     - [ ] 4. 数据表修改
 - [ ] 2. 日志列表
-    - [ ] 1.日志删除 
+    - [ ] 1.日志删除
 - [ ] 3. 基础配置
     - [ ] 1. 基础配置保存
     - [ ] 2. 基础配置更新
@@ -260,7 +266,7 @@ INSERT INTO os_api_doc VALUES ('1','1','<ul>
 - [ ] 2. Quill (富文本)
 
 - ###### 错误码说明
-  
+
 
 |错误码|说明|
 |---|---|
@@ -270,7 +276,8 @@ INSERT INTO os_api_doc VALUES ('1','1','<ul>
 |401|没有权限 （Unauthorized）|
 |403|拒绝访问 （Forbidden）|
 |404|页面不存在 （NOT FOUND）|');
-INSERT INTO os_api_doc VALUES ('2','7','<h5><a id="_0"></a>简要描述</h5>
+INSERT INTO os_api_doc
+VALUES ('2', '7', '<h5><a id="_0"></a>简要描述</h5>
 <ul>
 <li>
 <h6><a id="_2"></a>获取权限列表</h6>
@@ -359,13 +366,13 @@ INSERT INTO os_api_doc VALUES ('2','7','<h5><a id="_0"></a>简要描述</h5>
     <span class="hljs-attr">"code"</span>: <span class="hljs-number">405</span>,
     <span class="hljs-attr">"msg"</span>: <span class="hljs-string">"Method Not Allowed"</span>
 }
-</code></div></pre>','##### 简要描述
+</code></div></pre>', '##### 简要描述
 
 - ###### 获取权限列表
 
 ##### 请求地址
 - [https://www.fanglonger.com/api/v1/auth/index](https://www.fanglonger.com/api/v1/auth/index)
- 
+
 ##### 请求方式
 
 - ###### POST
@@ -422,7 +429,8 @@ INSERT INTO os_api_doc VALUES ('2','7','<h5><a id="_0"></a>简要描述</h5>
     "msg": "Method Not Allowed"
 }
 ```');
-INSERT INTO os_api_doc VALUES ('3','2','<h4><a id="_0"></a>权限管理</h4>
+INSERT INTO os_api_doc
+VALUES ('3', '2', '<h4><a id="_0"></a>权限管理</h4>
 <ul class="contains-task-list">
 <li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> 1. 权限列表
 <ul class="contains-task-list">
@@ -459,8 +467,8 @@ INSERT INTO os_api_doc VALUES ('3','2','<h4><a id="_0"></a>权限管理</h4>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 3. 删除申请授权列表</li>
 </ul>
 </li>
-</ul>','#### 权限管理
-   - [x] 1. 权限列表  
+</ul>', '#### 权限管理
+   - [x] 1. 权限列表
       - [x] 1. 更新权限
       - [x] 2. 保存权限
       - [x] 3. 删除权限
@@ -471,16 +479,17 @@ INSERT INTO os_api_doc VALUES ('3','2','<h4><a id="_0"></a>权限管理</h4>
    - [ ] 3. 角色列表
       - [ ] 1. 更新角色列表
       - [ ] 2. 保存角色列表
-      - [ ] 3. 删除角色列表 
+      - [ ] 3. 删除角色列表
    - [ ] 4. 授权用户列表
       - [ ] 1. 更新授权用户列表
       - [ ] 2. 保存授权用户列表
-      - [ ] 3. 删除授权用户列表 
+      - [ ] 3. 删除授权用户列表
    - [ ] 5. 申请授权列表
       - [ ] 1. 更新申请授权列表
       - [ ] 2. 保存申请授权列表
       - [ ] 3. 删除申请授权列表');
-INSERT INTO os_api_doc VALUES ('4','3','<h4><a id="_0"></a>文件管理</h4>
+INSERT INTO os_api_doc
+VALUES ('4', '3', '<h4><a id="_0"></a>文件管理</h4>
 <ul class="contains-task-list">
 <li class="task-list-item"><input class="task-list-item-checkbox" checked="" disabled="" type="checkbox"> 1. 文件列表
 <ul class="contains-task-list">
@@ -496,7 +505,7 @@ INSERT INTO os_api_doc VALUES ('4','3','<h4><a id="_0"></a>文件管理</h4>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 10. 文件保存</li>
 </ul>
 </li>
-</ul>','#### 文件管理
+</ul>', '#### 文件管理
 - [x] 1. 文件列表
     - [ ] 1. 文件权限
     - [ ] 2. 文件读取
@@ -508,7 +517,8 @@ INSERT INTO os_api_doc VALUES ('4','3','<h4><a id="_0"></a>文件管理</h4>
     - [ ] 8. 文件重命名
     - [ ] 9. 文件删除
     - [ ] 10. 文件保存');
-INSERT INTO os_api_doc VALUES ('5','4','<h4><a id="_0"></a>系统管理</h4>
+INSERT INTO os_api_doc
+VALUES ('5', '4', '<h4><a id="_0"></a>系统管理</h4>
 <ul class="contains-task-list">
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 1. 数据表列表
 <ul class="contains-task-list">
@@ -547,14 +557,14 @@ INSERT INTO os_api_doc VALUES ('5','4','<h4><a id="_0"></a>系统管理</h4>
 </li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 7. 系统日志</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 8. 聊天记录</li>
-</ul>','#### 系统管理
+</ul>', '#### 系统管理
 - [ ] 1. 数据表列表
     - [ ] 1. 数据表备份
     - [ ] 2. 数据表优化
     - [ ] 3. 数据表修复
     - [ ] 4. 数据表修改
 - [ ] 2. 日志列表
-    - [ ] 1.日志删除 
+    - [ ] 1.日志删除
 - [ ] 3. 基础配置
     - [ ] 1. 基础配置保存
     - [ ] 2. 基础配置更新
@@ -570,7 +580,8 @@ INSERT INTO os_api_doc VALUES ('5','4','<h4><a id="_0"></a>系统管理</h4>
     - [ ] 1. 更新用户信息
 - [ ] 7. 系统日志
 - [ ] 8. 聊天记录');
-INSERT INTO os_api_doc VALUES ('6','5','<h4><a id="_0"></a>项目管理</h4>
+INSERT INTO os_api_doc
+VALUES ('6', '5', '<h4><a id="_0"></a>项目管理</h4>
 <ul class="contains-task-list">
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 1. 项目列表 （JSON）
 <ul class="contains-task-list">
@@ -589,7 +600,7 @@ INSERT INTO os_api_doc VALUES ('6','5','<h4><a id="_0"></a>项目管理</h4>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 3. APiDoc删除</li>
 </ul>
 </li>
-</ul>','#### 项目管理
+</ul>', '#### 项目管理
 - [ ] 1. 项目列表 （JSON）
    - [ ] 1. 分类保存
    - [ ] 2. 分类更新
@@ -601,14 +612,16 @@ INSERT INTO os_api_doc VALUES ('6','5','<h4><a id="_0"></a>项目管理</h4>
    - [ ] 1. APiDoc保存
    - [ ] 2. APiDoc更新
    - [ ] 3. APiDoc删除');
-INSERT INTO os_api_doc VALUES ('7','6','<h4><a id="_0"></a>编辑器管理</h4>
+INSERT INTO os_api_doc
+VALUES ('7', '6', '<h4><a id="_0"></a>编辑器管理</h4>
 <ul class="contains-task-list">
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 1. MarkDown</li>
 <li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"> 2. Quill (富文本)</li>
-</ul>','#### 编辑器管理
+</ul>', '#### 编辑器管理
 - [ ] 1. MarkDown
 - [ ] 2. Quill (富文本)');
-INSERT INTO os_api_doc VALUES ('8','10','<h5><a id="_0"></a>简要描述</h5>
+INSERT INTO os_api_doc
+VALUES ('8', '10', '<h5><a id="_0"></a>简要描述</h5>
 <ul>
 <li>
 <h6><a id="_2"></a>删除权限列表</h6>
@@ -687,13 +700,13 @@ INSERT INTO os_api_doc VALUES ('8','10','<h5><a id="_0"></a>简要描述</h5>
     <span class="hljs-attr">"code"</span>: <span class="hljs-number">405</span>,
     <span class="hljs-attr">"msg"</span>: <span class="hljs-string">"Method Not Allowed"</span>
 }
-</code></div></pre>','##### 简要描述
+</code></div></pre>', '##### 简要描述
 
 - ###### 删除权限列表
 
 ##### 请求地址
 - [https://www.fanglonger.com/api/v1/auth/delete](https://www.fanglonger.com/api/v1/auth/delete)
- 
+
 ##### 请求方式
 
 - ###### POST
@@ -728,7 +741,8 @@ INSERT INTO os_api_doc VALUES ('8','10','<h5><a id="_0"></a>简要描述</h5>
     "msg": "Method Not Allowed"
 }
 ```');
-INSERT INTO os_api_doc VALUES ('9','8','<h5><a id="_0"></a>简要描述</h5>
+INSERT INTO os_api_doc
+VALUES ('9', '8', '<h5><a id="_0"></a>简要描述</h5>
 <ul>
 <li>
 <h6><a id="_2"></a>更新权限列表</h6>
@@ -844,13 +858,13 @@ INSERT INTO os_api_doc VALUES ('9','8','<h5><a id="_0"></a>简要描述</h5>
     <span class="hljs-attr">"code"</span>: <span class="hljs-number">201</span>,
     <span class="hljs-attr">"msg"</span>: <span class="hljs-string">"update rule error"</span>
 }
-</code></div></pre>','##### 简要描述
+</code></div></pre>', '##### 简要描述
 
 - ###### 更新权限列表
 
 ##### 请求地址
 - [https://www.fanglonger.com/api/v1/auth/update](https://www.fanglonger.com/api/v1/auth/update)
- 
+
 ##### 请求方式
 
 - ###### POST
@@ -892,7 +906,8 @@ INSERT INTO os_api_doc VALUES ('9','8','<h5><a id="_0"></a>简要描述</h5>
     "msg": "update rule error"
 }
 ```');
-INSERT INTO os_api_doc VALUES ('10','9','<h5><a id="_0"></a>简要描述</h5>
+INSERT INTO os_api_doc
+VALUES ('10', '9', '<h5><a id="_0"></a>简要描述</h5>
 <ul>
 <li>
 <h6><a id="_2"></a>保存权限列表</h6>
@@ -1001,13 +1016,13 @@ INSERT INTO os_api_doc VALUES ('10','9','<h5><a id="_0"></a>简要描述</h5>
     <span class="hljs-attr">"code"</span>: <span class="hljs-number">201</span>,
     <span class="hljs-attr">"msg"</span>: <span class="hljs-string">"save rule error"</span>
 }
-</code></div></pre>','##### 简要描述
+</code></div></pre>', '##### 简要描述
 
 - ###### 保存权限列表
 
 ##### 请求地址
 - [https://www.fanglonger.com/api/v1/auth/save](https://www.fanglonger.com/api/v1/auth/save)
- 
+
 ##### 请求方式
 
 - ###### POST
@@ -1048,7 +1063,8 @@ INSERT INTO os_api_doc VALUES ('10','9','<h5><a id="_0"></a>简要描述</h5>
     "msg": "save rule error"
 }
 ```');
-INSERT INTO os_api_doc VALUES ('11','15','<h5><a id="_0"></a>简要描述</h5>
+INSERT INTO os_api_doc
+VALUES ('11', '15', '<h5><a id="_0"></a>简要描述</h5>
 <ul>
 <li>
 <h6><a id="_2"></a>获取文件列表</h6>
@@ -1170,13 +1186,13 @@ INSERT INTO os_api_doc VALUES ('11','15','<h5><a id="_0"></a>简要描述</h5>
     <span class="hljs-attr">"code"</span>: <span class="hljs-number">405</span>,
     <span class="hljs-attr">"msg"</span>: <span class="hljs-string">"Method Not Allowed"</span>
 }
-</code></div></pre>','##### 简要描述
+</code></div></pre>', '##### 简要描述
 
 - ###### 获取文件列表
 
 ##### 请求地址
 - [https://www.fanglonger.com/api/v1/file/index](https://www.fanglonger.com/api/v1/file/index)
- 
+
 ##### 请求方式
 
 - ###### POST
@@ -1254,7 +1270,8 @@ INSERT INTO os_api_doc VALUES ('11','15','<h5><a id="_0"></a>简要描述</h5>
     "msg": "Method Not Allowed"
 }
 ```');
-INSERT INTO os_api_doc VALUES ('12','16','<h5><a id="_0"></a>简要描述</h5>
+INSERT INTO os_api_doc
+VALUES ('12', '16', '<h5><a id="_0"></a>简要描述</h5>
 <ul>
 <li>
 <h6><a id="_2"></a>设置文件权限</h6>
@@ -1333,13 +1350,13 @@ INSERT INTO os_api_doc VALUES ('12','16','<h5><a id="_0"></a>简要描述</h5>
     <span class="hljs-attr">"code"</span>: <span class="hljs-number">405</span>,
     <span class="hljs-attr">"msg"</span>: <span class="hljs-string">"Method Not Allowed"</span>
 }
-</code></div></pre>','##### 简要描述
+</code></div></pre>', '##### 简要描述
 
 - ###### 设置文件权限
 
 ##### 请求地址
 - [https://www.fanglonger.com/api/v1/file/chmod](https://www.fanglonger.com/api/v1/file/chmod)
- 
+
 ##### 请求方式
 
 - ###### POST
@@ -1374,7 +1391,8 @@ INSERT INTO os_api_doc VALUES ('12','16','<h5><a id="_0"></a>简要描述</h5>
     "msg": "Method Not Allowed"
 }
 ```');
-INSERT INTO os_api_doc VALUES ('13','16','<h5><a id="_0"></a>简要描述</h5>
+INSERT INTO os_api_doc
+VALUES ('13', '16', '<h5><a id="_0"></a>简要描述</h5>
 <ul>
 <li>
 <h6><a id="_2"></a>设置文件权限</h6>
@@ -1453,13 +1471,13 @@ INSERT INTO os_api_doc VALUES ('13','16','<h5><a id="_0"></a>简要描述</h5>
     <span class="hljs-attr">"code"</span>: <span class="hljs-number">405</span>,
     <span class="hljs-attr">"msg"</span>: <span class="hljs-string">"Method Not Allowed"</span>
 }
-</code></div></pre>','##### 简要描述
+</code></div></pre>', '##### 简要描述
 
 - ###### 设置文件权限
 
 ##### 请求地址
 - [https://www.fanglonger.com/api/v1/file/chmod](https://www.fanglonger.com/api/v1/file/chmod)
- 
+
 ##### 请求方式
 
 - ###### POST
@@ -1494,7 +1512,8 @@ INSERT INTO os_api_doc VALUES ('13','16','<h5><a id="_0"></a>简要描述</h5>
     "msg": "Method Not Allowed"
 }
 ```');
-INSERT INTO os_api_doc VALUES ('14','16','<h5><a id="_0"></a>简要描述</h5>
+INSERT INTO os_api_doc
+VALUES ('14', '16', '<h5><a id="_0"></a>简要描述</h5>
 <ul>
 <li>
 <h6><a id="_2"></a>设置文件权限</h6>
@@ -1573,13 +1592,13 @@ INSERT INTO os_api_doc VALUES ('14','16','<h5><a id="_0"></a>简要描述</h5>
     <span class="hljs-attr">"code"</span>: <span class="hljs-number">405</span>,
     <span class="hljs-attr">"msg"</span>: <span class="hljs-string">"Method Not Allowed"</span>
 }
-</code></div></pre>','##### 简要描述
+</code></div></pre>', '##### 简要描述
 
 - ###### 设置文件权限
 
 ##### 请求地址
 - [https://www.fanglonger.com/api/v1/file/chmod](https://www.fanglonger.com/api/v1/file/chmod)
- 
+
 ##### 请求方式
 
 - ###### POST

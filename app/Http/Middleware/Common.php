@@ -12,14 +12,14 @@ class Common extends Base
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param  \Closure  $next
+     * @param \Closure $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
-        if ($authorization['code'] === Code::SUCCESS){
+        if ($authorization['code'] === Code::SUCCESS) {
             $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
             /* todo：获取用户角色信息 */
             $_role = $this->roleService->getRole(['id' => $_user->role_id], ['auth_api']);

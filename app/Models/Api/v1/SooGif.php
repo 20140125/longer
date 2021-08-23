@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class SooGif extends Base
 {
     use HasFactory;
+
     /**
      * @var string $table
      */
@@ -76,6 +77,7 @@ class SooGif extends Base
     {
         return $this->remove($this->table, $where);
     }
+
     /**
      * todo:获取数据列表
      * @param $where

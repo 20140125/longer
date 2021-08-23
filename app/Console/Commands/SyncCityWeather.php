@@ -55,35 +55,35 @@ class SyncCityWeather extends Command
     protected function syncCityWeather()
     {
         try {
-            $lists = Area::getInstance()->getAreaLists([['id' ,'>' , 1]]);
+            $lists = Area::getInstance()->getAreaLists([['id', '>', 1]]);
             $bar = $this->output->createProgressBar(count($lists));
             $form = [];
             foreach ($lists as $item) {
-                $this->info('currently synchronized city weather is：【'.$item->name.'】');
-                $_weather = (array)AMap::getInstance()->getWeather($item->code ,'all');
+                $this->info('currently synchronized city weather is：【' . $item->name . '】');
+                $_weather = (array)AMap::getInstance()->getWeather($item->code, 'all');
                 if (!empty($_weather['code'])) {
                     $this->error($_weather['message']);
                     continue;
                 }
                 $forecast = !empty($_weather['info']) ? ($_weather['info'] == 'OK' ? $_weather['forecasts'][0] : '') : '';
-                if(empty($forecast)) {
+                if (empty($forecast)) {
                     $this->error('Failed get weather info');
                     continue;
                 }
                 $info = array(
-                    'city' => $forecast->city ?? '',
-                    'adcode' => $forecast->adcode ??  '',
-                    'province' => $forecast->province ??  '',
+                    'city'       => $forecast->city ?? '',
+                    'adcode'     => $forecast->adcode ?? '',
+                    'province'   => $forecast->province ?? '',
                     'reporttime' => $forecast->reporttime ?? '',
-                    'casts' => $forecast->casts ? $forecast->casts[0] : ''
+                    'casts'      => $forecast->casts ? $forecast->casts[0] : ''
                 );
                 $form['updated_at'] = date('Y-m-d H:i:s');
                 $form['info'] = json_encode($info, JSON_UNESCAPED_UNICODE);
                 $form['forecast'] = json_encode($forecast, JSON_UNESCAPED_UNICODE);
                 if (Area::getInstance()->updateOne(['id' => $item->id], $form)) {
-                    $this->info('Successfully synchronized city weather is：【'.$item->name.'】');
+                    $this->info('Successfully synchronized city weather is：【' . $item->name . '】');
                 } else {
-                    $this->info('Failed synchronized city weather is：【'.$item->name.'】');
+                    $this->info('Failed synchronized city weather is：【' . $item->name . '】');
                 }
                 usleep(rand(500000, 700000));
                 $bar->advance();

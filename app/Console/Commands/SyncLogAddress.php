@@ -57,12 +57,12 @@ class SyncLogAddress extends Command
                     $res = (array)AMap::getInstance()->getAddress($item->ip_address);
                     $province = gettype($res['province']) === 'string' ? $res['province'] : '中华人民共和国';
                     $city = gettype($res['city']) === 'string' ? $res['city'] : '';
-                    $item->local = $province.','.$city;
+                    $item->local = $province . ',' . $city;
                 }
                 if (!empty(Log::getInstance()->updateOne(['id' => $item->id], ['local' => $item->local]))) {
-                    $this->info('Successfully updated location：'.$item->local);
+                    $this->info('Successfully updated location：' . $item->local);
                 } else {
-                    $this->info('Failed updated location：'.$item->local);
+                    $this->info('Failed updated location：' . $item->local);
                 }
                 usleep(rand(500000, 700000));
                 $bar->advance();

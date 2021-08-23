@@ -42,7 +42,7 @@ class OsChinaController extends OAuthController
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url').'api/v1/callback/os_china';
+        $this->redirectUri = config('app.url') . 'api/v1/callback/os_china';
     }
 
     /**
@@ -67,12 +67,12 @@ class OsChinaController extends OAuthController
     public function getAuthUrl($length = 32, $callback = '')
     {
         $arr = [
-            'client_id' => $this->appid,
+            'client_id'     => $this->appid,
             'response_type' => 'code',
-            'redirect_uri' => empty($callback) ? $this->redirectUri : $callback,
-            'state' => $this->getState($length),
+            'redirect_uri'  => empty($callback) ? $this->redirectUri : $callback,
+            'state'         => $this->getState($length),
         ];
-        return $this->apiUrl.'action/oauth2/authorize?'.http_build_query($arr);
+        return $this->apiUrl . 'action/oauth2/authorize?' . http_build_query($arr);
     }
 
     /**
@@ -84,15 +84,15 @@ class OsChinaController extends OAuthController
     public function getAccessToken(string $code)
     {
         $arr = [
-            'client_id' => $this->appid,
+            'client_id'     => $this->appid,
             'client_secret' => $this->appsecret,
-            'grant_type' => 'authorization_code',
-            'code' => $code,
-            'redirect_uri' => $this->redirectUri,
-            'dataType' => 'json',
-            'callback' => 'json'
+            'grant_type'    => 'authorization_code',
+            'code'          => $code,
+            'redirect_uri'  => $this->redirectUri,
+            'dataType'      => 'json',
+            'callback'      => 'json'
         ];
-        $result = $this->curl->post($this->apiUrl.'action/openapi/token', $arr);
+        $result = $this->curl->post($this->apiUrl . 'action/openapi/token', $arr);
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
@@ -109,15 +109,15 @@ class OsChinaController extends OAuthController
     public function refreshToken(string $refreshToken)
     {
         $arr = [
-            'client_id' => $this->appid,
+            'client_id'     => $this->appid,
             'client_secret' => $this->appsecret,
-            'grant_type' => 'refresh_token',
-            'redirect_uri' => $this->redirectUri,
+            'grant_type'    => 'refresh_token',
+            'redirect_uri'  => $this->redirectUri,
             'refresh_token' => $refreshToken,
-            'dataType' => 'json',
-            'callback' => 'json'
+            'dataType'      => 'json',
+            'callback'      => 'json'
         ];
-        $result = $this->curl->post($this->apiUrl.'action/openapi/token', $arr);
+        $result = $this->curl->post($this->apiUrl . 'action/openapi/token', $arr);
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
@@ -134,9 +134,9 @@ class OsChinaController extends OAuthController
     {
         $arr = [
             'access_token' => $access_token,
-            'dataType' => 'json'
+            'dataType'     => 'json'
         ];
-        $result = $this->curl->post($this->apiUrl.'action/openapi/user', $arr);
+        $result = $this->curl->post($this->apiUrl . 'action/openapi/user', $arr);
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
@@ -155,11 +155,11 @@ class OsChinaController extends OAuthController
     {
         $arr = [
             'access_token' => $access_token,
-            'dataType' => 'json',
-            'user' => $user,
-            'friend' => $friend
+            'dataType'     => 'json',
+            'user'         => $user,
+            'friend'       => $friend
         ];
-        $result = $this->curl->post($this->apiUrl.'action/openapi/user_information', $arr);
+        $result = $this->curl->post($this->apiUrl . 'action/openapi/user_information', $arr);
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }

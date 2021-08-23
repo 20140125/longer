@@ -10,6 +10,7 @@ class ToolsService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -20,6 +21,7 @@ class ToolsService extends BaseService
         }
         return self::$instance;
     }
+
     /**
      * todo:获取定位
      * @param $form
@@ -31,7 +33,7 @@ class ToolsService extends BaseService
         if (!empty($result['code'])) {
             return $result;
         }
-        if(gettype($result) === 'boolean') {
+        if (gettype($result) === 'boolean') {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Failed get Address';
             return $this->return;

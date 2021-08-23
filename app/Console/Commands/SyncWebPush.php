@@ -51,49 +51,49 @@ class SyncWebPush extends Command
     protected function sendWebPusherMessage()
     {
         try {
-            $lists = Push::getInstance()->getLists([['state','<>','successfully']], ['page' => 1, 'limit' => 10000]);
+            $lists = Push::getInstance()->getLists([['state', '<>', 'successfully']], ['page' => 1, 'limit' => 10000]);
             $bar = $this->output->createProgressBar($lists['total']);
             foreach ($lists['data'] as &$item) {
                 $userCenter = UserCenter::getInstance()->getOne(['u_name' => $item->username]);
                 if ($userCenter->notice_status == 2) {
-                    $this->error('【'.$item->username.'】：Disable notification within the station');
+                    $this->error('【' . $item->username . '】：Disable notification within the station');
                     return false;
                 }
-                switch($item->status) {
+                switch ($item->status) {
                     /*todo:立即推送*/
                     case 1:
                         if (!RedisClient::getInstance()->sIsMember(config('app.redis_user_key'), $item->uuid)) {
                             $item->state = Code::WEBSOCKET_STATE[2];
-                            $this->warn('【'.$item->username.'】：Already offline~');
+                            $this->warn('【' . $item->username . '】：Already offline~');
                             break;
                         }
                         if (webPush($item->info, $item->uuid)) {
                             $item->state = Code::WEBSOCKET_STATE[0];
                             $item->created_at = time();
-                            $this->info('【'.$item->username.'】：Successfully push notification');
+                            $this->info('【' . $item->username . '】：Successfully push notification');
                         } else {
                             $item->state = Code::WEBSOCKET_STATE[1];
-                            $this->error('【'.$item->username.'】：Failed push notification');
+                            $this->error('【' . $item->username . '】：Failed push notification');
                         }
                         break;
                     /*todo:定时推送*/
                     case 2:
                         if ($item->created_at > time()) {
-                            $this->warn('【'.$item->username.'】：Push time yet to come');
+                            $this->warn('【' . $item->username . '】：Push time yet to come');
                             break;
                         }
                         if (!RedisClient::getInstance()->sIsMember(config('app.redis_user_key'), $item->uuid)) {
                             $item->state = Code::WEBSOCKET_STATE[2];
-                            $this->warn('【'.$item->username.'】：Already offline~');
+                            $this->warn('【' . $item->username . '】：Already offline~');
                             break;
                         }
                         if (webPush($item->info, $item->uid)) {
                             $item->state = Code::WEBSOCKET_STATE[0];
                             $item->created_at = time();
-                            $this->info('【'.$item->username.'】：Push station timing message successfully');
+                            $this->info('【' . $item->username . '】：Push station timing message successfully');
                         } else {
                             $item->state = Code::WEBSOCKET_STATE[1];
-                            $this->error('【'.$item->username.'】：Push station timing message failed');
+                            $this->error('【' . $item->username . '】：Push station timing message failed');
                         }
                         break;
                 }

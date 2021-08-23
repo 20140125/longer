@@ -22,6 +22,7 @@ class Oauth extends Mailable
     {
         $this->request = $request;
     }
+
     /**
      * @var string $subject
      */
@@ -35,9 +36,9 @@ class Oauth extends Mailable
     public function build()
     {
         return $this->view('email.oauth')->with([
-            'code'=>$this->request['verify_code'],
-            'username'=>$this->request['username'],
-            'url'=>config('app.url')."/admin/index/{$this->request['remember_token']}"
+            'code'     => $this->request['verify_code'],
+            'username' => $this->request['username'],
+            'url'      => config('app.url') . "/admin/index/{$this->request['remember_token']}"
         ]);
     }
 }

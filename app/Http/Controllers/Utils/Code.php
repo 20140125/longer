@@ -23,7 +23,7 @@ class Code extends Controller
     /* todo:服务器错误 */
     const SERVER_ERROR = 500;
     /* todo:站内信息推送的状态 (成功 失败 离线) */
-    const WEBSOCKET_STATE = array( 'successfully', 'failed', 'offline');
+    const WEBSOCKET_STATE = array('successfully', 'failed', 'offline');
     /**
      * @var static $instance
      */
@@ -39,6 +39,7 @@ class Code extends Controller
         }
         return self::$instance;
     }
+
     private function __clone()
     {
         // TODO: Implement __clone() method.

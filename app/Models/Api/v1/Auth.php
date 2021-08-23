@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class Auth extends Base
 {
     use HasFactory;
+
     /**
      * @var string $table
      */

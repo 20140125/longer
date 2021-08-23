@@ -15,6 +15,7 @@ class AreaService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -33,11 +34,11 @@ class AreaService extends BaseService
      * @param string[] $columns
      * @return array
      */
-    public function getAreaLists($form, bool $getAll = false, $columns = ['id','parent_id as pid', 'name', 'code', 'info', 'forecast'])
+    public function getAreaLists($form, bool $getAll = false, $columns = ['id', 'parent_id as pid', 'name', 'code', 'info', 'forecast'])
     {
         if ($getAll) {
             $result = Cache::get('__cache_area');
-            if(!empty($result)) {
+            if (!empty($result)) {
                 $this->return['lists'] = json_decode($result, true);
                 return $this->return;
             }
@@ -65,23 +66,23 @@ class AreaService extends BaseService
     public function getAreaWeather($form)
     {
         try {
-            $_weather = (array)AMap::getInstance()->getWeather($form['code'] ,'all');
+            $_weather = (array)AMap::getInstance()->getWeather($form['code'], 'all');
             if (!empty($_weather['code'])) {
                 $this->return = $_weather;
                 return $this->return;
             }
             $forecast = !empty($_weather['info']) ? ($_weather['info'] == 'OK' ? $_weather['forecasts'][0] : '') : '';
-            if(empty($forecast)) {
+            if (empty($forecast)) {
                 $this->return['code'] = Code::ERROR;
                 $this->return['message'] = 'Failed get weather info';
                 return $this->return;
             }
             $info = array(
-                'city' => $forecast->city ?? '',
-                'adcode' => $forecast->adcode ??  '',
-                'province' => $forecast->province ??  '',
+                'city'       => $forecast->city ?? '',
+                'adcode'     => $forecast->adcode ?? '',
+                'province'   => $forecast->province ?? '',
                 'reporttime' => $forecast->reporttime ?? '',
-                'casts' => $forecast->casts ? $forecast->casts[0] : ''
+                'casts'      => $forecast->casts ? $forecast->casts[0] : ''
             );
             $form['updated_at'] = date('Y-m-d H:i:s');
             $form['created_at'] = strtotime($form['created_at']);
@@ -95,6 +96,7 @@ class AreaService extends BaseService
             return ['code' => Code::ERROR, 'message' => $exception->getMessage()];
         }
     }
+
     /**
      * todo:获取城市缓存
      * @param array $form
@@ -104,16 +106,17 @@ class AreaService extends BaseService
     {
         $attr = !empty($form['type']) ? ['__cache_val' => '_weather', 'fields' => ['code', 'info', 'parent_id', 'id', 'name', 'forecast'], 'timeout' => 1] : ['__cache_val' => '_center', 'fields' => ['parent_id', 'id', 'name'], 'timeout' => 0];
         $result = Cache::get($attr['__cache_val']);
-        if(!empty($result)) {
+        if (!empty($result)) {
             $this->return['lists'] = json_decode($result, true);
             return $this->return;
         }
-        $where = [['id' ,'>' , 0]];
+        $where = [['id', '>', 0]];
         $result = $this->areaModel->getAreaLists($where, $attr['fields']);
-        $attr['timeout'] ? Cache::put($attr['__cache_val'],json_encode($result, 256), Carbon::now()->addDay()) : Cache::forever($attr['__cache_val'], json_encode($result, 256));
+        $attr['timeout'] ? Cache::put($attr['__cache_val'], json_encode($result, 256), Carbon::now()->addDay()) : Cache::forever($attr['__cache_val'], json_encode($result, 256));
         $this->return['lists'] = $result;
         return $this->return;
     }
+
     /**
      * todo:获取天气
      * @param $where

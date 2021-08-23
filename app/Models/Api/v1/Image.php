@@ -9,6 +9,7 @@ use Illuminate\Database\Query\Builder;
 class Image extends Base
 {
     use HasFactory;
+
     /**
      * @var string $table
      */

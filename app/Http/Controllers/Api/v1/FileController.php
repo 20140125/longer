@@ -13,7 +13,7 @@ class FileController extends BaseController
      */
     public function getFileLists()
     {
-        validatePost($this->post, ['path'=>'required|string', 'basename'=>'required|string']);
+        validatePost($this->post, ['path' => 'required|string', 'basename' => 'required|string']);
         $result = $this->fileService->getFileLists($this->post, ['rebar3']);
         return ajaxReturn($result);
     }
@@ -24,7 +24,7 @@ class FileController extends BaseController
      */
     public function readFile()
     {
-        validatePost($this->post, ['path'=>'required|string']);
+        validatePost($this->post, ['path' => 'required|string']);
         $result = $this->fileService->readFile($this->post);
         return ajaxReturn($result);
     }
@@ -35,7 +35,7 @@ class FileController extends BaseController
      */
     public function updateFile()
     {
-        validatePost($this->post, ['path'=>'required|string', 'content' => 'required|string']);
+        validatePost($this->post, ['path' => 'required|string', 'content' => 'required|string']);
         $result = $this->fileService->updateFile($this->post);
         return ajaxReturn($result);
     }
@@ -49,10 +49,11 @@ class FileController extends BaseController
      */
     public function gZipFile()
     {
-        validatePost($this->post, ['path'=>'required|string','resource'=>'required|string','docLists'=>'required|array']);
+        validatePost($this->post, ['path' => 'required|string', 'resource' => 'required|string', 'docLists' => 'required|array']);
         $result = $this->fileService->gZipFile($this->post);
         return ajaxReturn($result);
     }
+
     /**
      * TODO:：文件解压
      * @param string path 文件路径
@@ -61,7 +62,7 @@ class FileController extends BaseController
      */
     public function unGZipFile()
     {
-        validatePost($this->post, ['path'=>'required|string','resource'=>'required|string']);
+        validatePost($this->post, ['path' => 'required|string', 'resource' => 'required|string']);
         $result = $this->fileService->unGZipFile($this->post);
         return ajaxReturn($result);
     }
@@ -73,10 +74,11 @@ class FileController extends BaseController
      */
     public function removeFile()
     {
-        validatePost($this->post, ['path'=>'required|string']);
+        validatePost($this->post, ['path' => 'required|string']);
         $result = $this->fileService->removeFile($this->post);
         return ajaxReturn($result);
     }
+
     /**
      * TODO:：文件新建
      * @param string path 文件路径
@@ -84,7 +86,7 @@ class FileController extends BaseController
      */
     public function createFile()
     {
-        validatePost($this->post, ['path'=>'required|string']);
+        validatePost($this->post, ['path' => 'required|string']);
         $result = $this->fileService->createFile($this->post);
         return ajaxReturn($result);
     }
@@ -106,7 +108,7 @@ class FileController extends BaseController
      */
     public function setFileAuth()
     {
-        validatePost($this->post, ['path'=>'required|string','auth'=>'required|integer|max:666']);
+        validatePost($this->post, ['path' => 'required|string', 'auth' => 'required|integer|max:666']);
         $result = $this->fileService->setFileAuth($this->post);
         return ajaxReturn($result);
     }
@@ -117,7 +119,7 @@ class FileController extends BaseController
      */
     public function renameFile()
     {
-        validatePost($this->post, ['oldFile'=>'required|string','newFile'=>'required|string']);
+        validatePost($this->post, ['oldFile' => 'required|string', 'newFile' => 'required|string']);
         $result = $this->fileService->renameFile($this->post);
         return ajaxReturn($result);
     }

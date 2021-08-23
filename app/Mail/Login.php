@@ -25,6 +25,7 @@ class Login extends Mailable
     {
         $this->request = $request;
     }
+
     /**
      * @var string $subject
      */
@@ -38,8 +39,8 @@ class Login extends Mailable
     public function build()
     {
         return $this->view('email.login')->with([
-            'code'=>$this->request['verify_code'],
-            'url'=>config('app.url').'/login'
+            'code' => $this->request['verify_code'],
+            'url'  => config('app.url') . '/login'
         ]);
     }
 }

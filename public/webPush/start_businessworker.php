@@ -11,10 +11,11 @@
  * @link http://www.workerman.net/
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 use \Workerman\Worker;
 use \GatewayWorker\BusinessWorker;
 
-require_once   '../../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 
 // bussinessWorker 进程
 $worker = new BusinessWorker();

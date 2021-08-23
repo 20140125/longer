@@ -42,7 +42,7 @@ class WeiBoController extends OAuthController
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url').'api/v1/callback/weibo';
+        $this->redirectUri = config('app.url') . 'api/v1/callback/weibo';
     }
 
     /**
@@ -67,17 +67,17 @@ class WeiBoController extends OAuthController
      */
     public function getAuthUrl($length = 32, $callback = '', $scope = 'all,email')
     {
-        $this->redirectUri = empty($callback) ? $this->redirectUri :$callback;
+        $this->redirectUri = empty($callback) ? $this->redirectUri : $callback;
         $arr = [
-            'client_id' => $this->appid,
-            'redirect_uri' =>$this->redirectUri,
-            'scope' => $scope,
-            'state' => $this->getState($length),
-            'display' => 'default',  // default mobile wap client
-            'forcelogin' => false, //是否强制用户重新登录，true：是，false：否。默认false。
+            'client_id'    => $this->appid,
+            'redirect_uri' => $this->redirectUri,
+            'scope'        => $scope,
+            'state'        => $this->getState($length),
+            'display'      => 'default',  // default mobile wap client
+            'forcelogin'   => false, //是否强制用户重新登录，true：是，false：否。默认false。
             //'language' =>''  //授权页语言，缺省为中文简体版，en为英文版
         ];
-        return $this->apiUrl.'oauth2/authorize?'.http_build_query($arr);
+        return $this->apiUrl . 'oauth2/authorize?' . http_build_query($arr);
     }
 
     /**
@@ -89,13 +89,13 @@ class WeiBoController extends OAuthController
     public function getAccessToken(string $code)
     {
         $arr = [
-            'client_id' => $this->appid,
+            'client_id'     => $this->appid,
             'client_secret' => $this->appsecret,
-            'grant_type' => 'authorization_code',
-            'code' => $code,
-            'redirect_uri' => $this->redirectUri
+            'grant_type'    => 'authorization_code',
+            'code'          => $code,
+            'redirect_uri'  => $this->redirectUri
         ];
-        $result = $this->curl->post($this->apiUrl.'oauth2/access_token', $arr);
+        $result = $this->curl->post($this->apiUrl . 'oauth2/access_token', $arr);
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
@@ -112,7 +112,7 @@ class WeiBoController extends OAuthController
      */
     public function getUserInfo(string $access_token, string $uid)
     {
-        $result = $this->curl->get($this->apiUrl."2/users/show.json?access_token={$access_token}&uid={$uid}");
+        $result = $this->curl->get($this->apiUrl . "2/users/show.json?access_token={$access_token}&uid={$uid}");
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }

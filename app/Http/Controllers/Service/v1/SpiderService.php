@@ -18,12 +18,13 @@ class SpiderService extends BaseService
     public function getSpiderConfig()
     {
         $result = $this->systemConfigModel->getOne(['name' => 'SpiderConfig'], ['children'])->children;
-        $this->return['lists'] = json_decode($result ?? (Object)[], true);
+        $this->return['lists'] = json_decode($result ?? (object)[], true);
         foreach ($this->return['lists'] as &$item) {
             $item['value'] = json_decode($item['value'], true);
         }
         return $this->return;
     }
+
     /**
      * todo:同步图片类型
      * @param $form
@@ -34,6 +35,7 @@ class SpiderService extends BaseService
         dispatch(new SyncImageTypeProcess($form))->onQueue('spider');
         return $this->return;
     }
+
     /**
      * todo:同步图片列表
      * @param $form
@@ -44,6 +46,7 @@ class SpiderService extends BaseService
         dispatch(new SyncImageListsProcess($form))->onQueue('spider');
         return $this->return;
     }
+
     /**
      * todo:同步图片大小
      * @param $form
@@ -54,6 +57,7 @@ class SpiderService extends BaseService
         dispatch(new SyncImageSizeProcess($form))->onQueue('spider');
         return $this->return;
     }
+
     /**
      * todo:同步授权用户
      * @param $form
@@ -64,6 +68,7 @@ class SpiderService extends BaseService
         dispatch(new SyncImageListsForTagsProcess($form))->onQueue('spider');
         return $this->return;
     }
+
     /**
      * todo:同步授权用户
      * @param $form

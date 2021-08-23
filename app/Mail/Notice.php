@@ -10,10 +10,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class Notice extends Mailable
 {
     use Queueable, SerializesModels;
+
     /**
      * @var $request
      */
     protected $request;
+
     /**
      * Create a new message instance.
      * @param $request
@@ -38,10 +40,10 @@ class Notice extends Mailable
     {
         return $this->view('email.notice')
             ->with([
-                'href'=>config('app.url').str_replace(['/admin/'], ['api/v1/'], $this->request['href']),
-                'rule_name'=>$this->request['rule_name'],
-                'username'=>$this->request['username'],
-                'url'=>config('app.url')."/admin/index/{$this->request['remember_token']}"
+                'href'      => config('app.url') . str_replace(['/admin/'], ['api/v1/'], $this->request['href']),
+                'rule_name' => $this->request['rule_name'],
+                'username'  => $this->request['username'],
+                'url'       => config('app.url') . "/admin/index/{$this->request['remember_token']}"
             ]);
     }
 }

@@ -22,7 +22,7 @@ class DatabaseController extends BaseController
      */
     public function backUpTable()
     {
-        validatePost($this->post, ['name'=>'required|string', 'form' => 'required|string|in:table,source,all']);
+        validatePost($this->post, ['name' => 'required|string', 'form' => 'required|string|in:table,source,all']);
         $result = $this->databaseService->backUpTable($this->post);
         return ajaxReturn($result);
     }
@@ -51,6 +51,7 @@ class DatabaseController extends BaseController
         return ajaxReturn($result);
 
     }
+
     /**
      * TODO：数据表修改
      * @param string name 数据库名称
@@ -59,7 +60,7 @@ class DatabaseController extends BaseController
      */
     public function alterTable()
     {
-        validatePost($this->post, ['name' => 'required|string','comment' => 'required|string']);
+        validatePost($this->post, ['name' => 'required|string', 'comment' => 'required|string']);
         $result = $this->databaseService->commentTable($this->post);
         return ajaxReturn($result);
     }

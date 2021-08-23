@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class Users extends Base
 {
     use HasFactory;
+
     /**
      * @var string $table
      */
@@ -88,7 +89,7 @@ class Users extends Base
         }
         $result['data'] = DB::table($this->table)
             ->limit($pagination['limit'])->offset($pagination['limit'] * ($pagination['page'] - 1))
-            ->orderBy($order['order'],$order['direction'])
+            ->orderBy($order['order'], $order['direction'])
             ->where($where)
             ->get($column);
         $result['total'] = DB::table($this->table)->where($where)->count();

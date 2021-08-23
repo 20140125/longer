@@ -66,6 +66,7 @@ class SyncWebDriveService extends Command
             $this->error($e->getMessage());
         }
     }
+
     /**
      * todo:数据抓取
      * @param ChromeDriver $driver
@@ -80,21 +81,22 @@ class SyncWebDriveService extends Command
                 'name' => $item->findElement(WebDriverBy::cssSelector('.image'))->getAttribute('alt')
             ];
             if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $arr['href'])])) {
-                $this->warn('image already exists: '. str_replace('http', 'https', $arr['href']));
+                $this->warn('image already exists: ' . str_replace('http', 'https', $arr['href']));
             } else {
                 SooGif::getInstance()->saveOne(['href' => str_replace('http', 'https', $arr['href']), 'name' => mb_substr($arr['name'], 0, 50)]);
-                $this->info('successfully save image： '. str_replace('http', 'https', $arr['href']));
+                $this->info('successfully save image： ' . str_replace('http', 'https', $arr['href']));
             }
         }
         sleep(5);
         /* todo:页码切换 */
         $this->currentPageChange($driver);
     }
+
     /* todo:分页切换 */
     protected function currentPageChange(ChromeDriver $driver)
     {
         $pageButton = $driver->findElements(WebDriverBy::cssSelector('.pagination a'));
-        foreach($pageButton as $item) {
+        foreach ($pageButton as $item) {
             if ($item->getText() === '下一页') {
                 $item->click();
                 sleep(5);

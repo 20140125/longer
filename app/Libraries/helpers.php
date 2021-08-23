@@ -16,7 +16,7 @@ if (!function_exists('ajaxReturn')) {
      */
     function ajaxReturn(array $data = [], int $code = 200)
     {
-        $_item = array('item' => $data, 'code' => $code, 'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).request()->getRequestUri());
+        $_item = array('item' => $data, 'code' => $code, 'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri());
         saveLog(array('url' => $_item['url'], 'message' => $data['message'] ?? 'successfully'));
         return response()->json($_item);
     }
@@ -35,12 +35,12 @@ if (!function_exists('validatePost')) {
         if ($_validate->fails()) {
             $_code = $_validate->errors()->first() == 'Permission denied' ? Code::FORBIDDEN : 200;
             setCode($_code);
-            $_data =  array(
+            $_data = array(
                 'code' => $_code,
                 'item' => array('code' => Code::ERROR, 'message' => $_validate->errors()->first()),
-                'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).request()->getRequestUri()
+                'url'  => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri()
             );
-            exit(json_encode($_data,JSON_UNESCAPED_UNICODE));
+            exit(json_encode($_data, JSON_UNESCAPED_UNICODE));
         }
     }
 }
@@ -59,12 +59,12 @@ if (!function_exists('saveLog')) {
                 unset($_post['role']);
             }
             $data = array(
-                'username' => $_user->username ?? 'tourist',
-                'url' =>  $form['url'],
-                'ip_address' =>request()->getClientIp(),
-                'created_at' =>time(),
-                'day' => date('Ymd'),
-                'log' => json_encode(['message' => $form['message'], 'request_params' => $_post], JSON_UNESCAPED_UNICODE)
+                'username'   => $_user->username ?? 'tourist',
+                'url'        => $form['url'],
+                'ip_address' => request()->getClientIp(),
+                'created_at' => time(),
+                'day'        => date('Ymd'),
+                'log'        => json_encode(['message' => $form['message'], 'request_params' => $_post], JSON_UNESCAPED_UNICODE)
             );
             return DB::table('os_system_log')->insert($data);
         } catch (\Exception $exception) {
@@ -113,12 +113,12 @@ if (!function_exists('getRoundNum')) {
                 $str = 'qwertyuioplkjhgfdsazxcvbnm';
                 break;
             default:
-                $str = time().uniqid();
+                $str = time() . uniqid();
                 break;
         }
-        $char='';
-        for ($i=0; $i<$length; $i++) {
-            $char.= mb_substr(str_shuffle($str), 0, 1);
+        $char = '';
+        for ($i = 0; $i < $length; $i++) {
+            $char .= mb_substr(str_shuffle($str), 0, 1);
         }
         return $char;
     }
@@ -132,7 +132,7 @@ if (!function_exists('getServerIp')) {
     {
         $preg = "/\A((([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\.){3}(([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\Z/";
         //获取windows Mac
-        if (in_array(PHP_OS, ['WINNT','Darwin'])) {
+        if (in_array(PHP_OS, ['WINNT', 'Darwin'])) {
             exec("ipconfig", $out, $stats);
             if (!empty($out)) {
                 foreach ($out as $row) {
@@ -215,7 +215,7 @@ if (!function_exists('setCode')) {
             509 => 'Bandwidth Limit Exceeded'
         );
         if (isset($_status[$code])) {
-            header('HTTP/1.1 '.$code.' '.$_status[$code]);
+            header('HTTP/1.1 ' . $code . ' ' . $_status[$code]);
         }
     }
 }
@@ -231,28 +231,45 @@ if (!function_exists('getFileLists')) {
     {
         try {
             $fileArr = array();
-            $_defaultPermission =  [
-                '.', '..', 'vendor', '.gitattributes', '.git', '.gitignore', '.env', '.idea', '.editorconfig', '.DS_Store', 'node_modules', '.styleci.yml', 'db.php', 'rsa',
-                'css', 'js', 'static', 'favicon.ico', 'backup'
+            $_defaultPermission = [
+                '.',
+                '..',
+                'vendor',
+                '.gitattributes',
+                '.git',
+                '.gitignore',
+                '.env',
+                '.idea',
+                '.editorconfig',
+                '.DS_Store',
+                'node_modules',
+                '.styleci.yml',
+                'db.php',
+                'rsa',
+                'css',
+                'js',
+                'static',
+                'favicon.ico',
+                'backup'
             ];
             foreach ($permissionFile as $permission) {
                 $_defaultPermission[] = $permission;
             }
             $openDir = opendir($filePath);
-            $fileType  = [];
+            $fileType = [];
             while ($file = readdir($openDir)) {
-                if (!in_array($file, $_defaultPermission) && str_replace('/', '\\', $filePath.$file) != public_path('storage')) {
+                if (!in_array($file, $_defaultPermission) && str_replace('/', '\\', $filePath . $file) != public_path('storage')) {
                     $fileArr[] = array(
-                        'filename' => $file,
-                        'file_type' => filetype($filePath.$file),
-                        'children' => [],
-                        'path' => filetype($filePath.$file) == 'dir' ? $filePath.$file.'/' : $filePath.$file,
-                        'md5' => md5($filePath.$file),
-                        'auth' => chmodFile($filePath.$file),
-                        'time' => date('Y-m-d H:i:s', fileatime($filePath.$file)),
-                        'size' => formatBates(filesize($filePath.$file))
+                        'filename'  => $file,
+                        'file_type' => filetype($filePath . $file),
+                        'children'  => [],
+                        'path'      => filetype($filePath . $file) == 'dir' ? $filePath . $file . '/' : $filePath . $file,
+                        'md5'       => md5($filePath . $file),
+                        'auth'      => chmodFile($filePath . $file),
+                        'time'      => date('Y-m-d H:i:s', fileatime($filePath . $file)),
+                        'size'      => formatBates(filesize($filePath . $file))
                     );
-                    $fileType[] = filetype($filePath.$file);
+                    $fileType[] = filetype($filePath . $file);
                 }
             }
             foreach ($fileArr as &$item) {
@@ -288,7 +305,7 @@ if (!function_exists('getFilePath')) {
     function getFilePath($path, $basename)
     {
         $filePath = array('base_path' => base_path($basename), 'storage_path' => storage_path($basename), 'public_path' => public_path($basename));
-        return substr($filePath[$path], 0, strlen($filePath[$path])-1);
+        return substr($filePath[$path], 0, strlen($filePath[$path]) - 1);
     }
 }
 if (!function_exists('getFileContent')) {
@@ -303,7 +320,7 @@ if (!function_exists('getFileContent')) {
             $fileObj = new SplFileObject($filepath, 'r');
             $fileInfo = '';
             while ($fileObj->valid()) {
-                $fileInfo.= $fileObj->fgets();
+                $fileInfo .= $fileObj->fgets();
             }
             $fileObj = null;
             return $fileInfo;
@@ -339,7 +356,9 @@ if (!function_exists('renameFile')) {
     function renameFile($oldFile, $newFile)
     {
         try {
-            if ((is_file($oldFile) || is_dir($oldFile)) && !file_exists($newFile)) return rename($oldFile, $newFile);
+            if ((is_file($oldFile) || is_dir($oldFile)) && !file_exists($newFile)) {
+                return rename($oldFile, $newFile);
+            }
             return ['code' => Code::ERROR, 'message' => 'rename file failed'];
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
@@ -356,7 +375,9 @@ if (!function_exists('createFile')) {
     function createFile($filepath)
     {
         try {
-            if (file_exists($filepath))  return false;
+            if (file_exists($filepath)) {
+                return false;
+            }
             $file = mb_substr($filepath, strripos($filepath, '/') + 1);
             if (strstr($file, '.') === false) {
                 mkdir($filepath, 0666);
@@ -382,13 +403,15 @@ if (!function_exists('gZipFile')) {
     {
         try {
             $zipObj = new ZipArchive();
-            $result = $zipObj->open($zipProductPath.$filename, ZipArchive::CREATE);
-            if (!$result) return false;
+            $result = $zipObj->open($zipProductPath . $filename, ZipArchive::CREATE);
+            if (!$result) {
+                return false;
+            }
             foreach ($docLists as $item) {
-                is_dir($item) ? addFileToZip($item, $zipObj) :  $zipObj->addFile($item);
+                is_dir($item) ? addFileToZip($item, $zipObj) : $zipObj->addFile($item);
             }
             $zipObj->close();
-            return file_exists($zipProductPath.$filename);
+            return file_exists($zipProductPath . $filename);
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
         }
@@ -405,16 +428,20 @@ if (!function_exists('unGZipFile')) {
     function unGZipFile(string $path, string $resource = '', bool $removeResource = false)
     {
         try {
-            if (!file_exists($path)) return false;
+            if (!file_exists($path)) {
+                return false;
+            }
             $zip = new ZipArchive();
             $arr = explode('.', basename($path));
-            if (in_array($arr[1], ['zip','ZIP'])) {
-                $filePath = str_replace(basename($path), '', $path).$resource;
+            if (in_array($arr[1], ['zip', 'ZIP'])) {
+                $filePath = str_replace(basename($path), '', $path) . $resource;
                 if (!is_dir($filePath)) {
                     mkdir($filePath, 0777, true);
                 }
                 /* 打开zip文件返回bool值，将完整的归档或给定文件提取到指定的目标 */
-                if ($zip->open($path))  $zip->extractTo($filePath);
+                if ($zip->open($path)) {
+                    $zip->extractTo($filePath);
+                }
                 /* 关闭资源 */
                 $zip->close();
             }
@@ -436,8 +463,8 @@ if (!function_exists('addFileToZip')) {
         try {
             $bool = opendir($path);
             while ($filename = readdir($bool)) {
-                if (!in_array($filename, ['.','..'])) {
-                    is_dir($path.DIRECTORY_SEPARATOR.$filename) ? addFileToZip($path.DIRECTORY_SEPARATOR.$filename, $zip) : $zip->addFile($path.DIRECTORY_SEPARATOR.$filename);
+                if (!in_array($filename, ['.', '..'])) {
+                    is_dir($path . DIRECTORY_SEPARATOR . $filename) ? addFileToZip($path . DIRECTORY_SEPARATOR . $filename, $zip) : $zip->addFile($path . DIRECTORY_SEPARATOR . $filename);
                 }
             }
             @closedir($path);
@@ -456,13 +483,15 @@ if (!function_exists('removeFiles')) {
     function removeFiles($path)
     {
         try {
-            if (is_file($path)) return unlink($path);
+            if (is_file($path)) {
+                return unlink($path);
+            }
             //先删除目录下的文件：
-            $dh=opendir($path);
-            while ($file=readdir($dh)) {
-                if (!in_array($file, ['.','..'])) {
-                    $fullPath = $path.DIRECTORY_SEPARATOR.$file;
-                    !is_dir($fullPath) ?  unlink($fullPath) : removeFiles($fullPath);
+            $dh = opendir($path);
+            while ($file = readdir($dh)) {
+                if (!in_array($file, ['.', '..'])) {
+                    $fullPath = $path . DIRECTORY_SEPARATOR . $file;
+                    !is_dir($fullPath) ? unlink($fullPath) : removeFiles($fullPath);
                 }
             }
             @closedir($dh);
@@ -498,11 +527,15 @@ if (!function_exists('cuttingFile')) {
     function cuttingFile(string $filename, string $block = '1024')
     {
         try {
-            if (!file_exists($filename)) return false;
+            if (!file_exists($filename)) {
+                return false;
+            }
             $inputFileObj = new SplFileObject($filename);
-            if (!in_array(substr(sprintf('%o', $inputFileObj->getPerms()), -4), [0777,777])) chmod($filename, 0777);
-            while ($content=$inputFileObj->fread($block)) {
-                $cutFileName = $inputFileObj->getPath().DIRECTORY_SEPARATOR.explode('.', $inputFileObj->getFilename())[0].'_'.uniqid().'.'.$inputFileObj->getExtension();
+            if (!in_array(substr(sprintf('%o', $inputFileObj->getPerms()), -4), [0777, 777])) {
+                chmod($filename, 0777);
+            }
+            while ($content = $inputFileObj->fread($block)) {
+                $cutFileName = $inputFileObj->getPath() . DIRECTORY_SEPARATOR . explode('.', $inputFileObj->getFilename())[0] . '_' . uniqid() . '.' . $inputFileObj->getExtension();
                 $cutFileObj = new SplFileObject($cutFileName, 'w+');
                 $cutFileObj->fwrite($content);
                 $cutFileObj = null;
@@ -530,7 +563,7 @@ if (!function_exists('mergerFile')) {
             foreach ($filePath as $file) {
                 $fileObj = new SplFileObject($file, 'r');
                 while ($fileObj->valid()) {
-                    $content.=$fileObj->fgets();
+                    $content .= $fileObj->fgets();
                 }
                 $fileObj = null;
             }
@@ -560,8 +593,8 @@ if (!function_exists('webPush')) {
             $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
             $curl->post($push_api_url, $post_data);
             if ($curl->error) {
-                Log::error($curl->errorCode .':'.$curl->errorMessage);
-                return ['code' =>$curl->errorCode, 'message' => $curl->errorMessage];
+                Log::error($curl->errorCode . ':' . $curl->errorMessage);
+                return ['code' => $curl->errorCode, 'message' => $curl->errorMessage];
             }
             return true;
         } catch (\Exception $exception) {

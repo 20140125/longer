@@ -13,17 +13,18 @@ class LoginController extends BaseController
      */
     public function getOpenId()
     {
-        validatePost($this->post, ['code'=>'required|string']);
+        validatePost($this->post, ['code' => 'required|string']);
         $result = $this->loginService->getOpenId($this->post);
         return ajaxReturn($result);
     }
+
     /**
      * todo:小程序登录
      * @return JsonResponse
      */
     public function login()
     {
-        validatePost($this->post, ['nickName'=>'required|string', 'avatarUrl'=>'required|string', 'code2Session'=>'required|Array']);
+        validatePost($this->post, ['nickName' => 'required|string', 'avatarUrl' => 'required|string', 'code2Session' => 'required|Array']);
         $result = $this->loginService->wxLogin($this->post);
         return ajaxReturn($result);
     }

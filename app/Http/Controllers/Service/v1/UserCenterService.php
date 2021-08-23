@@ -17,6 +17,7 @@ class UserCenterService extends BaseService
     private static $instance;
 
     private $json = ['tags', 'ip_address', 'local'];
+
     /**
      * @return static
      */
@@ -38,8 +39,9 @@ class UserCenterService extends BaseService
         foreach ($this->json as $item) {
             $this->return['lists']->$item = empty($this->return['lists']->$item) ? [] : json_decode($this->return['lists']->$item, true);
         }
-         return  $this->return;
+        return $this->return;
     }
+
     /**
      * todo：更新用户信息
      * @param $form

@@ -18,14 +18,16 @@
  * 然后观察一段时间workerman.log看是否有process_timeout异常
  */
 //declare(ticks=1);
+
 /**
  * 聊天主逻辑
  * 主要是处理 onMessage onClose
  */
+
 use \GatewayWorker\Lib\Gateway;
 use \Workerman\MySQL\Connection;
 
-require_once __DIR__.'/config/db.php';
+require_once __DIR__ . '/config/db.php';
 date_default_timezone_set("Asia/Shanghai");
 
 class Events
@@ -38,14 +40,15 @@ class Events
      * @var string[]
      */
     protected static $sysRobot = [
-        'client_id' => 'longer7f00000108fc00000001',
+        'client_id'   => 'longer7f00000108fc00000001',
         'client_name' => 'systemRobot',
-        'client_img' => 'https://cdn.pixabay.com/photo/2016/12/13/21/20/alien-1905155_960_720.png',
-        'content' => '欢迎您的到来！'
+        'client_img'  => 'https://cdn.pixabay.com/photo/2016/12/13/21/20/alien-1905155_960_720.png',
+        'content'     => '欢迎您的到来！'
     ];
+
     /**
      * 有消息时
-     * @param $from_client_id  //workerman 生成的client_id
+     * @param $from_client_id //workerman 生成的client_id
      * @param $message
      * @return bool
      * @throws \Exception|boolean
@@ -85,16 +88,16 @@ class Events
                 }
                 /* 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx} */
                 $new_message = array(
-                    'type'=>'login',
-                    'from_client_id'=>$message_data['from_client_id'],
-                    'from_client_name'=>htmlspecialchars($from_client_name),
-                    'to_client_id' => 'all',
-                    'to_client_name' => 'all',
-                    'time'=>date('Y-m-d H:i:s'),
-                    'client_img' => $message_data['client_img'],
-                    'client_lists' => $clients_list,
-                    'room_id' =>$room_id,
-                    'uuid' => $message_data['uuid']
+                    'type'             => 'login',
+                    'from_client_id'   => $message_data['from_client_id'],
+                    'from_client_name' => htmlspecialchars($from_client_name),
+                    'to_client_id'     => 'all',
+                    'to_client_name'   => 'all',
+                    'time'             => date('Y-m-d H:i:s'),
+                    'client_img'       => $message_data['client_img'],
+                    'client_lists'     => $clients_list,
+                    'room_id'          => $room_id,
+                    'uuid'             => $message_data['uuid']
                 );
                 Gateway::sendToGroup($room_id, json_encode($new_message));
                 /* 加入群聊房间 */
@@ -114,26 +117,26 @@ class Events
                 /* 数据库查询历史记录 */
                 $hisMessage = array(
                     'from_client_id' => $message_data['from_client_id'],
-                    'to_client_id' => $message_data['to_client_id'],
-                    'room_id' => $message_data['room_id'],
-                    'page' => $message_data['page'],
-                    'limit' => $message_data['limit'] + 1
+                    'to_client_id'   => $message_data['to_client_id'],
+                    'room_id'        => $message_data['room_id'],
+                    'page'           => $message_data['page'],
+                    'limit'          => $message_data['limit'] + 1
                 );
                 $messageLists = (ceil($redisMessage['total'] / $hisMessage['limit']) > $hisMessage['page']) ? $redisMessage : self::getHisChatMessage($redisMessage, $hisMessage);
                 $new_message = array(
-                    'type'=>'history',
+                    'type'             => 'history',
                     'from_client_name' => $message_data['from_client_name'],
-                    'from_client_id' => $message_data['from_client_id'],
-                    'to_client_name' => $message_data['to_client_name'],
-                    'to_client_id' => $message_data['to_client_id'],
-                    'room_id' =>$message_data['room_id'],
-                    'message' => $messageLists['list'],
-                    'total' => $messageLists['total'],
-                    'uuid' => $message_data['uuid'],
-                    'page' => $message_data['page'],
-                    'limit' => $message_data['limit'],
-                    'client_lists' => $clients_list,
-                    'source' => $message_data['source']
+                    'from_client_id'   => $message_data['from_client_id'],
+                    'to_client_name'   => $message_data['to_client_name'],
+                    'to_client_id'     => $message_data['to_client_id'],
+                    'room_id'          => $message_data['room_id'],
+                    'message'          => $messageLists['list'],
+                    'total'            => $messageLists['total'],
+                    'uuid'             => $message_data['uuid'],
+                    'page'             => $message_data['page'],
+                    'limit'            => $message_data['limit'],
+                    'client_lists'     => $clients_list,
+                    'source'           => $message_data['source']
                 );
                 /* 发送消息到当前客户端 */
                 Gateway::sendToCurrentClient(json_encode($new_message));
@@ -144,16 +147,16 @@ class Events
                 /* 私聊 */
                 if ($message_data['to_client_id'] != 'all') {
                     $new_message = array(
-                        'type'=>'say',
-                        'from_client_id'=>$message_data['from_client_id'], //发送人
-                        'from_client_name' =>$from_client_name,
-                        'to_client_id'=>$message_data['to_client_id'], //接收人
-                        'to_client_name'=>$message_data['to_client_name'],
-                        'content'=>nl2br(htmlspecialchars($message_data['content'])),
-                        'time'=>date('Y-m-d H:i:s'),
-                        'client_img' => $message_data['client_img'],
-                        'uuid' => $message_data['uuid'], //接收人的uuid
-                        'room_id' => ''  //私聊房间号置空。
+                        'type'             => 'say',
+                        'from_client_id'   => $message_data['from_client_id'], //发送人
+                        'from_client_name' => $from_client_name,
+                        'to_client_id'     => $message_data['to_client_id'], //接收人
+                        'to_client_name'   => $message_data['to_client_name'],
+                        'content'          => nl2br(htmlspecialchars($message_data['content'])),
+                        'time'             => date('Y-m-d H:i:s'),
+                        'client_img'       => $message_data['client_img'],
+                        'uuid'             => $message_data['uuid'], //接收人的uuid
+                        'room_id'          => ''  //私聊房间号置空。
                     );
                     /* 设置未读消息数 */
                     self::$chat->setUnreadMsgLists($message_data['from_client_id'], $message_data['to_client_id']);
@@ -170,16 +173,16 @@ class Events
                 }
                 /* 群聊 */
                 $new_message = array(
-                    'type'=>'say',
-                    'from_client_id'=>$message_data['from_client_id'],
-                    'from_client_name' =>$from_client_name,
-                    'to_client_id'=>'all',
-                    'to_client_name' => 'all',
-                    'content'=>nl2br(htmlspecialchars($message_data['content'])),
-                    'time'=>date('Y-m-d H:i:s'),
-                    'client_img' => $message_data['client_img'],
-                    'uuid' => $message_data['uuid'], //发送人的uuid
-                    'room_id' =>$message_data['room_id']
+                    'type'             => 'say',
+                    'from_client_id'   => $message_data['from_client_id'],
+                    'from_client_name' => $from_client_name,
+                    'to_client_id'     => 'all',
+                    'to_client_name'   => 'all',
+                    'content'          => nl2br(htmlspecialchars($message_data['content'])),
+                    'time'             => date('Y-m-d H:i:s'),
+                    'client_img'       => $message_data['client_img'],
+                    'uuid'             => $message_data['uuid'], //发送人的uuid
+                    'room_id'          => $message_data['room_id']
                 );
                 /* 保存聊天记录 */
                 self::$chat->setChatMsgLists($message_data['from_client_id'], 'all', $message_data['room_id'], $new_message);
@@ -205,6 +208,7 @@ class Events
         }
         return false;
     }
+
     /**
      * todo:消息撤回删除
      * @param $message_data
@@ -222,6 +226,7 @@ class Events
             Gateway::sendToUid($message_data['to_client_id'], json_encode($message_data));
         }
     }
+
     /**
      * 当客户端断开连接时
      * @param $client_id //客户端id
@@ -235,15 +240,16 @@ class Events
             $room_id = $_SESSION['room_id'];
             self::$chat->sRem(REDIS_KEY, $_SESSION['uuid']);
             $new_message = array(
-                'type'=>'logout',
-                'from_client_id'=>$client_id,
-                'from_client_name'=>$_SESSION['client_name'],
-                'time'=>date('Y-m-d H:i:s'),
-                'uuid' => $_SESSION['uuid'],
+                'type'             => 'logout',
+                'from_client_id'   => $client_id,
+                'from_client_name' => $_SESSION['client_name'],
+                'time'             => date('Y-m-d H:i:s'),
+                'uuid'             => $_SESSION['uuid'],
             );
             Gateway::sendToGroup($room_id, json_encode($new_message));
         }
     }
+
     /**
      * todo:自动回复消息
      * @param $room_id
@@ -251,20 +257,21 @@ class Events
     protected static function getRobotMessage($room_id)
     {
         $new_message = array(
-            'type' => 'say',
-            'from_client_id' => self::$sysRobot['client_id'],
+            'type'             => 'say',
+            'from_client_id'   => self::$sysRobot['client_id'],
             'from_client_name' => self::$sysRobot['client_name'],
-            'to_client_id' => 'all',
-            'to_client_name' => 'all',
-            'content' => $_SESSION['client_name'].self::$sysRobot['content'],
-            'time' => date('Y-m-d H:i:s'),
-            'msg_type' => 'text',
-            'client_img' => self::$sysRobot['client_img'],
-            'uuid' => self::$sysRobot['client_id'],
-            'room_id' => $room_id
+            'to_client_id'     => 'all',
+            'to_client_name'   => 'all',
+            'content'          => $_SESSION['client_name'] . self::$sysRobot['content'],
+            'time'             => date('Y-m-d H:i:s'),
+            'msg_type'         => 'text',
+            'client_img'       => self::$sysRobot['client_img'],
+            'uuid'             => self::$sysRobot['client_id'],
+            'room_id'          => $room_id
         );
         Gateway::sendToGroup($room_id, json_encode($new_message));
     }
+
     /**
      * todo:获取管理员列表
      * @param $redisUser
@@ -297,6 +304,7 @@ class Events
         array_multisort($sort, SORT_DESC, $arr);
         return $arr;
     }
+
     /**
      * todo:获取历史记录(数据库查询数据)
      * @param $redisMessage

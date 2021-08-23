@@ -19,6 +19,7 @@ class SyncImageTypeProcess implements ShouldQueue
      * @var $post
      */
     protected $post;
+
     /**
      * Create a new job instance.
      * @param $post

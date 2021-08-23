@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,19 +52,19 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
-    'socket_url' => env('WORKER_SOCKET_URL', 'http://127.0.0.1:2120/'),
-    'push_url' => env('WORKER_PUSH_URL', 'http://127.0.0.1:2121/'),
-    'client_id' => env('CLIENT_ID_PREFIX', ''),
-    'redis_user_key' => env('WORKER_REDIS_USER_KEY', ''),
-    'chat_user_key' => env('CHAT_REDIS_USER_KEY', ''),
-    'rsa_public' => env('RSA_PUBLIC_KEY_PATH', ''),
-    'rsa_private' => env('RSA_PRIVATE_KEY_PATH', ''),
-    'redis_host' => env('REDIS_HOST', '127.0.0.1'),
-    'redis_password' => env('REDIS_PASSWORD', null),
-    'redis_port' => env('REDIS_PORT', '6379'),
-    'avatar_url' => env('AVATAR_URL', ''),
-    'websocket' => env('WEBSOCKET_URL', 'ws://127.0.0.1:7272'),
+    'url'                    => env('APP_URL', 'http://localhost'),
+    'socket_url'             => env('WORKER_SOCKET_URL', 'http://127.0.0.1:2120/'),
+    'push_url'               => env('WORKER_PUSH_URL', 'http://127.0.0.1:2121/'),
+    'client_id'              => env('CLIENT_ID_PREFIX', ''),
+    'redis_user_key'         => env('WORKER_REDIS_USER_KEY', ''),
+    'chat_user_key'          => env('CHAT_REDIS_USER_KEY', ''),
+    'rsa_public'             => env('RSA_PUBLIC_KEY_PATH', ''),
+    'rsa_private'            => env('RSA_PRIVATE_KEY_PATH', ''),
+    'redis_host'             => env('REDIS_HOST', '127.0.0.1'),
+    'redis_password'         => env('REDIS_PASSWORD', null),
+    'redis_port'             => env('REDIS_PORT', '6379'),
+    'avatar_url'             => env('AVATAR_URL', ''),
+    'websocket'              => env('WEBSOCKET_URL', 'ws://127.0.0.1:7272'),
     'app_refresh_login_time' => env('APP_REFRESH_LOGIN_TIME', 259200000),
 
     'asset_url' => env('ASSET_URL', null),
@@ -132,36 +132,36 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key'                 => env('APP_KEY'),
 
     /*
     |--------------------------------------------------------------------------
     | 第三方授权登录
     |--------------------------------------------------------------------------
     */
-    'a_map_key' => env('A_MAP_KEY', null),
-    'mini_program_appid' => env('MINI_PROGRAM_APP_KEY', ''),
+    'a_map_key'           => env('A_MAP_KEY', null),
+    'mini_program_appid'  => env('MINI_PROGRAM_APP_KEY', ''),
     'mini_program_secret' => env('MINI_PROGRAM_APP_SECRET', ''),
 
-    'a_li_yun_appid' => env('A_LI_YUN_APPID', ''),
+    'a_li_yun_appid'  => env('A_LI_YUN_APPID', ''),
     'a_li_yun_secret' => env('A_LI_YUN_APP_SECRET', ''),
 
-    'qq_appid' => env('QQ_APPID', ''),
+    'qq_appid'  => env('QQ_APPID', ''),
     'qq_secret' => env('QQ_APP_SECRET', ''),
 
-    'github_appid' => env('GITHUB_APPID', ''),
+    'github_appid'  => env('GITHUB_APPID', ''),
     'github_secret' => env('GITHUB_APP_SECRET', ''),
 
-    'weibo_appid' => env('WEIBO_APPID', ''),
+    'weibo_appid'  => env('WEIBO_APPID', ''),
     'weibo_secret' => env('WEIBO_APP_SECRET', ''),
 
-    'gitee_appid' => env('GITEE_APPID', ''),
+    'gitee_appid'  => env('GITEE_APPID', ''),
     'gitee_secret' => env('GITEE_APP_SECRET', ''),
 
-    'baidu_appid' => env('BAIDU_APPID', ''),
+    'baidu_appid'  => env('BAIDU_APPID', ''),
     'baidu_secret' => env('BAIDU_APP_SECRET', ''),
 
-    'os_china_appid' => env('OS_CHINA_APPID', ''),
+    'os_china_appid'  => env('OS_CHINA_APPID', ''),
     'os_china_secret' => env('OS_CHINA_APP_SECRET', ''),
 
     'database' => env('DB_DATABASE', null),
@@ -241,43 +241,43 @@ return [
 
     'aliases' => [
 
-        'App' => Illuminate\Support\Facades\App::class,
-        'Arr' => Illuminate\Support\Arr::class,
-        'Artisan' => Illuminate\Support\Facades\Artisan::class,
-        'Auth' => Illuminate\Support\Facades\Auth::class,
-        'Blade' => Illuminate\Support\Facades\Blade::class,
-        'Broadcast' => Illuminate\Support\Facades\Broadcast::class,
-        'Bus' => Illuminate\Support\Facades\Bus::class,
-        'Cache' => Illuminate\Support\Facades\Cache::class,
-        'Config' => Illuminate\Support\Facades\Config::class,
-        'Cookie' => Illuminate\Support\Facades\Cookie::class,
-        'Crypt' => Illuminate\Support\Facades\Crypt::class,
-        'Date' => Illuminate\Support\Facades\Date::class,
-        'DB' => Illuminate\Support\Facades\DB::class,
-        'Eloquent' => Illuminate\Database\Eloquent\Model::class,
-        'Event' => Illuminate\Support\Facades\Event::class,
-        'File' => Illuminate\Support\Facades\File::class,
-        'Gate' => Illuminate\Support\Facades\Gate::class,
-        'Hash' => Illuminate\Support\Facades\Hash::class,
-        'Http' => Illuminate\Support\Facades\Http::class,
-        'Lang' => Illuminate\Support\Facades\Lang::class,
-        'Log' => Illuminate\Support\Facades\Log::class,
-        'Mail' => Illuminate\Support\Facades\Mail::class,
+        'App'          => Illuminate\Support\Facades\App::class,
+        'Arr'          => Illuminate\Support\Arr::class,
+        'Artisan'      => Illuminate\Support\Facades\Artisan::class,
+        'Auth'         => Illuminate\Support\Facades\Auth::class,
+        'Blade'        => Illuminate\Support\Facades\Blade::class,
+        'Broadcast'    => Illuminate\Support\Facades\Broadcast::class,
+        'Bus'          => Illuminate\Support\Facades\Bus::class,
+        'Cache'        => Illuminate\Support\Facades\Cache::class,
+        'Config'       => Illuminate\Support\Facades\Config::class,
+        'Cookie'       => Illuminate\Support\Facades\Cookie::class,
+        'Crypt'        => Illuminate\Support\Facades\Crypt::class,
+        'Date'         => Illuminate\Support\Facades\Date::class,
+        'DB'           => Illuminate\Support\Facades\DB::class,
+        'Eloquent'     => Illuminate\Database\Eloquent\Model::class,
+        'Event'        => Illuminate\Support\Facades\Event::class,
+        'File'         => Illuminate\Support\Facades\File::class,
+        'Gate'         => Illuminate\Support\Facades\Gate::class,
+        'Hash'         => Illuminate\Support\Facades\Hash::class,
+        'Http'         => Illuminate\Support\Facades\Http::class,
+        'Lang'         => Illuminate\Support\Facades\Lang::class,
+        'Log'          => Illuminate\Support\Facades\Log::class,
+        'Mail'         => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
-        'Password' => Illuminate\Support\Facades\Password::class,
-        'Queue' => Illuminate\Support\Facades\Queue::class,
-        'Redirect' => Illuminate\Support\Facades\Redirect::class,
-        'Redis' => Illuminate\Support\Facades\Redis::class,
-        'Request' => Illuminate\Support\Facades\Request::class,
-        'Response' => Illuminate\Support\Facades\Response::class,
-        'Route' => Illuminate\Support\Facades\Route::class,
-        'Schema' => Illuminate\Support\Facades\Schema::class,
-        'Session' => Illuminate\Support\Facades\Session::class,
-        'Storage' => Illuminate\Support\Facades\Storage::class,
-        'Str' => Illuminate\Support\Str::class,
-        'URL' => Illuminate\Support\Facades\URL::class,
-        'Validator' => Illuminate\Support\Facades\Validator::class,
-        'View' => Illuminate\Support\Facades\View::class,
+        'Password'     => Illuminate\Support\Facades\Password::class,
+        'Queue'        => Illuminate\Support\Facades\Queue::class,
+        'Redirect'     => Illuminate\Support\Facades\Redirect::class,
+        'Redis'        => Illuminate\Support\Facades\Redis::class,
+        'Request'      => Illuminate\Support\Facades\Request::class,
+        'Response'     => Illuminate\Support\Facades\Response::class,
+        'Route'        => Illuminate\Support\Facades\Route::class,
+        'Schema'       => Illuminate\Support\Facades\Schema::class,
+        'Session'      => Illuminate\Support\Facades\Session::class,
+        'Storage'      => Illuminate\Support\Facades\Storage::class,
+        'Str'          => Illuminate\Support\Str::class,
+        'URL'          => Illuminate\Support\Facades\URL::class,
+        'Validator'    => Illuminate\Support\Facades\Validator::class,
+        'View'         => Illuminate\Support\Facades\View::class,
 
     ],
 

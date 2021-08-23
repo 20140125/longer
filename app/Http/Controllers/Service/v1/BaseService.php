@@ -36,10 +36,12 @@ class BaseService
     {
         // TODO: Implement __clone() method.
     }
+
     /**
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -50,6 +52,7 @@ class BaseService
         }
         return self::$instance;
     }
+
     /**
      * @var Users $userModel
      */
@@ -209,25 +212,25 @@ class BaseService
         $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info', 'forecast']);
         $province = $this->areaModel->getOne(['id' => $area->parent_id], ['name']);
         $this->return['lists'] = array(
-            'auth' => json_decode(($_role->auth_api ?? ''), true),
-            'remember_token' => $_user->remember_token ?? '',
-            'username' => $_user->username ?? '',
-            'socket' => config('app.socket_url') ?? '',
-            'avatar_url' => $_user->username == 'admin' ? config('app.avatar_url') : $_user->avatar_url,
-            'websocket' => config('app.websocket') ?? '',
-            'role_id' => encrypt($_user->role_id ?? ''),
-            'uuid' => $_user->uuid ?? '',
-            'local' => config('app.url') ?? '',
-            'adcode' => $adCode ?? '',
-            'city' => !empty($province->name) ? $province->name.$area->name : $area->name,
-            'room_id' =>'1200',
-            'room_name' => '畅所欲言',
-            'id' => $_user->id ?? '',
+            'auth'              => json_decode(($_role->auth_api ?? ''), true),
+            'remember_token'    => $_user->remember_token ?? '',
+            'username'          => $_user->username ?? '',
+            'socket'            => config('app.socket_url') ?? '',
+            'avatar_url'        => $_user->username == 'admin' ? config('app.avatar_url') : $_user->avatar_url,
+            'websocket'         => config('app.websocket') ?? '',
+            'role_id'           => encrypt($_user->role_id ?? ''),
+            'uuid'              => $_user->uuid ?? '',
+            'local'             => config('app.url') ?? '',
+            'adcode'            => $adCode ?? '',
+            'city'              => !empty($province->name) ? $province->name . $area->name : $area->name,
+            'room_id'           => '1200',
+            'room_name'         => '畅所欲言',
+            'id'                => $_user->id ?? '',
             'default_client_id' => config('app.client_id') ?? '',
-            'weather' => json_decode($area->info, true),
-            'forecast' => json_decode($area->forecast, true),
-            'email' => $_user->email ?? '',
-            'ip_address' => request()->ip()
+            'weather'           => json_decode($area->info, true),
+            'forecast'          => json_decode($area->forecast, true),
+            'email'             => $_user->email ?? '',
+            'ip_address'        => request()->ip()
         );
         return $this->return;
     }
@@ -346,7 +349,9 @@ class BaseService
             $form['state'] = Code::WEBSOCKET_STATE[2];
             /* todo:推送给所有人 */
             if ($form['uuid'] == config('app.client_id')) {
-                if (webPush($form['info'])) $form['state'] = Code::WEBSOCKET_STATE[0];
+                if (webPush($form['info'])) {
+                    $form['state'] = Code::WEBSOCKET_STATE[0];
+                }
             }
             /* todo: 推送给个人 */
             if ($this->redisClient->sIsMember(config('app.redis_user_key'), $form['uuid'])) {

@@ -12,6 +12,7 @@ class InterfaceCategoryService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -22,6 +23,7 @@ class InterfaceCategoryService extends BaseService
         }
         return self::$instance;
     }
+
     /**
      * todo:获取分类列表
      * @param array $where
@@ -34,6 +36,7 @@ class InterfaceCategoryService extends BaseService
         $this->return['lists'] = $this->apiCategoryModel->getLists($where, $order, $columns);
         return $this->return;
     }
+
     /**
      * todo:数据添加
      * @param $form
@@ -51,7 +54,7 @@ class InterfaceCategoryService extends BaseService
         $form['path'] = $id;
         $form['level'] = 0;
         if (!empty($parent_result)) {
-            $form['path'] = $parent_result->path.'-'.$id;
+            $form['path'] = $parent_result->path . '-' . $id;
             $form['level'] = substr_count($form['path'], '-');
         }
         $result = $this->apiCategoryModel->updateOne(['id' => $id], $form);
@@ -63,6 +66,7 @@ class InterfaceCategoryService extends BaseService
         $this->return['lists'] = $form;
         return $this->return;
     }
+
     /**
      * todo:数据更新
      * @param $form
@@ -71,7 +75,7 @@ class InterfaceCategoryService extends BaseService
     public function updateCategory($form)
     {
         $parent_result = $this->apiCategoryModel->getOne(['id' => $form['pid']], ['path']);
-        $form['path'] = !empty($parent_result->path) ? $parent_result->path.'-'.$form['id'] : $form['id'];
+        $form['path'] = !empty($parent_result->path) ? $parent_result->path . '-' . $form['id'] : $form['id'];
         $form['level'] = substr_count($form['path'], '-');
         $result = $this->apiCategoryModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
@@ -82,6 +86,7 @@ class InterfaceCategoryService extends BaseService
         $this->return['lists'] = $form;
         return $this->return;
     }
+
     /**
      * todo:删除记录
      * @param $form

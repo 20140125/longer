@@ -46,7 +46,7 @@ class Rsa extends Controller
     public function __construct()
     {
         $this->privateKey = file_get_contents(public_path(config('app.rsa_private')));
-        $this->publicKey  = file_get_contents(public_path(config('app.rsa_public')));
+        $this->publicKey = file_get_contents(public_path(config('app.rsa_public')));
     }
 
     /**

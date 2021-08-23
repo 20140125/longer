@@ -38,6 +38,7 @@ class InterfaceCategoryController extends BaseController
         $result = $this->interfaceCategoryService->updateCategory($this->post);
         return ajaxReturn($result);
     }
+
     /**
      * todo：删除接口
      * @return JsonResponse

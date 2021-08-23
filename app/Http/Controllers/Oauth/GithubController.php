@@ -43,7 +43,7 @@ class GithubController extends OAuthController
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url').'api/v1/callback/github';
+        $this->redirectUri = config('app.url') . 'api/v1/callback/github';
     }
 
     /**
@@ -69,13 +69,13 @@ class GithubController extends OAuthController
     public function getAuthUrl($length = 32, $callback = '', $scope = 'user:email')
     {
         $arr = [
-            'client_id' => $this->appid,
+            'client_id'    => $this->appid,
             'redirect_uri' => empty($callback) ? $this->redirectUri : $callback,
-            'scope' => $scope,  // user:email read:user user:follow
-            'state' => $this->getState($length),
+            'scope'        => $scope,  // user:email read:user user:follow
+            'state'        => $this->getState($length),
             'allow_signup' => true, //是否在登录页显示注册，默认false
         ];
-        return $this->apiUrl.'login/oauth/authorize?'.http_build_query($arr);
+        return $this->apiUrl . 'login/oauth/authorize?' . http_build_query($arr);
     }
 
     /**
@@ -88,13 +88,13 @@ class GithubController extends OAuthController
     public function getAccessToken(string $code, string $state)
     {
         $arr = [
-            'client_id' => $this->appid,
+            'client_id'     => $this->appid,
             'client_secret' => $this->appsecret,
-            'code' => $code,
-            'redirect_uri' => $this->redirectUri,
-            'state' => $state
+            'code'          => $code,
+            'redirect_uri'  => $this->redirectUri,
+            'state'         => $state
         ];
-        $result = $this->curl->post($this->apiUrl.'login/oauth/access_token', $arr);
+        $result = $this->curl->post($this->apiUrl . 'login/oauth/access_token', $arr);
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }

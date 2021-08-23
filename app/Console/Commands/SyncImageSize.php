@@ -24,6 +24,7 @@ class SyncImageSize extends Command
     protected $description = 'synchronizing image size';
 
     protected $flag;
+
     /**
      * Create a new command instance.
      *
@@ -44,6 +45,7 @@ class SyncImageSize extends Command
     {
         $this->setFileInfo();
     }
+
     /**
      * todo:获取文件信息
      */
@@ -56,22 +58,22 @@ class SyncImageSize extends Command
                 $this->flag = !empty($result);
                 if (!empty($result)) {
                     $fileInfo = getimagesize($result->href);
-                    if(SooGif::getInstance()->updateOne(['id' => $result->id], ['width' => $fileInfo[0], 'height' => $fileInfo[1]])) {
-                        $this->info('Successfully update image size：'.$result->href);
-                        WebPush('Successfully update image size：'.$result->href, $this->argument('uuid'), 'command');
+                    if (SooGif::getInstance()->updateOne(['id' => $result->id], ['width' => $fileInfo[0], 'height' => $fileInfo[1]])) {
+                        $this->info('Successfully update image size：' . $result->href);
+                        WebPush('Successfully update image size：' . $result->href, $this->argument('uuid'), 'command');
                     } else {
-                        $this->error('Failed update image size：'.$result->href);
-                        WebPush('Failed update image size：'.$result->href, $this->argument('uuid'), 'command');
+                        $this->error('Failed update image size：' . $result->href);
+                        WebPush('Failed update image size：' . $result->href, $this->argument('uuid'), 'command');
                     }
                 } else {
                     WebPush('Successfully spider image size', $this->argument('uuid'), 'command');
                 }
             }
         } catch (\Exception $exception) {
-            $this->error('Failed update image size：'.$result->href);
-            WebPush('Failed update image size：'.$result->href, $this->argument('uuid'), 'command');
-            $this->error('error_description：'.$exception->getMessage());
-            WebPush('error_description：'.$exception->getMessage(), $this->argument('uuid'), 'command');
+            $this->error('Failed update image size：' . $result->href);
+            WebPush('Failed update image size：' . $result->href, $this->argument('uuid'), 'command');
+            $this->error('error_description：' . $exception->getMessage());
+            WebPush('error_description：' . $exception->getMessage(), $this->argument('uuid'), 'command');
             if ($result) {
                 SooGif::getInstance()->removeOne(['id' => $result->id]);
             }

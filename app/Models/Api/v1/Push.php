@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class Push extends Base
 {
     use HasFactory;
+
     /**
      * @var string $table
      */

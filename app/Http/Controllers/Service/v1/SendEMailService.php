@@ -13,6 +13,7 @@ class SendEMailService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -38,8 +39,8 @@ class SendEMailService extends BaseService
             Mail::to($form['email'])->send(new Login($form));
             if (!Mail::failures()) {
                 $data = array(
-                    'email' => $form['email'],
-                    'code'  => $form['verify_code'],
+                    'email'      => $form['email'],
+                    'code'       => $form['verify_code'],
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 );
@@ -70,7 +71,7 @@ class SendEMailService extends BaseService
         $where[] = ['updated_at', '>=', date('Y-m-d H:i:s', strtotime('-10 minutes'))];
         $result = $this->sendEMailModel->getOne($where);
         if ($result) {
-            return $this->sendEMailModel->updateOne(['code'=>$result->code, 'email'=>$data['email']], ['code'=>$data['code']]);
+            return $this->sendEMailModel->updateOne(['code' => $result->code, 'email' => $data['email']], ['code' => $data['code']]);
         }
         return $this->sendEMailModel->saveOne($data);
     }

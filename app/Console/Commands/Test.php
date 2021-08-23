@@ -46,7 +46,7 @@ class Test extends Command
             foreach ($redisUser as $redis) {
                 $users[$key]['online'] = $redis === $users[$key]['uuid'];
             }
-            $unreadMsg = RedisClient::getInstance()->hGetAll('unread_'.$users[$key]['uuid']) ?? [];
+            $unreadMsg = RedisClient::getInstance()->hGetAll('unread_' . $users[$key]['uuid']) ?? [];
             /* 单条用户展示未读消息数 */
             $unreadArr = array();
             foreach ($unreadMsg as $from => $total) {

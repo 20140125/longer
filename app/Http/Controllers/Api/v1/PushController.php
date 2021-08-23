@@ -27,7 +27,7 @@ class PushController extends BaseController
      */
     public function savePush()
     {
-        validatePost($this->post, ['info'=>'required|string', 'username'=>'required|string', 'status'=>'required|integer|in:1,2', 'created_at'=>'required|string|date', 'uuid' => 'required|string']);
+        validatePost($this->post, ['info' => 'required|string', 'username' => 'required|string', 'status' => 'required|integer|in:1,2', 'created_at' => 'required|string|date', 'uuid' => 'required|string']);
         $result = $this->pushService->savePush($this->post);
         return ajaxReturn($result);
     }
@@ -38,7 +38,7 @@ class PushController extends BaseController
      */
     public function updatePush()
     {
-        validatePost($this->post, ['id'=> 'required|integer', 'info'=>'required|string', 'username'=>'required|string', 'status'=>'required|integer|in:1,2', 'created_at'=>'required|string|date', 'uuid' => 'required|string']);
+        validatePost($this->post, ['id' => 'required|integer', 'info' => 'required|string', 'username' => 'required|string', 'status' => 'required|integer|in:1,2', 'created_at' => 'required|string|date', 'uuid' => 'required|string']);
         $result = $this->pushService->updatePush($this->post);
         return ajaxReturn($result);
     }
@@ -49,7 +49,7 @@ class PushController extends BaseController
      */
     public function removePush()
     {
-        validatePost($this->post, ['id'=> 'required|integer']);
+        validatePost($this->post, ['id' => 'required|integer']);
         $result = $this->pushService->removePush($this->post);
         return ajaxReturn($result);
     }

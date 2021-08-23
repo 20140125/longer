@@ -34,14 +34,14 @@ class DatabaseService extends BaseService
         $result = DB::select('SHOW TABLE STATUS');
         foreach ($result as $item) {
             $this->return['lists'][] = array(
-                'name' => $item->Name,
-                'engine' => $item->Engine,
-                'version' => $item->Version,
-                'data_length' => formatBates($item->Data_length),
+                'name'           => $item->Name,
+                'engine'         => $item->Engine,
+                'version'        => $item->Version,
+                'data_length'    => formatBates($item->Data_length),
                 'auto_increment' => $item->Auto_increment,
-                'create_time' => $item->Create_time,
-                'comment' => $item->Comment,
-                'collation' => $item->Collation
+                'create_time'    => $item->Create_time,
+                'comment'        => $item->Comment,
+                'collation'      => $item->Collation
             );
         }
         return $this->return;
@@ -60,7 +60,7 @@ class DatabaseService extends BaseService
         if (!is_dir($tablePath)) {
             mkdir($tablePath);
         }
-        $savaFilePath = $tablePath.DIRECTORY_SEPARATOR.date('Y_m_d').'_create_table_'.$form['name'].'.sql';
+        $savaFilePath = $tablePath . DIRECTORY_SEPARATOR . date('Y_m_d') . '_create_table_' . $form['name'] . '.sql';
         $content = '';
         if ($form['form'] === 'table') {
             $content = $this->createTable($form['name']);
@@ -69,12 +69,13 @@ class DatabaseService extends BaseService
             $content = $this->sourceTable($form['name']);
         }
         if ($form['form'] === 'all') {
-            $content = $this->createTable($form['name']).$this->sourceTable($form['name']);
+            $content = $this->createTable($form['name']) . $this->sourceTable($form['name']);
         }
         $result = writeFile($savaFilePath, $content);
         $form['time'] = time() - $s_time;
         return !empty($result['code']) ? $result : ['code' => Code::SUCCESS, 'message' => 'backup table successfully', 'lists' => $form];
     }
+
     /**
      * TODO:创建数据表SQL
      * @param string $tableName
@@ -83,12 +84,12 @@ class DatabaseService extends BaseService
     protected function createTable(string $tableName)
     {
         $result = DB::select(sprintf('SHOW CREATE TABLE %s', $tableName));
-        $sql = "-- ----------------------------\n-- ".date('Y-m-d H:i:s')." backup table start\n-- ----------------------------\n";
+        $sql = "-- ----------------------------\n-- " . date('Y-m-d H:i:s') . " backup table start\n-- ----------------------------\n";
         foreach ($result as $item) {
             $item = (array)$item;
             $sql .= "-- ----------------------------\n-- Table structure for {$item['Table']}\n-- ----------------------------\n";
-            $sql .= sprintf("DROP TABLE IF EXISTS `%s`", $item["Table"]).';';
-            $sql .=  "\n".$item['Create Table'];
+            $sql .= sprintf("DROP TABLE IF EXISTS `%s`", $item["Table"]) . ';';
+            $sql .= "\n" . $item['Create Table'];
             $sql .= ";\n -- ";
         }
         return $sql;
@@ -104,11 +105,11 @@ class DatabaseService extends BaseService
         $result = DB::select(sprintf('SELECT * FROM %s', $tableName));
         $sql = ";\n-- ----------------------------\n-- Records of $tableName\n-- ----------------------------\n";
         if (empty($result)) {
-            $sql.=  "-- ----------------------------\n-- ".date('Y-m-d H:i:s')." backup table end\n-- ----------------------------\n";
+            $sql .= "-- ----------------------------\n-- " . date('Y-m-d H:i:s') . " backup table end\n-- ----------------------------\n";
             return $sql;
         }
         foreach ($result as $item) {
-            $sql.= sprintf('INSERT INTO %s VALUES %s', $tableName, '(');
+            $sql .= sprintf('INSERT INTO %s VALUES %s', $tableName, '(');
             foreach ($item as $rows) {
                 $sql .= "'{$rows}',";
             }
@@ -117,7 +118,7 @@ class DatabaseService extends BaseService
             $sql = substr($sql, 0, strlen($sql) - 3);
             $sql .= ");\n";
         }
-        $sql.=  "-- ----------------------------\n-- ".date('Y-m-d H:i:s')." backup table end\n-- ----------------------------\n";
+        $sql .= "-- ----------------------------\n-- " . date('Y-m-d H:i:s') . " backup table end\n-- ----------------------------\n";
         return rtrim($sql, ',');
     }
 
@@ -128,7 +129,7 @@ class DatabaseService extends BaseService
      */
     public function repairTable($form)
     {
-        $result = DB::select(sprintf('REPAIR TABLE %s',  $form['name']));
+        $result = DB::select(sprintf('REPAIR TABLE %s', $form['name']));
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'repair table failed';
@@ -145,7 +146,7 @@ class DatabaseService extends BaseService
      */
     public function optimizeTable($form)
     {
-        $result = $form['engine'] == 'MyISAM' ? DB::select(sprintf('OPTIMIZE TABLE %s', $form['name'])) : DB::select(sprintf('ANALYZE TABLE %s', $form['name'])) ;
+        $result = $form['engine'] == 'MyISAM' ? DB::select(sprintf('OPTIMIZE TABLE %s', $form['name'])) : DB::select(sprintf('ANALYZE TABLE %s', $form['name']));
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'optimize table failed';
@@ -154,6 +155,7 @@ class DatabaseService extends BaseService
         $this->return['message'] = 'optimize table successfully';
         return $this->return;
     }
+
     /**
      * TODO:修改数据表注释
      * @param $form

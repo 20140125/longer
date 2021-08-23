@@ -26,6 +26,7 @@ class SyncSpiderImage extends Command
      * @var string $baseUrl
      */
     protected $baseUrl;
+
     /**
      * Create a new command instance.
      *
@@ -56,35 +57,35 @@ class SyncSpiderImage extends Command
     {
         global $currentId;
         try {
-            $result = SooGifType::getInstance()->getLists([['id' ,'>=', $startId]]);
+            $result = SooGifType::getInstance()->getLists([['id', '>=', $startId]]);
             $bar = $this->output->createProgressBar(count($result));
             $client = new Client();
             foreach ($result as $item) {
                 $currentId = $item->id;
-                $this->info('current spider image url：' .$item->href);
-                WebPush('current spider image url：' .$item->href, $this->argument('uuid'), 'command');
+                $this->info('current spider image url：' . $item->href);
+                WebPush('current spider image url：' . $item->href, $this->argument('uuid'), 'command');
                 $promise = $client->request('GET', $item->href);
                 sleep(1);
-                $promise->filter('.bqpp .bqppdiv1')->each(function($node) use ($client) {
+                $promise->filter('.bqpp .bqppdiv1')->each(function ($node) use ($client) {
                     if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $node->filter('img')->attr('data-original'))])) {
-                        $this->warn('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')));
-                        WebPush('image already exists: '. str_replace('http', 'https', $node->filter('img')->attr('data-original')), $this->argument('uuid'), 'command');
+                        $this->warn('image already exists: ' . str_replace('http', 'https', $node->filter('img')->attr('data-original')));
+                        WebPush('image already exists: ' . str_replace('http', 'https', $node->filter('img')->attr('data-original')), $this->argument('uuid'), 'command');
                     } else {
                         SooGif::getInstance()->saveOne([
                             'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),
                             'name' => mb_substr($node->text(), 0, 50)
                         ]);
-                        $this->info('successfully save image： '. $node->filter('img')->attr('data-original'));
-                        WebPush('successfully save image： '. $node->filter('img')->attr('data-original'), $this->argument('uuid'), 'command');
+                        $this->info('successfully save image： ' . $node->filter('img')->attr('data-original'));
+                        WebPush('successfully save image： ' . $node->filter('img')->attr('data-original'), $this->argument('uuid'), 'command');
                     }
                 });
-                $this->info('successfully spider image url： ' .$item->href);
-                WebPush('successfully spider image url： ' .$item->href, $this->argument('uuid'), 'command');
+                $this->info('successfully spider image url： ' . $item->href);
+                WebPush('successfully spider image url： ' . $item->href, $this->argument('uuid'), 'command');
                 $bar->advance();
             }
             $bar->finish();
         } catch (\Exception $exception) {
-            $this->error($exception->getMessage().' currentId：'.$currentId);
+            $this->error($exception->getMessage() . ' currentId：' . $currentId);
             $this->spiderImage($currentId);
         }
     }

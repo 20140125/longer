@@ -11,6 +11,7 @@ class FileService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -50,7 +51,7 @@ class FileService extends BaseService
             $this->return['message'] = 'File size exceeds limit';
         }
         $result = getFileContent($form['path']);
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $result;
+        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $result;
         return $this->return;
     }
 
@@ -66,8 +67,8 @@ class FileService extends BaseService
             $this->return['message'] = 'File does not exist';
         }
         $result = writeFile($form['path'], $form['content']);
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
-        $this->return['message'] = !empty($result['code']) ? $this->return['message'] = $result['message']: 'update file successfully';
+        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
+        $this->return['message'] = !empty($result['code']) ? $this->return['message'] = $result['message'] : 'update file successfully';
         return $this->return;
     }
 
@@ -77,15 +78,16 @@ class FileService extends BaseService
      * @return array|bool
      */
     public function gZipFile($form)
-	{
+    {
         if (!file_exists($form['path'])) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'File does not exist';
         }
-        $result = gZipFile($form['docLists'], $form['path'], $form['resource'].'_'.date('YmdHis').'.zip');
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
+        $result = gZipFile($form['docLists'], $form['path'], $form['resource'] . '_' . date('YmdHis') . '.zip');
+        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
         return $this->return;
-	}
+    }
+
     /**
      * todo:文件解压
      * @param $form
@@ -98,7 +100,7 @@ class FileService extends BaseService
             $this->return['message'] = 'File does not exist';
         }
         $result = unGZipFile($form['path'], $form['resource'], false);
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
+        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
         return $this->return;
     }
 
@@ -115,7 +117,7 @@ class FileService extends BaseService
         }
         chmod($form['path'], 0777);
         $result = removeFiles($form['path']);
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
+        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
         return $this->return;
     }
 
@@ -127,7 +129,7 @@ class FileService extends BaseService
     public function createFile($form)
     {
         $result = createFile($form['path']);
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
+        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
         return $this->return;
     }
 
@@ -142,9 +144,9 @@ class FileService extends BaseService
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'File does not exist';
         }
-        chmod($form['path'], octdec((int)'0'.$form['auth']));
+        chmod($form['path'], octdec((int)'0' . $form['auth']));
         $result = chmodFile($form['path']) == $form['auth'];
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
+        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
         return $this->return;
     }
 
@@ -156,7 +158,7 @@ class FileService extends BaseService
     public function renameFile($form)
     {
         $result = renameFile($form['oldFile'], $form['newFile']);
-        !empty($result['code']) ?  $this->return = $result : $this->return['lists'] = $form;
+        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
         return $this->return;
     }
 
@@ -208,7 +210,7 @@ class FileService extends BaseService
             Storage::disk('public')->put($filename, file_get_contents($path));
             $this->return['code'] = Code::SUCCESS;
             $this->return['message'] = 'upload file successfully';
-            $this->return['lists'] = array('src'=>config('app.url').'storage/'.$filename, 'file_type' => $form['file_type'] ?? '');
+            $this->return['lists'] = array('src' => config('app.url') . 'storage/' . $filename, 'file_type' => $form['file_type'] ?? '');
             return $this->return;
         }
         /* todo：覆盖上传文件名称 */
@@ -220,7 +222,7 @@ class FileService extends BaseService
             $file->move($form['path'], $filename);
             $this->return['code'] = Code::SUCCESS;
             $this->return['message'] = 'upload file successfully';
-            $this->return['lists'] = array('src'=>config('app.url').'storage/'.$filename, 'name' => $filename);
+            $this->return['lists'] = array('src' => config('app.url') . 'storage/' . $filename, 'name' => $filename);
             return $this->return;
         }
         return $this->return;

@@ -12,6 +12,7 @@ class RoleService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -86,7 +87,9 @@ class RoleService extends BaseService
             $form = $this->__initRole($form);
             $form['created_at'] = strtotime($form['created_at']);
         }
-        if (!empty($form['act'])) unset($form['act']);
+        if (!empty($form['act'])) {
+            unset($form['act']);
+        }
         $result = $this->roleModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;

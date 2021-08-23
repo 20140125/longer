@@ -9,6 +9,7 @@ class ImageService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -19,6 +20,7 @@ class ImageService extends BaseService
         }
         return self::$instance;
     }
+
     /**
      * todo:获取图片列表
      * @param $form
@@ -34,7 +36,7 @@ class ImageService extends BaseService
             $where[] = ['type', $form['id']];
         }
         if (!empty($form['name'])) {
-            $where[] =['name', 'like', "%{$form['name']}%"];
+            $where[] = ['name', 'like', "%{$form['name']}%"];
         }
         $this->return['lists'] = $this->sooGifModel->getLists($where, $pagination, $order, $columns);
         return $this->return;

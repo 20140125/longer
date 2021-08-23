@@ -13,22 +13,22 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'Test' => 'App\Console\Commands\Test',
-        'SyncOauth' => 'App\Console\Commands\SyncOauth',
-        'SyncWebPush' => 'App\Console\Commands\SyncWebPush',
-        'SyncCityWeather' => 'App\Console\Commands\SyncCityWeather',
-        'SyncSpiderImage' => 'App\Console\Commands\SyncSpiderImage',
+        'Test'                   => 'App\Console\Commands\Test',
+        'SyncOauth'              => 'App\Console\Commands\SyncOauth',
+        'SyncWebPush'            => 'App\Console\Commands\SyncWebPush',
+        'SyncCityWeather'        => 'App\Console\Commands\SyncCityWeather',
+        'SyncSpiderImage'        => 'App\Console\Commands\SyncSpiderImage',
         'SyncSpiderImageService' => 'App\Console\Commands\SyncSpiderImageService',
-        'SyncSpiderImageTag' => 'App\Console\Commands\SyncSpiderImageTag',
-        'SyncSpiderImageType' => 'App\Console\Commands\SyncSpiderImageType',
-        'SyncWebDriveService' => 'App\Console\Commands\SyncWebDriveService',
-        'SyncImageSize' => 'App\Console\Commands\SyncImageSize'
+        'SyncSpiderImageTag'     => 'App\Console\Commands\SyncSpiderImageTag',
+        'SyncSpiderImageType'    => 'App\Console\Commands\SyncSpiderImageType',
+        'SyncWebDriveService'    => 'App\Console\Commands\SyncWebDriveService',
+        'SyncImageSize'          => 'App\Console\Commands\SyncImageSize'
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

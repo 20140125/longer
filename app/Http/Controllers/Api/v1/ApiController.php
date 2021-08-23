@@ -43,6 +43,7 @@ class ApiController extends BaseController
         $result = $this->post['source'] === 'json' ? $this->apiService->updateApiLists($this->post, $user) : $this->apiService->updateMarkDown($this->post, $user);
         return ajaxReturn($result);
     }
+
     /**
      * todo:设置验证规则
      * @param $source
@@ -53,16 +54,16 @@ class ApiController extends BaseController
     {
         $rules = $source === 'json' ?
             [
-                'desc' => 'required|string',
-                'api_id' => 'required|integer',
-                'href' => 'required|url',
-                'request' => 'required|array',
-                'response' => 'required|array',
+                'desc'            => 'required|string',
+                'api_id'          => 'required|integer',
+                'href'            => 'required|url',
+                'request'         => 'required|array',
+                'response'        => 'required|array',
                 'response_string' => 'required|array',
-                'remark' => 'required|string'
+                'remark'          => 'required|string'
             ] :
             [
-                'html' => 'required|string',
+                'html'     => 'required|string',
                 'markdown' => 'required|string'
             ];
         if ($action === 'update') {

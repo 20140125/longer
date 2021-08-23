@@ -11,6 +11,7 @@ class PushService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -70,7 +71,7 @@ class PushService extends BaseService
             return $this->return;
         }
         $form['username'] = 'admin';
-        $form['uuid'] = config('app.client_id').'1';
+        $form['uuid'] = config('app.client_id') . '1';
         dispatch(new SyncPushProcess($form))->onQueue('webPush')->delay(15);
         $this->return['lists'] = $form;
         return $this->return;

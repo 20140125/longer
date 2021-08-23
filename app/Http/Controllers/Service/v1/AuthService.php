@@ -18,6 +18,7 @@ class AuthService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -40,7 +41,7 @@ class AuthService extends BaseService
     public function getLists($form, array $columns = ['*'], bool $getAll = false, array $attr = ['key' => 'id', 'ids' => array()])
     {
         if ($getAll) {
-            $this->return['lists'] =  $this->authModel->getLists([], $columns, $attr, ['order' => 'path', 'direction' => 'asc']);
+            $this->return['lists'] = $this->authModel->getLists([], $columns, $attr, ['order' => 'path', 'direction' => 'asc']);
             return $this->return;
         }
         $where = [['status', $form['status'] ?? 1], ['level', '<', $form['level'] ?? 2]];
@@ -54,7 +55,7 @@ class AuthService extends BaseService
             $where = [['pid', (int)$form['id']]];
         }
         /* todo:数据列表 */
-        $this->return['lists'] =  $this->authModel->getLists($where, $columns, $attr);
+        $this->return['lists'] = $this->authModel->getLists($where, $columns, $attr);
         if (is_numeric($form['id'])) {
             foreach ($this->return['lists'] as $auth) {
                 $auth->hasChildren = false;
@@ -84,7 +85,7 @@ class AuthService extends BaseService
         $form['path'] = $id;
         $form['level'] = 0;
         if (!empty($parent_result)) {
-            $form['path'] = $parent_result->path.'-'.$id;
+            $form['path'] = $parent_result->path . '-' . $id;
             $form['level'] = substr_count($form['path'], '-');
         }
         $result = $this->authModel->updateOne(['id' => $id], $form);
@@ -104,7 +105,9 @@ class AuthService extends BaseService
      */
     public function updateAuth($form)
     {
-        if (count($form['children']) >=0) unset($form['children']);
+        if (count($form['children']) >= 0) {
+            unset($form['children']);
+        }
         /* todo:修改权限状态 */
         if (!empty($form['act'])) {
             unset($form['act']);
@@ -119,7 +122,7 @@ class AuthService extends BaseService
         }
         /* todo:修改权限 */
         $result = $this->getAuth(['id' => $form['pid']]);
-        $form['path'] = !empty($result->path) ? $result->path.'-'.$form['id'] : $form['id'];
+        $form['path'] = !empty($result->path) ? $result->path . '-' . $form['id'] : $form['id'];
         $form['level'] = substr_count($form['path'], '-');
         $result = $this->authModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {

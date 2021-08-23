@@ -11,13 +11,14 @@
  * @link http://www.workerman.net/
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 use \Workerman\Worker;
 use \GatewayWorker\Gateway;
 
-require_once   '../../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 
 // gateway 进程
-if (in_array(PHP_OS, ['WINNT','Darwin'])) {
+if (in_array(PHP_OS, ['WINNT', 'Darwin'])) {
     $gateway = new Gateway("websocket://0.0.0.0:7272");
 } else {
     $context = array(

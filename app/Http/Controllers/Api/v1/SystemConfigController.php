@@ -37,7 +37,7 @@ class SystemConfigController extends BaseController
      */
     public function saveSystemConfig()
     {
-        validatePost($this->post, ['name'=>'required|string|unique:os_system_config', 'children'=> 'required|array', 'status'=>'required|integer|in:1,2']);
+        validatePost($this->post, ['name' => 'required|string|unique:os_system_config', 'children' => 'required|array', 'status' => 'required|integer|in:1,2']);
         $result = $this->systemConfigService->saveSystemConfig($this->post);
         return ajaxReturn($result);
     }
@@ -48,7 +48,7 @@ class SystemConfigController extends BaseController
      */
     public function updateSystemConfig()
     {
-        validatePost($this->post, ['name'=>'required|string', 'children'=> 'required|array', 'status'=>'required|integer|in:1,2']);
+        validatePost($this->post, ['name' => 'required|string', 'children' => 'required|array', 'status' => 'required|integer|in:1,2']);
         $result = $this->systemConfigService->updateSystemConfig($this->post);
         return ajaxReturn($result);
     }

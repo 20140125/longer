@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class PermissionApplyLog extends Base
 {
     use HasFactory;
+
     /**
      * @var string $table
      */
@@ -53,6 +54,6 @@ class PermissionApplyLog extends Base
      */
     public function getLists(array $where = [], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
-        return DB::table($this->table)->orderBy($order['order'],$order['direction'])->where($where)->limit(100)->get($columns);
+        return DB::table($this->table)->orderBy($order['order'], $order['direction'])->where($where)->limit(100)->get($columns);
     }
 }

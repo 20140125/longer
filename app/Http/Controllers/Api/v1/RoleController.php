@@ -20,6 +20,7 @@ class RoleController extends BaseController
         $result = $this->roleService->getLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'id', 'direction' => 'desc'], ['id', 'role_name', 'status', 'auth_ids', 'created_at', 'updated_at']);
         return ajaxReturn($result);
     }
+
     /**
      * todo:获取角色权限
      * @return JsonResponse

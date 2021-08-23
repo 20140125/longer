@@ -16,6 +16,7 @@ class ApiService extends BaseService
     private static $instance;
 
     protected $json_str = ['request', 'response', 'response_string'];
+
     /**
      * @return static
      */
@@ -35,7 +36,7 @@ class ApiService extends BaseService
     public function getApiList($form)
     {
         $this->return['lists'] = $this->apiListsModel->getOne(['api_id' => $form['id']]);
-        if(!$this->return['lists']) {
+        if (!$this->return['lists']) {
             $this->return['lists'] = (object)array();
             return $this->return;
         }
@@ -60,7 +61,7 @@ class ApiService extends BaseService
     public function getMarkDownList($form)
     {
         $this->return['lists'] = $this->apiDocModel->getOne(['api_id' => $form['id']]);
-        if(!$this->return['lists']) {
+        if (!$this->return['lists']) {
             $this->return['lists'] = (object)array();
             return $this->return;
         }
@@ -81,8 +82,12 @@ class ApiService extends BaseService
      */
     public function saveApiLists($form, $user)
     {
-        if (!empty($form['source'])) unset($form['source']);
-        if (count($form['apiLog']) >= 0) unset($form['apiLog']);
+        if (!empty($form['source'])) {
+            unset($form['source']);
+        }
+        if (count($form['apiLog']) >= 0) {
+            unset($form['apiLog']);
+        }
         foreach ($this->json_str as $item) {
             $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
         }
@@ -106,12 +111,16 @@ class ApiService extends BaseService
      */
     public function updateApiLists($form, $user)
     {
-        if (!empty($form['source'])) unset($form['source']);
-        if (count($form['apiLog']) >= 0) unset($form['apiLog']);
+        if (!empty($form['source'])) {
+            unset($form['source']);
+        }
+        if (count($form['apiLog']) >= 0) {
+            unset($form['apiLog']);
+        }
         foreach ($this->json_str as $item) {
             $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
         }
-        $result = $this->apiListsModel->updateOne(['id' => $form['id']],$form);
+        $result = $this->apiListsModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Error update json interface details';
@@ -131,8 +140,12 @@ class ApiService extends BaseService
      */
     public function saveMarkDown($form, $user)
     {
-        if (!empty($form['source'])) unset($form['source']);
-        if (count($form['apiLog']) >= 0) unset($form['apiLog']);
+        if (!empty($form['source'])) {
+            unset($form['source']);
+        }
+        if (count($form['apiLog']) >= 0) {
+            unset($form['apiLog']);
+        }
         $result = $this->apiDocModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
@@ -153,9 +166,13 @@ class ApiService extends BaseService
      */
     public function updateMarkDown($form, $user)
     {
-        if (!empty($form['source'])) unset($form['source']);
-        if (count($form['apiLog']) >= 0) unset($form['apiLog']);
-        $result = $this->apiDocModel->updateOne(['id' => $form['id']],$form);
+        if (!empty($form['source'])) {
+            unset($form['source']);
+        }
+        if (count($form['apiLog']) >= 0) {
+            unset($form['apiLog']);
+        }
+        $result = $this->apiDocModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Error update markdown interface details';
@@ -166,6 +183,7 @@ class ApiService extends BaseService
         $this->return['lists'] = $form;
         return $this->return;
     }
+
     /**
      * todo:保存操作日志
      * @param $form
@@ -174,12 +192,12 @@ class ApiService extends BaseService
     protected function saveApiLog($form, $user)
     {
         $this->apiLogModel->saveOne([
-            'username' => $user->username,
-            'api_id' => $form['api_id'],
+            'username'   => $user->username,
+            'api_id'     => $form['api_id'],
             'updated_at' => time(),
-            'source' => $form['source'],
-            'desc' => '编辑'.($form['desc'] ?? $this->apiCategoryModel->getOne(['id' => $form['api_id']], ['name'])->name),
-            'json' => $form['source'] === 2 ? json_encode($form, JSON_UNESCAPED_UNICODE) : $form['markdown']
+            'source'     => $form['source'],
+            'desc'       => '编辑' . ($form['desc'] ?? $this->apiCategoryModel->getOne(['id' => $form['api_id']], ['name'])->name),
+            'json'       => $form['source'] === 2 ? json_encode($form, JSON_UNESCAPED_UNICODE) : $form['markdown']
         ]);
     }
 }

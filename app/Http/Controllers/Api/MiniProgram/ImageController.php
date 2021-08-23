@@ -51,6 +51,7 @@ class ImageController extends BaseController
         $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);
         return ajaxReturn($result);
     }
+
     /**
      * todo:获取关键字
      * @return JsonResponse

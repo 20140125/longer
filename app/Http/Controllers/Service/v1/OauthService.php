@@ -14,6 +14,7 @@ class OauthService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */

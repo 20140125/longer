@@ -42,6 +42,7 @@ class RedisClient extends Controller
         }
         return self::$instance;
     }
+
     /**
      * RedisClient constructor.
      */
@@ -147,6 +148,7 @@ class RedisClient extends Controller
     {
         return $this->redisClient->lPush($key, $value);
     }
+
     /**
      * TODO:移除并返回列表的第一个元素（ Redis 列表(List)）
      * @param $key
@@ -156,6 +158,7 @@ class RedisClient extends Controller
     {
         return $this->redisClient->lPop($key);
     }
+
     /**
      * TODO:数据添加（列表尾部 Redis 列表(List)）
      * @param $key
@@ -166,6 +169,7 @@ class RedisClient extends Controller
     {
         return $this->redisClient->rPush($key, $value);
     }
+
     /**
      * TODO:移除并返回列表的最末元素（ Redis 列表(List)）
      * @param $key
@@ -219,6 +223,7 @@ class RedisClient extends Controller
     {
         return $this->redisClient->hDel($to, $from);
     }
+
     /**
      * TODO:获取所有的Key
      * @param $pattern
@@ -228,6 +233,7 @@ class RedisClient extends Controller
     {
         return $this->redisClient->keys($pattern);
     }
+
     /**
      * TODO:获取聊天记录长度
      * @param $key

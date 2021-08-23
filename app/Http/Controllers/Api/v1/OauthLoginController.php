@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Oauth\BaiDuController;
@@ -83,11 +84,12 @@ class OauthLoginController extends Controller
     {
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
-        $giteeOAuth =GiteeController::getInstance($appId, $appSecret);
+        $giteeOAuth = GiteeController::getInstance($appId, $appSecret);
         $url = $giteeOAuth->getAuthUrl();
         $this->redisClient->setValue($giteeOAuth->state, $giteeOAuth->state, ['EX' => 60]);
         return redirect($url);
     }
+
     /**
      * TODO:：Gitee跳转到授权登录页面
      * @return RedirectResponse|Redirector
@@ -101,6 +103,7 @@ class OauthLoginController extends Controller
         $this->redisClient->setValue($baiDuOauth->state, $baiDuOauth->state, ['EX' => 60]);
         return redirect($url);
     }
+
     /**
      * TODO:：OsChina跳转到授权登录页面
      * @return RedirectResponse|Redirector

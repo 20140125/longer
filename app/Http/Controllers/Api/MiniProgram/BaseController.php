@@ -14,6 +14,7 @@ class BaseController extends Controller
     protected $imageService;
 
     protected $post;
+
     /**
      * WxUsersController constructor.
      * @param Request $request

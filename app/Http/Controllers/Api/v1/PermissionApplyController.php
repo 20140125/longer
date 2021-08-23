@@ -40,9 +40,9 @@ class PermissionApplyController extends BaseController
     {
         validatePost($this->post, [
             'user_id' => 'required|integer',
-            'expires' => 'required|date|before:'.date('Y-m-d H:i:s', strtotime('+1 year')).'|after:'.date('Y-m-d H:i:s'),
-            'desc' => 'required|string',
-            'href' => 'required|string'
+            'expires' => 'required|date|before:' . date('Y-m-d H:i:s', strtotime('+1 year')) . '|after:' . date('Y-m-d H:i:s'),
+            'desc'    => 'required|string',
+            'href'    => 'required|string'
         ]);
         $result = $this->permissionApplyService->savePermissionApply($this->post);
         return ajaxReturn($result);
@@ -57,7 +57,7 @@ class PermissionApplyController extends BaseController
         $rules = ['status' => 'required|integer|in:1,2', 'id' => 'required|integer'];
         validatePost($this->post, $rules);
         $_user = $request->get('unauthorized');
-        $result = (int)$this->post['status'] === 2 ?  $this->permissionApplyService->removePermissionApply($this->post, $_user) : $this->permissionApplyService->updatePermissionApply($this->post, $_user);
+        $result = (int)$this->post['status'] === 2 ? $this->permissionApplyService->removePermissionApply($this->post, $_user) : $this->permissionApplyService->updatePermissionApply($this->post, $_user);
         return ajaxReturn($result);
     }
 }

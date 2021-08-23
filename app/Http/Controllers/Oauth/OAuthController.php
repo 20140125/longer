@@ -37,9 +37,10 @@ class OAuthController extends Controller
      */
     public function getState(int $length = 32)
     {
-        $this->state = substr(md5(getRoundNum($length ,'all').time().uniqid()), 0, $length);
+        $this->state = substr(md5(getRoundNum($length, 'all') . time() . uniqid()), 0, $length);
         return $this->state;
     }
+
     /**
      * TODO:：校验标识是否正确
      * @param $storeState
@@ -58,7 +59,7 @@ class OAuthController extends Controller
      */
     public function json($data)
     {
-        return json_decode(str_replace(['callback','(',')',';'], '', $data), true);
+        return json_decode(str_replace(['callback', '(', ')', ';'], '', $data), true);
     }
 
     /**

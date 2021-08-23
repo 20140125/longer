@@ -29,15 +29,15 @@ class UserCenterController extends BaseController
     {
         validatePost($this->post,
             [
-                'u_name'=>'required|string',
-                'id'=>'required|integer',
-                'desc'=>'required|string|max:128',
-                'tags'=>'required|array|max:128',
-                'notice_status'=>'required|integer|in:1,2',
-                'user_status'=>'required|integer|in:1,2',
-                'uid'=>'required|integer',
-                'ip_address' => 'required|array',
-                'local'=>'required|array'
+                'u_name'        => 'required|string',
+                'id'            => 'required|integer',
+                'desc'          => 'required|string|max:128',
+                'tags'          => 'required|array|max:128',
+                'notice_status' => 'required|integer|in:1,2',
+                'user_status'   => 'required|integer|in:1,2',
+                'uid'           => 'required|integer',
+                'ip_address'    => 'required|array',
+                'local'         => 'required|array'
             ]
         );
         $_user = $request->get('unauthorized');

@@ -42,8 +42,9 @@ class BaiDuController extends OAuthController
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url').'api/v1/callback/baidu';
+        $this->redirectUri = config('app.url') . 'api/v1/callback/baidu';
     }
+
     /**
      * @param string $appid
      * @param string $appsecret
@@ -75,17 +76,17 @@ class BaiDuController extends OAuthController
          * tv: 电视等超大显示屏使用的授权页面。
          */
         $arr = [
-            'response_type' =>'code',
-            'client_id' => $this->appid,
-            'redirect_uri' => empty($callback) ? $this->redirectUri : $callback,
-            'scope' => 'basic super_msg',
-            'state' => $this->getState($length),
-            'display' => 'dialog',
-            'force_login' => '0', //如传递“force_login=1”，则加载登录页时强制用户输入用户名和口令，不会从cookie中读取百度用户的登陆状态。
-            'confirm_login' =>'1', // 如传递“confirm_login=1”且百度用户已处于登陆状态，会提示是否使用已当前登陆用户对应用授权。
-            'login_type' => 'sms' //如传递“login_type=sms”，授权页面会默认使用短信动态密码注册登陆方式。
+            'response_type' => 'code',
+            'client_id'     => $this->appid,
+            'redirect_uri'  => empty($callback) ? $this->redirectUri : $callback,
+            'scope'         => 'basic super_msg',
+            'state'         => $this->getState($length),
+            'display'       => 'dialog',
+            'force_login'   => '0', //如传递“force_login=1”，则加载登录页时强制用户输入用户名和口令，不会从cookie中读取百度用户的登陆状态。
+            'confirm_login' => '1', // 如传递“confirm_login=1”且百度用户已处于登陆状态，会提示是否使用已当前登陆用户对应用授权。
+            'login_type'    => 'sms' //如传递“login_type=sms”，授权页面会默认使用短信动态密码注册登陆方式。
         ];
-        return $this->apiUrl.'oauth/2.0/authorize?'.http_build_query($arr);
+        return $this->apiUrl . 'oauth/2.0/authorize?' . http_build_query($arr);
     }
 
     /**
@@ -96,13 +97,13 @@ class BaiDuController extends OAuthController
     public function getAccessToken(string $code)
     {
         $arr = [
-            'grant_type' => 'authorization_code',
-            'code' => $code,
-            'client_id' => $this->appid,
+            'grant_type'    => 'authorization_code',
+            'code'          => $code,
+            'client_id'     => $this->appid,
             'client_secret' => $this->appsecret,
-            'redirect_uri' => $this->redirectUri,
+            'redirect_uri'  => $this->redirectUri,
         ];
-        $result = $this->curl->get($this->apiUrl.'oauth/2.0/token?'.http_build_query($arr));
+        $result = $this->curl->get($this->apiUrl . 'oauth/2.0/token?' . http_build_query($arr));
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
@@ -119,9 +120,9 @@ class BaiDuController extends OAuthController
     {
         $arr = [
             'access_token' => $access_token,
-            'format' => 'json'
+            'format'       => 'json'
         ];
-        $result = $this->curl->get($this->apiUrl.'rest/2.0/passport/users/getLoggedInUser?'.http_build_query($arr));
+        $result = $this->curl->get($this->apiUrl . 'rest/2.0/passport/users/getLoggedInUser?' . http_build_query($arr));
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
@@ -138,10 +139,10 @@ class BaiDuController extends OAuthController
     {
         $arr = [
             'access_token' => $access_token,
-            'format' => 'json',
-            'get_unionid' => '1',
+            'format'       => 'json',
+            'get_unionid'  => '1',
         ];
-        $result = $this->curl->get($this->apiUrl.'rest/2.0/passport/users/getInfo?'.http_build_query($arr));
+        $result = $this->curl->get($this->apiUrl . 'rest/2.0/passport/users/getInfo?' . http_build_query($arr));
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
@@ -154,16 +155,16 @@ class BaiDuController extends OAuthController
      * @param string $refreshToken
      * @return array|mixed
      */
-    public function refreshToken(string  $refreshToken)
+    public function refreshToken(string $refreshToken)
     {
-        $arr =  array(
-            'grant_type' => 'refresh_token',
+        $arr = array(
+            'grant_type'    => 'refresh_token',
             'refresh_token' => $refreshToken,
-            'client_id' => $this->appid,
+            'client_id'     => $this->appid,
             'client_secret' => $this->appsecret,
-            'scope' => 'basic'
+            'scope'         => 'basic'
         );
-        $result = $this->curl->get($this->apiUrl.'oauth/2.0/token?'.http_build_query($arr));
+        $result = $this->curl->get($this->apiUrl . 'oauth/2.0/token?' . http_build_query($arr));
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }

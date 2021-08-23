@@ -35,7 +35,7 @@ class AuthController extends BaseController
      */
     public function saveAuth()
     {
-        validatePost($this->post, ['name'=> 'required|string|unique:os_auth','href' =>'required|string|unique:os_auth', 'status' => 'required|in:1,2|integer', 'pid' => 'required|integer']);
+        validatePost($this->post, ['name' => 'required|string|unique:os_auth', 'href' => 'required|string|unique:os_auth', 'status' => 'required|in:1,2|integer', 'pid' => 'required|integer']);
         $result = $this->authService->saveAuth($this->post);
         return ajaxReturn($result);
     }

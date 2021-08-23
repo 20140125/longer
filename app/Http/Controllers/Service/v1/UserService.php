@@ -18,6 +18,7 @@ class UserService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -65,7 +66,7 @@ class UserService extends BaseService
                 return $this->return;
             }
             /* 用户被禁用 */
-            if ($user->status  === 2) {
+            if ($user->status === 2) {
                 $this->return['code'] = Code::FORBIDDEN;
                 $this->return['message'] = 'users not allowed login system';
                 return $this->return;
@@ -83,7 +84,7 @@ class UserService extends BaseService
     protected function accountLogin($form, $user)
     {
         /* 密码错误 */
-        $password = md5(md5($form['password']).$user->salt);
+        $password = md5(md5($form['password']) . $user->salt);
         if ($password !== $user->password) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'password validator failed';
@@ -113,7 +114,7 @@ class UserService extends BaseService
     {
         /* 更新用户信息 */
         $form['salt'] = getRoundNum(8, 'all');
-        $form['password'] = md5(md5($form['password']).$form['salt']) === $user->password ? $user->password : md5(md5($form['password']).$form['salt']);
+        $form['password'] = md5(md5($form['password']) . $form['salt']) === $user->password ? $user->password : md5(md5($form['password']) . $form['salt']);
         $form['remember_token'] = encrypt($form['password']);
         $form['ip_address'] = getServerIp();
         $form['created_at'] = !empty($form['created_at']) ? strtotime($form['created_at']) : time();
@@ -142,7 +143,7 @@ class UserService extends BaseService
     {
         $form['avatar_url'] = $this->getUserAvatarImage();
         $form['salt'] = getRoundNum(8, 'all');
-        $form['password'] = md5(md5(getRoundNum(9, 'all')).$form['salt']);
+        $form['password'] = md5(md5(getRoundNum(9, 'all')) . $form['salt']);
         $form['remember_token'] = encrypt($form['password']);
         $form['ip_address'] = getServerIp();
         $form['updated_at'] = time();
@@ -153,8 +154,8 @@ class UserService extends BaseService
         $form['username'] = explode("@", $form['email'])[0];
         $id = $this->userModel->saveOne($form);
         //新用户注册生成client_id
-        $this->userModel->updateOne(['id' => $id], [$form['uuid'] => config('app.client_id').$id]);
-        $userCenter = ['u_name' => $form['username'], 'uid' => $id,'token' => $form['remember_token'], 'notice_status' => 1, 'user_status' =>1 ];
+        $this->userModel->updateOne(['id' => $id], [$form['uuid'] => config('app.client_id') . $id]);
+        $userCenter = ['u_name' => $form['username'], 'uid' => $id, 'token' => $form['remember_token'], 'notice_status' => 1, 'user_status' => 1];
         $this->userCenterModel->saveOne($userCenter);
         //更新用户画像
         $this->updateUsersAvatarImage();
@@ -166,6 +167,7 @@ class UserService extends BaseService
         $this->return['message'] = $message;
         return $this->return;
     }
+
     /**
      * todo:获取用户画像
      * @return int
@@ -175,12 +177,13 @@ class UserService extends BaseService
         $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0], true);
         $avatarUrl = [];
         foreach ($users as $user) {
-            if ($user['client_name']!=='admin') {
+            if ($user['client_name'] !== 'admin') {
                 $avatarUrl[] = $user['client_img'];
             }
         }
         return $avatarUrl[rand(0, count($avatarUrl))];
     }
+
     /**
      * TODO:更新用户画像
      * @return int
@@ -190,7 +193,7 @@ class UserService extends BaseService
         $_column = ['username as client_name', 'avatar_url as client_img', 'uuid', 'id'];
         $users = $this->userModel->getLists([], [], [], true, $_column);
         foreach ($users as &$user) {
-            $user->centerInfo = $this->userCenterModel->getOne(['uid' => $user->id], ['desc','tags','ip_address','local']);
+            $user->centerInfo = $this->userCenterModel->getOne(['uid' => $user->id], ['desc', 'tags', 'ip_address', 'local']);
             $user->id = encrypt($user->id);
         }
         if ($this->redisClient->sMembers(config('app.chat_user_key'))) {
@@ -207,7 +210,7 @@ class UserService extends BaseService
     {
         $this->return['lists'] = Cache::get('_users_lists');
         if (empty($this->return['lists'])) {
-            $this->return['lists'] = $this->userModel->getLists('', [], [], true, ['id', 'username','uuid']);
+            $this->return['lists'] = $this->userModel->getLists('', [], [], true, ['id', 'username', 'uuid']);
             Cache::put('_users_lists', $this->return['lists'], Carbon::now()->addHours(2));
         }
         $this->return['message'] = 'successfully';

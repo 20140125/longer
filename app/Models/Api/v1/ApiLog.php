@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class ApiLog extends Base
 {
     use HasFactory;
+
     /**
      * @var string $table
      */

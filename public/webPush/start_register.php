@@ -11,10 +11,11 @@
  * @link http://www.workerman.net/
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 use \Workerman\Worker;
 use \GatewayWorker\Register;
 
-require_once   '../../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 
 // register 服务必须是text协议
 $register = new Register('text://0.0.0.0:1236');

@@ -14,6 +14,7 @@ class LoginService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -24,6 +25,7 @@ class LoginService extends BaseService
         }
         return self::$instance;
     }
+
     /**
      * todo:获取openID
      * @param $form
@@ -33,13 +35,13 @@ class LoginService extends BaseService
     {
         $url = 'https://api.weixin.qq.com/sns/jscode2session?';
         $data = array(
-            'appid' =>$this->appid,
-            'secret' =>$this->appsecret,
-            'js_code' =>$form['code'],
-            'grant_type' =>'authorization_code'
+            'appid'      => $this->appid,
+            'secret'     => $this->appsecret,
+            'js_code'    => $form['code'],
+            'grant_type' => 'authorization_code'
         );
         $curl = new Curl();
-        $response = $curl->post($url.http_build_query($data));
+        $response = $curl->post($url . http_build_query($data));
         $this->return['lists'] = json_decode(trim($response), true, 512, JSON_OBJECT_AS_ARRAY);
         return $this->return;
     }
@@ -53,23 +55,23 @@ class LoginService extends BaseService
     {
         try {
             $oauth = [
-                'username' => $form['nickName'],
-                'openid' => $form['code2Session']['openid'] ?? 0,
-                'access_token' => $form['code2Session']['session_key'] ?? 0,
-                'expires' => time() + $form['code2Session']['expires_in'] ?? 0,
-                'role_id' => 2,
-                'created_at' => time(),
-                'updated_at' => time(),
-                'remember_token' => encrypt(md5($form['nickName']).time()),
-                'oauth_type' => 'weixin',
-                'avatar_url' => $form['avatarUrl']
+                'username'       => $form['nickName'],
+                'openid'         => $form['code2Session']['openid'] ?? 0,
+                'access_token'   => $form['code2Session']['session_key'] ?? 0,
+                'expires'        => time() + $form['code2Session']['expires_in'] ?? 0,
+                'role_id'        => 2,
+                'created_at'     => time(),
+                'updated_at'     => time(),
+                'remember_token' => encrypt(md5($form['nickName']) . time()),
+                'oauth_type'     => 'weixin',
+                'avatar_url'     => $form['avatarUrl']
             ];
             $where[] = array('openid', '=', $oauth['openid']);
             $where[] = array('oauth_type', '=', 'weixin');
             $result = $this->oauthModel->getOne($where);
             if (!empty($result)) {
-                $result->remember_token =  encrypt($oauth['username'].time());
-                $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' =>  $result->remember_token]);
+                $result->remember_token = encrypt($oauth['username'] . time());
+                $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' => $result->remember_token]);
                 /* 缓存用户登录标识（脚本缓存有时间延时） */
                 \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($result->remember_token, $result->remember_token, config('app.app_refresh_login_time'));
                 dispatch(new SyncOauthProcess(['remember_token' => $result->remember_token]))->onQueue('users');

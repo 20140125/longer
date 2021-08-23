@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
@@ -26,9 +27,9 @@ class LoginController extends BaseController
         if ($verifyCode['code'] === Code::VERIFY_CODE_ERROR) {
             return ajaxReturn($verifyCode);
         }
-        $rules = ['email' =>'required|between:8,64|email', 'verify_code' =>'required|size:8|string'];
+        $rules = ['email' => 'required|between:8,64|email', 'verify_code' => 'required|size:8|string'];
         if ($this->post['loginType'] === 'password') {
-            $rules = ['email' =>'required|between:8,64|email', 'password' =>'required|between:6,32|string', 'verify_code' =>'required|size:6|string'];
+            $rules = ['email' => 'required|between:8,64|email', 'password' => 'required|between:6,32|string', 'verify_code' => 'required|size:6|string'];
         }
         validatePost($this->post, $rules);
         $form = array('email' => $this->post['email'], 'password' => $this->post['password']);
@@ -53,7 +54,7 @@ class LoginController extends BaseController
     public function reportCode()
     {
         $this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']);
-        return ajaxReturn(array('lists' => array('code' => $this->post['verify_code']), 'message' => 'successfully', 'code' => Code::SUCCESS ));
+        return ajaxReturn(array('lists' => array('code' => $this->post['verify_code']), 'message' => 'successfully', 'code' => Code::SUCCESS));
     }
 
     /**

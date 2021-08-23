@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author <fl140125@gmail.com>
  * Class Chat
@@ -13,14 +14,16 @@ class Chat
      * @var string $hashKey
      */
     protected $hashKey = 'unread_';
+
     /**
      * Chat constructor.
      */
     public function __construct()
     {
         $this->redisClient = new Redis();
-        $this->redisClient -> connect('127.0.0.1', 6379);
+        $this->redisClient->connect('127.0.0.1', 6379);
     }
+
     /**
      * TODO：缓存用户聊天记录
      * @param $from
@@ -32,9 +35,10 @@ class Chat
     public function setChatMsgLists($from, $to, $room_id, $message)
     {
         $value = str_replace('\\', '', json_encode($message, JSON_UNESCAPED_UNICODE));
-        $keyName = $to == 'all' ? 'receive_all_'.$room_id : "receive_{$from}_$to";
-        return $this ->redisClient-> lPush($keyName, $value);
+        $keyName = $to == 'all' ? 'receive_all_' . $room_id : "receive_{$from}_$to";
+        return $this->redisClient->lPush($keyName, $value);
     }
+
     /**
      * TODO：获取聊天记录
      * @param $from
@@ -48,12 +52,12 @@ class Chat
     {
         $message = array();
         $time = array();
-        $offset = $limit * ($page - 1) ;
+        $offset = $limit * ($page - 1);
         //群聊消息
         if (!empty($room_id)) {
-            $recName = 'receive_all_'.$room_id;
+            $recName = 'receive_all_' . $room_id;
             $num = $this->getMsgLen($recName);
-            $recList = $offset + $limit >= $num ? $this ->redisClient-> lRange($recName, $offset, $num) : $this->redisClient->lRange($recName, $offset, $offset+$limit);
+            $recList = $offset + $limit >= $num ? $this->redisClient->lRange($recName, $offset, $num) : $this->redisClient->lRange($recName, $offset, $offset + $limit);
             foreach ($recList as $item) {
                 array_push($message, json_decode($item, true));
                 $time[] = json_decode($item, true)['time'];
@@ -62,9 +66,9 @@ class Chat
             return array('lists' => $message, 'total' => $num);
         }
         //接受的消息
-        $recName =  "receive_{$from}_$to";
+        $recName = "receive_{$from}_$to";
         $recNum = $this->getMsgLen($recName);
-        $recList = $offset + $limit >= $recNum ? $this ->redisClient-> lRange($recName, $offset, $recNum) : $this->redisClient->lRange($recName, $offset, $offset+$limit);
+        $recList = $offset + $limit >= $recNum ? $this->redisClient->lRange($recName, $offset, $recNum) : $this->redisClient->lRange($recName, $offset, $offset + $limit);
         foreach ($recList as $item) {
             array_push($message, json_decode($item, true));
             $time[] = json_decode($item, true)['time'];
@@ -72,7 +76,7 @@ class Chat
         //发送的消息
         $sendName = "receive_{$to}_$from";
         $sendNum = $this->getMsgLen($sendName);
-        $sendLists = $offset + $limit >= $sendNum ? $this ->redisClient-> lRange($sendName, $offset, $sendNum) : $this->redisClient->lRange($sendName, $offset, $offset+$limit);
+        $sendLists = $offset + $limit >= $sendNum ? $this->redisClient->lRange($sendName, $offset, $sendNum) : $this->redisClient->lRange($sendName, $offset, $offset + $limit);
         foreach ($sendLists as $item) {
             array_push($message, json_decode($item, true));
             $time[] = json_decode($item, true)['time'];
@@ -80,6 +84,7 @@ class Chat
         array_multisort($message, $time, SORT_ASC);
         return array('lists' => $message, 'total' => $recNum + $sendNum);
     }
+
     /**
      * todo:消息撤回：删除redis缓存数据并告知用户/消息删除：直接删除消息
      * @param $message
@@ -88,7 +93,7 @@ class Chat
     {
         $receiveKey = empty($message['room_id']) ? "receive_{$message['from_client_id']}_{$message['to_client_id']}" : "receive_all_{$message['room_id']}";
         $num = $this->getMsgLen($receiveKey);
-        $recList = $this ->redisClient-> lRange($receiveKey, 0, $num);
+        $recList = $this->redisClient->lRange($receiveKey, 0, $num);
         $newRecList = array();
         foreach ($recList as $index => $item) {
             if (!$this->compareJson(json_encode($message, JSON_UNESCAPED_UNICODE), $item)) {
@@ -113,7 +118,7 @@ class Chat
     {
         $jsonA = json_decode($jsonA, true);
         $jsonB = json_decode($jsonB, true);
-        if (count($jsonB)!== count($jsonA)) {
+        if (count($jsonB) !== count($jsonA)) {
             return false;
         }
         $total = count($jsonA);
@@ -125,6 +130,7 @@ class Chat
         }
         return $num === $total;
     }
+
     /**
      * TODO:获取聊天记录长度
      * @param $key
@@ -134,6 +140,7 @@ class Chat
     {
         return $this->redisClient->lLen($key);
     }
+
     /**
      * TODO：获取用户未读消息记录数(所有)
      * @param $to
@@ -141,7 +148,7 @@ class Chat
      */
     public function getUnreadMsgAllCount($to)
     {
-        return $this ->redisClient-> hGetAll($this->hashKey.$to);
+        return $this->redisClient->hGetAll($this->hashKey . $to);
     }
 
     /**
@@ -152,8 +159,9 @@ class Chat
      */
     public function getUnreadMsgCount($to, $from)
     {
-        return $this ->redisClient-> hGet($this->hashKey.$to, $from);
+        return $this->redisClient->hGet($this->hashKey . $to, $from);
     }
+
     /**
      * TODO：包括所有未读消息内容的数组
      * @param $from
@@ -162,11 +170,12 @@ class Chat
      */
     public function getUnreadMsg($from, $to)
     {
-        $countArr = $this -> getUnreadMsgAllCount($to);
+        $countArr = $this->getUnreadMsgAllCount($to);
         $count = $countArr[$from];
         $keyName = "receive_{$from}_$to";
-        return $this ->redisClient -> lRange($keyName, 0, (int)($count));
+        return $this->redisClient->lRange($keyName, 0, (int)($count));
     }
+
     /**
      * TODO:添加用户未读消息记录数
      * @param $from
@@ -175,8 +184,9 @@ class Chat
      */
     public function setUnreadMsgLists($from, $to)
     {
-        return $this->redisClient->hIncrBy($this->hashKey.$to, $from, 1);
+        return $this->redisClient->hIncrBy($this->hashKey . $to, $from, 1);
     }
+
     /**
      * TODO:删除未读消息
      * @param $from
@@ -185,8 +195,9 @@ class Chat
      */
     public function delUnreadMsg($from, $to)
     {
-        return $this->redisClient->hDel($this->hashKey.$from, $to);
+        return $this->redisClient->hDel($this->hashKey . $from, $to);
     }
+
     /**
      * TODO:判断是否存在
      * @param $key
@@ -197,6 +208,7 @@ class Chat
     {
         return $this->redisClient->sIsMember($key, $value);
     }
+
     /**
      * TODO：获取集合
      * @param $key
@@ -217,6 +229,7 @@ class Chat
     {
         return $this->redisClient->sAdd($string, $uid);
     }
+
     /**
      * TODO：数据存储 （Redis 字符串(String)）
      * @param $key
@@ -228,6 +241,7 @@ class Chat
     {
         return $this->redisClient->set($key, $value, $timeout);
     }
+
     /**
      * TODO:数据获取（Redis 字符串(String)）
      * @param $key

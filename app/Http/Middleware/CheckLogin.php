@@ -21,11 +21,11 @@ class CheckLogin extends Base
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
-        if(empty($this->post['token'])) {
+        if (empty($this->post['token'])) {
             return $next($request);
         }
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
-        if ($authorization['code'] === Code::SUCCESS){
+        if ($authorization['code'] === Code::SUCCESS) {
             $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
             $request->merge(array('unauthorized' => $_user));
             return $next($request);

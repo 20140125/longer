@@ -37,7 +37,7 @@ class OauthCallbackController extends Controller
      */
     protected $redisClient;
     /**
-     * @var string $state;
+     * @var string $state ;
      */
     protected $state;
     /**
@@ -83,18 +83,18 @@ class OauthCallbackController extends Controller
         $userInfo = $QQOauth->getUserInfo($result['access_token']);
         $this->throwException($userInfo);
         $data = array(
-            'username' => (string)$userInfo['nickname'] ?? '',
-            'openid' => $QQOauth->openid ?? '',
-            'avatar_url' => empty($userInfo['figureurl_qq_2']) ? $userInfo['figureurl_qq_1'] : $userInfo['figureurl_qq_2'],
-            'access_token' => (string) $result['access_token'] ?? '',
-            'url' => $userInfo['url'] ?? '',
-            'refresh_token' => $result['refresh_token'] ?? '0',
-            'oauth_type' => 'qq',
-            'expires' => time() + ($result['expires_in'] ?? 0),
-            'remember_token' => encrypt(md5($userInfo['nickname'] ?? '').$QQOauth->openid ?? ''.time()),
+            'username'       => (string)$userInfo['nickname'] ?? '',
+            'openid'         => $QQOauth->openid ?? '',
+            'avatar_url'     => empty($userInfo['figureurl_qq_2']) ? $userInfo['figureurl_qq_1'] : $userInfo['figureurl_qq_2'],
+            'access_token'   => (string)$result['access_token'] ?? '',
+            'url'            => $userInfo['url'] ?? '',
+            'refresh_token'  => $result['refresh_token'] ?? '0',
+            'oauth_type'     => 'qq',
+            'expires'        => time() + ($result['expires_in'] ?? 0),
+            'remember_token' => encrypt(md5($userInfo['nickname'] ?? '') . $QQOauth->openid ?? '' . time()),
         );
-        $where[] = array('openid','=',$QQOauth->openid);
-        $where[] = array('oauth_type','=','qq');
+        $where[] = array('openid', '=', $QQOauth->openid);
+        $where[] = array('oauth_type', '=', 'qq');
         return $this->oauth($data, $where);
     }
 
@@ -116,15 +116,15 @@ class OauthCallbackController extends Controller
         $userInfo = $gitHubOAuth->getUserInfo($result['access_token']);
         $this->throwException($userInfo);
         $data = array(
-            'username' => $userInfo['login'] ?? '',
-            'openid' => (string)$userInfo['id'] ?? '',
-            'avatar_url' => (string)$userInfo['avatar_url'] ?? '',
-            'access_token' => (string)$result['access_token'] ?? '',
-            'url' => $userInfo['url'] ?? '',
-            'refresh_token' => $result['refresh_token'] ?? '',
-            'oauth_type' => 'github',
-            'expires' => time() + ($result['expires_in'] ?? 0),
-            'remember_token' => encrypt(md5($userInfo['login'] ?? '').$userInfo['id'] ?? ''.time()),
+            'username'       => $userInfo['login'] ?? '',
+            'openid'         => (string)$userInfo['id'] ?? '',
+            'avatar_url'     => (string)$userInfo['avatar_url'] ?? '',
+            'access_token'   => (string)$result['access_token'] ?? '',
+            'url'            => $userInfo['url'] ?? '',
+            'refresh_token'  => $result['refresh_token'] ?? '',
+            'oauth_type'     => 'github',
+            'expires'        => time() + ($result['expires_in'] ?? 0),
+            'remember_token' => encrypt(md5($userInfo['login'] ?? '') . $userInfo['id'] ?? '' . time()),
         );
         $where[] = array('openid', '=', (string)$userInfo['id']);
         $where[] = array('oauth_type', '=', 'github');
@@ -149,15 +149,15 @@ class OauthCallbackController extends Controller
         $userInfo = (array)($giteeOauth->getUserInfo($result['access_token']));
         $this->throwException($userInfo);
         $data = array(
-            'username' => (string)$userInfo['name'] ?? '',
-            'openid' => (string)$userInfo['id'] ?? '',
-            'avatar_url' => (string)$userInfo['avatar_url'] ?? '',
-            'access_token' => (string)$result['access_token'] ?? '',
-            'url' => $userInfo['url'] ?? '',
-            'refresh_token' => $result['refresh_token'] ?? '0',
-            'oauth_type' => 'gitee',
-            'expires' => time() + ($result['expires_in'] ?? 0),
-            'remember_token' => encrypt(md5($userInfo['name'] ?? '').$userInfo['id'] ?? ''.time()),
+            'username'       => (string)$userInfo['name'] ?? '',
+            'openid'         => (string)$userInfo['id'] ?? '',
+            'avatar_url'     => (string)$userInfo['avatar_url'] ?? '',
+            'access_token'   => (string)$result['access_token'] ?? '',
+            'url'            => $userInfo['url'] ?? '',
+            'refresh_token'  => $result['refresh_token'] ?? '0',
+            'oauth_type'     => 'gitee',
+            'expires'        => time() + ($result['expires_in'] ?? 0),
+            'remember_token' => encrypt(md5($userInfo['name'] ?? '') . $userInfo['id'] ?? '' . time()),
         );
         $where[] = array('openid', '=', (string)$userInfo['id']);
         $where[] = array('oauth_type', '=', 'gitee');
@@ -182,15 +182,15 @@ class OauthCallbackController extends Controller
         $userInfo = $weiboOAuth->getUserInfo($result['access_token'], $result['uid']);
         $this->throwException($userInfo);
         $data = array(
-            'username' => (string)$userInfo['name'] ?? '',
-            'openid' => (string)$userInfo['id'] ?? '',
-            'avatar_url' => !empty($userInfo['avatar_hd']) ? (string)explode('?', $userInfo['avatar_hd'])[0] : '',
-            'access_token' => (string)$result['access_token'] ?? '',
-            'url' => $userInfo['url'] ?? '',
-            'refresh_token' => $result['refresh_token'] ?? '0',
-            'oauth_type' => 'weibo',
-            'expires' => time() + ($result['expires_in'] ?? 0),
-            'remember_token' => encrypt(md5($userInfo['name'] ?? '').$userInfo['id'] ?? ''.time()),
+            'username'       => (string)$userInfo['name'] ?? '',
+            'openid'         => (string)$userInfo['id'] ?? '',
+            'avatar_url'     => !empty($userInfo['avatar_hd']) ? (string)explode('?', $userInfo['avatar_hd'])[0] : '',
+            'access_token'   => (string)$result['access_token'] ?? '',
+            'url'            => $userInfo['url'] ?? '',
+            'refresh_token'  => $result['refresh_token'] ?? '0',
+            'oauth_type'     => 'weibo',
+            'expires'        => time() + ($result['expires_in'] ?? 0),
+            'remember_token' => encrypt(md5($userInfo['name'] ?? '') . $userInfo['id'] ?? '' . time()),
         );
         $where[] = array('openid', '=', (string)$userInfo['id']);
         $where[] = array('oauth_type', '=', 'weibo');
@@ -214,18 +214,18 @@ class OauthCallbackController extends Controller
         $userInfo = $baiDuOauth->getUserInfo($result['access_token']);
         $this->throwException($userInfo);
         $data = array(
-            'username' => (string)$userInfo['username'] ?? '',
-            'openid' => (string)$userInfo['openid'],
-            'avatar_url' => !empty($userInfo['portrait']) ? 'http://tb.himg.baidu.com/sys/portrait/item/'.$userInfo['portrait'] : '',
-            'access_token' => (string)$result['access_token'] ?? '',
-            'url' => $userInfo['url'] ?? '',
-            'refresh_token' => $result['refresh_token'] ?? '0',
-            'oauth_type' => 'baidu',
-            'expires' => time() + ($result['expires_in'] ?? 0),
-            'remember_token' => encrypt(md5($userInfo['username'] ?? '').$userInfo['openid'] ?? ''.time()),
+            'username'       => (string)$userInfo['username'] ?? '',
+            'openid'         => (string)$userInfo['openid'],
+            'avatar_url'     => !empty($userInfo['portrait']) ? 'http://tb.himg.baidu.com/sys/portrait/item/' . $userInfo['portrait'] : '',
+            'access_token'   => (string)$result['access_token'] ?? '',
+            'url'            => $userInfo['url'] ?? '',
+            'refresh_token'  => $result['refresh_token'] ?? '0',
+            'oauth_type'     => 'baidu',
+            'expires'        => time() + ($result['expires_in'] ?? 0),
+            'remember_token' => encrypt(md5($userInfo['username'] ?? '') . $userInfo['openid'] ?? '' . time()),
         );
-        $where[] = array('openid','=',(string)$userInfo['openid']);
-        $where[] = array('oauth_type','=','baidu');
+        $where[] = array('openid', '=', (string)$userInfo['openid']);
+        $where[] = array('oauth_type', '=', 'baidu');
         return $this->oauth($data, $where);
     }
 
@@ -247,15 +247,15 @@ class OauthCallbackController extends Controller
         $userInfo = $osChinaOAuth->getUserInfo($result['access_token']);
         $this->throwException($userInfo);
         $data = array(
-            'username' => (string)$userInfo['name'] ?? '',
-            'openid' => (string)$userInfo['id'] ?? '',
-            'avatar_url' => $userInfo['avatar'] ?? '',
-            'access_token' => (string)$result['access_token'] ?? '',
-            'url' => $userInfo['url'] ?? '',
-            'refresh_token' => $result['refresh_token'] ?? '',
-            'oauth_type' => 'os_china',
-            'expires' => time() + ($result['expires_in'] ?? 0),
-            'remember_token' => encrypt(md5($userInfo['name'] ?? '').$userInfo['id'] ?? ''.time()),
+            'username'       => (string)$userInfo['name'] ?? '',
+            'openid'         => (string)$userInfo['id'] ?? '',
+            'avatar_url'     => $userInfo['avatar'] ?? '',
+            'access_token'   => (string)$result['access_token'] ?? '',
+            'url'            => $userInfo['url'] ?? '',
+            'refresh_token'  => $result['refresh_token'] ?? '',
+            'oauth_type'     => 'os_china',
+            'expires'        => time() + ($result['expires_in'] ?? 0),
+            'remember_token' => encrypt(md5($userInfo['name'] ?? '') . $userInfo['id'] ?? '' . time()),
         );
         $where[] = array('openid', '=', (string)$userInfo['id']);
         $where[] = array('oauth_type', '=', 'osChina');
@@ -284,24 +284,24 @@ class OauthCallbackController extends Controller
             unset($data['username']);
             unset($data['avatar_url']);
             $data['created_at'] = strtotime($oauth->created_at);
-            $oauthRes =  $this->oauthModel->updateOne($where, $data);
+            $oauthRes = $this->oauthModel->updateOne($where, $data);
             if (!empty($oauthRes)) {
                 /*  同步用户数据 */
                 dispatch(new SyncOauthProcess(['remember_token' => $data['remember_token']]))->onQueue('users');
-                return strlen($this->state) == 32 ? redirect('/admin/home/index/'.$data['remember_token'])->send() : redirect('/admin/oauth/index')->send();
+                return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send() : redirect('/admin/oauth/index')->send();
             }
             return redirect('/login')->send();
         }
         /* todo:授权用户第一次登陆跳转到绑定页 */
         $data['uid'] = 0;
         $data['role_id'] = 2;
-        $oauthRes =  $this->oauthModel->saveOne($data);
+        $oauthRes = $this->oauthModel->saveOne($data);
         if (!empty($oauthRes)) {
             dispatch(new SyncOauthProcess(['remember_token' => $data['remember_token']]))->onQueue('users');
-            Mail::to(config('mail.username'))->send(new Register(array('name'=>$data['username'])));
+            Mail::to(config('mail.username'))->send(new Register(array('name' => $data['username'])));
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
-                return redirect('/admin/home/index/'.$data['remember_token'])->send();
+                return redirect('/admin/home/index/' . $data['remember_token'])->send();
             }
             /* todo:授权列表 (账户绑定成功) */
             return redirect('/admin/oauth/index')->send();

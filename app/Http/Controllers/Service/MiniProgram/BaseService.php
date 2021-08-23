@@ -71,8 +71,8 @@ class BaseService extends Controller
      */
     public function getImageConfiguration()
     {
-        $this->systemConfig  = $this->systemConfigModel->getOne(['name' => 'ImageBed'], ['children'])->children;
-        return $this->systemConfig ;
+        $this->systemConfig = $this->systemConfigModel->getOne(['name' => 'ImageBed'], ['children'])->children;
+        return $this->systemConfig;
     }
 
     /**

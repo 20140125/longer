@@ -84,6 +84,7 @@ class SpiderController extends BaseController
         $result = $this->spiderService->syncOauth(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
     }
+
     /**
      * todo:同步授权用户信息
      * @param $_user

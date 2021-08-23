@@ -23,6 +23,7 @@ class SyncPushProcess implements ShouldQueue
      * @var $post
      */
     protected $post;
+
     /**
      * Create a new job instance.
      * @param $post
@@ -33,6 +34,7 @@ class SyncPushProcess implements ShouldQueue
         date_default_timezone_set('Asia/Shanghai');
         $this->post = $post;
     }
+
     /**
      * Execute the job.
      * todo:站内通知
@@ -43,7 +45,7 @@ class SyncPushProcess implements ShouldQueue
         try {
             $_userLists = Cache::get('_user_lists');
             if (empty($_userLists)) {
-                $_userLists = Users::getInstance()->getLists('', [], [], true, ['id', 'username','uuid']);
+                $_userLists = Users::getInstance()->getLists('', [], [], true, ['id', 'username', 'uuid']);
                 Cache::put('_user_lists', $_userLists, Carbon::now()->addHours(2));
             }
             $_online_user = RedisClient::getInstance()->sMembers(config('app.redis_user_key'));

@@ -12,6 +12,7 @@ class TimeLineService extends BaseService
      * @var static $instance
      */
     private static $instance;
+
     /**
      * @return static
      */
@@ -22,6 +23,7 @@ class TimeLineService extends BaseService
         }
         return self::$instance;
     }
+
     /**
      * todo:获取用户
      * @param $where

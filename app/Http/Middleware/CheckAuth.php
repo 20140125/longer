@@ -13,13 +13,13 @@ class CheckAuth extends Base
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param  \Closure  $next
+     * @param \Closure $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
-        if(!$this->post['token']) {
+        if (!$this->post['token']) {
             setCode(Code::UNAUTHORIZED);
             exit();
         }
