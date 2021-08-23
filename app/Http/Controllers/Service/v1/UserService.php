@@ -167,7 +167,6 @@ class UserService extends BaseService
         $this->setVerifyCode($form['remember_token'], $form['remember_token'], config('app.app_refresh_login_time'));
         $this->return['lists'] = $form;
         $this->return['message'] = $message;
-        dispatch(new SyncOauthProcess(['remember_token' => $form['remember_token'], 'uuid' => 'longer7f00000108fc00000001']))->onQueue('users')->delay(5);
         return $this->return;
     }
 
