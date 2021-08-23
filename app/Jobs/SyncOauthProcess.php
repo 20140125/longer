@@ -40,7 +40,7 @@ class SyncOauthProcess implements ShouldQueue
     {
         try {
             $rememberToken = !empty($this->post['keywords']) ?  $this->post['keywords'] :  $this->post['remember_token'];
-            Artisan::call("longer:sync-oauth !empty($this->post['keywords']) $rememberToken {$this->post['uuid']}");
+            Artisan::call("longer:sync-oauth $rememberToken {$this->post['uuid']}");
         } catch (\Exception $exception) {
             WebPush($exception->getMessage(), $this->post['uuid'], 'command');
             Log::error(json_encode(['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()]));
