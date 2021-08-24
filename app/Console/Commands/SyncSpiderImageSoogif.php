@@ -79,8 +79,8 @@ class SyncSpiderImageSoogif extends Command
                             webPush('Successfully save image： ' . $arr['href'], $this->argument('uuid'), 'command');
                         }
                     });
-                    $this->info('Successfully spider image url： ' . $url);
-                    webPush('Successfully spider image url： ' . $url, $this->argument('uuid'), 'command');
+                    $this->info('Successfully spider image url： ' . $href);
+                    webPush('Successfully spider image url： ' . $href, $this->argument('uuid'), 'command');
                     $bar->advance();
                 }
                 $bar->finish();
