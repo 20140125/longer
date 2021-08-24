@@ -58,7 +58,7 @@ class SyncSpiderImageSoogif extends Command
                 if (stristr($url, '_')) {
                     $this->startId = explode('_', $url)[1];
                 }
-                $arr = range($this->startId, $num[0]);
+                $arr = range($this->startId, ceil($num[0] / 30));
                 foreach ($arr as $id) {
                     if (stristr($url, '_')) {
                         $url = explode('_', $url)[0];
