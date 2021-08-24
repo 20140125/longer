@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
+use Exception;
 
 /**
  * Class GiteeController
@@ -64,7 +65,7 @@ class GiteeController extends OAuthController
      * @param string $callback
      * @return string
      */
-    public function getAuthUrl($length = 32, $callback = '')
+    public function getAuthUrl(int $length = 32, string $callback = '')
     {
         $arr = array(
             'client_id'     => $this->appid,
@@ -78,8 +79,8 @@ class GiteeController extends OAuthController
     /**
      * TODO:：获取access_token
      * @param string $code
-     * @return mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function getAccessToken(string $code)
     {
@@ -101,8 +102,8 @@ class GiteeController extends OAuthController
     /**
      * TODO:：刷新AccessToken续期
      * @param string $refresh_token
-     * @return array|mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function refreshToken(string $refresh_token)
     {
@@ -121,8 +122,8 @@ class GiteeController extends OAuthController
     /**
      * TODO:：获取用户资料
      * @param string $access_token
-     * @return mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function getUserInfo(string $access_token)
     {

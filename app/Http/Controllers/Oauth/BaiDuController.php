@@ -64,7 +64,7 @@ class BaiDuController extends OAuthController
      * @param int $length
      * @return string
      */
-    public function getAuthUrl($length = 32, $callback = '')
+    public function getAuthUrl(int $length = 32, string $callback = '')
     {
         /**
          * display desc
@@ -92,7 +92,7 @@ class BaiDuController extends OAuthController
     /**
      * TODO：获取access_token
      * @param string $code
-     * @return array|mixed
+     * @return array
      */
     public function getAccessToken(string $code)
     {
@@ -114,7 +114,7 @@ class BaiDuController extends OAuthController
     /**
      * TODO:获取用户信息（待废弃）
      * @param string $access_token
-     * @return array|mixed
+     * @return array
      */
     public function getUserInfo2(string $access_token)
     {
@@ -133,7 +133,7 @@ class BaiDuController extends OAuthController
     /**
      * TODO:获取用户信息
      * @param string $access_token
-     * @return array|bool|mixed
+     * @return array
      */
     public function getUserInfo(string $access_token)
     {
@@ -153,7 +153,7 @@ class BaiDuController extends OAuthController
     /**
      * TODO：刷新AccessToken
      * @param string $refreshToken
-     * @return array|mixed
+     * @return array
      */
     public function refreshToken(string $refreshToken)
     {

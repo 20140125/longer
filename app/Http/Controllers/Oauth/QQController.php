@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -71,7 +72,7 @@ class QQController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl($length = 32, $callback = '', $scope = 'get_user_info')
+    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'get_user_info')
     {
         $arr = [
             'response_type' => 'code',
@@ -87,8 +88,8 @@ class QQController extends OAuthController
     /**
      * TODO:：获取access_token
      * @param string $code
-     * @return array|bool
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function getAccessToken(string $code)
     {
@@ -113,7 +114,7 @@ class QQController extends OAuthController
      * TODO:：获取用户的openid
      * @param string $access_token
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getOpenId(string $access_token)
     {
@@ -133,8 +134,8 @@ class QQController extends OAuthController
     /**
      * TODO:：刷新AccessToken续期
      * @param string $refreshToken
-     * @return array|mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function refreshToken(string $refreshToken)
     {
@@ -158,7 +159,7 @@ class QQController extends OAuthController
      * TODO:：获取用户信息
      * @param string $access_token
      * @return JsonResponse|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getUserInfo(string $access_token)
     {

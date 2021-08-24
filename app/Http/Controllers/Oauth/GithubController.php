@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Support\Facades\Log;
-
+use Exception;
 /**
  * Class GithubController
  * @author <fl140125@gmail.com>
@@ -66,7 +65,7 @@ class GithubController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl($length = 32, $callback = '', $scope = 'user:email')
+    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'user:email')
     {
         $arr = [
             'client_id'    => $this->appid,
@@ -82,8 +81,8 @@ class GithubController extends OAuthController
      * TODO:：获取access_token
      * @param string $code
      * @param string $state
-     * @return array|bool|mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function getAccessToken(string $code, string $state)
     {
@@ -105,8 +104,8 @@ class GithubController extends OAuthController
     /**
      * TODO:：获取用户信息
      * @param string $access_token
-     * @return mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function getUserInfo(string $access_token)
     {
@@ -122,14 +121,13 @@ class GithubController extends OAuthController
     /**
      * TODO:：获取用户信息(包含所有项目)
      * @param string $access_token
-     * @return mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function getUserRepos(string $access_token)
     {
         $this->curl->setHeader("Authorization", "token $access_token");
         $result = $this->curl->get('https://api.github.com/user/repos');
-        Log::error(json_encode($result));
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }

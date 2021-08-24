@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
+use Exception;
 
 /**
  * Class WeiboController
@@ -65,7 +66,7 @@ class WeiBoController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl($length = 32, $callback = '', $scope = 'all,email')
+    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'all,email')
     {
         $this->redirectUri = empty($callback) ? $this->redirectUri : $callback;
         $arr = [
@@ -75,7 +76,7 @@ class WeiBoController extends OAuthController
             'state'        => $this->getState($length),
             'display'      => 'default',  // default mobile wap client
             'forcelogin'   => false, //是否强制用户重新登录，true：是，false：否。默认false。
-            //'language' =>''  //授权页语言，缺省为中文简体版，en为英文版
+            'language'     => ''  //授权页语言，缺省为中文简体版，en为英文版
         ];
         return $this->apiUrl . 'oauth2/authorize?' . http_build_query($arr);
     }
@@ -83,8 +84,8 @@ class WeiBoController extends OAuthController
     /**
      * TODO:：获取access_token
      * @param string $code
-     * @return mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function getAccessToken(string $code)
     {
@@ -107,12 +108,12 @@ class WeiBoController extends OAuthController
      * TODO:：获取用户信息
      * @param string $access_token
      * @param string $uid
-     * @return array|mixed
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function getUserInfo(string $access_token, string $uid)
     {
-        $result = $this->curl->get($this->apiUrl . "2/users/show.json?access_token={$access_token}&uid={$uid}");
+        $result = $this->curl->get($this->apiUrl . "2/users/show.json?access_token=$access_token&uid=$uid");
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }

@@ -64,7 +64,7 @@ class OsChinaController extends OAuthController
      * @param string $callback
      * @return string
      */
-    public function getAuthUrl($length = 32, $callback = '')
+    public function getAuthUrl(int $length = 32, string $callback = '')
     {
         $arr = [
             'client_id'     => $this->appid,
@@ -149,7 +149,7 @@ class OsChinaController extends OAuthController
      * @param string $access_token
      * @param string $user
      * @param string $friend
-     * @return array|mixed
+     * @return array
      */
     public function getUserInformation(string $access_token, string $user, string $friend)
     {
