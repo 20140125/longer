@@ -59,8 +59,6 @@ class SyncSpiderImageSoogif extends Command
                     $promise = $client->request('GET', $href);
                     $promise->filter('.style-item')->each(function ($node) use ($client) {
                         $arr = ['href' => $node->attr('data-img'), 'name' => $node->filter('.item-tools h2')->text()];
-                        $this->info('Current spider image url：' . $arr['href']);
-                        WebPush('Current spider image url：' . $arr['href'], $this->argument('uuid'), 'command');
                         if (SooGif::getInstance()->getOne(['href' => $arr['href']])) {
                             $this->warn('Image already exists: ' . $arr['href']);
                             webPush('Image already exists: ' . $arr['href'], $this->argument('uuid'), 'command');
