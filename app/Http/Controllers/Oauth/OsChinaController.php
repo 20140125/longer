@@ -42,7 +42,7 @@ class OsChinaController extends OAuthController
         parent::__construct();
         $this->appid = $appid;
         $this->appsecret = $appsecret;
-        $this->redirectUri = config('app.url') . 'api/v1/callback/os_china';
+        $this->redirectUri = config('app.url') . 'api/v1/callback/osChina';
     }
 
     /**
