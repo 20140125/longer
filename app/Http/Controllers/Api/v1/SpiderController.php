@@ -38,6 +38,8 @@ class SpiderController extends BaseController
                 return $this->syncOauth($_user);
             case 'syncImageListsForTags':
                 return $this->syncImageListsForTags($_user);
+            case 'syncSpiderImageSoogif':
+                return $this->syncSpiderImageSoogif($_user);
         }
     }
 
@@ -93,6 +95,16 @@ class SpiderController extends BaseController
     protected function syncImageListsForTags($_user)
     {
         $result = $this->spiderService->syncImageListsForTags(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
+        return ajaxReturn($result);
+    }
+    /**
+     * todo:同步授权用户信息
+     * @param $_user
+     * @return JsonResponse
+     */
+    protected function syncSpiderImageSoogif($_user)
+    {
+        $result = $this->spiderService->syncSpiderImageSoogif(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
     }
 }

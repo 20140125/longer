@@ -8,6 +8,7 @@ use App\Jobs\SyncImageListsProcess;
 use App\Jobs\SyncImageSizeProcess;
 use App\Jobs\SyncImageTypeProcess;
 use App\Jobs\SyncOauthProcess;
+use App\Jobs\SyncSooGifImageProcess;
 
 class SpiderService extends BaseService
 {
@@ -66,6 +67,16 @@ class SpiderService extends BaseService
     public function syncImageListsForTags($form)
     {
         dispatch(new SyncImageListsForTagsProcess($form))->onQueue('spider');
+        return $this->return;
+    }
+    /**
+     * todo:同步动态图片
+     * @param $form
+     * @return array
+     */
+    public function syncSpiderImageSoogif($form)
+    {
+        dispatch(new SyncSooGifImageProcess($form))->onQueue('spider');
         return $this->return;
     }
 
