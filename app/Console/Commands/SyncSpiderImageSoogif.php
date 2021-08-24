@@ -54,7 +54,7 @@ class SyncSpiderImageSoogif extends Command
             sleep(1);
             preg_match("/\d+/", $promise->filter('.float-page a')->first()->html(), $num);
             if ($promise->filter('.float-page a')->first()->html() && (int)$num[0] > 0) {
-                $bar = $this->output->createProgressBar($num[0]);
+                $bar = $this->output->createProgressBar(ceil($num[0] / 30));
                 if (stristr($url, '_')) {
                     $this->startId = explode('_', $url)[1];
                 }
