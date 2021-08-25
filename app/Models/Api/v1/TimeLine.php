@@ -43,7 +43,7 @@ class TimeLine extends Base
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOne($where, $columns = ['*'])
+    public function getOne($where, array $columns = ['*'])
     {
         return $this->getResult($this->table, $where, $columns);
     }
@@ -77,7 +77,7 @@ class TimeLine extends Base
      * @param string[] $column
      * @return array|Collection
      */
-    public function getLists($pagination = ['page' => 1, 'limit' => 10], $order = ['order' => 'id', 'direction' => 'asc'], $getAll = false, $column = ['*'])
+    public function getLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
     {
         if ($getAll) {
             return DB::table($this->table)->get($column);

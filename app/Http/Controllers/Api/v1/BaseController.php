@@ -24,6 +24,10 @@ use App\Http\Controllers\Service\v1\UserService;
 use App\Http\Controllers\Service\v1\TimeLineService;
 use Illuminate\Http\Request;
 
+/**
+ * @class BaseController
+ * @author <fl140125@gmail.com>
+ */
 class BaseController extends Controller
 {
     /**

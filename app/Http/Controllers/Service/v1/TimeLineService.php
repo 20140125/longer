@@ -43,7 +43,7 @@ class TimeLineService extends BaseService
      * @param string[] $column
      * @return array|Collection
      */
-    public function getLists($pagination = ['page' => 1, 'limit' => 10], $order = ['order' => 'id', 'direction' => 'asc'], $getAll = false, $column = ['*'])
+    public function getLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
     {
         $this->return['lists'] = $this->timeLineModel->getLists($pagination, $order, $getAll, $column);
         return $this->return;
