@@ -134,4 +134,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     /* todo:osChina授权登录 */
     Route::get('oauth/login/osChina', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'osChina'])->name('osChinaLogin');
     Route::get('callback/osChina', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'osChina'])->name('osChinaCallback');
+
+    Route::get('callback/wxQrcode', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'wxQrcode'])->name('wxQrcodeCallback');
 });

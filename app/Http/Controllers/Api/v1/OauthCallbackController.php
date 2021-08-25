@@ -309,6 +309,10 @@ class OauthCallbackController extends Controller
         return redirect('/login')->send();
     }
 
+    public function wxQrcode() {
+        return redirect('/login')->send();
+    }
+
     /**
      * TODO：异常捕获
      * @param $response
