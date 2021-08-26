@@ -2,13 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Service\v1\BaseService;
 use App\Http\Controllers\Service\v1\UserService;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\UserCenter;
 use App\Models\Api\v1\Users;
-use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -146,7 +144,7 @@ class SyncOauth extends Command
             return false;
         }
         Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id') . $userId]);
-        Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId]);
+        Oauth::getInstance()->updateOne(['id' => $oauth->id, 'uuid' => ['uuid' => config('app.client_id') . $userId]], ['uid' => $userId]);
         $this->info('Successfully synchronizing oauth ' . $oauth->username);
         WebPush('Successfully synchronizing oauth ' . $oauth->username, $this->argument('uuid'), 'command');
     }
