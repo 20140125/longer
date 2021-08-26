@@ -133,6 +133,7 @@ class DatabaseService extends BaseService
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'repair table failed';
+            return $this->return;
         }
         $this->return['lists'] = $form;
         $this->return['message'] = 'repair table successfully';
@@ -150,6 +151,7 @@ class DatabaseService extends BaseService
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'optimize table failed';
+            return $this->return;
         }
         $this->return['lists'] = $form;
         $this->return['message'] = 'optimize table successfully';
@@ -167,6 +169,7 @@ class DatabaseService extends BaseService
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'update table failed';
+            return $this->return;
         }
         $this->return['lists'] = $form;
         $this->return['message'] = 'update table successfully';
