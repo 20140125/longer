@@ -105,7 +105,6 @@ class SyncOauth extends Command
                 return false;
             }
             $this->saveUsers($oauth);
-            sleep(1);
             $this->saveUserCenter($oauth);
             DB::commit();
         } catch (\Exception $exception) {
@@ -144,7 +143,7 @@ class SyncOauth extends Command
             return false;
         }
         Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id') . $userId]);
-        Oauth::getInstance()->updateOne(['id' => $oauth->id, 'uuid' => ['uuid' => config('app.client_id') . $userId]], ['uid' => $userId]);
+        Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId, 'uuid' => ['uuid' => config('app.client_id') . $userId]]);
         $this->info('Successfully synchronizing oauth ' . $oauth->username);
         WebPush('Successfully synchronizing oauth ' . $oauth->username, $this->argument('uuid'), 'command');
     }
