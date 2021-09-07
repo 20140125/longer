@@ -225,9 +225,10 @@ if (!function_exists('getFileLists')) {
      * @param $filePath
      * @param array $permissionFile
      * @param int $sort_order
+     * @param bool $recursion
      * @return array
      */
-    function getFileLists($filePath, array $permissionFile = [], int $sort_order = SORT_ASC)
+    function getFileLists($filePath, array $permissionFile = [], int $sort_order = SORT_ASC, bool $recursion = false)
     {
         try {
             $fileArr = array();
@@ -272,9 +273,12 @@ if (!function_exists('getFileLists')) {
                     $fileType[] = filetype($filePath . $file);
                 }
             }
-            foreach ($fileArr as &$item) {
-                if ($item['file_type'] === 'dir') {
-                    $item['children'] = getFileLists($item['path'], $permissionFile);
+            /* todo：是否递归操作 */
+            if ($recursion) {
+                foreach ($fileArr as &$item) {
+                    if ($item['file_type'] === 'dir') {
+                        $item['children'] = getFileLists($item['path'], $permissionFile);
+                    }
                 }
             }
             array_multisort($fileType, $sort_order, $fileArr);
@@ -305,7 +309,7 @@ if (!function_exists('getFilePath')) {
     function getFilePath($path, $basename)
     {
         $filePath = array('base_path' => base_path($basename), 'storage_path' => storage_path($basename), 'public_path' => public_path($basename));
-        return substr($filePath[$path], 0, strlen($filePath[$path]) - 1);
+        return $basename === '/' ? substr($filePath[$path], 0, strlen($filePath[$path]) - 1) : $basename;
     }
 }
 if (!function_exists('getFileContent')) {
