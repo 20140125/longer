@@ -6,7 +6,6 @@ use App\Models\Api\v1\SooGif;
 use App\Models\Api\v1\SooGifType;
 use Goutte\Client;
 use Illuminate\Console\Command;
-use Symfony\Component\HttpClient\HttpClient;
 
 class SyncSpiderImage extends Command
 {
@@ -60,7 +59,7 @@ class SyncSpiderImage extends Command
         try {
             $result = SooGifType::getInstance()->getLists([['id', '>=', $startId]]);
             $bar = $this->output->createProgressBar(count($result));
-            $client = new Client(HttpClient::create(['verify_peer' => false, 'verify_host' => false]));
+            $client = new Client();
             foreach ($result as $item) {
                 $currentId = $item->id;
                 $this->info('current spider image url：' . $item->href);

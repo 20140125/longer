@@ -6,7 +6,6 @@ use App\Models\Api\v1\SooGif;
 use Exception;
 use Goutte\Client;
 use Illuminate\Console\Command;
-use Symfony\Component\HttpClient\HttpClient;
 
 class SyncSpiderImageSoogif extends Command
 {
@@ -50,7 +49,7 @@ class SyncSpiderImageSoogif extends Command
     protected function getImageLists($url)
     {
         try {
-            $client = new Client(HttpClient::create(['verify_peer' => false, 'verify_host' => false]));
+            $client = new Client();
             $promise = $client->request('GET', $url);
             sleep(1);
             preg_match("/\d+/", $promise->filter('.float-page a')->first()->html(), $num);

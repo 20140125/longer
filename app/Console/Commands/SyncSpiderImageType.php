@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Api\v1\SooGifType;
 use Goutte\Client;
 use Illuminate\Console\Command;
-use Symfony\Component\HttpClient\HttpClient;
 
 class SyncSpiderImageType extends Command
 {
@@ -59,7 +58,7 @@ class SyncSpiderImageType extends Command
     {
         $type = $this->argument('type');
         try {
-            $client = new Client(HttpClient::create(['verify_peer' => false, 'verify_host' => false]));
+            $client = new Client();
             $promise = $client->request('GET', $this->baseUrl . "/bqb/lists/type/$type.html");
             $pageSize = $promise->filter('#mobilepage')->text();
             $pageRange = range($this->startPage, explode('/', $pageSize)[1]);
