@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Api\v1\SooGif;
 use Goutte\Client;
 use Illuminate\Console\Command;
+use Symfony\Component\HttpClient\HttpClient;
 
 class SyncSpiderImageTag extends Command
 {
@@ -60,7 +61,7 @@ class SyncSpiderImageTag extends Command
                 $this->startPage = intval(explode('.', substr($url, strrpos($url, '/') + 1))[0]);
                 $url = substr($url, 0, strrpos($url, '/') - 5) . '.html';
             }
-            $client = new Client();
+            $client = new Client(HttpClient::create(['verify_peer' => false, 'verify_host' => false]));
             $promise = $client->request('GET', $url);
             $pageSize = $promise->filter('#mobilepage')->text();
             $pageRange = range($this->startPage, explode('/', $pageSize)[1]);

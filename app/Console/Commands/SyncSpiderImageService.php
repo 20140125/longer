@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Api\v1\SooGif;
 use Goutte\Client;
 use Illuminate\Console\Command;
+use Symfony\Component\HttpClient\HttpClient;
 
 class SyncSpiderImageService extends Command
 {
@@ -55,7 +56,7 @@ class SyncSpiderImageService extends Command
     protected function spiderImage($href)
     {
         try {
-            $client = new Client();
+            $client = new Client(HttpClient::create(['verify_peer' => false, 'verify_host' => false]));
             $this->info('current spider image url：' . $href);
             WebPush('current spider image url：' . $href, $this->argument('uuid'), 'command');
             $promise = $client->request('GET', $href);
