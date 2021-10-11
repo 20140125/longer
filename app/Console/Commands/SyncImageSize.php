@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Api\v1\SooGif;
-use App\Models\Api\v1\SooGifType;
-use Goutte\Client;
 use Illuminate\Console\Command;
 
 class SyncImageSize extends Command
@@ -47,7 +45,7 @@ class SyncImageSize extends Command
     }
 
     /**
-     * todo:获取文件信息
+     * TODO:获取文件信息
      */
     protected function setFileInfo()
     {

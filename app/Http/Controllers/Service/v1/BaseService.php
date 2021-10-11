@@ -11,6 +11,7 @@ use App\Models\Api\v1\ApiLists;
 use App\Models\Api\v1\ApiLog;
 use App\Models\Api\v1\Area;
 use App\Models\Api\v1\Auth;
+use App\Models\Api\v1\Emotion;
 use App\Models\Api\v1\Log;
 use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\PermissionApplyLog;
@@ -127,6 +128,8 @@ class BaseService
      * @var AMap $aMapUtils
      */
     protected $aMapUtils;
+
+    protected $emotionModel;
     /**
      * @var $return
      */
@@ -153,6 +156,7 @@ class BaseService
         $this->apiListsModel = ApiLists::getInstance();
         $this->apiLogModel = ApiLog::getInstance();
         $this->aMapUtils = AMap::getInstance();
+        $this->emotionModel = Emotion::getInstance();
 
         /* todo:信息输出 */
         $this->return = array('code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => []);

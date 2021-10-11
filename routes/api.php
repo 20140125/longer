@@ -42,6 +42,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         /* todo:首页权限 */
         Route::match(['get', 'post'], 'common/menu', [App\Http\Controllers\Api\v1\HomeController::class, 'getMenu'])->name('getMenu');
         Route::match(['get', 'post'], 'timeline/index', [App\Http\Controllers\Api\v1\TimeLineController::class, 'getLists'])->name('getPlan');
+        /* todo:表情图 */
+        Route::match(['get', 'post'], 'emotion/index', [App\Http\Controllers\Api\v1\EmotionController::class, 'getLists'])->name('getEmotion');
         /* todo:全部用户 */
         Route::match(['get', 'post'], 'users/index', [App\Http\Controllers\Api\v1\UsersController::class, 'getUsersLists'])->name('getUsersLists');
         Route::match(['get', 'post'], 'users/update', [App\Http\Controllers\Api\v1\UsersController::class, 'updateUsers'])->name('updateUsers');
