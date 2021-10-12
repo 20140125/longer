@@ -105,7 +105,7 @@ class AuthService extends BaseService
      */
     public function updateAuth($form)
     {
-        if (count($form['children']) >= 0) {
+        if (!empty($form['children']) && count($form['children']) >= 0) {
             unset($form['children']);
         }
         /* todo:修改权限状态 */
