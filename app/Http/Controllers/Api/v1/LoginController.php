@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
+use App\Http\Controllers\Utils\RedisClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -74,6 +75,8 @@ class LoginController extends BaseController
         validatePost($this->post, ['token' => 'required']);
         $result = $this->userService->getUser(['token' => $this->post['token']]);
         if ($result) {
+            /* 清空redis数据 */
+            RedisClient::getInstance()->del($this->post['token']);
             return ajaxReturn(array('lists' => array('users' => $result), 'message' => 'successfully', 'code' => Code::SUCCESS));
         }
         return ajaxReturn(array('lists' => [], 'message' => 'users not found', 'code' => Code::ERROR));
