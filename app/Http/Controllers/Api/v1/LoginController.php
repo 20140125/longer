@@ -72,11 +72,11 @@ class LoginController extends BaseController
      */
     public function logout()
     {
-        validatePost($this->post, ['token' => 'required']);
-        $result = $this->userService->getUser(['token' => $this->post['token']]);
+        validatePost($this->post, ['remember_token' => 'required']);
+        $result = $this->userService->getUser(['remember_token' => $this->post['remember_token']]);
         if ($result) {
             /* 清空redis数据 */
-            RedisClient::getInstance()->del($this->post['token']);
+            RedisClient::getInstance()->del($this->post['remember_token']);
             return ajaxReturn(array('lists' => array('users' => $result), 'message' => 'successfully', 'code' => Code::SUCCESS));
         }
         return ajaxReturn(array('lists' => [], 'message' => 'users not found', 'code' => Code::ERROR));
