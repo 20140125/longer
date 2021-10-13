@@ -51,8 +51,7 @@ class LoginController extends BaseController
     public function reportCode()
     {
         validatePost($this->post, ['verify_code' => 'required']);
-        $this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']);
-        return ajaxReturn(array('lists' => array('code' => $this->post['verify_code']), 'message' => 'successfully', 'code' => Code::SUCCESS));
+        return ajaxReturn($this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']));
     }
 
     /**
@@ -64,5 +63,19 @@ class LoginController extends BaseController
         validatePost($this->post, ['email' => 'required|between:8,64|email']);
         $result = $this->sendEMailService->sendMail($this->post);
         return ajaxReturn($result);
+    }
+
+    /**
+     * todo:登出系统
+     * @return JsonResponse
+     */
+    public function logout()
+    {
+        validatePost($this->post, ['token' => 'required']);
+        $result = $this->userService->getUser(['token' => $this->post['token']]);
+        if ($result) {
+            return ajaxReturn(array('lists' => array('users' => $result), 'message' => 'successfully', 'code' => Code::SUCCESS));
+        }
+        return ajaxReturn(array('lists' => [], 'message' => 'users not found', 'code' => Code::ERROR));
     }
 }

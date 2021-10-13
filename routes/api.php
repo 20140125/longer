@@ -17,6 +17,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     Route::middleware('checkLogin')->group(function () {
         /* todo:用户登录 */
         Route::match(['get', 'post'], 'account/login', [App\Http\Controllers\Api\v1\LoginController::class, 'login'])->name('login');
+        /* todo:用户登出 */
+        Route::match(['get', 'post'], 'account/logout', [App\Http\Controllers\Api\v1\LoginController::class, 'logout'])->name('logout');
         /* todo:验证码上报 */
         Route::match(['get', 'post'], 'report/code', [App\Http\Controllers\Api\v1\LoginController::class, 'reportCode'])->name('reportCode');
         /* todo:校验登录 */
@@ -25,7 +27,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get', 'post'], 'mail/send', [App\Http\Controllers\Api\v1\LoginController::class, 'sendMail'])->name('sendMail');
         /* todo:授权登录信息 */
         Route::match(['get', 'post'], 'oauth/config', [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfig'])->name('getSystemConfig');
-        /* todo:小程序 */
+        /* todo:小程序(魔盒逗图) */
         Route::post('mini_program/login', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'login'])->name('wxLogin');
         Route::post('mini_program/openid', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'getOpenId'])->name('getOpenId');
         Route::post('image/lists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageLists'])->name('getImageLists');

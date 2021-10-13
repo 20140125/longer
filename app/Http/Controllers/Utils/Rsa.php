@@ -72,7 +72,7 @@ class Rsa extends Controller
      * @param string $data
      * @return null|string
      */
-    public function privateEncrypt($data = '')
+    public function privateEncrypt(string $data = '')
     {
         if (!is_string($data)) {
             return null;
@@ -85,7 +85,7 @@ class Rsa extends Controller
      * @param string $data
      * @return null|string
      */
-    public function publicEncrypt($data = '')
+    public function publicEncrypt(string $data = '')
     {
         if (!is_string($data)) {
             return null;
@@ -98,13 +98,12 @@ class Rsa extends Controller
      * @param string $encrypted
      * @return null
      */
-    public function privateDecrypt($encrypted = '')
+    public function privateDecrypt(string $encrypted = '')
     {
         if (!is_string($encrypted)) {
             return null;
         }
-        return (openssl_private_decrypt(base64_decode($encrypted), $decrypted, self::getPrivateKey()))
-            ? $decrypted : null;
+        return (openssl_private_decrypt(base64_decode($encrypted), $decrypted, self::getPrivateKey())) ? $decrypted : null;
     }
 
     /**
@@ -112,13 +111,12 @@ class Rsa extends Controller
      * @param string $encrypted
      * @return null
      */
-    public function publicDecrypt($encrypted = '')
+    public function publicDecrypt(string $encrypted = '')
     {
         if (!is_string($encrypted)) {
             return null;
         }
-        return (openssl_public_decrypt(base64_decode($encrypted), $decrypted, self::getPublicKey()))
-            ? $decrypted : null;
+        return (openssl_public_decrypt(base64_decode($encrypted), $decrypted, self::getPublicKey())) ? $decrypted : null;
     }
 
     /**
@@ -140,8 +138,7 @@ class Rsa extends Controller
         $signature = '';
         //生成签名
         openssl_sign($digest, $signature, self::getPrivateKey(), $algo);
-        $signature = base64_encode($signature);
-        return $signature;
+        return base64_encode($signature);
     }
 
     /**

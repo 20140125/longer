@@ -140,7 +140,7 @@ class AuthService extends BaseService
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getAuth($where, $columns = ['*'])
+    public function getAuth($where, array $columns = ['*'])
     {
         return $this->authModel->getOne($where, $columns);
     }

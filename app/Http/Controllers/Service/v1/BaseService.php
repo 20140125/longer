@@ -174,10 +174,10 @@ class BaseService
         $result = $this->redisClient->setValue($key, strtoupper($value), ['EX' => $timeout]);
         if (!$result) {
             $this->return['code'] = Code::VERIFY_CODE_ERROR;
-            $this->return['message'] = 'Set verify code failed';
+            $this->return['message'] = 'Failed set verify code ';
             return $this->return;
         }
-        $this->return['message'] = 'Set verify code successfully';
+        $this->return['message'] = 'Successfully set verify code';
         $this->return['lists'] = array('key' => $key, 'value' => $value, 'timeout' => $timeout);
         return $this->return;
     }
