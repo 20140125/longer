@@ -19,6 +19,7 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -287,7 +288,8 @@ class OauthCallbackController extends Controller
             $oauthRes = $this->oauthModel->updateOne($where, $data);
             if (!empty($oauthRes)) {
                 /*  同步用户数据 */
-                dispatch(new SyncOauthProcess(['remember_token' => $data['remember_token'], 'uuid' => 'longer7f00000108fc00000001']))->onQueue('users')->delay(5);
+                Artisan::call("longer:sync-oauth {$data['remember_token']} longer7f00000108fc00000001");
+//                dispatch(new SyncOauthProcess(['remember_token' => $data['remember_token'], 'uuid' => 'longer7f00000108fc00000001']))->onQueue('users')->delay(5);
                 return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send() : redirect('/admin/oauth/index')->send();
             }
             return redirect('/login')->send();
@@ -297,7 +299,8 @@ class OauthCallbackController extends Controller
         $data['role_id'] = 2;
         $oauthRes = $this->oauthModel->saveOne($data);
         if (!empty($oauthRes)) {
-            dispatch(new SyncOauthProcess(['remember_token' => $data['remember_token'], 'uuid' => 'longer7f00000108fc00000001']))->onQueue('users')->delay(5);
+            Artisan::call("longer:sync-oauth {$data['remember_token']} longer7f00000108fc00000001");
+//            dispatch(new SyncOauthProcess(['remember_token' => $data['remember_token'], 'uuid' => 'longer7f00000108fc00000001']))->onQueue('users')->delay(5);
             Mail::to(config('mail.username'))->send(new Register(array('name' => $data['username'])));
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
