@@ -28,6 +28,7 @@ class Common extends Base
                 setCode(Code::FORBIDDEN);
                 exit();
             }
+            $this->userService->setVerifyCode($this->post['token'], $this->post['token'], config('app.app_refresh_login_time'));
             $request->merge(array('unauthorized' => $_user));
             return $next($request);
         }

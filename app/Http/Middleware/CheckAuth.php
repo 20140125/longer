@@ -64,10 +64,6 @@ class CheckAuth extends Base
         if (!$this->redisClient->sIsMember(config('app.redis_user_key'), $_user->uuid)) {
             $this->redisClient->sAdd(config('app.redis_user_key'), $_user->uuid);
         }
-        /* todo:更新redis用户标识 */
-        if (!$this->redisClient->getValue($this->post['token'])) {
-            $this->redisClient->setValue($this->post['token'], $this->post['token'], ['EX' => config('app.app_refresh_login_time')]);
-        }
         $request->merge(array('role' => $_role, 'unauthorized' => $_user));
         return $next($request);
     }
