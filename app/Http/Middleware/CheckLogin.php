@@ -21,7 +21,8 @@ class CheckLogin extends Base
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
-        if (empty($this->post['token'])) {
+        $permissionArray = ['/api/v1/oauth/config', '/api/v1/report/code', '/api/v1/account/login', '/api/v1/mail/send'];
+        if (in_array($request->getRequestUri(), $permissionArray) || empty($this->post['token'])) {
             return $next($request);
         }
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
