@@ -77,33 +77,12 @@ class Rsa extends Controller
         if (!is_string($data)) {
             return null;
         }
-        return openssl_private_encrypt($data, $encrypted, self::getPrivateKey()) ? base64_encode($encrypted) : null;
-    }
-
-    /**
-     * TODO：公钥加密
-     * @param string $data
-     * @return null|string
-     */
-    public function publicEncrypt(string $data = '')
-    {
-        if (!is_string($data)) {
-            return null;
+        $split = str_split($data, 117);  // 1024 bit && OPENSSL_PKCS1_PADDING  不大于117即可
+        $crypto = '';
+        foreach ($split as $item) {
+            $crypto.= openssl_private_encrypt($item, $encrypted, self::getPrivateKey()) ? $encrypted : null;
         }
-        return openssl_public_encrypt($data, $encrypted, self::getPublicKey()) ? base64_encode($encrypted) : null;
-    }
-
-    /**
-     * TODO：私钥解密
-     * @param string $encrypted
-     * @return null
-     */
-    public function privateDecrypt(string $encrypted = '')
-    {
-        if (!is_string($encrypted)) {
-            return null;
-        }
-        return (openssl_private_decrypt(base64_decode($encrypted), $decrypted, self::getPrivateKey())) ? $decrypted : null;
+        return base64_encode($crypto);
     }
 
     /**
@@ -116,28 +95,68 @@ class Rsa extends Controller
         if (!is_string($encrypted)) {
             return null;
         }
-        return (openssl_public_decrypt(base64_decode($encrypted), $decrypted, self::getPublicKey())) ? $decrypted : null;
+        $split = str_split(base64_decode($encrypted), 128);  // 1024 bit  固定128
+        $crypto = '';
+        foreach ($split as $item) {
+            $crypto .= openssl_public_decrypt($item, $decrypted, self::getPublicKey()) ? $decrypted : null;
+        }
+        return $crypto;
+    }
+
+    /**
+     * TODO：公钥加密
+     * @param string $data
+     * @return null|string
+     */
+    public function publicEncrypt(string $data = '')
+    {
+        if (!is_string($data)) {
+            return null;
+        }
+        $split = str_split($data, 117);  // 1024 bit && OPENSSL_PKCS1_PADDING  不大于117即可
+        $crypto = '';
+        foreach ($split as $item) {
+            $crypto .= openssl_public_encrypt($item, $encrypted, self::getPublicKey()) ? $encrypted : null;
+        }
+        return base64_encode($crypto);
+    }
+
+    /**
+     * TODO：私钥解密
+     * @param string $encrypted
+     * @return null
+     */
+    public function privateDecrypt(string $encrypted = '')
+    {
+        if (!is_string($encrypted)) {
+            return null;
+        }
+        $split = str_split(base64_decode($encrypted), 128);  // 1024 bit  固定128
+        $crypto = '';
+        foreach ($split as $item) {
+            $crypto .= openssl_private_decrypt($item, $decrypted, self::getPrivateKey()) ? $decrypted : null;
+        }
+        return $crypto;
     }
 
     /**
      * TODO：私钥生成签名
-     * @param $data
+     * @param string $data
      * @return string|null
      */
-    public function makeSign($data)
+    public function makeSign(string $data)
     {
         if (!is_string($data)) {
             return null;
         }
         // 摘要及签名的算法
         $digestAlgo = 'sha512';
-        $algo = OPENSSL_ALGO_SHA1;
         // 生成摘要
         $digest = openssl_digest($data, $digestAlgo);
         // 签名
         $signature = '';
         //生成签名
-        openssl_sign($digest, $signature, self::getPrivateKey(), $algo);
+        openssl_sign($digest, $signature, self::getPrivateKey(), OPENSSL_ALGO_SHA1);
         return base64_encode($signature);
     }
 
@@ -147,17 +166,16 @@ class Rsa extends Controller
      * @param string $signature 签名
      * @return int|null
      */
-    public function checkSign($data, $signature)
+    public function checkSign(string $data, string $signature)
     {
         if (!is_string($data)) {
             return null;
         }
         // 摘要及签名的算法，同上面一致
         $digestAlgo = 'sha512';
-        $algo = OPENSSL_ALGO_SHA1;
         // 生成摘要
         $digest = openssl_digest($data, $digestAlgo);
         // 验签
-        return openssl_verify($digest, base64_decode($signature), self::getPublicKey(), $algo);
+        return openssl_verify($digest, base64_decode($signature), self::getPublicKey(), OPENSSL_ALGO_SHA1);
     }
 }

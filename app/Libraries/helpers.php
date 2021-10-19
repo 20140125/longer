@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Utils\AMap;
 use App\Http\Controllers\Utils\Code;
+use Curl\Curl;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,11 @@ if (!function_exists('ajaxReturn')) {
      */
     function ajaxReturn(array $data = [], int $code = 200)
     {
-        $_item = array('item' => $data, 'code' => $code, 'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri());
+        $_item = array(
+            'item' => $data,
+            'code' => $code,
+            'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri()
+        );
         saveLog(array('url' => $_item['url'], 'message' => $data['message'] ?? 'successfully'));
         return response()->json($_item);
     }
@@ -592,7 +597,7 @@ if (!function_exists('webPush')) {
         try {
             $push_api_url = config('app.push_url');
             $post_data = array('type' => $type, 'content' => htmlspecialchars($content), 'to' => $uid ?? '');
-            $curl = new \Curl\Curl();
+            $curl = new Curl();
             $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
             $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
             $curl->post($push_api_url, $post_data);

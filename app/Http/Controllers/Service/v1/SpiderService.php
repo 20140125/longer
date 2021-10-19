@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use App\Jobs\SyncCityWeatherProcess;
 use App\Jobs\SyncImageListsForTagsProcess;
 use App\Jobs\SyncImageListsProcess;
 use App\Jobs\SyncImageSizeProcess;
