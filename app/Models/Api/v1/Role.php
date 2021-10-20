@@ -43,7 +43,7 @@ class Role extends Base
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOne($where, $columns = ['*'])
+    public function getOne($where, array $columns = ['*'])
     {
         return $this->getResult($this->table, $where, $columns);
     }
@@ -78,7 +78,7 @@ class Role extends Base
      * @param string[] $columns
      * @return Collection | array
      */
-    public function getLists($where, $pagination = ['page' => 1, 'limit' => 10], $order = ['order' => 'id', 'direction' => 'desc'], $getAll = false, $columns = ['*'])
+    public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], bool $getAll = false, array $columns = ['*'])
     {
         if ($getAll) {
             return DB::table($this->table)->where($where)->get($columns);

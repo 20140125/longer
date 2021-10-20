@@ -7,6 +7,7 @@ use App\Jobs\SyncOauthProcess;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -116,9 +117,9 @@ class UserService extends BaseService
         /* 更新用户信息 */
         $form['salt'] = getRoundNum(8, 'all');
         $form['password'] = md5(md5($form['password']) . $form['salt']) === $user->password ? $user->password : md5(md5($form['password']) . $form['salt']);
-        $form['remember_token'] = encrypt($form['password']);
+        /* 自己修改信息时，修改用户标识。管理员修改其他用户时不修改用户标识 */
+        $form['remember_token'] = $user->uuid === $form['uuid'] ? encrypt($form['password']) : $form['remember_token'];
         $form['ip_address'] = getServerIp();
-        $form['created_at'] = !empty($user->created_at) ? strtotime($user->created_at) : time();
         $form['updated_at'] = time();
         $this->userModel->updateOne(['id' => $user->id], $form);
         /* 设置用户标识 */
@@ -131,7 +132,7 @@ class UserService extends BaseService
         $form['url'] = config('app.url');
         $this->return['lists'] = $form;
         $this->return['message'] = $message;
-        dispatch(new SyncOauthProcess(['remember_token' => $form['remember_token'], 'uuid' => 'longer7f00000108fc00000001']))->onQueue('users')->delay(5);
+        Artisan::call("longer:sync-oauth {$form['remember_token']} longer7f00000108fc00000001");
         return $this->return;
     }
 

@@ -46,7 +46,7 @@ class RoleService extends BaseService
     public function getLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
         $where = [];
-        if (!in_array($user->role_id, [1])) {
+        if ($user->role_id != 1) {
             $where[] = ['id', $user->role_id];
         }
         $this->return['lists'] = $this->roleModel->getLists($where, $pagination, $order, false, $columns);
