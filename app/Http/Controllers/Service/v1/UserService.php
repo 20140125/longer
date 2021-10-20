@@ -115,8 +115,9 @@ class UserService extends BaseService
     public function updateUsers($form, $user, $message)
     {
         /* 更新用户信息 */
-        $form['salt'] = getRoundNum(8, 'all');
-        $form['password'] = md5(md5($form['password']) . $form['salt']) === $user->password ? $user->password : md5(md5($form['password']) . $form['salt']);
+        $salt = getRoundNum(8, 'all');
+        $form['password'] = md5(md5($form['password']) . $form['salt']) === $user->password ? $user->password : md5(md5($form['password']) . $salt);
+        $form['salt'] = $salt;
         /* 自己修改信息时，修改用户标识。管理员修改其他用户时不修改用户标识 */
         $form['remember_token'] = $user->uuid === $form['uuid'] ? encrypt($form['password']) : $form['remember_token'];
         $form['ip_address'] = getServerIp();
