@@ -17,7 +17,7 @@ class SyncUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-users {remember_token=default} {uuid=longer7f00000108fc00000001}';
+    protected $signature = 'longer:sync-users {remember_token=default}';
 
     /**
      * The console command description.
