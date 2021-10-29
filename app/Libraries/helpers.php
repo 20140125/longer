@@ -374,7 +374,6 @@ if (!function_exists('renameFile')) {
         }
     }
 }
-
 if (!function_exists('createFile')) {
     /**
      * TODO:保存文件
@@ -399,7 +398,6 @@ if (!function_exists('createFile')) {
         }
     }
 }
-
 if (!function_exists('gZipFile')) {
     /**
      * TODO:文件压缩
@@ -612,7 +610,6 @@ if (!function_exists('webPush')) {
         }
     }
 }
-
 if (!function_exists('getTree')) {
     /**
      * TODO: 树形结构

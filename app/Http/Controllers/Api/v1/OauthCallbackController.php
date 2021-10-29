@@ -298,7 +298,7 @@ class OauthCallbackController extends Controller
         $oauthRes = $this->oauthModel->saveOne($data);
         if (!empty($oauthRes)) {
             Artisan::call("longer:sync-oauth {$data['remember_token']} longer7f00000108fc00000001");
-            Mail::to(config('mail.username'))->send(new Register(array('name' => $data['username'])));
+            Mail::to(config('app.username'))->send(new Register(array('name' => $data['username'])));
             if (strlen($this->state) == 32) {
                 $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
                 return redirect('/admin/home/index/' . $data['remember_token'])->send();

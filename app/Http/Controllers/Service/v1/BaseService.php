@@ -220,7 +220,7 @@ class BaseService
             'remember_token'    => $_user->remember_token ?? '',
             'username'          => $_user->username ?? '',
             'socket'            => config('app.socket_url') ?? '',
-            'avatar_url'        => $_user->username == 'admin' ? config('app.avatar_url') : $_user->avatar_url,
+            'avatar_url'        => ($_user->username ?? '') == 'admin' ? config('app.avatar_url') : $_user->avatar_url,
             'websocket'         => config('app.websocket') ?? '',
             'role_id'           => encrypt($_user->role_id ?? ''),
             'uuid'              => $_user->uuid ?? '',

@@ -164,6 +164,8 @@ return [
     'os_china_appid'  => env('OS_CHINA_APPID', ''),
     'os_china_secret' => env('OS_CHINA_APP_SECRET', ''),
 
+    'username'  => env('MAIL_USERNAME', ''),
+
     'database' => env('DB_DATABASE', null),
     /*
      |--------------------------------------------------------------------------
