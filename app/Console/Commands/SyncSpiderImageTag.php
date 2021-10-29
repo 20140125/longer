@@ -46,7 +46,7 @@ class SyncSpiderImageTag extends Command
     public function handle()
     {
         $url = $this->argument('url');
-        $pages = range(322, 60471);
+        $pages = range(18962, 60471);
         foreach($pages as $page) {
             $this->getImageLists(str_replace('?', $page, $url));
         }
@@ -66,8 +66,9 @@ class SyncSpiderImageTag extends Command
             $client = new Client();
             $promise = $client->request('GET', $url);
             $pageSize = $promise->filter('#mobilepage')->text();
-            $pageRange = range($this->startPage, explode('/', $pageSize)[1]);
-            $bar = $this->output->createProgressBar(explode('/', $pageSize)[1]);
+            $totalPage = intval(explode('/', $pageSize)[1]) === 374 ? 1 : explode('/', $pageSize)[1];
+            $pageRange = range($this->startPage, $totalPage);
+            $bar = $this->output->createProgressBar($totalPage);
             foreach ($pageRange as $item) {
                 if (stristr($url, 'page')) {
                     $url = substr($url, 0, strrpos($url, '/') - 5) . '.html';

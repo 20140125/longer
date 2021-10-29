@@ -67,10 +67,10 @@ class RedisClient extends Controller
      * TODO：数据存储 （Redis 字符串(String)）
      * @param $key
      * @param $value
-     * @param int $timeout
+     * @param array $timeout
      * @return bool
      */
-    public function setValue($key, $value, $timeout = 0)
+    public function setValue($key, $value, array $timeout = ['EX' => 0])
     {
         return $this->redisClient->set($key, $value, $timeout);
     }
