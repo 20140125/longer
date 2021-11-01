@@ -51,11 +51,11 @@ class SyncWebPush extends Command
     protected function sendWebPusherMessage()
     {
         try {
-            $lists = Push::getInstance()->getLists([['state', '<>', 'successfully']], ['page' => 1, 'limit' => 10000]);
+            $lists = Push::getInstance()->getLists([['state', '<>', 'successfully']], true);
             $bar = $this->output->createProgressBar($lists['total']);
             foreach ($lists['data'] as &$item) {
                 $userCenter = UserCenter::getInstance()->getOne(['u_name' => $item->username]);
-                if ($userCenter->notice_status == 2) {
+                if (($userCenter->notice_status ?? 1) == 2) {
                     $this->error('【' . $item->username . '】：Disable notification within the station');
                     return false;
                 }

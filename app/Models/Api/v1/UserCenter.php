@@ -41,7 +41,7 @@ class UserCenter extends Base
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOne($where, $columns = ['*'])
+    public function getOne($where, array $columns = ['*'])
     {
         return $this->getResult($this->table, $where, $columns);
     }

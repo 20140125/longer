@@ -81,13 +81,19 @@ class Push extends Base
     /**
      * todo:获取列表记录
      * @param  $where
+     * @param bool $getAll
      * @param int[] $pagination
      * @param string[] $order
      * @param string[] $columns
      * @return array
      */
-    public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getLists($where, bool $getAll, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
+        if ($getAll) {
+            $result['data'] = DB::table($this->table)->where($where)->orderBy($order['order'], $order['direction'])->get($columns);
+            $result['total'] = DB::table($this->table)->where($where)->count();
+            return $result;
+        }
         $result['data'] = DB::table($this->table)->limit($pagination['limit'])
             ->where($where)
             ->offset($pagination['limit'] * ($pagination['page'] - 1))
