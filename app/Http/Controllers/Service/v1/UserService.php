@@ -116,7 +116,7 @@ class UserService extends BaseService
     {
         /* 更新用户信息 */
         $salt = getRoundNum(8, 'all');
-        $form['password'] = md5(md5($form['password']) . $form['salt']) === $user->password ? $user->password : md5(md5($form['password']) . $salt);
+        $form['password'] = md5(md5($form['password']) . $user->salt) === $user->password ? $user->password : md5(md5($form['password']) . $salt);
         $form['salt'] = $salt;
         /* 自己修改信息时，修改用户标识。管理员修改其他用户时不修改用户标识 */
         $form['remember_token'] = $user->uuid === $form['uuid'] ? encrypt($form['password']) : $form['remember_token'];
