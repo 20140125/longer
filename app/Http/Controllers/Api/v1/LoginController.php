@@ -20,7 +20,7 @@ class LoginController extends BaseController
      */
     public function login()
     {
-        $rules = ['email' => 'required|between:8,64|email', 'verify_code' => 'required|size:8|integer', 'loginType' => 'required'];
+        $rules = ['email' => 'required|between:8,64|email', 'verify_code' => 'required|integer', 'loginType' => 'required'];
         if ($this->post['loginType'] === 'password') {
             $rules = ['email' => 'required|between:8,64|email', 'password' => 'required|between:6,32|string', 'verify_code' => 'required|size:6|integer'];
         }
