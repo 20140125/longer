@@ -26,7 +26,7 @@ class LoginController extends BaseController
         }
         validatePost($this->post, $rules);
         /* 校验Redis内验证码是否存在 */
-        $verifyCode = $this->sendEMailService->getVerifyCode($this->post['verify_code'], $this->post['verify_code']);
+        $verifyCode = $this->sendEMailService->getVerifyCode($this->post['loginType'] === 'password' ? $this->post['verify_code'] : $this->post['email'], $this->post['verify_code']);
         if ($verifyCode['code'] === Code::VERIFY_CODE_ERROR) {
             return ajaxReturn($verifyCode);
         }
