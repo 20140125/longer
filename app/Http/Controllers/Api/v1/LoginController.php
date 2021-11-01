@@ -30,7 +30,7 @@ class LoginController extends BaseController
         if ($verifyCode['code'] === Code::VERIFY_CODE_ERROR) {
             return ajaxReturn($verifyCode);
         }
-        $form = array('email' => $this->post['email'], 'password' => $this->post['password']);
+        $form = array('email' => $this->post['email'] ?? '', 'password' => $this->post['password'] ?? '');
         $users = $this->userService->loginSYS($form);
         return ajaxReturn($users);
     }
