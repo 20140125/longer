@@ -22,7 +22,7 @@ class LoginController extends BaseController
     {
         $rules = ['email' => 'required|between:8,64|email', 'verify_code' => 'required|size:8|string', 'loginType' => 'required'];
         if ($this->post['loginType'] === 'password') {
-            $rules = ['email' => 'required|between:8,64|email', 'password' => 'required|between:6,32|string', 'verify_code' => 'required|size:6|string'];
+            $rules = ['email' => 'required|between:8,64|email', 'password' => 'required|between:6,32|string', 'verify_code' => 'required|size:6|integer'];
         }
         validatePost($this->post, $rules);
         /* 校验Redis内验证码是否存在 */
