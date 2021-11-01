@@ -68,8 +68,9 @@ class PushService extends BaseService
             $result = $this->pushModel->saveOne($form);
             if (!$result) {
                 $this->return['code'] = Code::ERROR;
-                $this->return['message'] = 'web push save failed';
+                $this->return['message'] = 'Failed save web push';
             }
+            $this->return['message'] = "Current push state {$form['state']}";
             $this->return['lists'] = $form;
             return $this->return;
         }
@@ -92,8 +93,9 @@ class PushService extends BaseService
         $result = $this->pushModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'web push update failed';
+            $this->return['message'] = 'Failed updated web push';
         }
+        $this->return['message'] = "Current push state {$form['state']}";
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -108,7 +110,7 @@ class PushService extends BaseService
         $result = $this->pushModel->removeOne(['id' => $form['id']]);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'web push delete failed';
+            $this->return['message'] = 'Failed delete web push';
         }
         $this->return['lists'] = $form;
         return $this->return;
