@@ -44,6 +44,9 @@ class PushService extends BaseService
         if ($user->role_id != 1) {
             $where[] = ['uuid', $user->uuid];
         }
+        if (!empty($form['username'])) {
+            $where[] = ['username', $form['username']];
+        }
         $this->return['lists'] = $this->pushModel->getLists($where, false, $pagination, $order, $columns);
         foreach ($this->return['lists']['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s', $item->created_at);
