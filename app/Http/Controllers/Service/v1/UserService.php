@@ -119,7 +119,7 @@ class UserService extends BaseService
         $form['password'] = md5(md5($form['password']) . $user->salt) === $user->password ? $user->password : md5(md5($form['password']) . $salt);
         $form['salt'] = $salt;
         /* 自己修改信息时，修改用户标识。管理员修改其他用户时不修改用户标识 */
-        $form['remember_token'] = $user->email === $form['email'] ? encrypt($form['password']) : $form['remember_token'];
+        $form['remember_token'] = encrypt($form['password']);
         $form['ip_address'] = getServerIp();
         $form['updated_at'] = time();
         $this->userModel->updateOne(['id' => $user->id], $form);
