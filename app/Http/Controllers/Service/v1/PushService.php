@@ -70,7 +70,7 @@ class PushService extends BaseService
                 $this->return['code'] = Code::ERROR;
                 $this->return['message'] = 'Failed save web push';
             }
-            $this->return['message'] = "Current push state {$form['state']}";
+            $this->return['message'] = "Current push state ".ucwords($form['state']);
             $this->return['lists'] = $form;
             return $this->return;
         }
@@ -95,7 +95,7 @@ class PushService extends BaseService
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Failed updated web push';
         }
-        $this->return['message'] = "Current push state {$form['state']}";
+        $this->return['message'] = "Current push state ".ucwords($form['state']);
         $this->return['lists'] = $form;
         return $this->return;
     }
