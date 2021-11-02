@@ -41,11 +41,14 @@ class ApiService extends BaseService
             return $this->return;
         }
         foreach ($this->json_str as $item) {
-            $this->return['lists']->$item = json_decode($this->return['lists']->$item, JSON_UNESCAPED_UNICODE);
+            $this->return['lists']->$item = json_decode($this->return['lists']->$item, true);
         }
         $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->api_id, 'source' => 2], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
         foreach ($apiLog as &$item) {
             $item->json = json_decode($item->json, true);
+            foreach ($this->json_str as $str) {
+                $item->json[$str] = json_decode($item->json[$str], true);
+            }
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
         }
         $this->return['lists']->apiLog = $apiLog;
