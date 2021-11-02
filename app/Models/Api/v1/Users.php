@@ -43,7 +43,7 @@ class Users extends Base
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOne($where, $columns = ['*'])
+    public function getOne($where, array $columns = ['*'])
     {
         return $this->getResult($this->table, $where, $columns);
     }
@@ -76,16 +76,20 @@ class Users extends Base
      * @param array|string[] $order
      * @param bool $getAll
      * @param array|string[] $column
+     * @param array $form
      * @return array|Collection
      */
-    public function getLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
+    public function getLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'], array $form = [])
     {
         if ($getAll) {
             return DB::table($this->table)->get($column);
         }
         $where = [];
-        if (!empty($user) && !in_array($user->role_id, [1])) {
+        if (!empty($user) && $user->role_id != 1) {
             $where[] = ['id', $user->id];
+        }
+        if (!empty($form['username'])) {
+            $where[] = ['username', $form['username']];
         }
         $result['data'] = DB::table($this->table)
             ->limit($pagination['limit'])->offset($pagination['limit'] * ($pagination['page'] - 1))

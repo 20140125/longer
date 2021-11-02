@@ -76,9 +76,10 @@ class Oauth extends Base
      * @param array|string[] $order
      * @param bool $getAll
      * @param array|string[] $column
+     * @param array $form
      * @return array|Collection
      */
-    public function getLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
+    public function getLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $form = [], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
     {
         if ($getAll) {
             return DB::table($this->table)->get($column);
@@ -86,6 +87,9 @@ class Oauth extends Base
         $where = [];
         if (!empty($user) && $user->role_id != 1) {
             $where[] = ['uid', $user->id];
+        }
+        if (!empty($form['username'])) {
+            $where[] = ['username', $form['username']];
         }
         $result['data'] = DB::table($this->table)
             ->limit($pagination['limit'])->offset($pagination['limit'] * ($pagination['page'] - 1))

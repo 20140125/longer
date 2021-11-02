@@ -16,7 +16,7 @@ class UsersController extends BaseController
     {
         validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
-        $result = $this->userService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'updated_at', 'direction' => 'desc']);
+        $result = $this->userService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'updated_at', 'direction' => 'desc'], false, ['*'], $this->post);
         return ajaxReturn($result);
     }
 

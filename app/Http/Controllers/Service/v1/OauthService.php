@@ -33,11 +33,12 @@ class OauthService extends BaseService
      * @param array|string[] $order
      * @param bool $getAll
      * @param array|string[] $column
+     * @param array $form
      * @return array
      */
-    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'updated_at', 'direction' => 'desc'], bool $getAll = false, array $column = ['*'])
+    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $form = [], array $order = ['order' => 'updated_at', 'direction' => 'desc'], bool $getAll = false, array $column = ['*'])
     {
-        $this->return['lists'] = $this->oauthModel->getLists($user, $pagination, $order, $getAll, $column);
+        $this->return['lists'] = $this->oauthModel->getLists($user, $pagination, $form, $order, $getAll, $column);
         foreach ($this->return['lists']['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s', $item->created_at);
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);

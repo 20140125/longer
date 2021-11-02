@@ -39,11 +39,12 @@ class UserService extends BaseService
      * @param array|string[] $order
      * @param bool $getAll
      * @param array|string[] $column
+     * @param array $form
      * @return array
      */
-    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
+    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'], array $form = [])
     {
-        $this->return['lists'] = $this->userModel->getLists($user, $pagination, $order, $getAll, $column);
+        $this->return['lists'] = $this->userModel->getLists($user, $pagination, $order, $getAll, $column, $form);
         foreach ($this->return['lists']['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s', $item->created_at);
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
@@ -59,7 +60,7 @@ class UserService extends BaseService
      */
     public function loginSYS(&$form)
     {
-        $user = $this->userModel->getOne([['email', $form['email']]]);
+        $user = $this->getUser(['email' => $form['email']]);
         if (!empty($form['password'])) {
             /* 用户不存在 */
             if (!$user) {

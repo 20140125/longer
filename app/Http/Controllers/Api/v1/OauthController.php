@@ -17,7 +17,7 @@ class OauthController extends BaseController
     {
         validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
-        $result = $this->oAuthService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);
+        $result = $this->oAuthService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']], $this->post);
         return ajaxReturn($result);
     }
 
