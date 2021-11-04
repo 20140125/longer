@@ -68,7 +68,7 @@ if (!function_exists('saveLog')) {
                 'url'        => $form['url'],
                 'ip_address' => request()->getClientIp(),
                 'created_at' => time(),
-                'day'        => date('Ymd'),
+                'day'        => date('Ymd', time()),
                 'log'        => json_encode(['message' => $form['message'], 'request_params' => $_post], JSON_UNESCAPED_UNICODE)
             );
             return DB::table('os_system_log')->insert($data);

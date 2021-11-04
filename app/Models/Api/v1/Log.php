@@ -91,7 +91,7 @@ class Log extends Base
     public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], bool $getAll = false, array $order = ['order' => 'id', 'direction' => 'desc'], array $column = ['*'])
     {
         if ($getAll) {
-            return DB::table($this->table)->where($where)->whereRaw('local is null')->get($column);
+            return DB::table($this->table)->whereRaw('local is null')->get($column);
         }
         $result['data'] = DB::table($this->table)->where($where)
             ->limit($pagination['limit'])
