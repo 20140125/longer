@@ -89,7 +89,7 @@ class PushService extends BaseService
     public function updatePush($form)
     {
         $form['created_at'] = gettype($form['created_at']) === 'integer' ?  $form['created_at'] : strtotime($form['created_at']);
-        if ($form['disabled']) unset($form['disabled']);
+        if ($form['see'] > 0) unset($form['disabled']);
         $form = intval($form['status']) == 1 ? $this->webPushMessage($form) : $form;
         $result = $this->pushModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
