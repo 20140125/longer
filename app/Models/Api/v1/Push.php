@@ -5,6 +5,7 @@ namespace App\Models\Api\v1;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Push extends Base
@@ -85,7 +86,7 @@ class Push extends Base
      * @param int[] $pagination
      * @param string[] $order
      * @param string[] $columns
-     * @return array
+     * @return Collection | array
      */
     public function getLists($where, bool $getAll = false, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {

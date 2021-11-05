@@ -9,17 +9,19 @@ use Workerman\Connection\TcpConnection;
 
 require_once '../../vendor/autoload.php';
 require_once __DIR__ . '/config/db.php';
-//日志今天的总量
+/* todo:日志今天的总量 */
 $log_last_count = 0;
-//通知今天的总量
+/* todo:通知今天的总量 */
 $push_last_count = 0;
-//授权用户总量
+/* todo:授权用户总量 */
 $oauth_last_count = 0;
-//在线人数
+/* todo:在线人数 */
 $online_user_count = 0;
-//时间跨度
+/* todo:系统通知 */
+$user_push_state = 0;
+/* todo:时间跨度 */
 $times = 15;
-/*todo: PHPSocketIO服务*/
+/* todo: PHPSocketIO服务 */
 if (in_array(PHP_OS, ['WINNT', 'Darwin'])) {
     /* todo:接收消息推送端口 */
     $sender_io = new SocketIO(2120);
@@ -57,6 +59,8 @@ $sender_io->on('connection', function ($socket) {
         /* todo：推送在线用户的站内通知 */
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
+            /* 链接时用户的通知记录 */
+            $user_push_state = count($pushData);
             /* 站内通知推送 */
             $sender_io->to($user)->emit('notice', $pushData);
         }
@@ -140,14 +144,17 @@ $sender_io->on('workerStart', function () {
     };
     /* 执行监听 */
     $inner_http_worker->listen();
-    /* 定时器 (只有在客户端在线数变化了才广播，减少不必要的客户端通讯)  */
+    /* todo:定时器 (只有在客户端在线数变化了才广播，减少不必要的客户端通讯)  */
     Timer::add(2, function () {
-        global $sender_io, $redis, $day, $log_last_count, $push_last_count, $online_user_count, $oauth_last_count, $times;
+        global $sender_io, $redis, $day, $log_last_count, $push_last_count, $online_user_count, $oauth_last_count, $times, $user_push_state;
         $redisUser = $redis->SMEMBERS(REDIS_KEY);
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
             //站内通知推送
-            $sender_io->to($user)->emit('notice', $pushData);
+            if ($user_push_state !== count($pushData)) {
+                $user_push_state = count($pushData);
+                $sender_io->to($user)->emit('notice', $pushData);
+            }
         }
         if ($day[count($day) - 1] !== date('Ymd')) {
             $day = range(strtotime(date('Ymd', strtotime("-{$times} day"))), strtotime(date('Ymd')), 24 * 60 * 60);
