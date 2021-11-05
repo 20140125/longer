@@ -25,6 +25,8 @@ class BaseController extends Controller
         $this->loginService = LoginService::getInstance();
         $this->imageService = ImageService::getInstance();
         $this->post = $request->post();
-        UserService::getInstance()->setVerifyCode($this->post['token'], $this->post['token'], config('app.app_refresh_login_time'));
+        if (!empty($this->post['token'])) {
+            UserService::getInstance()->setVerifyCode($this->post['token'], $this->post['token'], config('app.app_refresh_login_time'));
+        }
     }
 }
