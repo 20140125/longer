@@ -98,7 +98,7 @@ class PushService extends BaseService
             $this->return['message'] = 'Failed updated web push';
             return $this->return;
         }
-        $this->return['message'] = $form['see'] > 0 ? 'successfully': "Current push state ".strtoupper($form['state']);
+        $this->return['message'] = "Current push state ".strtoupper($form['state']);
         $this->return['lists'] = $form;
         return $this->return;
     }
