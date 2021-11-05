@@ -69,6 +69,7 @@ class PushService extends BaseService
             if (!$result) {
                 $this->return['code'] = Code::ERROR;
                 $this->return['message'] = 'Failed save web push';
+                return $this->return;
             }
             $this->return['message'] = "Current push state ".strtoupper($form['state']);
             $this->return['lists'] = $form;
@@ -95,6 +96,7 @@ class PushService extends BaseService
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Failed updated web push';
+            return $this->return;
         }
         $this->return['message'] = $form['see'] > 0 ? 'successfully': "Current push state ".strtoupper($form['state']);
         $this->return['lists'] = $form;
@@ -112,6 +114,7 @@ class PushService extends BaseService
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Failed delete web push';
+            return $this->return;
         }
         $this->return['lists'] = $form;
         return $this->return;
