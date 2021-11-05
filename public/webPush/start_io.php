@@ -209,7 +209,7 @@ $sender_io->on('workerStart', function () {
     }
 
     /**
-     * TODO：获取站内通知
+     * TODO：获取站内通知(成功)
      * @return array
      */
     function getPushCount()
@@ -217,6 +217,7 @@ $sender_io->on('workerStart', function () {
         global $db, $day, $times;
         $push = $db->select("FROM_UNIXTIME(created_at,'%Y%m%d') as day,count(*) as total")->from('os_push')
             ->where("created_at>=" . strtotime(date('Y-m-d 23:59:59', strtotime("-{$times} day"))))
+            ->where('state = successfully')
             ->groupBy(["FROM_UNIXTIME(created_at,'%Y%m%d')"])->query();
         $pushDay = $pushTotal = array();
         foreach ($push as $value) {
