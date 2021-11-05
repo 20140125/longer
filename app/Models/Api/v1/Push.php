@@ -87,12 +87,10 @@ class Push extends Base
      * @param string[] $columns
      * @return array
      */
-    public function getLists($where, bool $getAll, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getLists($where, bool $getAll = false, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
         if ($getAll) {
-            $result['data'] = DB::table($this->table)->where($where)->orderBy($order['order'], $order['direction'])->get($columns);
-            $result['total'] = DB::table($this->table)->where($where)->count();
-            return $result;
+            return DB::table($this->table)->where($where)->orderBy($order['order'], $order['direction'])->get($columns);
         }
         $result['data'] = DB::table($this->table)->limit($pagination['limit'])
             ->where($where)

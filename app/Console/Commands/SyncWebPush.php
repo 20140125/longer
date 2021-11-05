@@ -51,49 +51,54 @@ class SyncWebPush extends Command
     protected function sendWebPusherMessage()
     {
         try {
-            $users = RedisClient::getInstance()->SMEMBERS(config('app.redis_user_key'));
-            $lists = Push::getInstance()->getLists([['state', '<>', 'successfully'], ['uuid', 'in', $users]], true);
-            $bar = $this->output->createProgressBar($lists['total']);
-            foreach ($lists['data'] as &$item) {
-                $userCenter = UserCenter::getInstance()->getOne(['u_name' => $item->username]);
-                if (($userCenter->notice_status ?? 1) == 2) {
-                    $this->error('【' . $item->username . '】：Disable notification within the station');
-                    return false;
-                }
-                switch ($item->status) {
-                    /*todo:立即推送*/
-                    case 1:
-                        if (webPush($item->info, $item->uuid)) {
-                            $item->state = Code::WEBSOCKET_STATE[0];
-                            $this->info('【' . $item->username . '】：Successfully push notification');
-                        } else {
-                            $item->state = Code::WEBSOCKET_STATE[1];
-                            $this->error('【' . $item->username . '】：Failed push notification');
-                        }
-                        break;
-                    /*todo:定时推送*/
-                    case 2:
-                        if ($item->created_at > time()) {
-                            $this->warn('【' . $item->username . '】：Push time yet to come');
+            $users = RedisClient::getInstance()->sMembers(config('app.redis_user_key'));
+            $where[] = ['state', '<>', 'successfully'];
+            foreach ($users as $user) {
+                $where[] = ['uuid', '=', $user];
+                $lists = Push::getInstance()->getLists($where, true);
+                $bar = $this->output->createProgressBar(count($lists));
+                foreach ($lists as &$item) {
+                    $userCenter = UserCenter::getInstance()->getOne(['u_name' => $item->username]);
+                    if (($userCenter->notice_status ?? 1) == 2) {
+                        $this->error('【' . $item->username . '】：Disable notification within the station');
+                        return false;
+                    }
+                    switch ($item->status) {
+                        /*todo:立即推送*/
+                        case 1:
+                            if (webPush($item->info, $item->uuid)) {
+                                $item->state = Code::WEBSOCKET_STATE[0];
+                                $this->info('【' . $item->username . '】：Successfully push notification');
+                            } else {
+                                $item->state = Code::WEBSOCKET_STATE[1];
+                                $this->error('【' . $item->username . '】：Failed push notification');
+                            }
                             break;
-                        }
-                        if (webPush($item->info, $item->uid)) {
-                            $item->state = Code::WEBSOCKET_STATE[0];
-                            $this->info('【' . $item->username . '】：Push station timing message successfully');
-                        } else {
-                            $item->state = Code::WEBSOCKET_STATE[1];
-                            $this->error('【' . $item->username . '】：Push station timing message failed');
-                        }
-                        break;
+                        /*todo:定时推送*/
+                        case 2:
+                            if ($item->created_at > time()) {
+                                $this->warn('【' . $item->username . '】：Push time yet to come');
+                                break;
+                            }
+                            if (webPush($item->info, $item->uid)) {
+                                $item->state = Code::WEBSOCKET_STATE[0];
+                                $this->info('【' . $item->username . '】：Push station timing message successfully');
+                            } else {
+                                $item->state = Code::WEBSOCKET_STATE[1];
+                                $this->error('【' . $item->username . '】：Push station timing message failed');
+                            }
+                            break;
+                    }
+                    usleep(rand(500000, 700000));
+                    $item->created_at = time();
+                    Push::getInstance()->updateOne(['id' => $item->id], (array)$item);
+                    $bar->advance();
                 }
-                usleep(rand(500000, 700000));
-                $item->created_at = time();
-                Push::getInstance()->updateOne(['id' => $item->id], (array)$item);
-                $bar->advance();
+                
             }
             $bar->finish();
         } catch (\Exception $exception) {
-            $this->error($exception->getMessage());
+            $this->error($exception);
         }
     }
 }
