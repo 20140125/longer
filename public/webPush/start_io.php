@@ -242,7 +242,7 @@ $sender_io->on('workerStart', function () {
     {
         global $db, $day, $times;
         $oauth = $db->select("FROM_UNIXTIME(created_at,'%Y%m%d') as day,count(*) as total")->from('os_users')
-            ->where("created_at>=" . strtotime(date('Y-m-d 23:59:59', strtotime("-{$times} day"))))
+            ->where("created_at>=" . strtotime(date('Y-m-d 23:59:59', strtotime("-{$times} day"))) . " and state = 'successfully'")
             ->groupBy(["FROM_UNIXTIME(created_at,'%Y%m%d')"])->query();
         $oauthDay = $oauthTotal = array();
         foreach ($oauth as $value) {
