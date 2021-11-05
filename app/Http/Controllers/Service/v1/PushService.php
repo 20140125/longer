@@ -62,7 +62,7 @@ class PushService extends BaseService
     public function savePush($form)
     {
         $form['state'] = Code::WEBSOCKET_STATE[2];
-        $form['created_at'] = time();
+        $form['created_at'] = strtotime($form['created_at']);
         $form = intval($form['status']) === 1 ? $this->webPushMessage($form) : $form;
         if ($form['uuid'] != config('app.client_id')) {
             $result = $this->pushModel->saveOne($form);
@@ -88,14 +88,15 @@ class PushService extends BaseService
      */
     public function updatePush($form)
     {
-        $form['created_at'] = time();
+        $form['created_at'] = gettype($form['created_at']) === 'integer' ?  $form['created_at'] : strtotime($form['created_at']);
+        if ($form['disabled']) unset($form['disabled']);
         $form = intval($form['status']) == 1 ? $this->webPushMessage($form) : $form;
         $result = $this->pushModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Failed updated web push';
         }
-        $this->return['message'] = "Current push state ".strtoupper($form['state']);
+        $this->return['message'] = $form['see'] > 0 ? 'successfully': "Current push state ".strtoupper($form['state']);
         $this->return['lists'] = $form;
         return $this->return;
     }
