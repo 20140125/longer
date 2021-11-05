@@ -69,7 +69,6 @@ class SyncWebPush extends Command
                         }
                         if (webPush($item->info, $item->uuid)) {
                             $item->state = Code::WEBSOCKET_STATE[0];
-                            $item->created_at = time();
                             $this->info('【' . $item->username . '】：Successfully push notification');
                         } else {
                             $item->state = Code::WEBSOCKET_STATE[1];
@@ -89,7 +88,6 @@ class SyncWebPush extends Command
                         }
                         if (webPush($item->info, $item->uid)) {
                             $item->state = Code::WEBSOCKET_STATE[0];
-                            $item->created_at = time();
                             $this->info('【' . $item->username . '】：Push station timing message successfully');
                         } else {
                             $item->state = Code::WEBSOCKET_STATE[1];
@@ -98,6 +96,7 @@ class SyncWebPush extends Command
                         break;
                 }
                 usleep(rand(500000, 700000));
+                $item->created_at = time();
                 Push::getInstance()->updateOne(['id' => $item->id], (array)$item);
                 $bar->advance();
             }
