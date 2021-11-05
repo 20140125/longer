@@ -51,7 +51,8 @@ class SyncWebPush extends Command
     protected function sendWebPusherMessage()
     {
         try {
-            $lists = Push::getInstance()->getLists([['state', '<>', 'successfully']], true);
+            $users = RedisClient::getInstance()->SMEMBERS(config('app.redis_user_key'));
+            $lists = Push::getInstance()->getLists([['state', '<>', 'successfully'], ['uuid', 'in', $users]], true);
             $bar = $this->output->createProgressBar($lists['total']);
             foreach ($lists['data'] as &$item) {
                 $userCenter = UserCenter::getInstance()->getOne(['u_name' => $item->username]);
@@ -62,11 +63,6 @@ class SyncWebPush extends Command
                 switch ($item->status) {
                     /*todo:立即推送*/
                     case 1:
-                        if (!RedisClient::getInstance()->sIsMember(config('app.redis_user_key'), $item->uuid)) {
-                            $item->state = Code::WEBSOCKET_STATE[2];
-                            $this->warn('【' . $item->username . '】：Already offline~');
-                            break;
-                        }
                         if (webPush($item->info, $item->uuid)) {
                             $item->state = Code::WEBSOCKET_STATE[0];
                             $this->info('【' . $item->username . '】：Successfully push notification');
@@ -79,11 +75,6 @@ class SyncWebPush extends Command
                     case 2:
                         if ($item->created_at > time()) {
                             $this->warn('【' . $item->username . '】：Push time yet to come');
-                            break;
-                        }
-                        if (!RedisClient::getInstance()->sIsMember(config('app.redis_user_key'), $item->uuid)) {
-                            $item->state = Code::WEBSOCKET_STATE[2];
-                            $this->warn('【' . $item->username . '】：Already offline~');
                             break;
                         }
                         if (webPush($item->info, $item->uid)) {
