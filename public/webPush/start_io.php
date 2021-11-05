@@ -188,7 +188,7 @@ $sender_io->on('workerStart', function () {
     function pushData($user)
     {
         global $db;
-        return $db->select('*')->from('os_push')->where("uuid = '{$user}' ")->orderByDESC(['created_at'])->limit(10)->query();
+        return $db->select('*')->from('os_push')->where("uuid = '{$user}' and see < 1 ")->orderByDESC(['created_at'])->limit(30)->query();
     }
 
     /**
