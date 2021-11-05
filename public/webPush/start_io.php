@@ -49,7 +49,7 @@ foreach ($day as &$item) {
 $sender_io->on('connection', function ($socket) {
     /* 当客户端发来登录事件时触发 */
     $socket->on('login', function ($uid) use ($socket) {
-        global $redis, $online_user_count, $redisUser, $sender_io, $day, $log_last_count, $push_last_count, $oauth_last_count;
+        global $redis, $online_user_count, $redisUser, $sender_io, $day, $log_last_count, $push_last_count, $oauth_last_count,$user_push_state;
         $socket->uid = $uid;
         /* 在线用户存在Events.php文件中 */
         $redisUser = $redis->SMEMBERS(REDIS_KEY);
