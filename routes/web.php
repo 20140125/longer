@@ -17,9 +17,5 @@ Route::get('/login', function () {
     return view('welcome');
 });
 Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/h5/image/index', function () {
     return view('index');
 });
