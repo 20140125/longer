@@ -45,5 +45,6 @@ class Test extends Command
         $this->info($encrypt);
         $decrypt = $rsa->publicDecrypt($encrypt);
         $this->info($decrypt);
+        $this->info(strlen(substr(encrypt(getRoundNum(64, 'all')), 0, 64)));
     }
 }
