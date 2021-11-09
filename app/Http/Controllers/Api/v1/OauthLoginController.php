@@ -38,12 +38,12 @@ class OauthLoginController extends Controller
      * TODO:：QQ跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
-    public function QQ()
+    public function QQ($source = '')
     {
         $appId = config('app.qq_appid');
         $appSecret = config('app.qq_secret');
         $QQOauth = QQController::getInstance($appId, $appSecret);
-        $url = $QQOauth->getAuthUrl();
+        $url = $QQOauth->getAuthUrl(empty($source) ? 32 : 64);
         $this->redisClient->setValue($QQOauth->state, $QQOauth->state, ['EX' => 60]);
         return redirect($url);
     }
@@ -52,12 +52,12 @@ class OauthLoginController extends Controller
      * TODO:：Github跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
-    public function gitHub()
+    public function gitHub($source = '')
     {
         $appId = config('app.github_appid');
         $appSecret = config('app.github_secret');
         $gitHubOAuth = GithubController::getInstance($appId, $appSecret);
-        $url = $gitHubOAuth->getAuthUrl();
+        $url = $gitHubOAuth->getAuthUrl(empty($source) ? 32 : 64);
         $this->redisClient->setValue($gitHubOAuth->state, $gitHubOAuth->state, ['EX' => 60]);
         return redirect($url);
     }
@@ -66,12 +66,12 @@ class OauthLoginController extends Controller
      * TODO:：Weibo跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
-    public function weibo()
+    public function weibo($source = '')
     {
         $appId = config('app.weibo_appid');
         $appSecret = config('app.weibo_secret');
         $weiboOAuth = WeiBoController::getInstance($appId, $appSecret);
-        $url = $weiboOAuth->getAuthUrl();
+        $url = $weiboOAuth->getAuthUrl(empty($source) ? 32 : 64);
         $this->redisClient->setValue($weiboOAuth->state, $weiboOAuth->state, ['EX' => 60]);
         return redirect($url);
     }
@@ -80,12 +80,12 @@ class OauthLoginController extends Controller
      * TODO:：Gitee跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
-    public function gitee()
+    public function gitee($source = '')
     {
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
         $giteeOAuth = GiteeController::getInstance($appId, $appSecret);
-        $url = $giteeOAuth->getAuthUrl();
+        $url = $giteeOAuth->getAuthUrl(empty($source) ? 32 : 64);
         $this->redisClient->setValue($giteeOAuth->state, $giteeOAuth->state, ['EX' => 60]);
         return redirect($url);
     }
@@ -94,12 +94,12 @@ class OauthLoginController extends Controller
      * TODO:：Gitee跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
-    public function baidu()
+    public function baidu($source = '')
     {
         $appId = config('app.baidu_appid');
         $appSecret = config('app.baidu_secret');
         $baiDuOauth = BaiDuController::getInstance($appId, $appSecret);
-        $url = $baiDuOauth->getAuthUrl();
+        $url = $baiDuOauth->getAuthUrl(empty($source) ? 32 : 64);
         $this->redisClient->setValue($baiDuOauth->state, $baiDuOauth->state, ['EX' => 60]);
         return redirect($url);
     }
@@ -108,12 +108,12 @@ class OauthLoginController extends Controller
      * TODO:：OsChina跳转到授权登录页面
      * @return RedirectResponse|Redirector
      */
-    public function osChina()
+    public function osChina($source = '')
     {
         $appId = config('app.os_china_appid');
         $appSecret = config('app.os_china_secret');
         $osChinaOauth = OsChinaController::getInstance($appId, $appSecret);
-        $url = $osChinaOauth->getAuthUrl();
+        $url = $osChinaOauth->getAuthUrl(empty($source) ? 32 : 64);
         $this->redisClient->setValue($osChinaOauth->state, $osChinaOauth->state, ['EX' => 60]);
         return redirect($url);
     }

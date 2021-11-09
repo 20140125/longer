@@ -121,23 +121,21 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get', 'post'], 'spider/running', [App\Http\Controllers\Api\v1\SpiderController::class, 'runningSpider'])->name('runningSpider');
     });
     /* todo:QQ授权登录 */
-    Route::get('oauth/login/qq', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'QQ'])->name('qqLogin');
+    Route::get('oauth/login/qq/{source?}', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'QQ'])->name('qqLogin');
     Route::get('callback/qq', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'QQ'])->name('qqCallback');
     /* todo:Github授权登录 */
-    Route::get('oauth/login/github', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'gitHub'])->name('gitHubLogin');
+    Route::get('oauth/login/github/{source?}', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'gitHub'])->name('gitHubLogin');
     Route::get('callback/github', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'gitHub'])->name('gitHubCallback');
     /* todo:WeiBo授权登录 */
-    Route::get('oauth/login/weibo', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'weibo'])->name('weiboLogin');
+    Route::get('oauth/login/weibo/{source?}', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'weibo'])->name('weiboLogin');
     Route::get('callback/weibo', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'weibo'])->name('weiboCallback');
     /* todo:Gitee授权登录 */
-    Route::get('oauth/login/gitee', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'gitee'])->name('giteeLogin');
+    Route::get('oauth/login/gitee/{source?}', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'gitee'])->name('giteeLogin');
     Route::get('callback/gitee', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'gitee'])->name('giteeCallback');
     /* todo:Baidu授权登录 */
-    Route::get('oauth/login/baidu', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'baidu'])->name('baiduLogin');
+    Route::get('oauth/login/baidu/{source?}', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'baidu'])->name('baiduLogin');
     Route::get('callback/baidu', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'baidu'])->name('baiduCallback');
     /* todo:osChina授权登录 */
-    Route::get('oauth/login/osChina', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'osChina'])->name('osChinaLogin');
+    Route::get('oauth/login/osChina/{source?}', [App\Http\Controllers\Api\v1\OauthLoginController::class, 'osChina'])->name('osChinaLogin');
     Route::get('callback/osChina', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'osChina'])->name('osChinaCallback');
-
-    Route::get('callback/wxQrcode', [App\Http\Controllers\Api\v1\OauthCallbackController::class, 'wxQrcode'])->name('wxQrcodeCallback');
 });

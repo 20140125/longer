@@ -37,7 +37,7 @@ class OAuthController extends Controller
      */
     public function getState(int $length = 32)
     {
-        $this->state = substr(md5(getRoundNum($length, 'all') . time() . uniqid()), 0, $length);
+        $this->state = substr(encrypt(getRoundNum($length, 'all')), 0, $length);
         return $this->state;
     }
 
