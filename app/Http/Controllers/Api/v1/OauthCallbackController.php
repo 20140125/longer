@@ -289,7 +289,7 @@ class OauthCallbackController extends Controller
                 /*  同步用户数据 */
                 Artisan::call("longer:sync-users {$data['remember_token']}");
                 return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send()
-                    : redirect('/h5/image/index#/?token='.rawurlencode($data['remember_token']))->send();
+                    : redirect('/#/?token='.rawurlencode($data['remember_token']))->send();
             }
             return redirect('/login')->send();
         }
@@ -302,7 +302,7 @@ class OauthCallbackController extends Controller
             Mail::to(config('app.username'))->send(new Register(array('name' => $data['username'])));
             $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
             return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send()
-                : redirect('/h5/image/index#/?token='.rawurlencode($data['remember_token']))->send();
+                : redirect('/#/?token='.rawurlencode($data['remember_token']))->send();
         }
         return redirect('/login')->send();
     }
