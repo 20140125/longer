@@ -19,3 +19,7 @@ Route::get('/login', function () {
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/h5/image/index', function () {
+    return view('index');
+});

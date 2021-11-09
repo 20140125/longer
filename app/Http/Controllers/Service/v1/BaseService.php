@@ -213,6 +213,7 @@ class BaseService
         if (!empty($adCode['code']) && $adCode['code'] === Code::SERVER_ERROR) {
             $adCode = 440305;
         }
+        \Illuminate\Support\Facades\Log::error(json_encode($_user));
         $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info', 'forecast']);
         $province = $this->areaModel->getOne(['id' => $area->parent_id], ['name']);
         $this->return['lists'] = array(
