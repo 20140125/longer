@@ -97,7 +97,7 @@ class BaseService extends Controller
      * @param string $keyWords
      * @return string[]
      */
-    public function getConfiguration(string $keyWords = 'hotKeyWords')
+    public function getConfiguration(string $keyWords = 'hotKeyWord')
     {
         $this->configuration = $this->getSystemConfig($keyWords);
         $this->return['lists'] = explode(',', $this->configuration);
