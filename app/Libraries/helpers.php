@@ -22,7 +22,7 @@ if (!function_exists('ajaxReturn')) {
             'code' => $code,
             'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri()
         );
-        saveLog(array('url' => $_item['url'], 'message' => $data['message'] ?? 'successfully', 'response_params' => $data['list'] ?? ''));
+        saveLog(array('url' => $_item['url'], 'message' => $data['message'] ?? 'successfully', 'response_params' => $data['lists'] ?? ''));
         return response()->json($_item);
     }
 }
