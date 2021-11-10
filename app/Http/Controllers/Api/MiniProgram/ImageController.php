@@ -58,7 +58,7 @@ class ImageController extends BaseController
      */
     public function getHotKeyWords()
     {
-        $result = $this->imageService->getHotKeyWords();
+        $result = $this->imageService->getConfiguration(!empty($this->post['keywords']) ? 'hotKeyWords' : $this->post['keywords']);
         return ajaxReturn($result);
     }
 }

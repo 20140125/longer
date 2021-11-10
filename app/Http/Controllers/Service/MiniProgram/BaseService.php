@@ -46,7 +46,7 @@ class BaseService extends Controller
     /**
      * @var $hotKeyWords
      */
-    protected $hotKeyWords;
+    protected $configuration;
     /**
      * @var array $return
      */
@@ -93,13 +93,14 @@ class BaseService extends Controller
     }
 
     /**
-     * todo:获取关键词
+     * todo:获取配置
+     * @param string $keyWords
      * @return string[]
      */
-    public function getHotKeyWords()
+    public function getConfiguration(string $keyWords = 'hotKeyWords')
     {
-        $this->hotKeyWords = $this->getSystemConfig('hotKeyWord');
-        $this->return['lists'] = explode(',', $this->hotKeyWords);
+        $this->configuration = $this->getSystemConfig($keyWords);
+        $this->return['lists'] = explode(',', $this->configuration);
         return $this->return;
     }
 }
