@@ -13,6 +13,6 @@
 <noscript><strong>Please enable JavaScript to continue.</strong></noscript>
 <div id=app></div>
 <script src=/h5/static/js/chunk-vendors.31cba6de.js></script>
-<script src=/h5/static/js/index.5faa6841.js></script>
+<script src=/h5/static/js/index.dc01eb71.js></script>
 </body>
 </html>
