@@ -22,7 +22,7 @@ if (!function_exists('ajaxReturn')) {
             'code' => $code,
             'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri()
         );
-        saveLog(array('url' => $_item['url'], 'message' => $data['message'] ?? 'successfully'));
+        saveLog(array('url' => $_item['url'], 'message' => $data['message'] ?? 'successfully', 'response_params' => $data['list'] ?? ''));
         return response()->json($_item);
     }
 }
@@ -69,7 +69,7 @@ if (!function_exists('saveLog')) {
                 'ip_address' => request()->getClientIp(),
                 'created_at' => time(),
                 'day'        => date('Ymd', time()),
-                'log'        => json_encode(['message' => $form['message'], 'request_params' => $_post], JSON_UNESCAPED_UNICODE)
+                'log'        => json_encode(['message' => $form['message'], 'request_params' => $_post, 'response_params' => $form['response_params']], JSON_UNESCAPED_UNICODE)
             );
             return DB::table('os_system_log')->insert($data);
         } catch (\Exception $exception) {
