@@ -234,7 +234,8 @@ class BaseService
             'weather'           => json_decode($area->info, true),
             'forecast'          => json_decode($area->forecast, true),
             'email'             => $_user->email ?? '',
-            'ip_address'        => request()->ip()
+            'ip_address'        => request()->ip(),
+            'now_time'          => date('Y-m-d H:i:s', time()),
         );
         return $this->return;
     }
