@@ -14,6 +14,7 @@
         "ext-openssl": "*",
         "ext-redis": "*",
         "ext-zip": "*",
+        "ext-mcrypt": "*",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -27,8 +28,7 @@
         "workerman/gateway-worker": "^3.0.0",
         "workerman/globaldata": "^1.0",
         "workerman/mysql": "^1.0",
-        "workerman/phpsocket.io": "^1.1",
-      "ext-mcrypt": "*"
+        "workerman/phpsocket.io": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
