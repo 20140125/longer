@@ -64,32 +64,33 @@ class ImageController extends BaseController
      */
     public function runningSpider(Request $request)
     {
+        date_default_timezone_set('Asia/Shanghai');
         validatePost($this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
         $_user = $request->get('unauthorized');
         switch ($this->post['method']) {
             case 'syncImageType':
-                Artisan::call("longer:sync-spider_image_type {$this->post['keywords']} {$this->post['uuid']}");
+                Artisan::call("longer:sync-spider_image_type {$this->post['keywords']} {$_user->uuid}");
                 break;
             case 'syncImageLists':
                 if (is_numeric($this->post['keywords'])) {
                     $keywords = intval($this->post['keywords']);
-                    Artisan::call("longer:sync-spider_image_id $keywords {$this->post['uuid']}");
+                    Artisan::call("longer:sync-spider_image_id $keywords {$_user->uuid}");
                 } else {
-                    Artisan::call("longer:sync-spider_image_url {$this->post['keywords']} {$this->post['uuid']}");
+                    Artisan::call("longer:sync-spider_image_url {$this->post['keywords']} {$_user->uuid}");
                 }
                 break;
             case 'syncImageSize':
-                Artisan::call("longer:sync-spider_image_size {$this->post['keywords']} {$this->post['uuid']}");
+                Artisan::call("longer:sync-spider_image_size {$this->post['keywords']} {$_user->uuid}");
                 break;
             case 'syncOauth':
                 $rememberToken = !empty($this->post['keywords']) ?  $this->post['keywords'] :  $this->post['remember_token'];
-                Artisan::call("longer:sync-oauth $rememberToken {$this->post['uuid']}");
+                Artisan::call("longer:sync-oauth $rememberToken {$_user->uuid}");
                 break;
             case 'syncImageListsForTags':
-                Artisan::call("longer:sync-spider_image_tag_url {$this->post['keywords']} {$this->post['uuid']}");
+                Artisan::call("longer:sync-spider_image_tag_url {$this->post['keywords']} {$_user->uuid}");
                 break;
             case 'syncSpiderImageSoogif':
-                Artisan::call("longer:sync-spider_image_form_soogif {$this->post['keywords']} {$this->post['uuid']}");
+                Artisan::call("longer:sync-spider_image_form_soogif {$this->post['keywords']} {$_user->uuid}");
                 break;
         }
     }
