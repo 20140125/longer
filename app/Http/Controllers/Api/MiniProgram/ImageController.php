@@ -93,6 +93,7 @@ class ImageController extends BaseController
                 Artisan::call("longer:sync-spider_image_form_soogif {$this->post['keywords']} {$_user->uuid}");
                 break;
         }
+        return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => [$this->post]]);
     }
 
     /**
