@@ -65,7 +65,7 @@ return [
     'redis_port'             => env('REDIS_PORT', '6379'),
     'avatar_url'             => env('AVATAR_URL', ''),
     'websocket'              => env('WEBSOCKET_URL', 'ws://127.0.0.1:7272'),
-    'app_refresh_login_time' => env('APP_REFRESH_LOGIN_TIME', 259200000),
+    'app_refresh_login_time' => env('APP_REFRESH_LOGIN_TIME', 604800),
 
     'asset_url' => env('ASSET_URL', null),
 
