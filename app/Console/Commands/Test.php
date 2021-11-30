@@ -44,7 +44,45 @@ class Test extends Command
      */
     public function handle()
     {
-
+        global $driver;
+        try {
+            $driver = ChromeDriver::start();
+            $driver->manage()->window()->maximize();
+            $driver->get('http://om.tencent.com/attendances/check_out');
+            Log::info(date('Y-m-d H:i:s', time()). '系统准备签入签出，打开浏览器窗口');
+            sleep(2);
+            $driver->findElement(WebDriverBy::id('username'))->sendKeys($this->argument('username'));
+            $this->info('用户名：'.$this->argument('username'));
+            sleep(2);
+            $driver->findElement(WebDriverBy::id('password_input'))->sendKeys($this->argument('password'));
+            $this->info('用户密码：'.$this->argument('password'));
+            sleep(2);
+            $driver->findElement(WebDriverBy::id('rememberButton'))->click();
+            sleep(1);
+            $driver->findElement(WebDriverBy::id('login_button'))->click();
+            sleep(5);
+            $this->info("恭喜{$this->argument('username')}成功登录系统");
+            if (date('H', time()) >= 19) {
+                $this->info('19点后可以签出系统');
+                $driver->findElement(WebDriverBy::id('checkout_btn'))->click();
+            } else if (date('H', time()) <= 9) {
+                $this->info('9点之前签入系统');
+                $driver->findElement(WebDriverBy::id('checkin_btn'))->click();
+            } else {
+                $this->info('不在签入签出范围内');
+            }
+            sleep(5);
+            $this->info('准备确认系统签入签出');
+            $driver->findElement(WebDriverBy::cssSelector("#tdialog-buttonwrap .btn-primary"))->click();
+            sleep(5);
+            $this->info('系统签入签出成功，关闭浏览器');
+            Log::info(date('Y-m-d H:i:s', time()). '系统签入签出成功，关闭浏览器');
+            $driver->quit();
+        } catch (\Exception $exception) {
+            $driver->quit();
+            $this->info($exception->getMessage());
+            Log::error($exception->getMessage());
+        }
     }
 
 }
