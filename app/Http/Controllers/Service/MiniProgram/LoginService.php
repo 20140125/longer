@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Service\MiniProgram;
 
+use App\Http\Controllers\Service\v1\UserService;
 use App\Http\Controllers\Utils\Code;
 use App\Jobs\SyncOauthProcess;
 use Curl\Curl;
@@ -64,7 +65,7 @@ class LoginService extends BaseService
                 'updated_at'     => time(),
                 'remember_token' => encrypt(md5($form['nickName']) . time()),
                 'oauth_type'     => 'weixin',
-                'avatar_url'     => $form['avatarUrl']
+                'avatar_url'     => $form['avatarUrl'] ?? UserService::getInstance()->getUserAvatarImage()
             ];
             $where[] = array('openid', '=', $oauth['openid']);
             $where[] = array('oauth_type', '=', 'weixin');
