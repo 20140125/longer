@@ -161,6 +161,10 @@ return [
     'baidu_appid'  => env('BAIDU_APPID', ''),
     'baidu_secret' => env('BAIDU_APP_SECRET', ''),
 
+    'baidu_image_id'  => env('BAIDU_IMAGE_ID', ''),
+    'baidu_image_appid'  => env('BAIDU_IMAGE_APPID', ''),
+    'baidu_image_secret' => env('BAIDU_IMAGE_SECRET', ''),
+
     'os_china_appid'  => env('OS_CHINA_APPID', ''),
     'os_china_secret' => env('OS_CHINA_APP_SECRET', ''),
 

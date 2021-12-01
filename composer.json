@@ -9,12 +9,6 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "ext-curl": "*",
-        "ext-json": "*",
-        "ext-openssl": "*",
-        "ext-redis": "*",
-        "ext-zip": "*",
-        "ext-mcrypt": "*",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -42,7 +36,10 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\": "database/"
-        }
+        },
+        "classmap": [
+            "app/Libraries/baidu"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
