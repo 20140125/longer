@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'Test'                   => 'App\Console\Commands\Test',
+//        'Test'                   => 'App\Console\Commands\Test',
         'SyncOauth'              => 'App\Console\Commands\SyncOauth',
         'SyncWebPush'            => 'App\Console\Commands\SyncWebPush',
         'SyncCityWeather'        => 'App\Console\Commands\SyncCityWeather',
