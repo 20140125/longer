@@ -7,7 +7,7 @@ use Exception;
 use Goutte\Client;
 use Illuminate\Console\Command;
 
-class SyncSpiderImageSoogif extends Command
+class SyncSpiderImageSooGif extends Command
 {
     /**
      * The name and signature of the console command.

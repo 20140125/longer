@@ -32,14 +32,14 @@ date_default_timezone_set("Asia/Shanghai");
 
 class Events
 {
-    protected static $db = '';
+    protected static string $db = '';
     protected static $chat;
     protected static $redisUsers;
     /**
      * @todo 自动回复消息默认配置
      * @var string[]
      */
-    protected static $sysRobot = [
+    protected static array $sysRobot = [
         'client_id'   => 'longer7f00000108fc00000001',
         'client_name' => 'systemRobot',
         'client_img'  => 'https://cdn.pixabay.com/photo/2016/12/13/21/20/alien-1905155_960_720.png',
@@ -326,7 +326,7 @@ class Events
                     ->select('content')
                     ->query();
                 foreach ($lists as $item) {
-                    array_push($redisMessage['lists'], json_decode($item['content']));
+                    $redisMessage['lists'][] = json_decode($item['content']);
                 }
                 $result['lists'] = $redisMessage['lists'];
                 /* 总记录数 */
@@ -341,7 +341,7 @@ class Events
                     ->select('content')
                     ->query();
                 foreach ($lists as $item) {
-                    array_push($redisMessage['list'], json_decode($item['content']));
+                    $redisMessage['list'][] = json_decode($item['content']);
                 }
                 $result['list'] = $redisMessage['list'];
                 /* 总记录数 */

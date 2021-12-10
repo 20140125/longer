@@ -6,8 +6,6 @@ use App\Http\Controllers\Service\v1\AreaService;
 use App\Http\Controllers\Utils\AMap;
 use App\Models\Api\v1\Area;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-
 
 class SyncCityWeather extends Command
 {

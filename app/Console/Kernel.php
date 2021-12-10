@@ -23,18 +23,18 @@ class Kernel extends ConsoleKernel
         'SyncSpiderImageType'    => 'App\Console\Commands\SyncSpiderImageType',
         'SyncWebDriveService'    => 'App\Console\Commands\SyncWebDriveService',
         'SyncImageSize'          => 'App\Console\Commands\SyncImageSize',
-        'SyncSpiderImageSoogif'        => 'App\Console\Commands\SyncSpiderImageSoogif'
+        'SyncSpiderImageSooGif'        => 'App\Console\Commands\SyncSpiderImageSooGif'
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        //$schedule->command('inspire')->hourly();
     }
 
     /**

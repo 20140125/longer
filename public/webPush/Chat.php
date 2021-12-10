@@ -59,7 +59,7 @@ class Chat
             $num = $this->getMsgLen($recName);
             $recList = $offset + $limit >= $num ? $this->redisClient->lRange($recName, $offset, $num) : $this->redisClient->lRange($recName, $offset, $offset + $limit);
             foreach ($recList as $item) {
-                array_push($message, json_decode($item, true));
+                $message[] = json_decode($item, true);
                 $time[] = json_decode($item, true)['time'];
             }
             array_multisort($message, $time, SORT_ASC);
@@ -70,7 +70,7 @@ class Chat
         $recNum = $this->getMsgLen($recName);
         $recList = $offset + $limit >= $recNum ? $this->redisClient->lRange($recName, $offset, $recNum) : $this->redisClient->lRange($recName, $offset, $offset + $limit);
         foreach ($recList as $item) {
-            array_push($message, json_decode($item, true));
+            $message[] = json_decode($item, true);
             $time[] = json_decode($item, true)['time'];
         }
         //发送的消息
@@ -78,7 +78,7 @@ class Chat
         $sendNum = $this->getMsgLen($sendName);
         $sendLists = $offset + $limit >= $sendNum ? $this->redisClient->lRange($sendName, $offset, $sendNum) : $this->redisClient->lRange($sendName, $offset, $offset + $limit);
         foreach ($sendLists as $item) {
-            array_push($message, json_decode($item, true));
+            $message[] = json_decode($item, true);
             $time[] = json_decode($item, true)['time'];
         }
         array_multisort($message, $time, SORT_ASC);
@@ -97,7 +97,7 @@ class Chat
         $newRecList = array();
         foreach ($recList as $index => $item) {
             if (!$this->compareJson(json_encode($message, JSON_UNESCAPED_UNICODE), $item)) {
-                array_push($newRecList, json_decode($item, true));
+                $newRecList[] = json_decode($item, true);
             }
         }
         //删除redisKey重新赋值
