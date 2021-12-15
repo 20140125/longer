@@ -47,7 +47,7 @@ class SyncSpiderImageTag extends Command
     {
         $url = $this->argument('url');
         $pages = range(18962, 60471);
-        foreach($pages as $page) {
+        foreach ($pages as $page) {
             $this->getImageLists(str_replace('?', $page, $url));
         }
     }

@@ -40,7 +40,7 @@ class Login extends Mailable
     {
         return $this->view('email.login')->with([
             'code' => $this->request['verify_code'],
-            'url'  => config('app.url') . '/login'
+            'url'  => config('app.url') . 'login'
         ]);
     }
 }
