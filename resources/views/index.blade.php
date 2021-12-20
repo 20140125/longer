@@ -6,7 +6,7 @@
     <meta http-equiv=X-UA-Compatible content="IE=edge">
     <title>MagicBox</title>
     <script type="text/javascript">
-        const _hmt = _hmt || [];
+        let _hmt = _hmt || [];
         (function () {
             const hm = document.createElement("script");
             hm.src = "https://hm.baidu.com/hm.js?f89b6a9c4850b466c82a5e1a8e73e76b";
