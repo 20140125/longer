@@ -111,7 +111,7 @@ class SyncUsers extends Command
             return false;
         }
         Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id') . $userId]);
-        Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId, 'uuid' => ['uuid' => config('app.client_id') . $userId]]);
+        Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId, 'uuid' => config('app.client_id').$userId]);
         $this->info('Successfully synchronizing oauth ' . $oauth->username);
     }
 
