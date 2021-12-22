@@ -32,14 +32,14 @@ date_default_timezone_set("Asia/Shanghai");
 
 class Events
 {
-    protected static string $db = '';
+    protected static $db = '';
     protected static $chat;
     protected static $redisUsers;
     /**
      * @todo 自动回复消息默认配置
      * @var string[]
      */
-    protected static array $sysRobot = [
+    protected static $sysRobot = [
         'client_id'   => 'longer7f00000108fc00000001',
         'client_name' => 'systemRobot',
         'client_img'  => 'https://cdn.pixabay.com/photo/2016/12/13/21/20/alien-1905155_960_720.png',

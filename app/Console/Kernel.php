@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
         'SyncSpiderImageType'    => 'App\Console\Commands\SyncSpiderImageType',
         'SyncWebDriveService'    => 'App\Console\Commands\SyncWebDriveService',
         'SyncImageSize'          => 'App\Console\Commands\SyncImageSize',
-        'SyncSpiderImageSooGif'        => 'App\Console\Commands\SyncSpiderImageSooGif'
+        'SyncSpiderImageSooGif'  => 'App\Console\Commands\SyncSpiderImageSooGif'
     ];
 
     /**
