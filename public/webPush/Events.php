@@ -51,7 +51,7 @@ class Events
      * @param $from_client_id //workerman 生成的client_id
      * @param $message
      * @return bool
-     * @throws \Exception|boolean
+     * @throws Exception|boolean
      */
     public static function onMessage($from_client_id, $message)
     {
@@ -74,7 +74,7 @@ class Events
             case 'login':
                 /* 判断是否有房间号 */
                 if (!isset($message_data['room_id'])) {
-                    throw new \Exception("\$message_data['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']} \$message:$message");
+                    throw new Exception("\$message_data['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']} \$message:$message");
                 }
                 /* 把房间号昵称放到session中 */
                 $room_id = $message_data['room_id'];
@@ -169,7 +169,7 @@ class Events
                 }
                 /* 非法请求 */
                 if (!isset($_SESSION['room_id'])) {
-                    throw new \Exception("\$_SESSION['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']}");
+                    throw new Exception("\$_SESSION['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']}");
                 }
                 /* 群聊 */
                 $new_message = array(
@@ -230,7 +230,7 @@ class Events
     /**
      * 当客户端断开连接时
      * @param $client_id //客户端id
-     * @throws \Exception
+     * @throws Exception
      */
     public static function onClose($client_id)
     {
@@ -354,7 +354,7 @@ class Events
             }
             $result['total'] = (int)$total[0]['total'] + (int)$redisMessage['total'];
             return $result;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             self::$db->closeConnection();
             echo $exception;
         }

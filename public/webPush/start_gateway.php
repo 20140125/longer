@@ -44,7 +44,7 @@ $gateway->startPort = 2300;
 // 心跳间隔
 $gateway->pingInterval = 1;
 //如果pingNotResponseLimit = 1，则代表客户端必须定时发送心跳给服务端，否则pingNotResponseLimit*pingInterval=30秒内没有任何数据发来则关闭对应连接，并触发onClose。
-//$gateway->pingNotResponseLimit = 1;
+$gateway->pingNotResponseLimit = 1;
 // 心跳数据
 $gateway->pingData = '{"type":"ping"}';
 // 服务注册地址

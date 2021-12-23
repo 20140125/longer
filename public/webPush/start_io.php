@@ -145,7 +145,7 @@ $sender_io->on('workerStart', function () {
     /* 执行监听 */
     $inner_http_worker->listen();
     /* todo:定时器 (只有在客户端在线数变化了才广播，减少不必要的客户端通讯)  */
-    Timer::add(2, function () {
+    Timer::add(1, function () {
         global $sender_io, $redis, $day, $log_last_count, $push_last_count, $online_user_count, $oauth_last_count, $times, $user_push_state;
         $redisUser = $redis->SMEMBERS(REDIS_KEY);
         foreach ($redisUser as $user) {
@@ -201,16 +201,16 @@ $sender_io->on('workerStart', function () {
         $log = $db->select('day,count(*) as total')->from('os_system_log')->where("day>=" . date('Ymd', strtotime("-{$times} day")))->groupBy(['day'])->query();
         $logDay = $logTotal = array();
         foreach ($log as $value) {
-            array_push($logDay, intval($value['day']));
+            $logDay[] = intval($value['day']);
         }
         foreach ($day as $item) {
             if (!in_array($item, $logDay)) {
-                array_push($log, ['day' => $item, 'total' => 0]);
+                $log[] = ['day' => $item, 'total' => 0];
             }
         }
         array_multisort($log, SORT_ASC);
         foreach ($log as $item) {
-            array_push($logTotal, intval($item['total']));
+            $logTotal[] = intval($item['total']);
         }
         return $logTotal;
     }
@@ -227,16 +227,16 @@ $sender_io->on('workerStart', function () {
             ->groupBy(["FROM_UNIXTIME(created_at,'%Y%m%d')"])->query();
         $pushDay = $pushTotal = array();
         foreach ($push as $value) {
-            array_push($pushDay, intval($value['day']));
+            $pushDay[] = intval($value['day']);
         }
         foreach ($day as $item) {
             if (!in_array($item, $pushDay)) {
-                array_push($push, ['day' => $item, 'total' => 0]);
+                $push[] = ['day' => $item, 'total' => 0];
             }
         }
         array_multisort($push, SORT_ASC);
         foreach ($push as $item) {
-            array_push($pushTotal, intval($item['total']));
+            $pushTotal[] = intval($item['total']);
         }
         return $pushTotal;
     }
@@ -253,16 +253,16 @@ $sender_io->on('workerStart', function () {
             ->groupBy(["FROM_UNIXTIME(created_at,'%Y%m%d')"])->query();
         $oauthDay = $oauthTotal = array();
         foreach ($oauth as $value) {
-            array_push($oauthDay, intval($value['day']));
+            $oauthDay[] = intval($value['day']);
         }
         foreach ($day as $item) {
             if (!in_array($item, $oauthDay)) {
-                array_push($oauth, ['day' => $item, 'total' => 0]);
+                $oauth[] = ['day' => $item, 'total' => 0];
             }
         }
         array_multisort($oauth, SORT_ASC);
         foreach ($oauth as $item) {
-            array_push($oauthTotal, intval($item['total']));
+            $oauthTotal[] = intval($item['total']);
         }
         return $oauthTotal;
     }
