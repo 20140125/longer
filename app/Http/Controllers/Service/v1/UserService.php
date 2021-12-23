@@ -156,7 +156,8 @@ class UserService extends BaseService
         $form['uuid'] = config('app.client_id');
         $form['status'] = 1;
         $form['role_id'] = 2;
-        $form['username'] = explode("@", $form['email'])[0];
+        $form['username'] = (getXingLists())[rand(0, count(getXingLists()) - 1)].(getMingLists())[rand(0, count(getMingLists()) - 1)];
+        $form['char'] = getFirstChar($form['username']);
         $id = $this->userModel->saveOne($form);
         //新用户注册生成client_id
         $this->userModel->updateOne(['id' => $id], [$form['uuid'] => config('app.client_id') . $id]);

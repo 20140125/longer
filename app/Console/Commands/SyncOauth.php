@@ -108,7 +108,7 @@ class SyncOauth extends Command
     {
         $salt = getRoundNum(8, 'all');
         $userArray = [
-            'username'       => $oauth->username,
+            'username'       => (getXingLists())[rand(0, count(getXingLists()) - 1)].(getMingLists())[rand(0, count(getMingLists()) - 1)],
             'avatar_url'     => $oauth->avatar_url,
             'remember_token' => $oauth->remember_token,
             'email'          => $oauth->email ?? '',
@@ -122,6 +122,7 @@ class SyncOauth extends Command
             'phone_number'   => '',
             'uuid'           => ''
         ];
+        $userArray['char'] = getFirstChar($userArray['username']);
         $userId = Users::getInstance()->saveOne($userArray);
         if (!$userId) {
             WebPush('Failed save users ' . $oauth->username, $this->argument('uuid'), 'command');
