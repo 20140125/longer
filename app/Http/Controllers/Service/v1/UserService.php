@@ -130,6 +130,7 @@ class UserService extends BaseService
         $this->setVerifyCode($form['remember_token'], $form['remember_token'], config('app.app_refresh_login_time'));
         $form['uuid'] = $user->uuid ?? '';
         $form['avatar_url'] = $user->avatar_url ?? $this->getUserAvatarImage();
+        $form['username'] = $user->username ?? '';
         $form['socket'] = config('app.socket_url');
         $form['websocket'] = config('app.websocket');
         $form['url'] = config('app.url');
