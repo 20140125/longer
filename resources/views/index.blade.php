@@ -13,14 +13,14 @@
             s.parentNode.insertBefore(hm, s);
         })();
     </script>
-    <script>const coverSupport = 'CSS' in window && typeof CSS.supports === 'function' && (CSS.supports('top: env(a)') || CSS.supports('top: constant(a)'));
+    <script> const coverSupport = 'CSS' in window && typeof CSS.supports === 'function' && (CSS.supports('top: env(a)') || CSS.supports('top: constant(a)'));
         document.write('<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' + (coverSupport ? ', viewport-fit=cover' : '') + '" />')</script>
     <link rel=stylesheet href=/h5/static/index.a5c69d49.css>
 </head>
 <body>
 <noscript><strong>Please enable JavaScript to continue.</strong></noscript>
 <div id=app></div>
-<script src=/h5/static/js/chunk-vendors.237aeec2.js></script>
-<script src=/h5/static/js/index.8a977de3.js></script>
+<script src=/h5/static/js/chunk-vendors.479c13fc.js></script>
+<script src=/h5/static/js/index.ead8bb5d.js></script>
 </body>
 </html>
