@@ -4,7 +4,7 @@
     <meta charset=utf-8>
     <meta name="referrer" content="no-referrer">
     <meta http-equiv=X-UA-Compatible content="IE=edge">
-    <title>MagicBox</title>
+    <title>魔盒逗图</title>
     <script type="text/javascript">
         (function () {
             const hm = document.createElement("script");
@@ -20,7 +20,7 @@
 <body>
 <noscript><strong>Please enable JavaScript to continue.</strong></noscript>
 <div id=app></div>
-<script src=/h5/static/js/chunk-vendors.bb6f0bce.js></script>
-<script src=/h5/static/js/index.0fa520f2.js></script>
+<script src=/h5/static/js/chunk-vendors.79b29b46.js></script>
+<script src=/h5/static/js/index.a470453d.js></script>
 </body>
 </html>
