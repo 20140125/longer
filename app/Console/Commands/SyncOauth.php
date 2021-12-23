@@ -49,9 +49,9 @@ class SyncOauth extends Command
             WebPush('Request remember token is required', $this->argument('uuid'), 'command');
             return false;
         }
-        WebPush('Starting synchronizing the oauth list', $this->argument('uuid'), 'command');
+        WebPush('Starting synchronizing the oauth lists', $this->argument('uuid'), 'command');
         $this->syncOauth();
-        WebPush('Finished synchronizing the oauth list', $this->argument('uuid'), 'command');
+        WebPush('Finished synchronizing the oauth lists', $this->argument('uuid'), 'command');
     }
 
     /**
@@ -59,9 +59,9 @@ class SyncOauth extends Command
      */
     protected function syncClientList()
     {
-        WebPush('Starting synchronizing the client user list', $this->argument('uuid'), 'command');
+        WebPush('Starting synchronizing the client user lists', $this->argument('uuid'), 'command');
         UserService::getInstance()->updateUsersAvatarImage();
-        WebPush('Finished synchronizing the client user list', $this->argument('uuid'), 'command');
+        WebPush('Finished synchronizing the client user lists', $this->argument('uuid'), 'command');
     }
 
     /**
@@ -72,7 +72,7 @@ class SyncOauth extends Command
     {
         DB::beginTransaction();
         try {
-            $oauth = Oauth::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]) ?? Users::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]);
+            $oauth = Oauth::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]);
             if (!$oauth) {
                 WebPush('Remember token is invalid', $this->argument('uuid'), 'command');
                 return false;

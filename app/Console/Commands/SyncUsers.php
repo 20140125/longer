@@ -55,79 +55,22 @@ class SyncUsers extends Command
     {
         DB::beginTransaction();
         try {
-            $oauth = Oauth::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]);
-            if (!$oauth) {
+            $users = Users::getInstance()->getOne(['remember_token' => $this->argument('remember_token')]);
+            if (!$users) {
                 $this->error('Remember token is invalid');
                 return false;
             }
-            $users = Users::getInstance()->getOne(['id' => $oauth->uid]);
-            if ($users) {
-                /* todo：更新用户信息 */
-                Users::getInstance()->updateOne(['id' => $oauth->uid], ['remember_token' => $this->argument('remember_token')]);
-                $this->info('Successfully updated users： ' . $users->username);
-                /* todo：更新用户个人中心 */
-                $userCenter = UserCenter::getInstance()->getOne(['uid' => $oauth->uid]);
-                if ($userCenter) {
-                    UserCenter::getInstance()->updateOne(['id' => $userCenter->id], ['token' => $this->argument('remember_token'), 'u_name' => $oauth->username]);
-                    $this->info('Successfully updated users center： ' . $users->username);
-                }
-                return false;
+            /* todo：更新授权用户信息 */
+            if (Oauth::getInstance()->getOne(['uid' => $users->id])) {
+                Oauth::getInstance()->updateOne(['uid' => $users->id], ['remember_token' => $this->argument('remember_token')]);
             }
-            $this->saveUsers($oauth);
+            $this->info('Successfully updated Oauth Token： ' . $users->username);
+            /* todo：更新用户个人中心 */
+            UserCenter::getInstance()->updateOne(['uid' => $users->id], ['token' => $this->argument('remember_token'), 'u_name' => $users->username]);
             DB::commit();
         } catch (\Exception $exception) {
             $this->error($exception->getMessage());
             DB::rollback();
-        }
-    }
-
-    /**
-     * todo:添加用户
-     * @param $oauth
-     * @return false|void
-     */
-    protected function saveUsers($oauth)
-    {
-        $salt = getRoundNum(8, 'all');
-        $userArray = [
-            'username'       => (getXingLists())[rand(0, count(getXingLists()) - 1)].(getMingLists())[rand(0, count(getMingLists()) - 1)],
-            'avatar_url'     => $oauth->avatar_url,
-            'remember_token' => $oauth->remember_token,
-            'email'          => $oauth->email ?? '',
-            'salt'           => $salt,
-            'password'       => md5(md5('123456789') . $salt),
-            'role_id'        => $oauth->role_id,
-            'ip_address'     => request()->ip(),
-            'created_at'     => time(),
-            'updated_at'     => time(),
-            'status'         => $oauth->status,
-            'phone_number'   => '',
-            'uuid'           => ''
-        ];
-        $userArray['char'] = getFirstChar($userArray['username']);
-        $userId = Users::getInstance()->saveOne($userArray);
-        if (!$userId) {
-            $this->error('Failed save users ' . $oauth->username);
-            return false;
-        }
-        Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id') . $userId]);
-        Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId, 'uuid' => config('app.client_id').$userId]);
-        $this->saveUserCenter($userArray);
-        $this->info('Successfully synchronizing oauth ' . $oauth->username);
-    }
-
-    /**
-     * todo:添加用户中心记录
-     * @param $oauth
-     */
-    protected function saveUserCenter($oauth)
-    {
-        $arr = ['u_name' => $oauth->username, 'token' => $oauth->remember_token, 'uid' => $oauth->uid, 'notice_status' => 1, 'user_status' => 1];
-        $id = UserCenter::getInstance()->saveOne($arr);
-        if ($id) {
-            $this->info('Successfully save user center： ' . $oauth->username);
-        } else {
-            $this->error('Failed save user center： ' . $oauth->username);
         }
     }
 }
