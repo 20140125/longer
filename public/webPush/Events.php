@@ -288,11 +288,7 @@ class Events
             $users[$key]['online'] = false;
             foreach ($redisUser as $redis) {
                 if ($users[$key]['uuid'] === $redis) {
-<<<<<<< HEAD
-                     $users[$key]['online'] = true;
-=======
                     $users[$key]['online'] = true;
->>>>>>> 212f8e5127e826f3bdcf7fa5d4de25fd74b61133
                 }
             }
             $unreadMsg = self::$chat->getUnreadMsgAllCount($users[$key]['uuid']) ?? [];
