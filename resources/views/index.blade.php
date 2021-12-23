@@ -20,7 +20,7 @@
 <body>
 <noscript><strong>Please enable JavaScript to continue.</strong></noscript>
 <div id=app></div>
-<script src=/h5/static/js/chunk-vendors.79b29b46.js></script>
-<script src=/h5/static/js/index.a470453d.js></script>
+<script src=/h5/static/js/chunk-vendors.237aeec2.js></script>
+<script src=/h5/static/js/index.8a977de3.js></script>
 </body>
 </html>
