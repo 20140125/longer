@@ -287,19 +287,21 @@ class Events
             $users[$key]['room_id'] = '1200';
             $users[$key]['online'] = false;
             foreach ($redisUser as $redis) {
-                $users[$key]['online'] = $redis === $users[$key]['uuid'];
+                if ($users[$key]['uuid'] === $redis) {
+                    $users[$key]['online'] = true;
+                }
             }
             $unreadMsg = self::$chat->getUnreadMsgAllCount($users[$key]['uuid']) ?? [];
             /* 单条用户展示未读消息数 */
             $unreadArr = array();
             foreach ($unreadMsg as $from => $total) {
                 $unreadArr[] = ['form' => $from, 'total' => $total];
-                $users[$key]['unread_count'] += $total;
+                $item['unread_count'] += $total;
             }
             /* 未读消息数 */
             $users[$key]['unread'] = $unreadArr;
-            $arr[$users[$key]['uuid']] = $users[$key];
-            $sort[$users[$key]['uuid']] = $users[$key]['online'];
+            $arr[$item['uuid']] = $users[$key];
+            $sort[$item['uuid']] = $item['online'];
         }
         array_multisort($sort, SORT_DESC, $arr);
         return $arr;
