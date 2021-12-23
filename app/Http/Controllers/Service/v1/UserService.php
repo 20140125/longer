@@ -196,7 +196,7 @@ class UserService extends BaseService
      */
     public function updateUsersAvatarImage()
     {
-        $_column = ['username as client_name', 'avatar_url as client_img', 'uuid', 'id'];
+        $_column = ['username as client_name', 'avatar_url as client_img', 'uuid', 'id', 'char'];
         $users = $this->userModel->getLists([], [], [], true, $_column);
         foreach ($users as &$user) {
             $user->centerInfo = $this->userCenterModel->getOne(['uid' => $user->id], ['desc', 'tags', 'ip_address', 'local']);
