@@ -74,7 +74,6 @@ class SyncUsers extends Command
                 return false;
             }
             $this->saveUsers($oauth);
-            $this->saveUserCenter($oauth);
             DB::commit();
         } catch (\Exception $exception) {
             $this->error($exception->getMessage());
@@ -113,6 +112,7 @@ class SyncUsers extends Command
         }
         Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id') . $userId]);
         Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId, 'uuid' => config('app.client_id').$userId]);
+        $this->saveUserCenter($userArray);
         $this->info('Successfully synchronizing oauth ' . $oauth->username);
     }
 
