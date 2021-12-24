@@ -7,6 +7,7 @@ use App\Http\Controllers\Utils\Code;
 use App\Jobs\SyncUserCenterProcess;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 class UserCenterService extends BaseService
@@ -60,8 +61,8 @@ class UserCenterService extends BaseService
             $this->return['message'] = 'Error update user center';
             return $this->return;
         }
-        /* todo：执行用户相关信息 */
-        dispatch(new SyncUserCenterProcess($form))->onQueue('users');
+        // 更新用户画像
+        UserService::getInstance()->updateUsersAvatarImage();
         $this->return['message'] = 'Successfully updated user center';
         $this->return['lists'] = $form;
         return $this->return;
