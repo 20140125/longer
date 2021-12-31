@@ -30,7 +30,7 @@ class LogService extends BaseService
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getLog($where, $columns = ['*'])
+    public function getLog($where, array $columns = ['*'])
     {
         return $this->areaModel->getOne($where, $columns);
     }
