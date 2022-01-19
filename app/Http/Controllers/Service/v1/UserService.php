@@ -123,7 +123,7 @@ class UserService extends BaseService
         $form['remember_token'] = encrypt($form['password']);
         $form['ip_address'] = getServerIp();
         $form['updated_at'] = time();
-        $form['created_at'] = !empty($form['created_at']) ? strtotime($form['created_at']) : time();
+        $form['created_at'] = !empty($user->created_at)? $user->created_at : time();
         $form['char'] = getFirstChar($user->username);
         $this->userModel->updateOne(['id' => $user->id], $form);
         /* 设置用户标识 */
