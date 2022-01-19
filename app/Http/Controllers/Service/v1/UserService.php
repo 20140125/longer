@@ -124,7 +124,7 @@ class UserService extends BaseService
         $form['ip_address'] = getServerIp();
         $form['updated_at'] = time();
         $form['created_at'] = !empty($form['created_at']) ? strtotime($form['created_at']) : time();
-        $form['char'] = getFirstChar($form['username']);
+        $form['char'] = getFirstChar($user->username);
         $this->userModel->updateOne(['id' => $user->id], $form);
         /* 设置用户标识 */
         $this->setVerifyCode($form['remember_token'], $form['remember_token'], config('app.app_refresh_login_time'));

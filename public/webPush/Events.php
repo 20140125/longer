@@ -41,7 +41,7 @@ class Events
      */
     protected static $sysRobot = [
         'client_id'   => 'longer7f00000108fc00000001',
-        'client_name' => 'systemRobot',
+        'client_name' => '客服',
         'client_img'  => 'https://cdn.pixabay.com/photo/2016/12/13/21/20/alien-1905155_960_720.png',
         'content'     => '欢迎您的到来！'
     ];

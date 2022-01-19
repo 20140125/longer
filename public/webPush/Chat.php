@@ -124,7 +124,7 @@ class Chat
         $total = count($jsonA);
         $num = count($field);
         foreach ($jsonA as $i => $a) {
-            if (!in_array($i, $field) && $jsonA[$i] == $jsonB[$i]) {
+            if (!in_array($i, $field) && $a == $jsonB[$i]) {
                 $num++;
             }
         }

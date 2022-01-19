@@ -64,6 +64,16 @@ class RedisClient extends Controller
     }
 
     /**
+     * todo: Select 命令用于切换到指定的数据库，数据库索引号 index 用数字值指定，以 0 作为起始索引值。
+     * @param int $index
+     * @return bool
+     */
+    public function selectDB(int $index = 0)
+    {
+        return $this->redisClient->select($index);
+    }
+
+    /**
      * TODO：数据存储 （Redis 字符串(String)）
      * @param $key
      * @param $value
@@ -193,7 +203,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:Redis Hgetall 命令用于返回哈希表中，所有的字段和值。（ Redis 哈希 (hash)）
+     * TODO:Redis hGetAll 命令用于返回哈希表中，所有的字段和值。（ Redis 哈希 (hash)）
      * @param $key
      * @return array
      */
