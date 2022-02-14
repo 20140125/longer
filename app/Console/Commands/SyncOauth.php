@@ -93,7 +93,7 @@ class SyncOauth extends Command
             $this->saveUsers($oauth);
             DB::commit();
         } catch (\Exception $exception) {
-            $this->error($exception);
+            $this->error($exception->getMessage());
             DB::rollback();
         }
     }
