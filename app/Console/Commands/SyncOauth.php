@@ -129,6 +129,7 @@ class SyncOauth extends Command
         }
         Users::getInstance()->updateOne(['id' => $userId], ['uuid' => config('app.client_id') . $userId]);
         Oauth::getInstance()->updateOne(['id' => $oauth->id], ['uid' => $userId, 'uuid' => config('app.client_id').$userId]);
+        $userArray['uid'] = $userId;
         $this->saveUserCenter($userArray);
         WebPush('Successfully synchronizing oauth ' . $oauth->username, $this->argument('uuid'), 'command');
     }
