@@ -139,12 +139,12 @@ class SyncOauth extends Command
      */
     protected function saveUserCenter($oauth)
     {
-        $arr = ['u_name' => $oauth->username, 'token' => $oauth->remember_token, 'uid' => $oauth->uid, 'notice_status' => 1, 'user_status' => 1];
+        $arr = ['u_name' => $oauth['username'], 'token' => $oauth['remember_token'], 'uid' => $oauth['uid'], 'notice_status' => 1, 'user_status' => 1];
         $id = UserCenter::getInstance()->saveOne($arr);
         if ($id) {
-            WebPush('Successfully save user center： ' . $oauth->username, $this->argument('uuid'), 'command');
+            WebPush('Successfully save user center： ' . $oauth['username'], $this->argument('uuid'), 'command');
         } else {
-            WebPush('Failed save user center： ' . $oauth->username, $this->argument('uuid'), 'command');
+            WebPush('Failed save user center： ' . $oauth['username'], $this->argument('uuid'), 'command');
         }
     }
 }
