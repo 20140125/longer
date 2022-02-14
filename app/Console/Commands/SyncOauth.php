@@ -86,14 +86,14 @@ class SyncOauth extends Command
                 $userCenter = UserCenter::getInstance()->getOne(['uid' => $oauth->uid]);
                 if ($userCenter) {
                     UserCenter::getInstance()->updateOne(['id' => $userCenter->id], ['token' => $this->argument('remember_token'), 'u_name' => $oauth->username]);
-                    WebPush('Successfully updated users center： ' . $users->username, $this->argument('uuid'), 'command');
+                    WebPush('Successfully updated users center： ' . $oauth->username, $this->argument('uuid'), 'command');
                 }
                 return false;
             }
             $this->saveUsers($oauth);
             DB::commit();
         } catch (\Exception $exception) {
-            $this->error($exception->getMessage());
+            $this->error($exception);
             DB::rollback();
         }
     }
