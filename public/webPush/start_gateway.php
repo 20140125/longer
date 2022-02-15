@@ -19,7 +19,7 @@ require_once '../../vendor/autoload.php';
 
 // gateway 进程
 if (in_array(PHP_OS, ['WINNT', 'Darwin'])) {
-    $gateway = new Gateway("websocket://0.0.0.0:7272");
+    $gateway = new Gateway('websocket://0.0.0.0:7272');
 } else {
     $context = array(
         'ssl' => array(
@@ -28,7 +28,7 @@ if (in_array(PHP_OS, ['WINNT', 'Darwin'])) {
             'verify_peer' => false,
         )
     );
-    $gateway = new Gateway("websocket://0.0.0.0:7272", $context);
+    $gateway = new Gateway('websocket://0.0.0.0:7272', $context);
     // 开启SSL，websocket+SSL 即wss
     $gateway->transport = 'ssl';
 }
