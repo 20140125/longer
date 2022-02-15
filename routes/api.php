@@ -116,7 +116,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get', 'post'], 'database/alter', [App\Http\Controllers\Api\v1\DatabaseController::class, 'alterTable'])->name('alterTable');
         /* todo:工具管理 */
         Route::match(['get', 'post'], 'tools/getAddress', [App\Http\Controllers\Api\v1\ToolsController::class, 'getAddress'])->name('getAddress');
-        Route::match(['get', 'post'], 'tools/getWeather', [App\Http\Controllers\Api\v1\ToolsController::class, 'getWeather'])->name('getAddress');
+        Route::match(['get', 'post'], 'tools/getWeather', [App\Http\Controllers\Api\v1\ToolsController::class, 'getWeather'])->name('getWeather');
         /*  todo：爬虫管理 */
         Route::match(['get', 'post'], 'spider/index', [App\Http\Controllers\Api\v1\SpiderController::class, 'getSpiderConfig'])->name('getSpiderConfig');
         Route::match(['get', 'post'], 'spider/running', [App\Http\Controllers\Api\v1\SpiderController::class, 'runningSpider'])->name('runningSpider');
