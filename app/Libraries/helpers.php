@@ -667,12 +667,12 @@ if (!function_exists('getFirstChar')) {
         try {
             $char = ord(substr($s0, 0, 1));
             if ($char >= ord('A') and $char <= ord('z')) {
-                return strtoupper($s0{0});
+                return substr(strtoupper($s0), 0, 1);
             }
             $s1  = iconv('UTF-8', 'GB2312', $s0);
             $s2  = iconv('GB2312', 'UTF-8', $s1);
             $s = $s2 == $s0 ? $s1 : $s0;
-            $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
+            $asc = ord($s) * 256 + ord($s) - 65536;
             if ($asc >= -20319 and $asc <= -20284) {
                 return 'A';
             }

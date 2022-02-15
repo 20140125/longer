@@ -94,9 +94,8 @@ class SyncWebPush extends Command
                     Push::getInstance()->updateOne(['id' => $item->id], (array)$item);
                     $bar->advance();
                 }
-                
+                $bar->finish();
             }
-            $bar->finish();
         } catch (\Exception $exception) {
             $this->error($exception);
         }
