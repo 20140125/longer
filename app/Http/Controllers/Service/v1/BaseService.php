@@ -316,7 +316,7 @@ class BaseService
         $_authIds = [];
         /* todo:权限续期 */
         if ($status == 1) {
-            array_push($_role_authIds, $_auth->id);
+            $_role_authIds[] = $_auth->id;
             foreach ($_role_authIds as $item) {
                 if (!in_array($_auth->id, $_authIds)) {
                     $_authIds[] = (int)$item;
