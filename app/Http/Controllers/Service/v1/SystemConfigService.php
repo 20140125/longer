@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
+use Illuminate\Support\Facades\Log;
 
 class SystemConfigService extends BaseService
 {
@@ -56,6 +57,7 @@ class SystemConfigService extends BaseService
         if (empty($user)) {
             $form['name'] = 'Oauth';
         }
+        Log::error($form['name']);
         $this->return['lists'] = $this->systemConfigModel->getOne(['name' => $form['name']], ['children']);
         $this->return['lists']->children = json_decode($this->return['lists']->children, true);
         return $this->return;
