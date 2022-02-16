@@ -2,6 +2,7 @@
 /public/hot
 /app/Console/Commands/Test.php
 /public/storage
+/public/webPush/config/db.php
 /public/rsa/rsa_public_key.pem
 /public/rsa/rsa_private_key.pem
 /storage/*.key
