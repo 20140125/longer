@@ -42,17 +42,6 @@ class OAuthController extends Controller
     }
 
     /**
-     * TODO:：校验标识是否正确
-     * @param $storeState
-     * @param $state
-     * @return bool
-     */
-    public function checkState($storeState, $state)
-    {
-        return $storeState === $state;
-    }
-
-    /**
      * TODO:：数据转换成数组格式
      * @param $data
      * @return mixed

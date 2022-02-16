@@ -16,9 +16,9 @@ class OsChinaController extends OAuthController
      */
     protected $appid;
     /**
-     * @var string $appsecret
+     * @var string $appSecret
      */
-    protected $appsecret;
+    protected $appSecret;
     /**
      * @var string $redirectUri
      */
@@ -35,25 +35,25 @@ class OsChinaController extends OAuthController
     /**
      * OsChinaController constructor.
      * @param string $appid
-     * @param string $appsecret
+     * @param string $appSecret
      */
-    public function __construct(string $appid, string $appsecret)
+    public function __construct(string $appid, string $appSecret)
     {
         parent::__construct();
         $this->appid = $appid;
-        $this->appsecret = $appsecret;
+        $this->appSecret = $appSecret;
         $this->redirectUri = config('app.url') . 'api/v1/callback/osChina';
     }
 
     /**
      * @param string $appid
-     * @param string $appsecret
+     * @param string $appSecret
      * @return static
      */
-    public static function getInstance(string $appid, string $appsecret)
+    public static function getInstance(string $appid, string $appSecret)
     {
         if (!self::$instance instanceof self) {
-            self::$instance = new static($appid, $appsecret);
+            self::$instance = new static($appid, $appSecret);
         }
         return self::$instance;
     }
@@ -85,7 +85,7 @@ class OsChinaController extends OAuthController
     {
         $arr = [
             'client_id'     => $this->appid,
-            'client_secret' => $this->appsecret,
+            'client_secret' => $this->appSecret,
             'grant_type'    => 'authorization_code',
             'code'          => $code,
             'redirect_uri'  => $this->redirectUri,
@@ -110,7 +110,7 @@ class OsChinaController extends OAuthController
     {
         $arr = [
             'client_id'     => $this->appid,
-            'client_secret' => $this->appsecret,
+            'client_secret' => $this->appSecret,
             'grant_type'    => 'refresh_token',
             'redirect_uri'  => $this->redirectUri,
             'refresh_token' => $refreshToken,

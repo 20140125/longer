@@ -16,9 +16,9 @@ class BaiDuController extends OAuthController
      */
     protected $appid;
     /**
-     * @var string $appsecret
+     * @var string $appSecret
      */
-    protected $appsecret;
+    protected $appSecret;
     /**
      * @var string API 业务域名
      */
@@ -35,25 +35,25 @@ class BaiDuController extends OAuthController
     /**
      * BaiDu constructor.
      * @param string $appid
-     * @param string $appsecret
+     * @param string $appSecret
      */
-    public function __construct(string $appid, string $appsecret)
+    public function __construct(string $appid, string $appSecret)
     {
         parent::__construct();
         $this->appid = $appid;
-        $this->appsecret = $appsecret;
+        $this->appSecret = $appSecret;
         $this->redirectUri = config('app.url') . 'api/v1/callback/baidu';
     }
 
     /**
      * @param string $appid
-     * @param string $appsecret
+     * @param string $appSecret
      * @return BaiDuController
      */
-    public static function getInstance(string $appid, string $appsecret)
+    public static function getInstance(string $appid, string $appSecret)
     {
         if (!self::$instance instanceof self) {
-            self::$instance = new static($appid, $appsecret);
+            self::$instance = new static($appid, $appSecret);
         }
         return self::$instance;
     }
@@ -100,7 +100,7 @@ class BaiDuController extends OAuthController
             'grant_type'    => 'authorization_code',
             'code'          => $code,
             'client_id'     => $this->appid,
-            'client_secret' => $this->appsecret,
+            'client_secret' => $this->appSecret,
             'redirect_uri'  => $this->redirectUri,
         ];
         $result = $this->curl->get($this->apiUrl . 'oauth/2.0/token?' . http_build_query($arr));
@@ -161,7 +161,7 @@ class BaiDuController extends OAuthController
             'grant_type'    => 'refresh_token',
             'refresh_token' => $refreshToken,
             'client_id'     => $this->appid,
-            'client_secret' => $this->appsecret,
+            'client_secret' => $this->appSecret,
             'scope'         => 'basic'
         );
         $result = $this->curl->get($this->apiUrl . 'oauth/2.0/token?' . http_build_query($arr));
