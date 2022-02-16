@@ -40,7 +40,7 @@ class UsersController extends BaseController
         $rules = [
             'username'     => 'required|string',
             'email'        => 'required|string|email',
-            'phone_number' => 'required|integer|max:11',
+            'phone_number' => 'required|integer|size:11',
             'avatar_url'   => 'required|string|url',
             'id'           => 'required|integer',
             'role_id'      => 'required|integer',
