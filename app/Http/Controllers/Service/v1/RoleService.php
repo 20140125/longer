@@ -64,12 +64,13 @@ class RoleService extends BaseService
      */
     public function saveRole($form)
     {
-        $form = $this->__initRole($form);
+        $form = $this->initRole($form);
         $form['created_at'] = time();
         $result = $this->roleModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'save role failed';
+            return $this->return;
         }
         $this->return['lists'] = $form;
         $this->return['message'] = 'save role successfully';
@@ -84,7 +85,7 @@ class RoleService extends BaseService
     public function updateRole($form)
     {
         if (empty($form['act'])) {
-            $form = $this->__initRole($form);
+            $form = $this->initRole($form);
             $form['created_at'] = strtotime($form['created_at']);
         }
         if (!empty($form['act'])) {
@@ -94,6 +95,7 @@ class RoleService extends BaseService
         if (!$result) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'update role failed';
+            return $this->return;
         }
         $this->return['lists'] = $form;
         $this->return['message'] = 'update role successfully';
@@ -105,7 +107,7 @@ class RoleService extends BaseService
      * @param $form
      * @return mixed
      */
-    protected function __initRole($form)
+    protected function initRole($form)
     {
         $_auth_ids = $this->getDefaultAuth($form['auth_ids']);
         $_authLists = $this->authModel->getLists([], ['href', 'api'], ['key' => 'id', 'ids' => $_auth_ids]);
