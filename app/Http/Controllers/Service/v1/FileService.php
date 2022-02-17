@@ -66,9 +66,9 @@ class FileService extends BaseService
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'File does not exist';
         }
-        $result = writeFile($form['path'], $form['content']);
+        $result = writeFile($form['path'], $form['content'] ?? '');
         !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
-        $this->return['message'] = !empty($result['code']) ? $this->return['message'] = $result['message'] : 'update file successfully';
+        $this->return['message'] = !empty($result['code']) ? $result['message'] : 'update file successfully';
         return $this->return;
     }
 

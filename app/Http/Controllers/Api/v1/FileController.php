@@ -35,7 +35,7 @@ class FileController extends BaseController
      */
     public function updateFile()
     {
-        validatePost($this->post, ['path' => 'required|string', 'content' => 'required|string']);
+        validatePost($this->post, ['path' => 'required|string']);
         $result = $this->fileService->updateFile($this->post);
         return ajaxReturn($result);
     }
