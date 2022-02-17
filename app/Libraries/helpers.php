@@ -237,27 +237,7 @@ if (!function_exists('getFileLists')) {
     {
         try {
             $fileArr = array();
-            $_defaultPermission = [
-                '.',
-                '..',
-                'vendor',
-                '.gitattributes',
-                '.git',
-                '.gitignore',
-                '.env',
-                '.idea',
-                '.editorconfig',
-                '.DS_Store',
-                'node_modules',
-                '.styleci.yml',
-                'db.php',
-                'rsa',
-                'css',
-                'js',
-                'static',
-                'favicon.ico',
-                'backup'
-            ];
+            $_defaultPermission = ['.', '..'];
             foreach ($permissionFile as $permission) {
                 $_defaultPermission[] = $permission;
             }

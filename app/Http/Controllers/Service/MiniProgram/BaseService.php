@@ -8,19 +8,35 @@ use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\SooGif;
 use App\Models\Api\v1\SooGifType;
 use App\Models\Api\v1\SystemConfig;
-use Carbon\Carbon;
-use Illuminate\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Facades\Cache;
 
 class BaseService extends Controller
 {
+    private function __clone()
+    {
+        // TODO: Implement __clone() method.
+    }
+
     /**
-     * @var Repository|Application|mixed
+     * @var static $instance
+     */
+    private static $instance;
+
+    /**
+     * @return static
+     */
+    public static function getInstance()
+    {
+        if (!self::$instance instanceof self) {
+            self::$instance = new static();
+        }
+        return self::$instance;
+    }
+    /**
+     * @var mixed
      */
     protected $appid;
     /**
-     * @var Repository|Application|mixed
+     * @var mixed
      */
     protected $appSecret;
     /**
@@ -63,15 +79,17 @@ class BaseService extends Controller
         /* todo:信息输出 */
         $this->return = array('code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => []);
         /* todo：获取小程序配置 */
-        $this->getImageConfiguration();
+        $this->getSystemConfiguration();
     }
 
     /**
+     * todo:获取系统配置
+     * @param string $name
      * @return mixed
      */
-    public function getImageConfiguration()
+    public function getSystemConfiguration(string $name = 'ImageBed')
     {
-        $this->systemConfig = $this->systemConfigModel->getOne(['name' => 'ImageBed'], ['children'])->children;
+        $this->systemConfig = $this->systemConfigModel->getOne(['name' => $name], ['children'])->children;
         return $this->systemConfig;
     }
 

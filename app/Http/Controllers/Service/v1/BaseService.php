@@ -245,16 +245,12 @@ class BaseService
      * @param array $authIds
      * @return array
      */
-    protected function getDefaultAuth(array $authIds = [])
+    public function getDefaultAuth(array $authIds = [])
     {
         /* todo：获取默认的权限 */
         $_defaultAuth = Cache::get('_default_permission');
         if (empty($_defaultAuth)) {
-            $commonPermissions = $this->systemConfigModel->getOne(['name' => 'CommonPermission'], ['children']);
-            $attr = ['key' => 'id', 'ids' => array()];
-            foreach (json_decode($commonPermissions->children, true) as $item) {
-                $attr = ['key' => $item['name'], 'ids' => explode(',', $item['value'])];
-            }
+            $attr = ['key' => 'pid', 'ids' => $this->getConfiguration('PID', 'CommonPermission')];
             $_defaultAuth = $this->authModel->getLists([], ['id'], $attr);
             Cache::put('_default_permission', $_defaultAuth, Carbon::now()->addHours(2));
         }
@@ -270,6 +266,25 @@ class BaseService
             }
         }
         return $_authIds;
+    }
+
+    /**
+     * todo:获取配置信息
+     * @param string $name
+     * @param $key
+     * @return false|string[]
+     */
+    public function getConfiguration($key, string $name = 'CommonPermission')
+    {
+        $configuration = $this->systemConfigModel->getOne(['name' => $name], ['children'])->children;
+        $value = '';
+        $systemConfig = json_decode($configuration, true);
+        foreach ($systemConfig as $item) {
+            if ($item['name'] === $key) {
+                $value = $item['value'];
+            }
+        }
+        return explode(',', $value);
     }
 
     /**

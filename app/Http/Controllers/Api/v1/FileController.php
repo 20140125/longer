@@ -14,7 +14,8 @@ class FileController extends BaseController
     public function getFileLists()
     {
         validatePost($this->post, ['path' => 'required|string', 'basename' => 'required|string']);
-        $result = $this->fileService->getFileLists($this->post, ['rebar3']);
+        $permission = $this->fileService->getConfiguration('DefaultPermissionFile', 'CommonPermission');
+        $result = $this->fileService->getFileLists($this->post, $permission);
         return ajaxReturn($result);
     }
 
