@@ -280,7 +280,8 @@ if (!function_exists('getFileLists')) {
             }
             /* TODO:是否递归操作 */
             if ($recursion) {
-                foreach ($fileArr as &$item) {
+                foreach ($fileArr as $index => &$item) {
+                    $item['level'] = $index;
                     if ($item['file_type'] === 'dir') {
                         $item['children'] = getFileLists($item['path'], $permissionFile);
                     }
