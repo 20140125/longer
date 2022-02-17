@@ -270,7 +270,7 @@ if (!function_exists('getFileLists')) {
                         'file_type' => filetype($filePath . $file),
                         'children'  => [],
                         'path'      => filetype($filePath . $file) == 'dir' ? $filePath . $file . '/' : $filePath . $file,
-                        'md5'       => md5($filePath . $file),
+                        'name'       => md5($filePath . $file),
                         'auth'      => chmodFile($filePath . $file),
                         'time'      => date('Y-m-d H:i:s', fileatime($filePath . $file)),
                         'size'      => formatBates(filesize($filePath . $file))
@@ -281,7 +281,6 @@ if (!function_exists('getFileLists')) {
             /* TODO:是否递归操作 */
             if ($recursion) {
                 foreach ($fileArr as $index => &$item) {
-                    $item['level'] = $index;
                     if ($item['file_type'] === 'dir') {
                         $item['children'] = getFileLists($item['path'], $permissionFile);
                     }
