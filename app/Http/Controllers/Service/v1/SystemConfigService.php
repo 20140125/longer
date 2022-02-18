@@ -101,7 +101,7 @@ class SystemConfigService extends BaseService
     {
         foreach ($form['children'] as $key => &$item) {
             $item['updated_at'] = date('Y-m-d H:i:s', time());
-            $item['created_at'] = !empty($item['created_at']) ? strtotime($item['created_at']) : time();
+            $item['created_at'] = (!empty($item['created_at']) && is_numeric($item['created_at'])) ? date('Y-m-d H:i:s', $item['created_at']) : date('Y-m-d H:i:s', time());
             $item['id'] = $item['id'] ?? $form['id'] * 1000 + $key + 1;
         }
         $form['children'] = json_encode($form['children'], JSON_UNESCAPED_UNICODE);
