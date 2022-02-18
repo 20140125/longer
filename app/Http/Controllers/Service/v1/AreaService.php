@@ -116,15 +116,4 @@ class AreaService extends BaseService
         $this->return['lists'] = $result;
         return $this->return;
     }
-
-    /**
-     * todo:获取天气
-     * @param $where
-     * @param string[] $columns
-     * @return Model|Builder|object|null
-     */
-    public function getArea($where, array $columns = ['*'])
-    {
-        return $this->areaModel->getOne($where, $columns);
-    }
 }

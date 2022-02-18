@@ -55,6 +55,7 @@ class ToolsService extends BaseService
             $this->return['message'] = 'Failed get weather info';
             return $this->return;
         }
+        $this->return['message'] = 'Successfully get 【'.$form['city_name'].'】 weather info';
         $this->return['lists'] = $result;
         return $this->return;
     }
