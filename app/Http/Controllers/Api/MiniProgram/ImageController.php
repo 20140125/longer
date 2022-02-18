@@ -18,7 +18,7 @@ class ImageController extends BaseController
         if (empty($this->post['token']) && $this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
             return ajaxReturn(['code' => 20001, 'message' => 'Please Login']);
         }
-        $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('sensitiveKeywords'));
+        $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('SensitiveKeywords'));
         if (!empty($this->post['name']) && in_array($this->post['name'], $sensitiveKeywords)) {
             return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => ['data' => [], 'total' => 0]]);
         }
@@ -50,7 +50,7 @@ class ImageController extends BaseController
         if (empty($this->post['token']) && $this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
             return ajaxReturn(['code' => 20001, 'message' => 'Please Login']);
         }
-        $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('sensitiveKeywords'));
+        $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('SensitiveKeywords'));
         if (in_array($this->post['name'], $sensitiveKeywords)) {
             return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => ['data' => [], 'total' => 0]]);
         }
@@ -101,7 +101,7 @@ class ImageController extends BaseController
      */
     public function getHotKeyWords()
     {
-        $result = $this->imageService->getConfiguration(empty($this->post['keywords']) ? 'hotKeyWord' : $this->post['keywords']);
+        $result = $this->imageService->getConfiguration(empty($this->post['keywords']) ? 'HotKeyWord' : $this->post['keywords']);
         return ajaxReturn($result);
     }
 }

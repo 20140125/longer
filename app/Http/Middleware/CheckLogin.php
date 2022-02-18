@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Service\v1\BaseService;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
@@ -28,6 +29,10 @@ class CheckLogin extends Base
         if ($authorization['code'] === Code::SUCCESS) {
             $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
             $request->merge(array('unauthorized' => $_user));
+            return $next($request);
+        }
+        if ($this->post['page'] > intval(BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed'))) {
+            $request->merge(array('unauthorized' => array('code' => Code::ERROR, 'message' => 'Exceeded Single Page Request Record Limit')));
             return $next($request);
         }
         setCode(Code::FORBIDDEN);
