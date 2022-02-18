@@ -88,6 +88,7 @@ class SystemConfigService extends BaseService
             $this->return['message'] = 'save system config failed';
             return $this->return;
         }
+        $this->return['message'] = 'save system config successfully';
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -113,6 +114,7 @@ class SystemConfigService extends BaseService
             $this->return['message'] = 'update system config failed';
             return $this->return;
         }
+        $this->return['message'] = 'update system config successfully';
         $this->return['lists'] = $form;
         return $this->return;
     }
