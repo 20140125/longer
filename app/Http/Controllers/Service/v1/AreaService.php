@@ -34,7 +34,7 @@ class AreaService extends BaseService
      * @param string[] $columns
      * @return array
      */
-    public function getAreaLists($form, bool $getAll = false, $columns = ['id', 'parent_id as pid', 'name', 'code', 'info', 'forecast'])
+    public function getAreaLists($form, bool $getAll = false, array $columns = ['id', 'parent_id as pid', 'name', 'code', 'info', 'forecast'])
     {
         if ($getAll) {
             $result = Cache::get('__cache_area');

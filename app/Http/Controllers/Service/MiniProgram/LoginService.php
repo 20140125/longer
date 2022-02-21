@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Service\MiniProgram;
 use App\Http\Controllers\Service\v1\UserService;
 use App\Http\Controllers\Utils\Code;
 use App\Jobs\SyncOauthProcess;
+use App\Mail\Register;
 use Curl\Curl;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class LoginService extends BaseService
 {
@@ -88,6 +90,8 @@ class LoginService extends BaseService
             \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
             Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
             $this->return['lists'] = $oauth;
+            /* 邮件通知 */
+            Mail::to(config('app.username'))->send(new Register(array('name' => $oauth['username'])));
             return $this->return;
         } catch (\Exception $exception) {
             $this->return['code'] = Code::SERVER_ERROR;
