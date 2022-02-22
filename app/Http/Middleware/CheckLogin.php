@@ -26,7 +26,7 @@ class CheckLogin extends Base
             return $next($request);
         }
         // todo: 单次请求记录超过限制
-        if ($this->post['page'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
+        if (!empty($this->post['page']) && $this->post['page'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
             $request->merge(array('unauthorized' => array('code' => Code::ERROR, 'message' => 'Exceeded Single Page Request Record Limit')));
             return $next($request);
         }
