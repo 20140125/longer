@@ -19,7 +19,7 @@ class CheckAuth extends Base
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
-        if (!$this->post['token']) {
+        if (!$this->post['token'] || empty($this->post['token'])) {
             setCode(Code::UNAUTHORIZED);
             exit();
         }
@@ -56,7 +56,7 @@ class CheckAuth extends Base
         /* todo: 用户不属于超级管理员 */
         if ($_user->role_id !== 1) {
             if (!in_array($request->getRequestUri(), json_decode($_role->auth_api, true))) {
-                $request->merge(array('unauthorized' => array('code' => Code::FORBIDDEN, 'message' => 'Permission Denied')));
+                $request->merge(array('unauthorized' => array('code' => Code::UNAUTHORIZED, 'message' => 'Permission Denied')));
                 return $next($request);
             }
         }

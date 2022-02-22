@@ -9,7 +9,6 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "ext-json": "*",
         "baidu/aip-sdk": "^2.2",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.4",
@@ -23,14 +22,17 @@
         "php-curl-class/php-curl-class": "^9.1",
         "php-webdriver/webdriver": "^1.11",
         "predis/predis": "^1.1",
+        "w7corp/easywechat": "^5.16",
         "workerman/gateway-worker": "^3.0.0",
         "workerman/globaldata": "^1.0",
         "workerman/mysql": "^1.0",
         "workerman/phpsocket.io": "^1.1",
+        "ext-json": "*",
         "ext-gd": "*",
         "ext-redis": "*",
         "ext-curl": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -73,7 +75,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "easywechat-composer/easywechat-composer": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

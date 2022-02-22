@@ -25,15 +25,15 @@ class CheckLogin extends Base
         if (in_array($request->getRequestUri(), $permissionArray) || empty($this->post['token'])) {
             return $next($request);
         }
+        // todo: 单次请求记录超过限制
+        if ($this->post['page'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
+            $request->merge(array('unauthorized' => array('code' => Code::ERROR, 'message' => 'Exceeded Single Page Request Record Limit')));
+            return $next($request);
+        }
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] === Code::SUCCESS) {
             $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
             $request->merge(array('unauthorized' => $_user));
-            return $next($request);
-        }
-        // todo: 单次请求记录超过限制
-        if ($this->post['page'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
-            $request->merge(array('unauthorized' => array('code' => Code::ERROR, 'message' => 'Exceeded Single Page Request Record Limit')));
             return $next($request);
         }
         setCode(Code::FORBIDDEN);

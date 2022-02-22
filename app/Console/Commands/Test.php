@@ -35,8 +35,6 @@ class Test extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function handle()
     {
@@ -48,4 +46,3 @@ class Test extends Command
         }
     }
 }
-
