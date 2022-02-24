@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SystemConfigController extends BaseController
 {
@@ -11,9 +13,9 @@ class SystemConfigController extends BaseController
      * todo:获取系统配置列表
      * @return JsonResponse
      */
-    public function getSystemConfigLists()
+    public function getSystemConfigLists(Request $request)
     {
-        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $result = $this->systemConfigService->getSystemConfigLists(['page' => $this->post['page'], 'limit' => $this->post['limit']]);
         return ajaxReturn($result);
     }
@@ -25,9 +27,8 @@ class SystemConfigController extends BaseController
      */
     public function getSystemConfig(Request $request)
     {
-        validatePost($this->post, ['name' => 'required|string']);
-        $_user = $request->get('unauthorized');
-        $result = $this->systemConfigService->getConfig($this->post, $_user);
+        validatePost($request->get('item'), $this->post, ['name' => 'required|string']);
+        $result = $this->systemConfigService->getConfig($this->post, $request->get('unauthorized'));
         return ajaxReturn($result);
     }
 
@@ -35,9 +36,9 @@ class SystemConfigController extends BaseController
      * todo:保存系统配置
      * @return JsonResponse
      */
-    public function saveSystemConfig()
+    public function saveSystemConfig(Request $request)
     {
-        validatePost($this->post, ['name' => 'required|string|unique:os_system_config', 'children' => 'required|array', 'status' => 'required|integer|in:1,2']);
+        validatePost($request->get('item'), $this->post, ['name' => 'required|string|unique:os_system_config', 'children' => 'required|array', 'status' => 'required|integer|in:1,2']);
         $result = $this->systemConfigService->saveSystemConfig($this->post);
         return ajaxReturn($result);
     }
@@ -46,9 +47,9 @@ class SystemConfigController extends BaseController
      * todo:更新系统配置
      * @return JsonResponse
      */
-    public function updateSystemConfig()
+    public function updateSystemConfig(Request $request)
     {
-        validatePost($this->post, ['name' => 'required|string', 'children' => 'required|array', 'status' => 'required|integer|in:1,2']);
+        validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'children' => 'required|array', 'status' => 'required|integer|in:1,2']);
         $result = $this->systemConfigService->updateSystemConfig($this->post);
         return ajaxReturn($result);
     }

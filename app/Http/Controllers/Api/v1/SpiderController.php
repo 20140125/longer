@@ -12,8 +12,9 @@ class SpiderController extends BaseController
      * todo:获取系统配置
      * @return JsonResponse
      */
-    public function getSpiderConfig()
+    public function getSpiderConfig(Request $request)
     {
+        validatePost($request->get('item'));
         $result = $this->spiderService->getSpiderConfig();
         return ajaxReturn($result);
     }
@@ -25,7 +26,7 @@ class SpiderController extends BaseController
      */
     public function runningSpider(Request $request)
     {
-        validatePost($this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
         $_user = $request->get('unauthorized');
         switch ($this->post['method']) {
             case 'syncImageType':

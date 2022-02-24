@@ -18,13 +18,13 @@ class LoginController extends BaseController
      * TODO:登录系统
      * @return JsonResponse
      */
-    public function login()
+    public function login(Request $request)
     {
         $rules = ['email' => 'required|between:8,64|email', 'verify_code' => 'required|integer', 'loginType' => 'required'];
         if ($this->post['loginType'] === 'password') {
             $rules = ['email' => 'required|between:8,64|email', 'password' => 'required|between:6,32|string', 'verify_code' => 'required|size:6|string'];
         }
-        validatePost($this->post, $rules);
+        validatePost($request->get('item'), $this->post, $rules);
         /* 校验Redis内验证码是否存在 */
         $verifyCode = $this->sendEMailService->getVerifyCode($this->post['loginType'] === 'password' ? $this->post['verify_code'] : $this->post['email'], $this->post['verify_code']);
         if ($verifyCode['code'] === Code::VERIFY_CODE_ERROR) {
@@ -42,6 +42,7 @@ class LoginController extends BaseController
      */
     public function checkAuthorized(Request $request)
     {
+        validatePost($request->get('item'));
         return ajaxReturn($this->authService->setUnauthorized($request->get('unauthorized'), $request->get('role')));
     }
 
@@ -49,9 +50,9 @@ class LoginController extends BaseController
      * TODO:验证码上报
      * @return JsonResponse
      */
-    public function reportCode()
+    public function reportCode(Request $request)
     {
-        validatePost($this->post, ['verify_code' => 'required']);
+        validatePost($request->get('item'), $this->post, ['verify_code' => 'required']);
         return ajaxReturn($this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']));
     }
 
@@ -59,9 +60,9 @@ class LoginController extends BaseController
      * TODO:发送邮件
      * @return JsonResponse
      */
-    public function sendMail()
+    public function sendMail(Request $request)
     {
-        validatePost($this->post, ['email' => 'required|between:8,64|email']);
+        validatePost($request->get('item'), $this->post, ['email' => 'required|between:8,64|email']);
         $result = $this->sendEMailService->sendMail($this->post);
         return ajaxReturn($result);
     }
@@ -70,9 +71,9 @@ class LoginController extends BaseController
      * todo:登出系统
      * @return JsonResponse
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        validatePost($this->post, ['remember_token' => 'required']);
+        validatePost($request->get('item'), $this->post, ['remember_token' => 'required']);
         $result = $this->userService->getUser(['remember_token' => $this->post['remember_token']]);
         if ($result) {
             /* 清空redis数据 */

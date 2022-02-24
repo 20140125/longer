@@ -11,9 +11,9 @@ class ToolsController extends BaseController
      * todo:获取地址
      * @return JsonResponse
      */
-    public function getAddress()
+    public function getAddress(Request $request)
     {
-        validatePost($this->post, ['ip_address' => 'required|string|ip']);
+        validatePost($request->get('item'), $this->post, ['ip_address' => 'required|string|ip']);
         $result = $this->toolService->getAddress($this->post);
         return ajaxReturn($result);
     }
@@ -22,9 +22,9 @@ class ToolsController extends BaseController
      * todo:获取城市天气
      * @return JsonResponse
      */
-    public function getWeather()
+    public function getWeather(Request $request)
     {
-        validatePost($this->post, ['city_name' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['city_name' => 'required|string']);
         $result = $this->toolService->getWeather($this->post);
         return ajaxReturn($result);
     }

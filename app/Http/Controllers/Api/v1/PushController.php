@@ -15,7 +15,7 @@ class PushController extends BaseController
      */
     public function getPushLists(Request $request)
     {
-        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
         $result = $this->pushService->getPushLists($this->post, $_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);
         return ajaxReturn($result);
@@ -25,9 +25,9 @@ class PushController extends BaseController
      * todo:发布站内通知
      * @return JsonResponse
      */
-    public function savePush()
+    public function savePush(Request $request)
     {
-        validatePost($this->post, ['info' => 'required|string', 'username' => 'required|string', 'status' => 'required|integer|in:1,2', 'uuid' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['info' => 'required|string', 'username' => 'required|string', 'status' => 'required|integer|in:1,2', 'uuid' => 'required|string']);
         $result = $this->pushService->savePush($this->post);
         return ajaxReturn($result);
     }
@@ -36,9 +36,9 @@ class PushController extends BaseController
      * todo:更新站内通知
      * @return JsonResponse
      */
-    public function updatePush()
+    public function updatePush(Request $request)
     {
-        validatePost($this->post, ['id' => 'required|integer', 'info' => 'required|string', 'username' => 'required|string', 'status' => 'required|integer|in:1,2', 'uuid' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['id' => 'required|integer', 'info' => 'required|string', 'username' => 'required|string', 'status' => 'required|integer|in:1,2', 'uuid' => 'required|string']);
         $result = $this->pushService->updatePush($this->post);
         return ajaxReturn($result);
     }
@@ -47,9 +47,9 @@ class PushController extends BaseController
      * todo:删除站内通知
      * @return JsonResponse
      */
-    public function removePush()
+    public function removePush(Request $request)
     {
-        validatePost($this->post, ['id' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['id' => 'required|integer']);
         $result = $this->pushService->removePush($this->post);
         return ajaxReturn($result);
     }

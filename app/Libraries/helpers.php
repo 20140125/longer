@@ -29,31 +29,43 @@ if (!function_exists('ajaxReturn')) {
 if (!function_exists('validatePost')) {
     /**
      * TODO:错误信息输出
-     * @param $post
-     * @param $rules
+     * @param $unauthorized
+     * @param array $post
+     * @param array $rules
      * @param array $message
      * @return void
      */
-    function validatePost($post, $rules, array $message = [])
+    function validatePost($unauthorized, array $post = [], array $rules = [], array $message = [])
     {
-        $_validate = Validator::make($post, $rules, $message);
-        if ($_validate->fails()) {
-            $_code = $_validate->errors()->first() == 'Permission denied' ? Code::FORBIDDEN : 200;
-            setCode($_code);
+        if (!empty($unauthorized['code']) && $unauthorized['code'] !== Code::SUCCESS) {
             $_data = array(
-                'code' => $_code,
-                'item' => array('code' => Code::ERROR, 'message' => $_validate->errors()->first()),
+                'code' => 200,
+                'item' => $unauthorized,
                 'url'  => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri()
             );
             exit(json_encode($_data, JSON_UNESCAPED_UNICODE));
+        }
+        if (!empty($rules)) {
+            /* todo:字段验证 */
+            $_validate = Validator::make($post, $rules, $message);
+            if ($_validate->fails()) {
+                $_code = $_validate->errors()->first() == 'Permission denied' ? Code::FORBIDDEN : 200;
+                setCode($_code);
+                $_data = array(
+                    'code' => $_code,
+                    'item' => array('code' => Code::ERROR, 'message' => $_validate->errors()->first()),
+                    'url'  => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri()
+                );
+                exit(json_encode($_data, JSON_UNESCAPED_UNICODE));
+            }
         }
     }
 }
 if (!function_exists('saveLog')) {
     /**
-     * TODO:日志保存
+     *  TODO:日志保存
      * @param $form
-     * @return array | bool
+     * @return array|int
      */
     function saveLog($form)
     {
@@ -71,7 +83,7 @@ if (!function_exists('saveLog')) {
                 'day'        => date('Ymd', time()),
                 'log'        => json_encode(['message' => $form['message'], 'request_params' => $_post, 'response_params' => $form['response_params']], JSON_UNESCAPED_UNICODE)
             );
-            return DB::table('os_system_log')->insert($data);
+            return  \App\Models\Api\v1\Log::getInstance()->saveOne($data);
         } catch (\Exception $exception) {
             return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
         }

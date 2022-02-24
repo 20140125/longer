@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class DatabaseController extends BaseController
 {
@@ -10,8 +11,9 @@ class DatabaseController extends BaseController
      * todo:获取数据表列表
      * @return JsonResponse
      */
-    public function getDatabaseLists()
+    public function getDatabaseLists(Request $request)
     {
+        validatePost($request->get('item'));
         $result = $this->databaseService->getDatabaseLists();
         return ajaxReturn($result);
     }
@@ -20,9 +22,9 @@ class DatabaseController extends BaseController
      * todo:数据表备份
      * @return JsonResponse
      */
-    public function backUpTable()
+    public function backUpTable(Request $request)
     {
-        validatePost($this->post, ['name' => 'required|string', 'form' => 'required|string|in:table,source,all']);
+        validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'form' => 'required|string|in:table,source,all']);
         $result = $this->databaseService->backUpTable($this->post);
         return ajaxReturn($result);
     }
@@ -32,9 +34,9 @@ class DatabaseController extends BaseController
      * @param string name 数据库名称
      * @return JsonResponse
      */
-    public function repairTable()
+    public function repairTable(Request $request)
     {
-        validatePost($this->post, ['name' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['name' => 'required|string']);
         $result = $this->databaseService->repairTable($this->post);
         return ajaxReturn($result);
     }
@@ -44,9 +46,9 @@ class DatabaseController extends BaseController
      * @param string name 数据库名称
      * @return JsonResponse
      */
-    public function optimizeTabled()
+    public function optimizeTabled(Request $request)
     {
-        validatePost($this->post, ['name' => 'required|string', 'engine' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'engine' => 'required|string']);
         $result = $this->databaseService->optimizeTable($this->post);
         return ajaxReturn($result);
 
@@ -58,9 +60,9 @@ class DatabaseController extends BaseController
      * @param string common 备注
      * @return JsonResponse
      */
-    public function alterTable()
+    public function alterTable(Request $request)
     {
-        validatePost($this->post, ['name' => 'required|string', 'comment' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'comment' => 'required|string']);
         $result = $this->databaseService->commentTable($this->post);
         return ajaxReturn($result);
     }

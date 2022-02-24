@@ -31,17 +31,13 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get', 'post'], 'mini_program/login', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'login'])->name('wxLogin');
         Route::match(['get', 'post'], 'mini_program/openid', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'getOpenId'])->name('getOpenId');
         Route::match(['get', 'post'], 'image/lists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageLists'])->name('getImageLists');
-        Route::match(['get', 'post'], 'image/newLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getNewImageLists'])->name('getNewImageLists');
-        Route::match(['get', 'post'], 'image/hotLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotImageLists'])->name('getHotImageLists');
+        Route::match(['get', 'post'], 'image/newLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageLists'])->name('getNewImageLists');
+        Route::match(['get', 'post'], 'image/hotLists', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getImageLists'])->name('getHotImageLists');
         Route::match(['get', 'post'], 'image/hotKeyWord', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'getHotKeyWords'])->name('getHotKeyWords');
         Route::match(['get', 'post'], 'image/spider', [App\Http\Controllers\Api\MiniProgram\ImageController::class, 'runningSpider'])->name('imageSpiders');
     });
-    /* todo:实时鉴权 */
-    Route::middleware('checkAuth')->group(function () {
-        Route::match(['get', 'post'], 'check/authorized', [App\Http\Controllers\Api\v1\LoginController::class, 'checkAuthorized'])->name('checkAuthorized');
-    });
     /* todo:登录后鉴权 */
-    Route::middleware('common')->group(function () {
+    Route::middleware('checkAuth')->group(function () {
         /* todo:首页权限 */
         Route::match(['get', 'post'], 'common/menu', [App\Http\Controllers\Api\v1\HomeController::class, 'getMenu'])->name('getMenu');
         Route::match(['get', 'post'], 'timeline/index', [App\Http\Controllers\Api\v1\TimeLineController::class, 'getLists'])->name('getPlan');

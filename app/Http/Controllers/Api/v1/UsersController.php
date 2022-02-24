@@ -14,7 +14,7 @@ class UsersController extends BaseController
      */
     public function getUsersLists(Request $request)
     {
-        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
         $result = $this->userService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'updated_at', 'direction' => 'desc'], false, ['*'], $this->post);
         return ajaxReturn($result);
@@ -24,8 +24,9 @@ class UsersController extends BaseController
      * todo:获取缓存用户列表
      * @return JsonResponse
      */
-    public function getCacheUserLists()
+    public function getCacheUserLists(Request $request)
     {
+        validatePost($request->get('item'));
         $result = $this->userService->getCacheUserList();
         return ajaxReturn($result);
     }
@@ -47,7 +48,7 @@ class UsersController extends BaseController
             'status'       => 'required|in:1,2|integer',
             'password'     => 'required|string|between:6,32'
         ];
-        validatePost($this->post, $rules);
+        validatePost($request->get('item'), $this->post, $rules);
         $_user = $request->get('unauthorized');
         $user = $_user->id === $this->post['id'] ? $_user : $this->userService->getUser(['id' => $this->post['id']]);
         $result = $this->userService->updateUsers($this->post, $user, 'updated users successfully');

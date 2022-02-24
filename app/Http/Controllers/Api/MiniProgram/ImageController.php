@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\MiniProgram;
 
+use App\Http\Controllers\Service\v1\BaseService;
+use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -15,46 +17,18 @@ class ImageController extends BaseController
     public function getImageLists()
     {
         validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string']);
+        // todo: 单次请求记录超过限制
+        if (!empty($this->post['limit']) && $this->post['limit'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
+            return ajaxReturn(['code' => Code::ERROR, 'message' => Code::PAGE_SIZE_MESSAGE]);
+        }
         if (empty($this->post['token']) && $this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
-            return ajaxReturn(['code' => 20001, 'message' => 'Please Login']);
+            return ajaxReturn(['code' => Code::ERROR, 'message' => Code::NOT_LOGIN_MESSAGE]);
         }
         $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('SensitiveKeywords'));
         if (!empty($this->post['name']) && in_array($this->post['name'], $sensitiveKeywords)) {
-            return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => ['data' => [], 'total' => 0]]);
+            return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => ['data' => [], 'total' => 0]]);
         }
         $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'rand', 'direction' => 'desc']);
-        return ajaxReturn($result);
-    }
-
-    /**
-     * todo:获取最新图片
-     * @return JsonResponse
-     */
-    public function getNewImageLists()
-    {
-        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string']);
-        if (empty($this->post['token']) && $this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
-            return ajaxReturn(['code' => 20001, 'message' => 'Please Login']);
-        }
-        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'rand', 'direction' => 'desc']);
-        return ajaxReturn($result);
-    }
-
-    /**
-     * todo:获取关键词图片
-     * @return JsonResponse
-     */
-    public function getHotImageLists()
-    {
-        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string', 'name' => 'required|string']);
-        if (empty($this->post['token']) && $this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
-            return ajaxReturn(['code' => 20001, 'message' => 'Please Login']);
-        }
-        $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('SensitiveKeywords'));
-        if (in_array($this->post['name'], $sensitiveKeywords)) {
-            return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => ['data' => [], 'total' => 0]]);
-        }
-        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);
         return ajaxReturn($result);
     }
     /**

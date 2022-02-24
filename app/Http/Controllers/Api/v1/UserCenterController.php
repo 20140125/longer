@@ -15,6 +15,7 @@ class UserCenterController extends BaseController
      */
     public function getUserInfo(Request $request)
     {
+        validatePost($request->get('item'));
         $_user = $request->get('unauthorized');
         $result = $this->userCenterService->getUserInfo($_user);
         return ajaxReturn($result);
@@ -27,7 +28,9 @@ class UserCenterController extends BaseController
      */
     public function updateUserInfo(Request $request)
     {
-        validatePost($this->post,
+        validatePost(
+            $request->get('item'),
+            $this->post,
             [
                 'u_name'        => 'required|string',
                 'id'            => 'required|integer',

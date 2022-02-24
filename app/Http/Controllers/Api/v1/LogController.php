@@ -14,7 +14,7 @@ class LogController extends BaseController
      */
     public function getLogLists(Request $request)
     {
-        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
         $result = $this->logService->getLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']]);
         return ajaxReturn($result);
@@ -27,7 +27,7 @@ class LogController extends BaseController
      */
     public function removeLog(Request $request)
     {
-        validatePost($this->post, ['id' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['id' => 'required|integer']);
         $_user = $request->get('unauthorized');
         $result = $this->logService->removeLog($_user, $this->post);
         return ajaxReturn($result);

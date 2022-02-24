@@ -12,9 +12,9 @@ class AreaController extends BaseController
      * todo:获取成功列表
      * @return JsonResponse
      */
-    public function getAreaLists()
+    public function getAreaLists(Request $request)
     {
-        validatePost($this->post, ['parent_id' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['parent_id' => 'required|integer']);
         $result = $this->areaService->getAreaLists($this->post, false, ['*']);
         return ajaxReturn($result);
     }
@@ -23,9 +23,9 @@ class AreaController extends BaseController
      * todo:获取城市天气
      * @return JsonResponse
      */
-    public function getAreaWeather()
+    public function getAreaWeather(Request $request)
     {
-        validatePost($this->post, ['code' => 'required|string|exists:os_china_area']);
+        validatePost($request->get('item'), $this->post, ['code' => 'required|string|exists:os_china_area']);
         $result = $this->areaService->getAreaWeather($this->post);
         return ajaxReturn($result);
     }

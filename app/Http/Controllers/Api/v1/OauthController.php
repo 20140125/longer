@@ -15,7 +15,7 @@ class OauthController extends BaseController
      */
     public function getOAuthLists(Request $request)
     {
-        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
         $result = $this->oAuthService->getUserLists($_user, ['page' => $this->post['page'], 'limit' => $this->post['limit']], $this->post);
         return ajaxReturn($result);
@@ -25,9 +25,9 @@ class OauthController extends BaseController
      * todo:邮箱账号绑定
      * @return JsonResponse
      */
-    public function bindEmail()
+    public function bindEmail(Request $request)
     {
-        validatePost($this->post, ['email' => 'required|email', 'code' => 'required|integer|between:8,8', 'id' => 'required|integer']);
+        validatePost($request->get('item'), $this->post, ['email' => 'required|email', 'code' => 'required|integer|between:8,8', 'id' => 'required|integer']);
         /* 校验Redis内验证码是否存在 */
         $verifyCode = $this->sendEMailService->getVerifyCode($this->post['code'], $this->post['code']);
         if ($verifyCode['code'] === Code::VERIFY_CODE_ERROR) {
