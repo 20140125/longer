@@ -46,6 +46,7 @@ class LoginService extends BaseService
         $curl = new Curl();
         $response = $curl->post($url . http_build_query($data));
         $this->return['lists'] = json_decode(trim($response), true, 512, JSON_OBJECT_AS_ARRAY);
+        Log::error(json_encode($this->return));
         return $this->return;
     }
 
