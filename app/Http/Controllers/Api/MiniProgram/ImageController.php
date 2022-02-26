@@ -43,29 +43,29 @@ class ImageController extends BaseController
         $_user = $request->get('unauthorized');
         switch ($this->post['method']) {
             case 'syncImageType':
-                Artisan::call("longer:sync-spider_image_type {$this->post['keywords']} {$_user->uuid}");
-                return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => [$this->post]]);
+                Artisan::call("longer:sync-spider_image_type {$this->post['keywords']} $_user->uuid");
+                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
             case 'syncImageLists':
                 if (is_numeric($this->post['keywords'])) {
                     $keywords = intval($this->post['keywords']);
-                    Artisan::call("longer:sync-spider_image_id $keywords {$_user->uuid}");
+                    Artisan::call("longer:sync-spider_image_id $keywords $_user->uuid");
                 } else {
-                    Artisan::call("longer:sync-spider_image_url {$this->post['keywords']} {$_user->uuid}");
+                    Artisan::call("longer:sync-spider_image_url {$this->post['keywords']} $_user->uuid");
                 }
-                return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => [$this->post]]);
+                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
             case 'syncImageSize':
-                Artisan::call("longer:sync-spider_image_size {$this->post['keywords']} {$_user->uuid}");
+                Artisan::call("longer:sync-spider_image_size {$this->post['keywords']} $_user->uuid");
                 break;
             case 'syncOauth':
                 $rememberToken = !empty($this->post['keywords']) ?  $this->post['keywords'] :  $this->post['remember_token'];
-                Artisan::call("longer:sync-oauth $rememberToken {$_user->uuid}");
-                return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => [$this->post]]);
+                Artisan::call("longer:sync-oauth $rememberToken $_user->uuid");
+                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
             case 'syncImageListsForTags':
-                Artisan::call("longer:sync-spider_image_tag_url {$this->post['keywords']} {$_user->uuid}");
-                return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => [$this->post]]);
+                Artisan::call("longer:sync-spider_image_tag_url {$this->post['keywords']} $_user->uuid");
+                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
             case 'syncSpiderImageSoogif':
-                Artisan::call("longer:sync-spider_image_form_soogif {$this->post['keywords']} {$_user->uuid}");
-                return ajaxReturn(['code' => 20000, 'message' => 'successfully', 'lists' => [$this->post]]);
+                Artisan::call("longer:sync-spider_image_form_soogif {$this->post['keywords']} $_user->uuid");
+                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
         }
     }
 
