@@ -59,7 +59,7 @@ class LoginService extends BaseService
                 'username'       => $form['nickName'],
                 'openid'         => $form['code2Session']['openid'] ?? 0,
                 'access_token'   => $form['code2Session']['session_key'] ?? 0,
-                'expires'        => time() + $form['code2Session']['expires_in'] ?? 0,
+                'expires'        => time() + intval($form['code2Session']['expires_in']) ?? 0,
                 'role_id'        => 2,
                 'created_at'     => time(),
                 'updated_at'     => time(),
