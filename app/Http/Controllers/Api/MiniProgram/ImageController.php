@@ -12,11 +12,12 @@ class ImageController extends BaseController
 {
     /**
      * todo:获取图片列表
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getImageLists()
+    public function getImageLists(Request $request)
     {
-        validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string']);
         // todo: 单次请求记录超过限制
         if (!empty($this->post['limit']) && $this->post['limit'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
             return ajaxReturn(['code' => Code::ERROR, 'message' => Code::PAGE_SIZE_MESSAGE]);
@@ -31,15 +32,16 @@ class ImageController extends BaseController
         $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'rand', 'direction' => 'desc']);
         return ajaxReturn($result);
     }
+
     /**
      * todo:执行脚本
      * @param Request $request
-     * @return JsonResponse|void
+     * @return JsonResponse
      */
     public function runningSpider(Request $request)
     {
         date_default_timezone_set('Asia/Shanghai');
-        validatePost($this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
+        validatePost($request->get('item'), $this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
         $_user = $request->get('unauthorized');
         switch ($this->post['method']) {
             case 'syncImageType':
@@ -71,10 +73,12 @@ class ImageController extends BaseController
 
     /**
      * todo:获取关键字
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getHotKeyWords()
+    public function getHotKeyWords(Request $request)
     {
+        validatePost($request->get('item'));
         $result = $this->imageService->getConfiguration(empty($this->post['keywords']) ? 'HotKeyWord' : $this->post['keywords']);
         return ajaxReturn($result);
     }
