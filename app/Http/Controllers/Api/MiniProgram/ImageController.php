@@ -46,7 +46,7 @@ class ImageController extends BaseController
         switch ($this->post['method']) {
             case 'syncImageType':
                 Artisan::call("longer:sync-spider_image_type {$this->post['keywords']} $_user->uuid");
-                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
+                break;
             case 'syncImageLists':
                 if (is_numeric($this->post['keywords'])) {
                     $keywords = intval($this->post['keywords']);
@@ -54,21 +54,23 @@ class ImageController extends BaseController
                 } else {
                     Artisan::call("longer:sync-spider_image_url {$this->post['keywords']} $_user->uuid");
                 }
-                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
+                break;
             case 'syncImageSize':
                 Artisan::call("longer:sync-spider_image_size {$this->post['keywords']} $_user->uuid");
                 break;
             case 'syncOauth':
                 $rememberToken = !empty($this->post['keywords']) ?  $this->post['keywords'] :  $this->post['remember_token'];
                 Artisan::call("longer:sync-oauth $rememberToken $_user->uuid");
-                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
+                break;
             case 'syncImageListsForTags':
                 Artisan::call("longer:sync-spider_image_tag_url {$this->post['keywords']} $_user->uuid");
-                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
+                break;
             case 'syncSpiderImageSoogif':
                 Artisan::call("longer:sync-spider_image_form_soogif {$this->post['keywords']} $_user->uuid");
-                return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
+                break;
+
         }
+        return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
     }
 
     /**
