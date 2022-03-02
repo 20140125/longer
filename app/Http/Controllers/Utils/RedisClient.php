@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Utils;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redis;
 
 /**
  * Class RedisClient
@@ -11,22 +12,6 @@ use App\Http\Controllers\Controller;
  */
 class RedisClient extends Controller
 {
-    /**
-     * @var string $host
-     */
-    protected $host = '127.0.0.1';
-    /**
-     * @var int $port
-     */
-    protected $port = '6379';
-    /**
-     * @var string $password
-     */
-    protected $password = '';
-    /**
-     * @var $redisClient
-     */
-    protected $redisClient;
     /**
      * @var static $instance
      */
@@ -48,19 +33,6 @@ class RedisClient extends Controller
      */
     public function __construct()
     {
-        $this->redisClient = new \Redis();
-        $this->host = config('app.redis_host');
-        $this->port = config('app.redis_port');
-        $this->password = config('app.redis_password');
-        $this->redisClient->connect($this->host, $this->port);
-        if (!empty($this->password)) {
-            try {
-                $this->redisClient->auth($this->password);
-            } catch (\Exception $exception) {
-                echo $exception->getMessage();
-            }
-        }
-        return $this->redisClient;
     }
 
     /**
@@ -70,7 +42,7 @@ class RedisClient extends Controller
      */
     public function selectDB(int $index = 0)
     {
-        return $this->redisClient->select($index);
+        return Redis::select($index);
     }
 
     /**
@@ -82,7 +54,7 @@ class RedisClient extends Controller
      */
     public function setValue($key, $value, array $timeout = ['EX' => 0])
     {
-        return $this->redisClient->set($key, $value, $timeout);
+        return Redis::set($key, $value, $timeout);
     }
 
     /**
@@ -92,7 +64,7 @@ class RedisClient extends Controller
      */
     public function getValue($key)
     {
-        return $this->redisClient->get($key);
+        return Redis::get($key);
     }
 
     /**
@@ -103,7 +75,7 @@ class RedisClient extends Controller
      */
     public function sAdd($key, $value)
     {
-        return $this->redisClient->sAdd($key, $value);
+        return Redis::sAdd($key, $value);
     }
 
     /**
@@ -113,7 +85,7 @@ class RedisClient extends Controller
      */
     public function sMembers($key)
     {
-        return $this->redisClient->sMembers($key);
+        return Redis::sMembers($key);
     }
 
     /**
@@ -124,7 +96,7 @@ class RedisClient extends Controller
      */
     public function sIsMember($key, $value)
     {
-        return $this->redisClient->sIsMember($key, $value);
+        return Redis::sIsMember($key, $value);
     }
 
     /**
@@ -135,7 +107,7 @@ class RedisClient extends Controller
      */
     public function sRem($key, $value)
     {
-        return $this->redisClient->sRem($key, $value);
+        return Redis::sRem($key, $value);
     }
 
     /**
@@ -145,7 +117,7 @@ class RedisClient extends Controller
      */
     public function del($key)
     {
-        return $this->redisClient->del($key);
+        return Redis::del($key);
     }
 
     /**
@@ -156,7 +128,7 @@ class RedisClient extends Controller
      */
     public function lPush($key, $value)
     {
-        return $this->redisClient->lPush($key, $value);
+        return Redis::lPush($key, $value);
     }
 
     /**
@@ -166,7 +138,7 @@ class RedisClient extends Controller
      */
     public function lPop($key)
     {
-        return $this->redisClient->lPop($key);
+        return Redis::lPop($key);
     }
 
     /**
@@ -177,7 +149,7 @@ class RedisClient extends Controller
      */
     public function rPush($key, $value)
     {
-        return $this->redisClient->rPush($key, $value);
+        return Redis::rPush($key, $value);
     }
 
     /**
@@ -187,7 +159,7 @@ class RedisClient extends Controller
      */
     public function rPop($key)
     {
-        return $this->redisClient->rPop($key);
+        return Redis::rPop($key);
     }
 
     /**
@@ -199,7 +171,7 @@ class RedisClient extends Controller
      */
     public function lRange($key, $start, $num)
     {
-        return $this->redisClient->lRange($key, $start, $num);
+        return Redis::lRange($key, $start, $num);
     }
 
     /**
@@ -209,7 +181,7 @@ class RedisClient extends Controller
      */
     public function hGetAll($key)
     {
-        return $this->redisClient->hGetAll($key);
+        return Redis::hGetAll($key);
     }
 
     /**
@@ -220,7 +192,7 @@ class RedisClient extends Controller
      */
     public function hIncrBy($from, $to)
     {
-        return $this->redisClient->hIncrBy($to, $from, 1);
+        return Redis::hIncrBy($to, $from, 1);
     }
 
     /**
@@ -231,7 +203,7 @@ class RedisClient extends Controller
      */
     public function hDel($from, $to)
     {
-        return $this->redisClient->hDel($to, $from);
+        return Redis::hDel($to, $from);
     }
 
     /**
@@ -241,7 +213,7 @@ class RedisClient extends Controller
      */
     public function keys($pattern)
     {
-        return $this->redisClient->keys($pattern);
+        return Redis::keys($pattern);
     }
 
     /**
@@ -251,6 +223,6 @@ class RedisClient extends Controller
      */
     public function lLen($key)
     {
-        return $this->redisClient->lLen($key);
+        return Redis::lLen($key);
     }
 }
