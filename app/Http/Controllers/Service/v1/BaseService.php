@@ -214,7 +214,7 @@ class BaseService
             $adCode = 440305;
         }
         $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info', 'forecast']);
-        $province = $this->areaModel->getOne(['id' => $area->parent_id], ['name']);
+        $province = $this->areaModel->getOne(['id' => $area->parent_id ?? 1], ['name']);
         $this->return['lists'] = array(
             'auth'              => json_decode(($_role->auth_api ?? ''), true),
             'remember_token'    => $_user->remember_token ?? '',
