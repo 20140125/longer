@@ -46,8 +46,6 @@ class SyncOauth extends Command
     public function handle()
     {
         $this->syncClientList();
-        /* 更新Redis Token信息 */
-        Artisan::call("longer:sync-remove_redis_token");
         if ($this->argument('remember_token') === 'default') {
             WebPush('Request remember token is required', $this->argument('uuid'), 'command');
             return false;
@@ -55,6 +53,8 @@ class SyncOauth extends Command
         WebPush('Starting synchronizing the oauth lists', $this->argument('uuid'), 'command');
         $this->syncOauth();
         WebPush('Finished synchronizing the oauth lists', $this->argument('uuid'), 'command');
+        /* 更新Redis Token信息 */
+        Artisan::call("longer:sync-remove_redis_token");
     }
 
     /**
