@@ -8,6 +8,7 @@ use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\UserCenter;
 use App\Models\Api\v1\Users;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class SyncUsers extends Command
@@ -45,6 +46,8 @@ class SyncUsers extends Command
         $this->syncUsers();
         /* 更新用户画像 */
         UserService::getInstance()->updateUsersAvatarImage();
+        /* 更新Redis Token信息 */
+        Artisan::call("longer:sync-remove_redis_token");
     }
 
     /**
