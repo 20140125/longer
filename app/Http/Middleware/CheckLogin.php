@@ -6,6 +6,7 @@ use App\Http\Controllers\Service\v1\BaseService;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class checkLogin
@@ -23,7 +24,7 @@ class CheckLogin extends Base
         parent::handle($request, $next);
         /* todo:默认不鉴权 */
         $permissionArray = empty($this->post['token']) ? ['/api/v1/oauth/config', '/api/v1/report/code', '/api/v1/account/login', '/api/v1/mail/send'] : [ '/api/v1/report/code', '/api/v1/account/login', '/api/v1/mail/send'];
-        if (in_array($request->getRequestUri(), $permissionArray) || empty($this->post['token'])) {
+        if (in_array($request->getRequestUri(), $permissionArray)) {
             return $next($request);
         }
         /* todo:判断用户是否在Redis */
