@@ -8,6 +8,7 @@ use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\UserCenter;
 use App\Models\Api\v1\Users;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class SyncOauth extends Command
@@ -45,6 +46,8 @@ class SyncOauth extends Command
     public function handle()
     {
         $this->syncClientList();
+        /* 更新Redis Token信息 */
+        Artisan::call("longer:sync-remove_redis_token");
         if ($this->argument('remember_token') === 'default') {
             WebPush('Request remember token is required', $this->argument('uuid'), 'command');
             return false;
