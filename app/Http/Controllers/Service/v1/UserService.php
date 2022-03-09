@@ -65,13 +65,13 @@ class UserService extends BaseService
             /* 用户不存在 */
             if (!$user) {
                 $this->return['code'] = Code::NOT_FOUND;
-                $this->return['message'] = 'user not exists';
+                $this->return['message'] = Code::USER_NOT_FOUND_MESSAGE;
                 return $this->return;
             }
             /* 用户被禁用 */
             if ($user->status === 2) {
                 $this->return['code'] = Code::FORBIDDEN;
-                $this->return['message'] = 'users not allowed login system';
+                $this->return['message'] = Code::FORBIDDEN_MESSAGE;
                 return $this->return;
             }
         }

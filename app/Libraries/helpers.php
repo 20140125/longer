@@ -49,10 +49,8 @@ if (!function_exists('validatePost')) {
             /* todo:字段验证 */
             $_validate = Validator::make($post, $rules, $message);
             if ($_validate->fails()) {
-                $_code = $_validate->errors()->first() == 'Permission denied' ? Code::FORBIDDEN : 200;
-                setCode($_code);
                 $_data = array(
-                    'code' => $_code,
+                    'code' => 200,
                     'item' => array('code' => Code::ERROR, 'message' => $_validate->errors()->first()),
                     'url'  => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri()
                 );
