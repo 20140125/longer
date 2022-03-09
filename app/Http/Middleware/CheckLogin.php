@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
-use function Symfony\Component\Translation\t;
 
 /**
  * Class checkLogin
