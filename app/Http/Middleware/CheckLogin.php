@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
+use function Symfony\Component\Translation\t;
 
 /**
  * Class checkLogin
@@ -27,7 +28,7 @@ class CheckLogin extends Base
         }
         /* todo:判断用户是登录 */
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
-        if ($authorization['code'] === Code::SUCCESS) {
+        if ($authorization['code'] === Code::SUCCESS && !empty($this->post['token'])) {
             /* todo:用户信息 */
             $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
             /* todo:用户令牌过期 */
