@@ -124,13 +124,13 @@ class UserService extends BaseService
         $form['ip_address'] = getServerIp();
         $form['updated_at'] = time();
         $form['created_at'] = !empty($user->created_at)? $user->created_at : time();
-        $form['char'] = getFirstChar($user->username);
+        $form['char'] = getFirstChar($form['username'] ?? $user->username);
         $this->userModel->updateOne(['id' => $user->id], $form);
         /* 设置用户标识 */
         $this->setVerifyCode($form['remember_token'], $form['remember_token'], config('app.app_refresh_login_time'));
         $form['uuid'] = $user->uuid ?? '';
         $form['avatar_url'] = $user->avatar_url ?? $this->getUserAvatarImage();
-        $form['username'] = $user->username ?? '';
+        $form['username'] = $form['username'] ?? $user->username;
         $form['socket'] = config('app.socket_url');
         $form['websocket'] = config('app.websocket');
         $form['url'] = config('app.url');
