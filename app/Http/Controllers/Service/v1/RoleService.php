@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Service\v1;
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class RoleService extends BaseService
 {
@@ -72,6 +73,7 @@ class RoleService extends BaseService
             $this->return['message'] = 'save role failed';
             return $this->return;
         }
+        Cache::forget('role_permission_'. $result);
         $this->return['lists'] = $form;
         $this->return['message'] = 'save role successfully';
         return $this->return;
@@ -97,6 +99,7 @@ class RoleService extends BaseService
             $this->return['message'] = 'update role failed';
             return $this->return;
         }
+        Cache::forget('role_permission_'. $form['id']);
         $this->return['lists'] = $form;
         $this->return['message'] = 'update role successfully';
         return $this->return;

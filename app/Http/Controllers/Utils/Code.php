@@ -40,6 +40,8 @@ class Code extends Controller
     const ROLE_NOT_EXIST_MESSAGE = 'Role Is Not Exists';
     /* todo:角色被禁用 */
     const ROLE_DISABLED_MESSAGE = 'Role Is Disabled';
+    /* todo:用户不存在 */
+    const USER_NOT_FOUND_MESSAGE = 'User Not Found';
 
 
     /**
