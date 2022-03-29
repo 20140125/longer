@@ -118,4 +118,33 @@ class SystemConfigService extends BaseService
         $this->return['lists'] = $form;
         return $this->return;
     }
+
+    /**
+     * todo:插件安装、卸载
+     * @param $form
+     * @return array
+     */
+    public function pluginAction($form)
+    {
+        $result = $this->systemConfigModel->getOne(['id' => $form['pid']]);
+        if (empty($result)) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'get system config failed';
+            return $this->return;
+        }
+        foreach ($result->children as &$child) {
+            if ($child['id'] == $form['id']) {
+                $child['status'] = $form['status'];
+            }
+        }
+        $result = $this->systemConfigModel->updateOne(['id' => $result['id']], $result);
+        if (empty($result)) {
+            $this->return['code'] = Code::ERROR;
+            $this->return['message'] = 'Plugin installed failed';
+            return $this->return;
+        }
+        $this->return['message'] = 'Plugin installed successfully';
+        $this->return['lists'] = $form;
+        return $this->return;
+    }
 }

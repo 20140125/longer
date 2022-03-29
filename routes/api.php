@@ -86,6 +86,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get', 'post'], 'config/index', [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfigLists'])->name('getSystemConfigLists');
         Route::match(['get', 'post'], 'config/save', [App\Http\Controllers\Api\v1\SystemConfigController::class, 'saveSystemConfig'])->name('saveSystemConfig');
         Route::match(['get', 'post'], 'config/update', [App\Http\Controllers\Api\v1\SystemConfigController::class, 'updateSystemConfig'])->name('updateSystemConfig');
+        /* todo:插件管理 */
+        Route::match(['get', 'post'], 'plugin/action', [App\Http\Controllers\Api\v1\SystemConfigController::class, 'pluginAction'])->name('pluginAction');
         /* todo:站内通知 */
         Route::match(['get', 'post'], 'push/index', [App\Http\Controllers\Api\v1\PushController::class, 'getPushLists'])->name('getPushLists');
         Route::match(['get', 'post'], 'push/save', [App\Http\Controllers\Api\v1\PushController::class, 'savePush'])->name('savePush');

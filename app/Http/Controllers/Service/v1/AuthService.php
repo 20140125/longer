@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utils\Code;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class AuthService extends BaseService
 {
@@ -137,7 +131,7 @@ class AuthService extends BaseService
     /**
      * todo:获取权限规则
      * @param $where
-     * @param string[] $columns
+     * @param array $columns
      * @return Model|Builder|object|null
      */
     public function getAuth($where, array $columns = ['*'])
