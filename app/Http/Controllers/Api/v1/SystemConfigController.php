@@ -49,7 +49,7 @@ class SystemConfigController extends BaseController
      */
     public function updateSystemConfig(Request $request)
     {
-        validatePost($request->get('item'), $this->post, ['id' => 'required|integer', 'name' => 'required|string', 'children' => 'required|array', 'status' => 'required|integer|in:1,2']);
+        validatePost($request->get('item'), $this->post, ['id' => 'required|integer', 'status' => 'required|integer|in:1,2']);
         $result = $this->systemConfigService->updateSystemConfig($this->post);
         return ajaxReturn($result);
     }
@@ -61,7 +61,7 @@ class SystemConfigController extends BaseController
      */
     public function pluginAction(Request $request)
     {
-        validatePost($request->get('item'), $this->post, ['id' => 'required|integer', 'status' => 'required|integer|in:1,2']);
+        validatePost($request->get('item'), $this->post, ['pid' => 'required|integer', 'status' => 'required|integer|in:1,2']);
         $result = $this->systemConfigService->pluginAction($this->post);
         return ajaxReturn($result);
     }
