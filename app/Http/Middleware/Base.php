@@ -57,12 +57,13 @@ class Base
     /**
      * @param Request $request
      * @param Closure $next
+     * @return mixed|void
      */
     public function handle(Request $request, Closure $next)
     {
         if ($request->getMethod() === 'GET') {
-            setCode(Code::METHOD_ERROR);
-            exit();
+            $request->merge(array('item' => array('code' => Code::METHOD_ERROR, 'message' => Code::METHOD_ERROR_MESSAGE)));
+            return $next($request);
         }
     }
 }

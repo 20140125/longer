@@ -42,6 +42,8 @@ class Code extends Controller
     const ROLE_DISABLED_MESSAGE = 'Role Is Disabled';
     /* todo:用户不存在 */
     const USER_NOT_FOUND_MESSAGE = 'User Not Found';
+    /* todo:方法不被允许 */
+    const METHOD_ERROR_MESSAGE = 'Method Not Allowed';
 
 
     /**
