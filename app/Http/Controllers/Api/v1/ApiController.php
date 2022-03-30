@@ -24,7 +24,7 @@ class ApiController extends BaseController
      */
     public function saveInterface(Request $request)
     {
-        validatePost($request->get('item'), $this->post, $this->setRules($this->post['source'], 'save'));
+        validatePost($request->get('item'), $this->post, $this->setRules($this->post['source'] ?? 'json', 'save'));
         $user = $request->get('unauthorized');
         $result = $this->post['source'] === 'json' ? $this->apiService->saveApiLists($this->post, $user) : $this->apiService->saveMarkDown($this->post, $user);
         return ajaxReturn($result);
@@ -36,7 +36,7 @@ class ApiController extends BaseController
      */
     public function updateInterface(Request $request)
     {
-        validatePost($request->get('item'), $this->post, $this->setRules($this->post['source'], 'update'));
+        validatePost($request->get('item'), $this->post, $this->setRules($this->post['source'] ?? 'json', 'update'));
         $user = $request->get('unauthorized');
         $result = $this->post['source'] === 'json' ? $this->apiService->updateApiLists($this->post, $user) : $this->apiService->updateMarkDown($this->post, $user);
         return ajaxReturn($result);

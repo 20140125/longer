@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
+use Illuminate\Support\Facades\Log;
 
 class SystemConfigService extends BaseService
 {
@@ -132,12 +133,14 @@ class SystemConfigService extends BaseService
             $this->return['message'] = 'get system config failed';
             return $this->return;
         }
-        foreach ($result->children as &$child) {
+        $children = json_decode($result->children, true);
+        foreach ($children as &$child) {
             if ($child['id'] == $form['id']) {
                 $child['status'] = $form['status'];
+                $child['updated_at'] = date('Y-m-d H:i:s', time());
             }
         }
-        $result = $this->systemConfigModel->updateOne(['id' => $result['id']], $result);
+        $result = $this->systemConfigModel->updateOne(['id' => $result->id], ['children' => $children]);
         if (empty($result)) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Plugin installed failed';
