@@ -61,6 +61,7 @@ class SyncRedisTokenKey extends Command
     {
         $redisKeys = $this->redisClient->Keys('*');
         foreach ($redisKeys as $item) {
+            $item = str_replace('laravel_database_', '', $item);
             if (!in_array($item, $this->permissionKeys)) {
                 if (empty($this->usersModel->getOne(['remember_token' => $item]))) {
                     $this->redisClient->del($item);
