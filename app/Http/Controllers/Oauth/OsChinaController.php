@@ -78,7 +78,7 @@ class OsChinaController extends OAuthController
     /**
      * TODO:：获取access_token
      * @param string $code
-     * @return array|bool|mixed
+     * @return array
      * @throws \Exception
      */
     public function getAccessToken(string $code)
@@ -103,7 +103,7 @@ class OsChinaController extends OAuthController
     /**
      * TODO:：刷新AccessToken续期
      * @param string $refreshToken
-     * @return array|mixed
+     * @return array
      * @throws \Exception
      */
     public function refreshToken(string $refreshToken)
@@ -128,7 +128,7 @@ class OsChinaController extends OAuthController
     /**
      * TODO:获取用户信息
      * @param string $access_token
-     * @return array|mixed
+     * @return array
      */
     public function getUserInfo(string $access_token)
     {

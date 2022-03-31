@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         /* 自定义中间件 */
         'checkLogin'       => \App\Http\Middleware\CheckLogin::class,
         'checkAuth'        => \App\Http\Middleware\CheckAuth::class,
+        'checkOAuth'       => \App\Http\Middleware\CheckOAuth::class,
     ];
 }

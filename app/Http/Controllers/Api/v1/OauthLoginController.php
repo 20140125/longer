@@ -8,6 +8,7 @@ use App\Http\Controllers\Oauth\GithubController;
 use App\Http\Controllers\Oauth\OsChinaController;
 use App\Http\Controllers\Oauth\WeiBoController;
 use App\Http\Controllers\Utils\RedisClient;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Controller;
@@ -36,9 +37,10 @@ class OauthLoginController extends Controller
 
     /**
      * TODO:：QQ跳转到授权登录页面
-     * @return RedirectResponse|Redirector
+     * @param string $source
+     * @return Application|RedirectResponse|Redirector
      */
-    public function QQ($source = '')
+    public function QQ(string $source = '')
     {
         $appId = config('app.qq_appid');
         $appSecret = config('app.qq_secret');
@@ -50,9 +52,10 @@ class OauthLoginController extends Controller
 
     /**
      * TODO:：Github跳转到授权登录页面
-     * @return RedirectResponse|Redirector
+     * @param string $source
+     * @return Application|RedirectResponse|Redirector
      */
-    public function gitHub($source = '')
+    public function gitHub(string $source = '')
     {
         $appId = config('app.github_appid');
         $appSecret = config('app.github_secret');
@@ -64,9 +67,10 @@ class OauthLoginController extends Controller
 
     /**
      * TODO:：Weibo跳转到授权登录页面
-     * @return RedirectResponse|Redirector
+     * @param string $source
+     * @return Application|RedirectResponse|Redirector
      */
-    public function weibo($source = '')
+    public function weibo(string $source = '')
     {
         $appId = config('app.weibo_appid');
         $appSecret = config('app.weibo_secret');
@@ -78,9 +82,10 @@ class OauthLoginController extends Controller
 
     /**
      * TODO:：Gitee跳转到授权登录页面
-     * @return RedirectResponse|Redirector
+     * @param string $source
+     * @return Application|RedirectResponse|Redirector
      */
-    public function gitee($source = '')
+    public function gitee(string $source = '')
     {
         $appId = config('app.gitee_appid');
         $appSecret = config('app.gitee_secret');
@@ -92,9 +97,10 @@ class OauthLoginController extends Controller
 
     /**
      * TODO:：Gitee跳转到授权登录页面
-     * @return RedirectResponse|Redirector
+     * @param string $source
+     * @return Application|RedirectResponse|Redirector
      */
-    public function baidu($source = '')
+    public function baidu(string $source = '')
     {
         $appId = config('app.baidu_appid');
         $appSecret = config('app.baidu_secret');
@@ -106,9 +112,10 @@ class OauthLoginController extends Controller
 
     /**
      * TODO:：OsChina跳转到授权登录页面
-     * @return RedirectResponse|Redirector
+     * @param string $source
+     * @return Application|RedirectResponse|Redirector
      */
-    public function osChina($source = '')
+    public function osChina(string $source = '')
     {
         $appId = config('app.os_china_appid');
         $appSecret = config('app.os_china_secret');
