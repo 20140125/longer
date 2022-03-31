@@ -21,9 +21,16 @@ class CheckLogin extends Base
     {
         parent::handle($request, $next);
         /* todo:默认不鉴权 */
-        $permissionArray = empty($this->post['token']) ? ['/api/v1/oauth/config', '/api/v1/report/code', '/api/v1/account/login', '/api/v1/mail/send'] : [ '/api/v1/report/code', '/api/v1/account/login', '/api/v1/mail/send'];
+        $permissionArray = empty($this->post['token']) ? [route('getSystemConfig'), route('reportCode'), route('login'), route('sendMail')]
+            : [route('reportCode'), route('login'), route('sendMail')];
         if (in_array($request->getRequestUri(), $permissionArray)) {
             return $next($request);
+        }
+        /* todo:H5, 小程序未登录访问页面 */
+        if (empty($this->post['token'])) {
+            if (in_array($request->getRequestUri(), [route('getImageLists'), route('getHotKeyWords')])) {
+                return $next($request);
+            }
         }
         /* todo:判断用户是登录 */
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
