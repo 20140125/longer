@@ -25,6 +25,12 @@ class CheckLogin extends Base
         if (in_array($request->getRequestUri(), $permissionArray)) {
             return $next($request);
         }
+        /* todo:H5, 小程序未登录访问页面 */
+        if (empty($this->post['token'])) {
+            if (in_array(config('app.url').$request->getRequestUri(), [route('getImageLists'), route('getHotKeyWords')])) {
+                return $next($request);
+            }
+        }
         /* todo:判断用户是登录 */
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] === Code::SUCCESS && !empty($this->post['token'])) {
