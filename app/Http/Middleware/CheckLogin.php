@@ -21,12 +21,15 @@ class CheckLogin extends Base
     {
         parent::handle($request, $next);
         /* todo:默认不鉴权 */
-        $permissionArray = empty($this->post['token']) ? ['/api/v1/oauth/config', '/api/v1/report/code', '/api/v1/account/login', '/api/v1/mail/send'] : [ '/api/v1/report/code', '/api/v1/account/login', '/api/v1/mail/send'];
-        if (in_array($request->getRequestUri(), $permissionArray)) {
+        $permissionArray = empty($this->post['token']) ?
+            [route('getSystemConfig'), route('reportCode'), route('login'), route('sendMail')] :
+            [route('reportCode'), route('login'), route('sendMail')];
+        if (in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(), $permissionArray)) {
             return $next($request);
         }
         /* todo:H5, 小程序未登录访问页面 */
-        if (in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(), [route('getImageLists'), route('getHotKeyWords')])) {
+        if (in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(),
+            [route('lists'), route('hotLists'), route('newLists'), route('getHotKeyWords')])) {
             return $next($request);
         }
         /* todo:判断用户是登录 */
