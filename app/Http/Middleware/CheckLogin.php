@@ -29,7 +29,15 @@ class CheckLogin extends Base
         }
         /* todo: Web页面鉴权 */
         if (empty($this->post['token']) && in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(),
-            [route('lists'), route('hotLists'), route('newLists'), route('getHotKeyWords')])) {
+            [
+                route('wxLogin'),
+                route('getOpenId'),
+                route('lists'),
+                route('hotLists'),
+                route('newLists'),
+                route('getHotKeyWords'),
+                route('imageSpiders')
+            ])) {
             return $next($request);
         }
         /* todo:判断用户是登录 */
