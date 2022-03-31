@@ -26,7 +26,7 @@ class CheckLogin extends Base
             return $next($request);
         }
         /* todo:H5, 小程序未登录访问页面 */
-        if (in_array(config('app.url').$request->getRequestUri(), [route('getImageLists'), route('getHotKeyWords')])) {
+        if (in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(), [route('getImageLists'), route('getHotKeyWords')])) {
             return $next($request);
         }
         /* todo:判断用户是登录 */
