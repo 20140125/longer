@@ -27,8 +27,8 @@ class CheckLogin extends Base
         if (in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(), $permissionArray)) {
             return $next($request);
         }
-        /* todo:H5, 小程序未登录访问页面 */
-        if (in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(),
+        /* todo: Web页面鉴权 */
+        if (empty($this->post['token']) && in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(),
             [route('lists'), route('hotLists'), route('newLists'), route('getHotKeyWords')])) {
             return $next($request);
         }
