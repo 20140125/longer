@@ -22,8 +22,17 @@ class CheckLogin extends Base
         parent::handle($request, $next);
         /* todo:默认不鉴权 */
         $permissionArray = empty($this->post['token']) ?
-            [route('getSystemConfig'), route('reportCode'), route('login'), route('sendMail')] :
-            [route('reportCode'), route('login'), route('sendMail')];
+            [
+                route('getSystemConfig'),
+                route('reportCode'),
+                route('login'),
+                route('sendMail')
+            ] :
+            [
+                route('reportCode'),
+                route('login'),
+                route('sendMail')
+            ];
         if (in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(), $permissionArray)) {
             return $next($request);
         }
