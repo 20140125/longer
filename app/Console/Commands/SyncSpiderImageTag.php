@@ -47,7 +47,7 @@ class SyncSpiderImageTag extends Command
     {
         $url = $this->argument('url');
         if ($url == 'https://www.fabiaoqing.com/tag/detail/id/?.html') {
-            $ids = range(1, 60471);
+            $ids = range(1, 61480);
             foreach ($ids as $id) {
                 $this->getImageLists(str_replace('?', $id, $url));
             }
