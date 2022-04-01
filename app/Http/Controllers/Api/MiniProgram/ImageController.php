@@ -17,7 +17,7 @@ class ImageController extends BaseController
      */
     public function getImageLists(Request $request)
     {
-        $start_time = time();
+        $start_time = microtime(true);
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string']);
         // todo: 单次请求记录超过限制
         if (!empty($this->post['limit']) && $this->post['limit'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
@@ -32,8 +32,8 @@ class ImageController extends BaseController
         }
         $columns = ['href', 'name', 'width', 'height', 'id'];
         $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'rand', 'direction' => 'desc'], $columns);
-        $end_time = time();
-        return ajaxReturn($result, (int) $end_time - $start_time);
+        $end_time = microtime(true);
+        return ajaxReturn($result, ($end_time - $start_time) * 1000);
     }
 
     /**
