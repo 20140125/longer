@@ -47,9 +47,9 @@ class SyncSpiderImageTag extends Command
     {
         $url = $this->argument('url');
         if ($url == 'https://www.fabiaoqing.com/tag/detail/id/?.html') {
-            $pages = range(1, 60471);
-            foreach ($pages as $page) {
-                $this->getImageLists(str_replace('?', $page, $url));
+            $ids = range(1, 60471);
+            foreach ($ids as $id) {
+                $this->getImageLists(str_replace('?', $id, $url));
             }
         } else {
             $this->getImageLists($url);
@@ -70,7 +70,7 @@ class SyncSpiderImageTag extends Command
             $client = new Client();
             $promise = $client->request('GET', $url);
             $pageSize = $promise->filter('#mobilepage')->text();
-            $totalPage = intval(explode('/', $pageSize)[1]) === 374 ? 1 : explode('/', $pageSize)[1];
+            $totalPage = intval(explode('/', $pageSize)[1]) >= 100 ? 1 : explode('/', $pageSize)[1];
             $pageRange = range($this->startPage, $totalPage);
             $bar = $this->output->createProgressBar($totalPage);
             foreach ($pageRange as $item) {
