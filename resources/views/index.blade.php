@@ -5,11 +5,12 @@
     <meta name="referrer" content="no-referrer">
     <meta http-equiv=X-UA-Compatible content="IE=edge">
     <title>魔盒逗图</title>
-    <script type="text/javascript">
-        (function () {
-            const hm = document.createElement("script");
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
             hm.src = "https://hm.baidu.com/hm.js?f89b6a9c4850b466c82a5e1a8e73e76b";
-            const s = document.getElementsByTagName("script")[0];
+            var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         })();
     </script>
