@@ -21,7 +21,7 @@
 <body>
 <noscript><strong>Please enable JavaScript to continue.</strong></noscript>
 <div id=app></div>
-<script src=/h5/static/js/chunk-vendors.15c4781d.js></script>
-<script src=/h5/static/js/index.8eba310b.js></script>
+<script src=/h5/static/js/chunk-vendors.f6d320c6.js></script>
+<script src=/h5/static/js/index.a8851602.js></script>
 </body>
 </html>
