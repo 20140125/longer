@@ -238,7 +238,7 @@ class Events
         /* 从房间的客户端列表中删除 */
         if (isset($_SESSION['room_id'])) {
             $room_id = $_SESSION['room_id'];
-            self::$chat->sRem(REDIS_KEY, $_SESSION['uuid']);
+            self::$chat->sRem('laravel_database_'.REDIS_KEY, $_SESSION['uuid']);
             $new_message = array(
                 'type'             => 'logout',
                 'from_client_id'   => $client_id,
