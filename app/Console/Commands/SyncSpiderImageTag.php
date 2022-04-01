@@ -46,9 +46,13 @@ class SyncSpiderImageTag extends Command
     public function handle()
     {
         $url = $this->argument('url');
-        $pages = range(1, 60471);
-        foreach ($pages as $page) {
-            $this->getImageLists(str_replace('?', $page, $url));
+        if ($url == 'https://www.fabiaoqing.com/tag/detail/id/?.html') {
+            $pages = range(1, 60471);
+            foreach ($pages as $page) {
+                $this->getImageLists(str_replace('?', $page, $url));
+            }
+        } else {
+            $this->getImageLists($url);
         }
     }
 
