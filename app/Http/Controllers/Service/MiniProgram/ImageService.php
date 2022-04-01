@@ -32,9 +32,6 @@ class ImageService extends BaseService
     public function getImageLists($form, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
         $where = [];
-        if (!empty($form['id'])) {
-            $where[] = ['type', $form['id']];
-        }
         if (!empty($form['name'])) {
             $where[] = ['name', 'like', "%{$form['name']}%"];
         }

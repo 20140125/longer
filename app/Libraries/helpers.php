@@ -12,15 +12,17 @@ if (!function_exists('ajaxReturn')) {
     /**
      * TODO:返回JSON数据
      * @param array $data
+     * @param int $timestamp
      * @param int $code
      * @return JsonResponse
      */
-    function ajaxReturn(array $data = [], int $code = 200)
+    function ajaxReturn(array $data = [], int $timestamp = 0, int $code = 200)
     {
         $_item = array(
             'item' => $data,
             'code' => $code,
-            'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri()
+            'url' => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) . request()->getRequestUri(),
+            'timestamp' => $timestamp,
         );
         saveLog(array('url' => $_item['url'], 'message' => $data['message'] ?? 'successfully', 'response_params' => $data['lists'] ?? ''));
         return response()->json($_item);

@@ -29,7 +29,8 @@ class ImageController extends BaseController
         if (!empty($this->post['name']) && in_array($this->post['name'], $sensitiveKeywords)) {
             return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => ['data' => [], 'total' => 0]]);
         }
-        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'rand', 'direction' => 'desc']);
+        $columns = ['href', 'name', 'width', 'height', 'id'];
+        $result = $this->imageService->getImageLists($this->post, ['page' => $this->post['page'], 'limit' => $this->post['limit']], ['order' => 'rand', 'direction' => 'desc'], $columns);
         return ajaxReturn($result);
     }
 
