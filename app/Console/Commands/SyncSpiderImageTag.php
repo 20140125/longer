@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Service\v1\BaseService;
 use App\Models\Api\v1\SooGif;
+use App\Models\Api\v1\SystemConfig;
 use Goutte\Client;
 use Illuminate\Console\Command;
 
@@ -45,9 +47,10 @@ class SyncSpiderImageTag extends Command
      */
     public function handle()
     {
+        $spiderTagId = BaseService::getInstance()->getConfiguration('SpiderTagId', 'ImageBed');
         $url = $this->argument('url');
         if ($url == 'https://www.fabiaoqing.com/tag/detail/id/?.html') {
-            $ids = range(27831, 61480);
+            $ids = range($spiderTagId[0], $spiderTagId[1]);
             foreach ($ids as $id) {
                 $this->getImageLists(str_replace('?', $id, $url));
             }
