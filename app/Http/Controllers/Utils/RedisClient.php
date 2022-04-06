@@ -54,7 +54,7 @@ class RedisClient extends Controller
      */
     public function setValue($key, $value, array $timeout = ['EX' => 0])
     {
-        return Redis::set($key, $value, $timeout['EX']);
+        return Redis::setex($key, $timeout['EX'], $value);
     }
 
     /**
