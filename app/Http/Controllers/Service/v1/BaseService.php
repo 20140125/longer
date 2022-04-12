@@ -300,7 +300,7 @@ class BaseService
         $_role = $this->roleModel->getOne(['id' => $_user->role_id], ['auth_api']);
         $_userAuth = json_decode($_role->auth_api, true);
         /* todo:获取所有权限 */
-        $_authLists = $this->authModel->getLists([], ['api', 'name', 'level'], ['key' => 'id', 'ids' => array()], ['order' => 'path', 'direction' => 'asc']);
+        $_authLists = $this->authModel->getLists([], ['api', 'name', 'level','pid', 'id'], ['key' => 'id', 'ids' => array()], ['order' => 'path', 'direction' => 'asc']);
         foreach ($_authLists as &$item) {
             $item->disable = false;
             if (in_array($item->api, $_userAuth)) {
