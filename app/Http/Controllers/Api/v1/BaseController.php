@@ -24,6 +24,7 @@ use App\Http\Controllers\Service\v1\UserCenterService;
 use App\Http\Controllers\Service\v1\UserService;
 use App\Http\Controllers\Service\v1\TimeLineService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @class BaseController
@@ -141,6 +142,6 @@ class BaseController extends Controller
         $this->spiderService = SpiderService::getInstance();
         $this->emotionService = EmotionService::getInstance();
         $this->post = $request->post();
-        unset($this->post['token']);
+        Log::error($this->post['token']);
     }
 }
