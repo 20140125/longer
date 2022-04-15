@@ -142,6 +142,5 @@ class BaseController extends Controller
         $this->spiderService = SpiderService::getInstance();
         $this->emotionService = EmotionService::getInstance();
         $this->post = $request->post();
-        Log::error($this->post['token']);
     }
 }
