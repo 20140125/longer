@@ -190,7 +190,6 @@ class BaseService
      */
     public function getVerifyCode($key, $value)
     {
-        \Illuminate\Support\Facades\Log::error($this->redisClient->getValue($key));
         $result = $this->redisClient->getValue($key) && strtoupper($value) === $this->redisClient->getValue($key);
         if (!$result) {
             $this->return['code'] = Code::VERIFY_CODE_ERROR;
