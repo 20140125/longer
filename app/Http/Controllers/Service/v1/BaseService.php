@@ -190,7 +190,8 @@ class BaseService
      */
     public function getVerifyCode($key, $value)
     {
-        $result = $this->redisClient->getValue($key) && strtoupper($value) === $this->redisClient->getValue($key);
+        $result = $this->redisClient->getValue($key);
+        \Illuminate\Support\Facades\Log::error($result);
         if (!$result) {
             $this->return['code'] = Code::VERIFY_CODE_ERROR;
             $this->return['message'] = 'Get verify code failed';
