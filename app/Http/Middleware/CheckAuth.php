@@ -19,6 +19,7 @@ class CheckAuth extends Base
      */
     public function handle(Request $request, Closure $next)
     {
+        Log::error($this->post['token'] . 'AAAAAAABBBBB');
         parent::handle($request, $next);
         if (empty($this->post['token'])) {
             $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::NOT_LOGIN_MESSAGE)));
