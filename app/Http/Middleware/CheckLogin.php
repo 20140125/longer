@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Utils\Code;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class checkLogin
@@ -51,9 +50,7 @@ class CheckLogin extends Base
             return $next($request);
         }
         /* todo:判断用户是登录 */
-        Log::error($this->post['token']);
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
-        Log::error(json_encode($authorization));
         if ($authorization['code'] === Code::SUCCESS) {
             /* todo:用户信息 */
             $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);

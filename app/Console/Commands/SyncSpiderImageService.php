@@ -50,7 +50,7 @@ class SyncSpiderImageService extends Command
 
     /**
      * todo:爬取图片
-     * @param $startId
+     * @param $href
      */
     protected function spiderImage($href)
     {
