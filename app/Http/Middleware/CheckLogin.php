@@ -51,7 +51,6 @@ class CheckLogin extends Base
             return $next($request);
         }
         /* todo:判断用户是登录 */
-        Log::error($this->post['token'] . 'AAAAAAABBBBB');
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] === Code::SUCCESS) {
             /* todo:用户信息 */
