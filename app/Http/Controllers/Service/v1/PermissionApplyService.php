@@ -6,7 +6,6 @@ use App\Http\Controllers\Utils\Code;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class PermissionApplyService
@@ -166,7 +165,6 @@ class PermissionApplyService extends BaseService
             DB::commit();
             return $this->return;
         } catch (\Exception $exception) {
-            Log::error($exception);
             $this->return['code'] = Code::SERVER_ERROR;
             $this->return['message'] = $exception->getMessage();
             DB::rollBack();
