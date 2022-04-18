@@ -60,7 +60,7 @@ class CheckLogin extends Base
                 return $next($request);
             }
             /* todo:角色信息 */
-            $_role = $this->roleService->getRole(['id' => $_user->role_id ?? 2], ['auth_api', 'status']);
+            $_role = $this->roleService->getRole(['id' => $_user->role_id], ['auth_api', 'status']);
             /* todo:刷新用户Redis存储时间 */
             $this->userService->setVerifyCode($this->post['token'], $this->post['token'], config('app.app_refresh_login_time'));
             /* todo:存储在线用户 */

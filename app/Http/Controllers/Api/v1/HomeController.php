@@ -16,9 +16,10 @@ class HomeController extends BaseController
     public function getMenu(Request $request)
     {
         $user = $request->get('unauthorized');
-        $result = json_decode(Cache::get('role_permission_' . $user->role_id ?? 2), true);
+        validatePost($request->get('item'));
+        $result = json_decode(Cache::get('role_permission_' . $user->role_id), true);
         if (empty($result['lists'])) {
-            $result = $this->authService->getLists(array('role_id' => $user->role_id ?? 2, 'id' => ''), ['id', 'pid', 'name', 'href']);
+            $result = $this->authService->getLists(array('role_id' => $user->role_id, 'id' => ''), ['id', 'pid', 'name', 'href']);
             Cache::put('role_permission_' . $user->role_id, json_encode($result, JSON_UNESCAPED_UNICODE), Carbon::now()->addHour());
         }
         return ajaxReturn($result);
