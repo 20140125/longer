@@ -58,7 +58,7 @@ class PermissionApplyService extends BaseService
             $item->updated_at = empty($item->updated_at) ? '' : date('Y-m-d H:i:s', $item->updated_at);
             $item->refresh = $item->expires - (3600 * 24 * 7) <= time();
             $item->expires = empty($item->expires) ? '' : date('Y-m-d H:i:s', $item->expires);
-            $item->applyLog = $this->permissionApplyLogModel->getLists(['apply_id' => $item->id]);
+            $item->applyLog = $this->permissionApplyLogModel->getLists(['id' => $item->id]);
         }
         return $this->return;
     }
@@ -79,6 +79,7 @@ class PermissionApplyService extends BaseService
                 $permission['status'] = 2;
                 $permission['username'] = $this->userModel->getOne(['id' => $form['user_id']], ['username'])->username;
                 $permission['href'] = $href;
+                $permission['user_id'] = $form['user_id'];
                 $result = $this->permissionApplyModel->saveOne($permission);
                 if (empty($result)) {
                     $this->return['code'] = Code::ERROR;
