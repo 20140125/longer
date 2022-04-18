@@ -59,6 +59,9 @@ class PermissionApplyService extends BaseService
             $item->refresh = $item->expires - (3600 * 24 * 7) <= time();
             $item->expires = empty($item->expires) ? '' : date('Y-m-d H:i:s', $item->expires);
             $item->applyLog = $this->permissionApplyLogModel->getLists(['id' => $item->id]);
+            foreach($item->applyLog as &$log) {
+                $log->created_at = empty($log->created_at) ? '' : date('Y-m-d H:i:s', $log->created_at);
+            }
         }
         return $this->return;
     }
