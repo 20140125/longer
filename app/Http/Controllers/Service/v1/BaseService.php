@@ -224,7 +224,7 @@ class BaseService
             'websocket'         => config('app.websocket') ?? '',
             'role_id'           => encrypt($_user->role_id ?? ''),
             'uuid'              => $_user->uuid ?? '',
-            'local'             => config('app.url') ?? '',
+            'local'             => substr_replace(config('app.url'), '', strlen(config('app.url')) - 1) ?? '',
             'adcode'            => $adCode ?? '',
             'city'              => !empty($province->name) ? $province->name . $area->name : $area->name,
             'room_id'           => '1200',
