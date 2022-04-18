@@ -86,7 +86,13 @@ class PermissionApplyService extends BaseService
                     DB::rollBack();
                     return $this->return;
                 }
-                $this->permissionApplyLogModel->saveOne(['apply_id' => $result, 'desc' => '用户申请权限', 'user_name' => $permission['username'], 'created_at' => date(time())]);
+                $this->permissionApplyLogModel->saveOne([
+                    'id' => $result,
+                    'desc' => '用户申请权限',
+                    'user_name' => $permission['username'],
+                    'created_at' => date(time()),
+                    'user_id' =>  $form['user_id']
+                ]);
             }
             $this->return['lists'] = $form;
             DB::commit();
