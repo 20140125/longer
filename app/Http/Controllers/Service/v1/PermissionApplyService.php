@@ -139,7 +139,7 @@ class PermissionApplyService extends BaseService
                 $this->roleModel->updateOne(['id' => $_roleAuth['user']->role_id], $_roleAuth['form']);
                 $this->permissionApplyLogModel->saveOne([
                     'apply_id' => $form['id'],
-                    'desc' => '管理员通过申请权限',
+                    'desc' => '管理员通过权限申请',
                     'user_name' => $user->username,
                     'created_at' => date(time()),
                     'user_id' => $user->id

@@ -79,7 +79,7 @@ class PermissionApply extends Base
      */
     public function getLists($user, array $where = [], array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
-        if (!empty($user) && !in_array($user->role_id, [1])) {
+        if (!empty($user) && $user->role_id != 1) {
             $where[] = ['user_id', empty($user->oauth_type) ? $user->id : $user->uid];
         }
         $result['data'] = DB::table($this->table)->limit($pagination['limit'])
