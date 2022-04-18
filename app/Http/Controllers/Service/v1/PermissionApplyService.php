@@ -121,6 +121,10 @@ class PermissionApplyService extends BaseService
         $form = ['id' => $form['id'], 'expires' => strtotime('+ 30 days'), 'updated_at' => time(), 'status' => $form['status']];
         DB::beginTransaction();
         try {
+            $permission = $this->permissionApplyModel->getOne(['id' => $form['id']]);
+            if (!empty($permission)) {
+                $form['expires'] = $permission->expires > strtotime('+ 30 days') ? $permission->expires : $permission->expires + 30 * 24 * 3600;
+            }
             $result = $this->permissionApplyModel->updateOne(['id' => $form['id']], $form);
             if (empty($result)) {
                 $this->return['code'] = Code::ERROR;
