@@ -64,6 +64,7 @@ class InterfaceCategoryService extends BaseService
             return $this->return;
         }
         $this->return['lists'] = $form;
+        $this->return['message'] = 'save category successfully';
         return $this->return;
     }
 
@@ -80,10 +81,11 @@ class InterfaceCategoryService extends BaseService
         $result = $this->apiCategoryModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Error update category';
+            $this->return['message'] = 'update category failed';
             return $this->return;
         }
         $this->return['lists'] = $form;
+        $this->return['message'] = 'update category successfully';
         return $this->return;
     }
 
@@ -97,11 +99,12 @@ class InterfaceCategoryService extends BaseService
         $result = $this->apiCategoryModel->removeOne(['id' => $form['id']]);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Error delete category';
+            $this->return['message'] = 'delete category failed';
             return $this->return;
         }
         /* todo:删除接口详情 */
         $this->return['lists'] = $form;
+        $this->return['message'] = 'delete category successfully';
         return $this->return;
     }
 

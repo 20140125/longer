@@ -97,11 +97,12 @@ class ApiService extends BaseService
         $result = $this->apiListsModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Error saving json interface details';
+            $this->return['message'] = 'saving json interface details failed';
             return $this->return;
         }
         $form['source'] = 2;
         $this->saveApiLog($form, $user);
+        $this->return['message'] = 'saving json interface details successfully';
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -126,11 +127,12 @@ class ApiService extends BaseService
         $result = $this->apiListsModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Error update json interface details';
+            $this->return['message'] = 'update json interface details failed';
             return $this->return;
         }
         $form['source'] = 2;
         $this->saveApiLog($form, $user);
+        $this->return['message'] = 'update json interface details successfully';
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -152,11 +154,12 @@ class ApiService extends BaseService
         $result = $this->apiDocModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Error saving markdown interface details';
+            $this->return['message'] = 'saving markdown interface details failed';
             return $this->return;
         }
         $form['source'] = 1;
         $this->saveApiLog($form, $user);
+        $this->return['message'] = 'saving markdown interface details successfully';
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -178,11 +181,12 @@ class ApiService extends BaseService
         $result = $this->apiDocModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
-            $this->return['message'] = 'Error update markdown interface details';
+            $this->return['message'] = 'update markdown interface details failed';
             return $this->return;
         }
         $form['source'] = 1;
         $this->saveApiLog($form, $user);
+        $this->return['message'] = 'update markdown interface details successfully';
         $this->return['lists'] = $form;
         return $this->return;
     }
