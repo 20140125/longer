@@ -132,7 +132,13 @@ class PermissionApplyService extends BaseService
             $_role = $this->roleModel->getOne(['id' => $_roleAuth['user']->id]);
             if (!empty($_role)) {
                 $this->roleModel->updateOne(['id' => $_roleAuth['user']->role_id], $_roleAuth['form']);
-                $this->permissionApplyLogModel->saveOne(['apply_id' => $form['id'], 'desc' => '管理员通过申请权限', 'user_name' => $user->username, 'created_at' => date(time())]);
+                $this->permissionApplyLogModel->saveOne([
+                    'id' => $form['id'],
+                    'desc' => '管理员通过申请权限',
+                    'user_name' => $user->username,
+                    'created_at' => date(time()),
+                    'user_id' => $user->id
+                ]);
                 $this->return['lists'] = $form;
                 DB::commit();
                 return $this->return;
@@ -144,7 +150,13 @@ class PermissionApplyService extends BaseService
             $this->roleModel->saveOne($_roleAuth['form']);
             /* todo:更新用户角色 */
             $this->userModel->updateOne(['id' => $_roleAuth['form']['id']], ['role_id' => $_roleAuth['form']['id']]);
-            $this->permissionApplyLogModel->saveOne(['apply_id' => $form['id'], 'desc' => '用户权限续期成功', 'user_name' => $user->username, 'created_at' => date(time())]);
+            $this->permissionApplyLogModel->saveOne([
+                'id' => $form['id'],
+                'desc' => '用户权限续期成功',
+                'user_name' => $user->username,
+                'created_at' => date(time()),
+                'user_id' => $user->id
+            ]);
             $this->return['lists'] = $form;
             DB::commit();
             return $this->return;
