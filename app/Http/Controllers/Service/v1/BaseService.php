@@ -324,7 +324,7 @@ class BaseService
         /* todo:获取当前用户权限 */
         $_user = $this->userModel->getOne(['id' => $_requestAuth->user_id], ['role_id', 'id', 'username']);
         /* todo；获取用户的角色信息 */
-        $_role_authIds = json_decode($this->roleModel->getOne(['id' => $_user->role_id], ['auth_ids'])->auth_ids, true);
+        $_role_authIds = json_decode(($this->roleModel->getOne(['id' => $_user->role_id], ['auth_ids']))->auth_ids, true);
         /* todo:根据地址获取权限信息 */
         $_auth = $this->authModel->getOne(['api' => $_requestAuth->href], ['id']);
         /* todo:更新角色信息 */
