@@ -42,7 +42,7 @@ class PermissionApplyController extends BaseController
             'user_id' => 'required|integer',
             'expires' => 'required|date|before:' . date('Y-m-d H:i:s', strtotime('+1 year')) . '|after:' . date('Y-m-d H:i:s'),
             'desc'    => 'required|string',
-            'href'    => 'required|string'
+            'href'    => 'required|array'
         ]);
         $result = $this->permissionApplyService->savePermissionApply($this->post);
         return ajaxReturn($result);

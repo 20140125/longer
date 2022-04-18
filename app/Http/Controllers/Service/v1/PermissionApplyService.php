@@ -72,19 +72,22 @@ class PermissionApplyService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $form['expires'] = $form['expires'] ? strtotime($form['expires']) : 0;
-            $form['created_at'] = time();
-            $form['updated_at'] = time();
-            $form['status'] = 2;
-            $form['username'] = $this->userModel->getOne(['id' => $form['user_id']], ['username'])->username;
-            $result = $this->permissionApplyModel->saveOne($form);
-            if (empty($result)) {
-                $this->return['code'] = Code::ERROR;
-                $this->return['message'] = 'save authorization failed';
-                DB::rollBack();
-                return $this->return;
+            foreach($form['href'] as $href) {
+                $permission['expires'] = $form['expires'] ? strtotime($form['expires']) : 0;
+                $permission['created_at'] = time();
+                $permission['updated_at'] = time();
+                $permission['status'] = 2;
+                $permission['username'] = $this->userModel->getOne(['id' => $form['user_id']], ['username'])->username;
+                $permission['href'] = $href;
+                $result = $this->permissionApplyModel->saveOne($permission);
+                if (empty($result)) {
+                    $this->return['code'] = Code::ERROR;
+                    $this->return['message'] = 'save authorization failed';
+                    DB::rollBack();
+                    return $this->return;
+                }
+                $this->permissionApplyLogModel->saveOne(['apply_id' => $result, 'desc' => '用户申请权限', 'user_name' => $permission['username'], 'created_at' => date(time())]);
             }
-            $this->permissionApplyLogModel->saveOne(['apply_id' => $result, 'desc' => '用户申请权限', 'user_name' => $form['username'], 'created_at' => date(time())]);
             $this->return['lists'] = $form;
             DB::commit();
             return $this->return;
