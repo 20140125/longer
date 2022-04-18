@@ -40,9 +40,10 @@ class Test extends Command
     {
         $users = Users::getInstance()->getLists([], [], [], true);
         foreach ($users as $user) {
+            $user->remember_token =  encrypt($user->username.time());
+            Users::getInstance()->updateOne(['id' => $user->id], ['remember_token' => $user->remember_token]);
             Oauth::getInstance()->updateOne(['uid' => $user->id], ['remember_token' => $user->remember_token]);
-            $arr = ['u_name' => $user->username, 'token' => $user->remember_token, 'uid' => $user->id, 'notice_status' => 1, 'user_status' => 1];
-            $id = UserCenter::getInstance()->saveOne($arr);
+            UserCenter::getInstance()->updateOne(['uid' => $user->id], ['token' => $user->remember_token]);
         }
     }
 }
