@@ -83,6 +83,7 @@ class PermissionApplyService extends BaseService
                 $permission['username'] = $this->userModel->getOne(['id' => $form['user_id']], ['username'])->username;
                 $permission['href'] = $href;
                 $permission['user_id'] = $form['user_id'];
+                $permission['desc'] = $form['desc'];
                 $result = $this->permissionApplyModel->saveOne($permission);
                 if (empty($result)) {
                     $this->return['code'] = Code::ERROR;
