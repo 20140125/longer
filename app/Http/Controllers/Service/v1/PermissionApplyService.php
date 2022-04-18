@@ -123,7 +123,7 @@ class PermissionApplyService extends BaseService
         try {
             $permission = $this->permissionApplyModel->getOne(['id' => $form['id']]);
             if (!empty($permission)) {
-                $form['expires'] = $permission->expires > strtotime('+ 30 days') ? $permission->expires : $permission->expires + 30 * 24 * 3600;
+                $form['expires'] = $permission->expires - 30 * 24 * 3600 > time()  ? $permission->expires : $permission->expires + 30 * 24 * 3600;
             }
             $result = $this->permissionApplyModel->updateOne(['id' => $form['id']], $form);
             if (empty($result)) {
