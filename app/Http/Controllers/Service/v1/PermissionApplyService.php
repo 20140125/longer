@@ -151,7 +151,7 @@ class PermissionApplyService extends BaseService
             $_roleAuth['form']['id'] = $_roleAuth['user']->id;
             $_roleAuth['form']['created_at'] = time();
             $_roleAuth['form']['status'] = 1;
-            $_roleAuth['form']['role_name'] = $_roleAuth['user']->username;
+            $_roleAuth['form']['role_name'] = $_roleAuth['user']->username. '【系统管理员】';
             $this->roleModel->saveOne($_roleAuth['form']);
             /* todo:更新用户角色 */
             $this->userModel->updateOne(['id' => $_roleAuth['form']['id']], ['role_id' => $_roleAuth['form']['id']]);
