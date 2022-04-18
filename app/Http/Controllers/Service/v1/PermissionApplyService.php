@@ -58,7 +58,7 @@ class PermissionApplyService extends BaseService
             $item->updated_at = empty($item->updated_at) ? '' : date('Y-m-d H:i:s', $item->updated_at);
             $item->refresh = $item->expires - (3600 * 24 * 7) <= time();
             $item->expires = empty($item->expires) ? '' : date('Y-m-d H:i:s', $item->expires);
-            $item->applyLog = $this->permissionApplyLogModel->getLists(['id' => $item->id]);
+            $item->applyLog = $this->permissionApplyLogModel->getLists(['apply_id' => $item->id]);
             foreach($item->applyLog as &$log) {
                 $log->created_at = empty($log->created_at) ? '' : date('Y-m-d H:i:s', $log->created_at);
             }
@@ -92,7 +92,7 @@ class PermissionApplyService extends BaseService
                     return $this->return;
                 }
                 $this->permissionApplyLogModel->saveOne([
-                    'id' => $result,
+                    'apply_id' => $result,
                     'desc' => '用户申请权限',
                     'user_name' => $permission['username'],
                     'created_at' => date(time()),
@@ -134,7 +134,7 @@ class PermissionApplyService extends BaseService
             if (!empty($_role)) {
                 $this->roleModel->updateOne(['id' => $_roleAuth['user']->role_id], $_roleAuth['form']);
                 $this->permissionApplyLogModel->saveOne([
-                    'id' => $form['id'],
+                    'apply_id' => $form['id'],
                     'desc' => '管理员通过申请权限',
                     'user_name' => $user->username,
                     'created_at' => date(time()),
@@ -152,7 +152,7 @@ class PermissionApplyService extends BaseService
             /* todo:更新用户角色 */
             $this->userModel->updateOne(['id' => $_roleAuth['form']['id']], ['role_id' => $_roleAuth['form']['id']]);
             $this->permissionApplyLogModel->saveOne([
-                'id' => $form['id'],
+                'apply_id' => $form['id'],
                 'desc' => '用户权限续期成功',
                 'user_name' => $user->username,
                 'created_at' => date(time()),
@@ -192,7 +192,13 @@ class PermissionApplyService extends BaseService
             $this->return['lists'] = $form;
             $this->return['code'] = $result ? Code::SUCCESS : Code::ERROR;
             $this->return['message'] = $result ? 'remove authorization successfully' : 'remove authorization failed';
-            $this->permissionApplyLogModel->saveOne(['apply_id' => $form['request_auth_id'], 'desc' => '管理员收回用户权限', 'user_name' => $user->username, 'created_at' => date(time())]);
+            $this->permissionApplyLogModel->saveOne([
+                'apply_id' => $form['request_auth_id'],
+                'desc' => '管理员收回用户权限',
+                'user_name' => $user->username,
+                'created_at' => date(time()),
+                'user_id' => $user->id
+            ]);
             DB::commit();
             return $this->return;
         } catch (\Exception $exception) {
