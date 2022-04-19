@@ -40,10 +40,6 @@ class OauthCallbackController extends Controller
      * @var string $state ;
      */
     protected $state;
-    /**
-     * @var Object $users
-     */
-    protected $users;
 
     /**
      * OauthCallbackController constructor.
@@ -55,11 +51,8 @@ class OauthCallbackController extends Controller
             exit(redirect('/login'));
         }
         $this->redisClient = RedisClient::getInstance();
-        if ($this->redisClient->getValue($request->get('state')) == false) {
+        if (!$this->redisClient->getValue($request->get('state'))) {
             exit(redirect('/login'));
-        }
-        if ($this->redisClient->getValue('users')) {
-            $this->users = json_decode($this->redisClient->getValue('users'));
         }
         $this->state = $this->redisClient->getValue($request->get('state'));
         $this->oauthModel = Oauth::getInstance();
@@ -277,18 +270,13 @@ class OauthCallbackController extends Controller
         BaseService::getInstance()->setVerifyCode($data['remember_token'], $data['remember_token'], config('app.app_refresh_login_time'));
         /* 授权用户存在直接跳转到欢迎页 */
         if (!empty($oauth)) {
-            if (!empty($this->users)) {
-                $data['uid'] = $this->users->id;
-                $data['role_id'] = $this->users->role_id;
-            }
             unset($data['username']);
             unset($data['avatar_url']);
             $oauthRes = $this->oauthModel->updateOne($where, $data);
             if (!empty($oauthRes)) {
                 /*  同步用户数据 */
                 Artisan::call("longer:sync-oauth {$data['remember_token']}");
-                return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send()
-                    : redirect('/#/?token='.rawurlencode($data['remember_token']))->send();
+                return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send() : redirect('/#/?token='.rawurlencode($data['remember_token']))->send();
             }
             return redirect('/login')->send();
         }
@@ -300,8 +288,7 @@ class OauthCallbackController extends Controller
             Artisan::call("longer:sync-oauth {$data['remember_token']}");
             Mail::to(config('app.username'))->send(new Register(array('name' => $data['username'])));
             $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
-            return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send()
-                : redirect('/#/?token='.rawurlencode($data['remember_token']))->send();
+            return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send() : redirect('/#/?token='.rawurlencode($data['remember_token']))->send();
         }
         return redirect('/login')->send();
     }
