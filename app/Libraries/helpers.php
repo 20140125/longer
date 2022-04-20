@@ -265,7 +265,8 @@ if (!function_exists('getFileLists')) {
                         'name'       => md5($filePath . $file),
                         'auth'      => chmodFile($filePath . $file),
                         'time'      => date('Y-m-d H:i:s', fileatime($filePath . $file)),
-                        'size'      => formatBates(filesize($filePath . $file))
+                        'size'      => formatBates(filesize($filePath . $file)),
+                        'imagesize' => in_array(explode('.', $file)[1], ['jpg', 'jpeg', 'png', 'gif']) ? getimagesize($filePath . $file) : [],
                     );
                     $fileType[] = filetype($filePath . $file);
                 }
