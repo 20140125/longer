@@ -33,7 +33,7 @@ class LogService extends BaseService
      */
     public function getLog($user, $where, array $columns = ['*'])
     {
-        $where = [];
+        $where = [['id', $where['id']]];
         if ($user->role_id != 1) {
             $where[] = ['username', $user->username];
         }
