@@ -37,7 +37,8 @@ class LogService extends BaseService
         if ($user->role_id != 1) {
             $where[] = ['username', $user->username];
         }
-        $this->return['lists'] = json_decode(($this->logModel->getOne($where, $columns))->log, true);
+        $result = $this->logModel->getOne($where, $columns);
+        $this->return['lists'] = json_decode($result->log, true);
         return $this->return;
     }
 
