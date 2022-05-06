@@ -32,16 +32,10 @@ class SystemConfigService extends BaseService
     public function getSystemConfigLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
     {
         $this->return['lists'] = $this->systemConfigModel->getLists($pagination, $order, $columns);
-        $intFields = ['status', 'id', 'pid'];
         foreach ($this->return['lists']['data'] as &$item) {
             $item->created_at = date('Y-m-d H:i:s', $item->created_at);
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
             $item->children = $item->children ? json_decode($item->children, true) : [];
-            foreach ($intFields as $int) {
-                foreach ($item->children as &$child) {
-                    $child[$int] = (int)$child[$int];
-                }
-            }
         }
         return $this->return;
     }
