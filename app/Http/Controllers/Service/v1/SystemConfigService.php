@@ -83,6 +83,7 @@ class SystemConfigService extends BaseService
             return $this->return;
         }
         $this->return['message'] = 'save system config successfully';
+        $form['children'] = json_decode($form['children'], true);
         $this->return['lists'] = $form;
         return $this->return;
     }
@@ -108,6 +109,7 @@ class SystemConfigService extends BaseService
             return $this->return;
         }
         $this->return['message'] = 'update system config successfully';
+        $form['children'] = json_decode($form['children'], true);
         $this->return['lists'] = $form;
         return $this->return;
     }
