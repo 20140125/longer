@@ -60,6 +60,7 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get', 'post'], 'auth/update', [App\Http\Controllers\Api\v1\AuthController::class, 'updateAuth'])->name('updateAuth');
         /* todo:日志管理 */
         Route::match(['get', 'post'], 'log/index', [App\Http\Controllers\Api\v1\LogController::class, 'getLogLists'])->name('getLogLists');
+        Route::match(['get', 'post'], 'log/get', [App\Http\Controllers\Api\v1\LogController::class, 'getLog'])->name('getLog');
         Route::match(['get', 'post'], 'log/delete', [App\Http\Controllers\Api\v1\LogController::class, 'removeLog'])->name('removeLog');
         /* todo:角色管理 */
         Route::match(['get', 'post'], 'role/index', [App\Http\Controllers\Api\v1\RoleController::class, 'getRoleLists'])->name('getRoleLists');

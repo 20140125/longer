@@ -21,6 +21,19 @@ class LogController extends BaseController
     }
 
     /**
+     * todo:获取日志信息
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getLog(Request $request)
+    {
+        validatePost($request->get('item'), $this->post, ['id' => 'required|integer']);
+        $_user = $request->get('unauthorized');
+        $result = $this->logService->getLog($_user, ['id' => $this->post['id']], ['log']);
+        return ajaxReturn($result);
+    }
+
+    /**
      * todo:日志删除
      * @param Request $request
      * @return JsonResponse

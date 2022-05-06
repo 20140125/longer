@@ -26,24 +26,30 @@ class LogService extends BaseService
 
     /**
      * todo:获取日志
+     * @param $user
      * @param $where
-     * @param string[] $columns
-     * @return Model|Builder|object|null
+     * @param array $columns
+     * @return array
      */
-    public function getLog($where, array $columns = ['*'])
+    public function getLog($user, $where, array $columns = ['*'])
     {
-        return $this->areaModel->getOne($where, $columns);
+        $where = [];
+        if ($user->role_id != 1) {
+            $where[] = ['username', $user->username];
+        }
+        $this->return['lists'] = $this->areaModel->getOne($where, $columns);
+        return $this->return;
     }
 
     /**
      * todo:保存日志
      * @param $form
-     * @return int
+     * @return array
      */
     public function saveLog($form)
     {
         $this->return['lists'] = $this->logModel->saveOne($form);
-        return $this->return['lists'];
+        return $this->return;
     }
 
     /**
