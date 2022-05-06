@@ -76,14 +76,14 @@ class SystemConfigService extends BaseService
         $form['created_at'] = time();
         $form['updated_at'] = time();
         $form['children'] = json_encode($form['children'], JSON_UNESCAPED_UNICODE);
-        $result = $this->systemConfigModel->saveOne($form);
+        $id = $this->systemConfigModel->saveOne($form);
         /* 更新PID */
         $form['children'] = json_decode($form['children'], true);
         foreach ($form['children'] as $key => &$item) {
-            $item['pid'] = $result;
-            $item['id'] = $item['id'] ?? $result * 1000 + $key + 1;
+            $item['pid'] = $id;
+            $item['id'] = $item['id'] ?? $id * 1000 + $key + 1;
         }
-        $result = $this->systemConfigModel->updateOne(['id' => $result], $form);
+        $result = $this->systemConfigModel->updateOne(['id' => $id], $form);
         if (empty($result)) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'save system config failed';
