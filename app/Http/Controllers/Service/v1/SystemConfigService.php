@@ -76,14 +76,7 @@ class SystemConfigService extends BaseService
         $form['created_at'] = time();
         $form['updated_at'] = time();
         $form['children'] = json_encode($form['children'], JSON_UNESCAPED_UNICODE);
-        $id = $this->systemConfigModel->saveOne($form);
-        /* 更新PID */
-        $form['children'] = json_decode($form['children'], true);
-        foreach ($form['children'] as $key => &$item) {
-            $item['pid'] = $id;
-            $item['id'] = $item['id'] ?? $id * 1000 + $key + 1;
-        }
-        $result = $this->systemConfigModel->updateOne(['id' => $id], $form);
+        $result = $this->systemConfigModel->saveOne($form);
         if (empty($result)) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'save system config failed';
@@ -104,7 +97,6 @@ class SystemConfigService extends BaseService
         foreach ($form['children'] as $key => &$item) {
             $item['updated_at'] = date('Y-m-d H:i:s', time());
             $item['created_at'] = (!empty($item['created_at']) && is_numeric($item['created_at'])) ? date('Y-m-d H:i:s', $item['created_at']) : date('Y-m-d H:i:s', time());
-            $item['id'] = $item['id'] ?? $form['id'] * 1000 + $key + 1;
         }
         $form['children'] = json_encode($form['children'], JSON_UNESCAPED_UNICODE);
         $form['created_at'] = !empty($form['created_at']) ? strtotime($form['created_at']) : time();
