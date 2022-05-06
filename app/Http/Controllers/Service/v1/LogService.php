@@ -58,7 +58,7 @@ class LogService extends BaseService
         if ($user->role_id != 1) {
             $where[] = ['username', $user->username];
         }
-        $this->return['lists'] = $this->logModel->getLists($where, $pagination);
+        $this->return['lists'] = $this->logModel->getLists($where, $pagination, false, ['order' => 'id', 'direction' => 'desc'], ['id', 'username', 'url', 'ip_address', 'created_at', 'day', 'local']);
         foreach ($this->return['lists']['data'] as &$item) {
             $item->created_at = date("Y-m-d H:i:s", $item->created_at);
         //    $item->log = json_decode($item->log, true);
