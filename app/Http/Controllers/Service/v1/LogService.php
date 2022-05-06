@@ -61,7 +61,7 @@ class LogService extends BaseService
         $this->return['lists'] = $this->logModel->getLists($where, $pagination);
         foreach ($this->return['lists']['data'] as &$item) {
             $item->created_at = date("Y-m-d H:i:s", $item->created_at);
-            $item->log = json_decode($item->log, true);
+        //    $item->log = json_decode($item->log, true);
         }
         return $this->return;
     }
