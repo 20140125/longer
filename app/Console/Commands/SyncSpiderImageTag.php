@@ -16,7 +16,7 @@ class SyncSpiderImageTag extends Command
      * @var string
      */
     /* https://www.fabiaoqing.com/tag/detail/id/?.html ? ID变量  */
-    protected $signature = 'longer:sync-spider_image_tag_url {url=https://www.fabiaoqing.com/biaoqing/lists/page/1.html} {uuid=longer7f00000108fc00000001}';
+    protected $signature = 'longer:sync-spider_image_tag_url {url=https://fabiaoqing.com/biaoqing/lists/page/1.html} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -28,6 +28,8 @@ class SyncSpiderImageTag extends Command
      * @var int $startPage
      */
     protected $startPage;
+
+    protected $source;
 
     /**
      * Create a new command instance.
@@ -51,10 +53,12 @@ class SyncSpiderImageTag extends Command
         $url = $this->argument('url');
         if ($url == 'https://www.fabiaoqing.com/tag/detail/id/?.html') {
             $ids = range($spiderTagId[0], $spiderTagId[1]);
+            $this->source = 'tags';
             foreach ($ids as $id) {
                 $this->getImageLists(str_replace('?', $id, $url));
             }
         } else {
+            $this->source = 'lists';
             $this->getImageLists($url);
         }
     }
@@ -73,7 +77,7 @@ class SyncSpiderImageTag extends Command
             $client = new Client();
             $promise = $client->request('GET', $url);
             $pageSize = $promise->filter('#mobilepage')->text();
-            $totalPage = intval(explode('/', $pageSize)[1]) >= 100 ? 1 : explode('/', $pageSize)[1];
+            $totalPage = (intval(explode('/', $pageSize)[1]) >= 100 && $this->source === 'tags') ? 1 : explode('/', $pageSize)[1];
             $pageRange = range($this->startPage, $totalPage);
             $bar = $this->output->createProgressBar($totalPage);
             foreach ($pageRange as $item) {
