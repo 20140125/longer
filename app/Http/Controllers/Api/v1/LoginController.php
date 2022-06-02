@@ -16,12 +16,13 @@ class LoginController extends BaseController
 {
     /**
      * TODO:登录系统
+     * @param Request $request
      * @return JsonResponse
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
-        $rules = ['email' => 'required|between:8,64|email', 'verify_code' => 'required|integer', 'loginType' => 'required'];
-        if ($this->post['loginType'] === 'password') {
+        $rules = ['email' => 'required|between:8,64|email', 'verify_code' => 'required|integer'];
+        if (!empty($this->post['loginType']) && $this->post['loginType'] === 'password') {
             $rules = ['email' => 'required|between:8,64|email', 'password' => 'required|between:6,32|string', 'verify_code' => 'required|size:6|string'];
         }
         validatePost($request->get('item'), $this->post, $rules);
@@ -40,7 +41,7 @@ class LoginController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function checkAuthorized(Request $request)
+    public function checkAuthorized(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         return ajaxReturn($this->authService->setUnauthorized($request->get('unauthorized'), $request->get('role')));
@@ -48,9 +49,10 @@ class LoginController extends BaseController
 
     /**
      * TODO:验证码上报
+     * @param Request $request
      * @return JsonResponse
      */
-    public function reportCode(Request $request)
+    public function reportCode(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['verify_code' => 'required']);
         return ajaxReturn($this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']));
@@ -58,9 +60,10 @@ class LoginController extends BaseController
 
     /**
      * TODO:发送邮件
+     * @param Request $request
      * @return JsonResponse
      */
-    public function sendMail(Request $request)
+    public function sendMail(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['email' => 'required|between:8,64|email']);
         $result = $this->sendEMailService->sendMail($this->post);
@@ -69,9 +72,10 @@ class LoginController extends BaseController
 
     /**
      * todo:登出系统
+     * @param Request $request
      * @return JsonResponse
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['token' => 'required']);
         $result = $this->userService->getUser(['remember_token' => $this->post['token']]);

@@ -188,7 +188,7 @@ class BaseService
      * @param $value
      * @return array
      */
-    public function getVerifyCode($key, $value)
+    public function getVerifyCode($key, $value): array
     {
         $result = $this->redisClient->getValue($key);
         if (!$result) {
@@ -207,7 +207,7 @@ class BaseService
      * @param $_role
      * @return array
      */
-    public function setUnauthorized($_user, $_role)
+    public function setUnauthorized($_user, $_role): array
     {
         $adCode = request()->ip() === '127.0.0.1' ? 440305 : getCityCode();
         if (!empty($adCode['code']) && $adCode['code'] === Code::SERVER_ERROR) {

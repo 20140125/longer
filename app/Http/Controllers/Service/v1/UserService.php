@@ -34,7 +34,7 @@ class UserService extends BaseService
 
     /**
      * todo:获取用户列表
-     * @param $user
+     * @param object $user
      * @param array|int[] $pagination
      * @param array|string[] $order
      * @param bool $getAll
@@ -42,7 +42,7 @@ class UserService extends BaseService
      * @param array $form
      * @return array
      */
-    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'], array $form = [])
+    public function getUserLists(object $user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'], array $form = [])
     {
         $this->return['lists'] = $this->userModel->getLists($user, $pagination, $order, $getAll, $column, $form);
         foreach ($this->return['lists']['data'] as &$item) {
@@ -55,10 +55,10 @@ class UserService extends BaseService
 
     /**
      * todo:用户登录
-     * @param $form
+     * @param array $form
      * @return array
      */
-    public function loginSYS(&$form)
+    public function loginSYS(array &$form)
     {
         $user = $this->getUser(['email' => $form['email']]);
         if (!empty($form['password'])) {
@@ -80,11 +80,11 @@ class UserService extends BaseService
 
     /**
      * todo：账号密码登录
-     * @param $form
-     * @param $user
+     * @param array $form
+     * @param object $user
      * @return array
      */
-    protected function accountLogin($form, $user)
+    protected function accountLogin(array $form, object $user)
     {
         /* 密码错误 */
         $password = md5(md5($form['password']) . $user->salt);
@@ -99,21 +99,23 @@ class UserService extends BaseService
 
     /**
      * todo:邮箱登录
+     * @param array $form
+     * @param object $user
      * @return array
      */
-    protected function mailLogin($form, $user)
+    protected function mailLogin(array $form, object $user)
     {
         return !empty($user) ? $this->updateUsers($form, $user, 'mail login system successfully') : $this->registerUsers($form, 'mail register system successfully');
     }
 
     /**
      * todo:更新用户信息
-     * @param $form
-     * @param $user
-     * @param $message
+     * @param array $form
+     * @param object $user
+     * @param string $message
      * @return array
      */
-    public function updateUsers($form, $user, $message)
+    public function updateUsers(array $form, object $user, string $message)
     {
         /* 更新用户信息 */
         $salt = getRoundNum(8, 'all');
@@ -142,11 +144,11 @@ class UserService extends BaseService
 
     /**
      * todo:用户注册
-     * @param $form
-     * @param $message
+     * @param array $form
+     * @param string $message
      * @return array
      */
-    protected function registerUsers($form, $message)
+    protected function registerUsers(array $form, string $message)
     {
         $form['avatar_url'] = $this->getUserAvatarImage();
         $form['salt'] = getRoundNum(8, 'all');
