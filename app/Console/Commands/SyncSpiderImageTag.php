@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Service\v1\BaseService;
+use App\Http\Controllers\Service\v1\SystemConfigService;
 use App\Models\Api\v1\SooGif;
 use App\Models\Api\v1\SystemConfig;
 use Goutte\Client;
@@ -27,9 +27,11 @@ class SyncSpiderImageTag extends Command
     /**
      * @var int $startPage
      */
-    protected $startPage;
-
-    protected $source;
+    protected int $startPage;
+    /**
+     * @var string $source
+     */
+    protected string $source;
 
     /**
      * Create a new command instance.
@@ -47,9 +49,9 @@ class SyncSpiderImageTag extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        $spiderTagId = BaseService::getInstance()->getConfiguration('SpiderTagId', 'ImageBed');
+        $spiderTagId = SystemConfigService::getInstance()->getConfiguration('SpiderTagId', 'ImageBed');
         $url = $this->argument('url');
         if ($url == 'https://www.fabiaoqing.com/tag/detail/id/?.html') {
             $ids = range($spiderTagId[0], $spiderTagId[1]);

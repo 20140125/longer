@@ -24,13 +24,15 @@ class SyncRedisTokenKey extends Command
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    protected RedisClient $redisClient;
     /**
      * @var array $permissionKeys
      */
-    protected $permissionKeys;
-
-    protected $usersModel;
+    protected array $permissionKeys;
+    /**
+     * @var Users $usersModel
+     */
+    protected Users $usersModel;
 
     /**
      * Create a new command instance.
@@ -57,7 +59,7 @@ class SyncRedisTokenKey extends Command
      * todo:获取redisToken
      * @return void
      */
-    public function getRedisToken()
+    public function getRedisToken(): void
     {
         $redisKeys = $this->redisClient->Keys('*');
         foreach ($redisKeys as $item) {

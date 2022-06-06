@@ -18,7 +18,7 @@ class CheckLogin extends Base
     /**
      * @param Request $request
      * @param Closure $next
-     * @return mixed
+     * @return mixed|void
      */
     public function handle(Request $request, Closure $next)
     {

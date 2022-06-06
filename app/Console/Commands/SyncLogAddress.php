@@ -37,7 +37,7 @@ class SyncLogAddress extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->syncLogAddress();
     }

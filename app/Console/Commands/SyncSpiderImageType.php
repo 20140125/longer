@@ -21,20 +21,20 @@ class SyncSpiderImageType extends Command
      * @var string
      */
     protected $description = 'synchronizing image type';
-
-    /**
-     * Create a new command instance.
-     * @return void
-     */
     /**
      * @var int $startPage
      */
-    protected $startPage;
+    protected int $startPage;
     /**
      * @var string $baseUrl
      */
-    protected $baseUrl;
+    protected string $baseUrl;
 
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -46,7 +46,7 @@ class SyncSpiderImageType extends Command
      * Execute the console command.
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->getImageType();
     }

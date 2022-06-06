@@ -17,31 +17,31 @@ class Base
     /**
      * @var UserService $userService
      */
-    protected $userService;
+    protected UserService $userService;
     /**
      * @var OauthService $oauthService
      */
-    protected $oauthService;
+    protected OauthService $oauthService;
     /**
      * @var RoleService $roleService
      */
-    protected $roleService;
+    protected RoleService $roleService;
     /**
      * @var AuthService $ruleService
      */
-    protected $ruleService;
+    protected AuthService $ruleService;
     /**
      * @var AreaService $areaService
      */
-    protected $areaService;
+    protected AreaService $areaService;
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    protected RedisClient $redisClient;
     /**
-     * @var $post
+     * @var array $post
      */
-    protected $post;
+    protected array $post;
 
     public function __construct(Request $request)
     {

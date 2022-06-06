@@ -22,8 +22,10 @@ class SyncSpiderImageSooGif extends Command
      * @var string
      */
     protected $description = 'Command description';
-
-    protected $startId;
+    /**
+     * @var int $startId
+     */
+    protected int $startId;
 
     /**
      * Create a new command instance.
@@ -41,12 +43,17 @@ class SyncSpiderImageSooGif extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->getImageLists($this->argument('url'));
     }
 
-    protected function getImageLists($url)
+    /**
+     * todo:获取图片信息
+     * @param $url
+     * @return void
+     */
+    protected function getImageLists($url): void
     {
         try {
             $client = new Client();

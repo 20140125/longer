@@ -36,7 +36,7 @@ class SyncImageListsForTagsProcess implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         try {
             Artisan::call("longer:sync-spider_image_tag_url {$this->post['keywords']} {$this->post['uuid']}");

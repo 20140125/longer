@@ -39,7 +39,7 @@ class SyncWebDriveService extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         putenv('WEBDRIVER_CHROME_DRIVER=D://python/chromedriver.exe');
         $url = $this->argument('url');

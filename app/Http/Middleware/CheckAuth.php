@@ -14,11 +14,9 @@ use Illuminate\Support\Facades\Log;
 class CheckAuth extends Base
 {
     /**
-     * Handle an incoming request.
-     *
      * @param Request $request
-     * @param \Closure $next
-     * @return mixed
+     * @param Closure $next
+     * @return mixed|void
      */
     public function handle(Request $request, Closure $next)
     {

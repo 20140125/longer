@@ -24,7 +24,7 @@ class SyncSpiderImageService extends Command
     /**
      * @var string $baseUrl
      */
-    protected $baseUrl;
+    protected string $baseUrl;
 
     /**
      * Create a new command instance.
@@ -42,7 +42,7 @@ class SyncSpiderImageService extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $href = $this->argument('href');
         $this->spiderImage($href);

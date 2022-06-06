@@ -20,8 +20,10 @@ class SyncImageSize extends Command
      * @var string
      */
     protected $description = 'synchronizing image size';
-
-    protected $flag;
+    /**
+     * @var bool $flag
+     */
+    protected bool $flag;
 
     /**
      * Create a new command instance.
@@ -35,11 +37,10 @@ class SyncImageSize extends Command
     }
 
     /**
-     * Execute the console command.
-     *
+     *  Execute the console command.
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->setFileInfo();
     }

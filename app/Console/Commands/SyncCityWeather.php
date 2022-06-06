@@ -38,7 +38,7 @@ class SyncCityWeather extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->syncCityWeather();
         sleep(1);
