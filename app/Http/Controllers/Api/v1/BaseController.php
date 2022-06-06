@@ -9,7 +9,6 @@ use App\Http\Controllers\Service\v1\AuthService;
 use App\Http\Controllers\Service\v1\DatabaseService;
 use App\Http\Controllers\Service\v1\EmotionService;
 use App\Http\Controllers\Service\v1\FileService;
-use App\Http\Controllers\Service\v1\ImageService;
 use App\Http\Controllers\Service\v1\InterfaceCategoryService;
 use App\Http\Controllers\Service\v1\LogService;
 use App\Http\Controllers\Service\v1\OauthService;
@@ -101,10 +100,6 @@ class BaseController extends Controller
      */
     protected $toolService;
     /**
-     * @var ImageService $imageService
-     */
-    protected $imageService;
-    /**
      * @var SpiderService $spiderService
      */
     protected $spiderService;
@@ -140,7 +135,6 @@ class BaseController extends Controller
         $this->databaseService = DatabaseService::getInstance();
         $this->interfaceCategoryService = InterfaceCategoryService::getInstance();
         $this->toolService = ToolsService::getInstance();
-        $this->imageService = ImageService::getInstance();
         $this->spiderService = SpiderService::getInstance();
         $this->emotionService = EmotionService::getInstance();
         $this->post = $request->post();
