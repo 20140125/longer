@@ -28,7 +28,7 @@ class AMap extends Controller
     /**
      * @var array $data
      */
-    protected array $data = array();
+    protected $data = array();
     /**
      * @var Curl $Curl
      */
