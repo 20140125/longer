@@ -17,27 +17,27 @@ class Base
     /**
      * @var UserService $userService
      */
-    protected UserService $userService;
+    protected $userService;
     /**
      * @var OauthService $oauthService
      */
-    protected OauthService $oauthService;
+    protected $oauthService;
     /**
      * @var RoleService $roleService
      */
-    protected RoleService $roleService;
+    protected $roleService;
     /**
      * @var AuthService $ruleService
      */
-    protected AuthService $ruleService;
+    protected $ruleService;
     /**
      * @var AreaService $areaService
      */
-    protected AreaService $areaService;
+    protected $areaService;
     /**
      * @var RedisClient $redisClient
      */
-    protected RedisClient $redisClient;
+    protected $redisClient;
     /**
      * @var $post
      */

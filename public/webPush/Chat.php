@@ -9,11 +9,11 @@ class Chat
     /**
      * @var Redis $redisClient
      */
-    protected Redis $redisClient;
+    protected $redisClient;
     /**
      * @var string $hashKey
      */
-    protected string $hashKey = 'unread_';
+    protected $hashKey = 'unread_';
 
     /**
      * Chat constructor.
