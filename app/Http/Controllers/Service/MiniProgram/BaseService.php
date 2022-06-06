@@ -47,9 +47,9 @@ class BaseService extends Controller
      */
     protected mixed $systemConfig;
     /**
-     * @var array $configuration
+     * @var string $configuration
      */
-    protected array $configuration;
+    protected string $configuration;
     /**
      * @var array $return
      */
@@ -83,7 +83,7 @@ class BaseService extends Controller
     /**
      * todo:获取配置
      * @param $key
-     * @return mixed|string
+     * @return string
      */
     public function getSystemConfig($key): mixed
     {

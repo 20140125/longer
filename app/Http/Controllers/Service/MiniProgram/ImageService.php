@@ -11,7 +11,7 @@ class ImageService extends BaseService
     private static $instance;
 
     /**
-     * @return static
+     * @return ImageService
      */
     public static function getInstance(): ImageService
     {
