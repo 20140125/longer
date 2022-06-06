@@ -35,83 +35,83 @@ class BaseController extends Controller
     /**
      * @var AuthService $authService
      */
-    protected AuthService $authService;
+    protected $authService;
     /**
      * @var TimeLineService $timeLineService
      */
-    protected TimeLineService $timeLineService;
+    protected $timeLineService;
     /**
      * @var LogService $logService
      */
-    protected LogService $logService;
+    protected $logService;
     /**
      * @var AreaService $areaService
      */
-    protected AreaService $areaService;
+    protected $areaService;
     /**
      * @var SendEMailService $sendEMailService
      */
-    protected SendEMailService $sendEMailService;
+    protected $sendEMailService;
     /**
      * @var UserService $userService
      */
-    protected UserService $userService;
+    protected $userService;
     /**
      * @var RoleService $roleService
      */
-    protected RoleService $roleService;
+    protected $roleService;
     /**
      * @var PermissionApplyService $permissionApplyService
      */
-    protected PermissionApplyService $permissionApplyService;
+    protected $permissionApplyService;
     /**
      * @var FileService $fileService
      */
-    protected FileService $fileService;
+    protected $fileService;
     /**
      * @var SystemConfigService $systemConfigService
      */
-    protected SystemConfigService $systemConfigService;
+    protected $systemConfigService;
     /**
      * @var PushService $pushService
      */
-    protected PushService $pushService;
+    protected $pushService;
     /**
      * @var ApiService $apiService
      */
-    protected ApiService $apiService;
+    protected $apiService;
     /**
      * @var OauthService $oAuthService
      */
-    protected OauthService $oAuthService;
+    protected $oAuthService;
     /**
      * @var UserCenterService $userCenterService
      */
-    protected UserCenterService $userCenterService;
+    protected $userCenterService;
     /**
      * @var DatabaseService $databaseService
      */
-    protected DatabaseService $databaseService;
+    protected $databaseService;
     /**
      * @var InterfaceCategoryService $interfaceCategoryService
      */
-    protected InterfaceCategoryService $interfaceCategoryService;
+    protected $interfaceCategoryService;
     /**
      * @var ToolsService $toolService
      */
-    protected ToolsService $toolService;
+    protected $toolService;
     /**
      * @var ImageService $imageService
      */
-    protected ImageService $imageService;
+    protected $imageService;
     /**
      * @var SpiderService $spiderService
      */
-    protected SpiderService $spiderService;
+    protected $spiderService;
     /**
      * @var EmotionService $emotionService
      */
-    protected EmotionService $emotionService;
+    protected $emotionService;
     /**
      * @var array|string|null $post
      */
