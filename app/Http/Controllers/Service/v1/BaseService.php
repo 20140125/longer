@@ -41,83 +41,83 @@ class BaseService
     /**
      * @var Users $userModel
      */
-    protected Users $userModel;
+    protected $userModel;
     /**
      * @var RedisClient $redisClient
      */
-    protected RedisClient $redisClient;
+    protected $redisClient;
     /**
      * @var SendEMail $SendEMail
      */
-    protected SendEMail $sendEMailModel;
+    protected $sendEMailModel;
     /**
      * @var UserCenter $userCenterModel
      */
-    protected UserCenter $userCenterModel;
+    protected $userCenterModel;
     /**
      * @var Oauth $oauthModel
      */
-    protected Oauth $oauthModel;
+    protected $oauthModel;
     /**
      * @var Role $roleModel
      */
-    protected Role $roleModel;
+    protected $roleModel;
     /**
      * @var Auth $authModel
      */
-    protected Auth $authModel;
+    protected $authModel;
     /**
      * @var Area $areaModel
      */
-    protected Area $areaModel;
+    protected $areaModel;
     /**
      * @var TimeLine $timeLineModel
      */
-    protected TimeLine $timeLineModel;
+    protected $timeLineModel;
     /**
      * @var Log $logModel
      */
-    protected Log $logModel;
+    protected $logModel;
     /**
      * @var PermissionApply $permissionApplyModel
      */
-    protected PermissionApply $permissionApplyModel;
+    protected $permissionApplyModel;
     /**
      * @var PermissionApplyLog $permissionApplyLogModel
      */
-    protected PermissionApplyLog $permissionApplyLogModel;
+    protected $permissionApplyLogModel;
     /**
      * @var SystemConfig $systemConfigModel
      */
-    protected SystemConfig $systemConfigModel;
+    protected $systemConfigModel;
     /**
      * @var Push $pushModel
      */
-    protected Push $pushModel;
+    protected $pushModel;
     /**
      * @var ApiCategory $apiCategoryModel
      */
-    protected ApiCategory $apiCategoryModel;
+    protected $apiCategoryModel;
     /**
      * @var ApiDoc $apiDocModel
      */
-    protected ApiDoc $apiDocModel;
+    protected $apiDocModel;
     /**
      * @var ApiLists $apiListsModel
      */
-    protected ApiLists $apiListsModel;
+    protected $apiListsModel;
     /**
      * @var ApiLog $apiLogModel
      */
-    protected ApiLog $apiLogModel;
+    protected $apiLogModel;
     /**
      * @var AMap $aMapUtils
      */
-    protected AMap $aMapUtils;
+    protected $aMapUtils;
     /**
      * @var Emotion $emotionModel
      */
-    protected Emotion $emotionModel;
+    protected $emotionModel;
     /**
      * @var array $return
      */
