@@ -24,7 +24,7 @@ class AMap extends Controller
     /**
      * @var string $url
      */
-    protected string $url;
+    protected $url;
     /**
      * @var array $data
      */
@@ -32,7 +32,7 @@ class AMap extends Controller
     /**
      * @var Curl $Curl
      */
-    protected Curl $Curl;
+    protected $Curl;
 
     private function __clone()
     {
