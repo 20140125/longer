@@ -29,7 +29,7 @@ class Emotion extends Base
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): Emotion
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -54,7 +54,7 @@ class Emotion extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -64,18 +64,18 @@ class Emotion extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
 
     /**
      * todo:获取用户列表
-     * @param int[] $pagination
+     * @param array $pagination
      * @param string $type
-     * @param string[] $order
-     * @param false $getAll
-     * @param string[] $column
+     * @param array $order
+     * @param bool $getAll
+     * @param array $column
      * @return array|Collection
      */
     public function getLists(array $pagination = ['page' => 1, 'limit' => 10], string $type = '', array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])

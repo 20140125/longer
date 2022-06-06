@@ -2,8 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\Service\v1\BaseService;
+use App\Http\Controllers\Service\v1\SystemConfigService;
 use App\Http\Controllers\Utils\Code;
+use App\Models\Api\v1\Auth;
+use App\Models\Api\v1\Role;
+use App\Models\Api\v1\Users;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -31,12 +34,12 @@ class CheckAuth extends Base
             return $next($request);
         }
         /* todo: 单次请求记录超过限制 */
-        if (!empty($this->post['limit']) && $this->post['limit'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
+        if (!empty($this->post['limit']) && $this->post['limit'] > intval((SystemConfigService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
             $request->merge(array('item' => array('code' => Code::ERROR, 'message' => Code::PAGE_SIZE_MESSAGE)));
             return $next($request);
         }
         /* todo：鉴权获取用户信息 */
-        $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
+        $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Auth::getInstance()->getOne(['remember_token' => $this->post['token']]);
         if (!$this->redisClient->getValue('oauth_register')) {
             /* todo: 非法途径访问 */
             if (empty($request->header('Authorization'))) {
@@ -55,7 +58,7 @@ class CheckAuth extends Base
             return $next($request);
         }
         /* todo：获取用户角色信息 */
-        $_role = $this->roleService->getRole(['id' => $_user->role_id], ['auth_api', 'status']);
+        $_role = Role::getInstance()->getOne(['id' => $_user->role_id], ['auth_api', 'status']);
         if (empty($_role)) {
             $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::ROLE_NOT_EXIST_MESSAGE), 'unauthorized' => $_user));
             return $next($request);

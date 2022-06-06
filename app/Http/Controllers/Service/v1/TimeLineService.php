@@ -16,7 +16,7 @@ class TimeLineService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): TimeLineService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -30,7 +30,7 @@ class TimeLineService extends BaseService
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getTimeLine($where, $columns = ['*'])
+    public function getTimeLine($where, array $columns = ['*'])
     {
         return $this->timeLineModel->getOne($where, $columns);
     }
@@ -41,9 +41,9 @@ class TimeLineService extends BaseService
      * @param string[] $order
      * @param false $getAll
      * @param string[] $column
-     * @return array|Collection
+     * @return array
      */
-    public function getLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
+    public function getLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*']): array
     {
         $this->return['lists'] = $this->timeLineModel->getLists($pagination, $order, $getAll, $column);
         return $this->return;

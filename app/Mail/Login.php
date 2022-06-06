@@ -33,10 +33,9 @@ class Login extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
+     * @return Login
      */
-    public function build()
+    public function build(): Login
     {
         return $this->view('email.login')->with([
             'code' => $this->request['verify_code'],

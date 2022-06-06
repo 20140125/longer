@@ -33,10 +33,9 @@ class Register extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
+     * @return Register
      */
-    public function build()
+    public function build(): Register
     {
         return $this->view('email.register')->with(['name' => $this->request['name']]);
     }

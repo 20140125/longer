@@ -11,9 +11,10 @@ class HomeController extends BaseController
 {
     /**
      * todo：获取导航栏
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getMenu(Request $request)
+    public function getMenu(Request $request): JsonResponse
     {
         $user = $request->get('unauthorized');
         validatePost($request->get('item'));

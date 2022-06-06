@@ -17,23 +17,12 @@ class RoleService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): RoleService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
         }
         return self::$instance;
-    }
-
-    /**
-     * todo:获取角色
-     * @param $where
-     * @param string[] $columns
-     * @return Model|Builder|object|null
-     */
-    public function getRole($where, array $columns = ['*'])
-    {
-        return $this->roleModel->getOne($where, $columns);
     }
 
     /**
@@ -44,7 +33,7 @@ class RoleService extends BaseService
      * @param string[] $columns
      * @return array
      */
-    public function getLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*']): array
     {
         $where = [];
         if ($user->role_id != 1) {
@@ -63,7 +52,7 @@ class RoleService extends BaseService
      * @param $form
      * @return array
      */
-    public function saveRole($form)
+    public function saveRole($form): array
     {
         $form = $this->initRole($form);
         $form['created_at'] = time();
@@ -84,7 +73,7 @@ class RoleService extends BaseService
      * @param $form
      * @return array
      */
-    public function updateRole($form)
+    public function updateRole($form): array
     {
         if (empty($form['act'])) {
             $form = $this->initRole($form);

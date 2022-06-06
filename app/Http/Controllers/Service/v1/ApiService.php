@@ -14,13 +14,15 @@ class ApiService extends BaseService
      * @var static $instance
      */
     private static $instance;
-
-    protected $json_str = ['request', 'response', 'response_string'];
+    /**
+     * @var array|string[]
+     */
+    protected array $json_str = ['request', 'response', 'response_string'];
 
     /**
-     * @return static
+     * @return ApiService
      */
-    public static function getInstance()
+    public static function getInstance(): ApiService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -33,7 +35,7 @@ class ApiService extends BaseService
      * @param $form
      * @return array
      */
-    public function getApiList($form)
+    public function getApiList($form): array
     {
         $this->return['lists'] = $this->apiListsModel->getOne(['api_id' => $form['id']]);
         if (!$this->return['lists']) {
@@ -61,7 +63,7 @@ class ApiService extends BaseService
      * @param $form
      * @return array
      */
-    public function getMarkDownList($form)
+    public function getMarkDownList($form): array
     {
         $this->return['lists'] = $this->apiDocModel->getOne(['api_id' => $form['id']]);
         if (!$this->return['lists']) {
@@ -83,7 +85,7 @@ class ApiService extends BaseService
      * @param $user
      * @return array
      */
-    public function saveApiLists($form, $user)
+    public function saveApiLists($form, $user): array
     {
         if (!empty($form['source'])) {
             unset($form['source']);
@@ -113,7 +115,7 @@ class ApiService extends BaseService
      * @param $user
      * @return array
      */
-    public function updateApiLists($form, $user)
+    public function updateApiLists($form, $user): array
     {
         if (!empty($form['source'])) {
             unset($form['source']);
@@ -143,7 +145,7 @@ class ApiService extends BaseService
      * @param $user
      * @return array
      */
-    public function saveMarkDown($form, $user)
+    public function saveMarkDown($form, $user): array
     {
         if (!empty($form['source'])) {
             unset($form['source']);
@@ -170,7 +172,7 @@ class ApiService extends BaseService
      * @param $user
      * @return array
      */
-    public function updateMarkDown($form, $user)
+    public function updateMarkDown($form, $user): array
     {
         if (!empty($form['source'])) {
             unset($form['source']);

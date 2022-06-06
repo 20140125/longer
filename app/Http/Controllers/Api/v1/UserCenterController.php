@@ -13,7 +13,7 @@ class UserCenterController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getUserInfo(Request $request)
+    public function getUserInfo(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $_user = $request->get('unauthorized');
@@ -26,7 +26,7 @@ class UserCenterController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function updateUserInfo(Request $request)
+    public function updateUserInfo(Request $request): JsonResponse
     {
         validatePost(
             $request->get('item'),

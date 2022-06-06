@@ -14,23 +14,23 @@ class BaiDuController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string API 业务域名
      */
-    protected $apiUrl = 'https://openapi.baidu.com/';
+    protected string $apiUrl = 'https://openapi.baidu.com/';
     /**
      * @var string 授权成功回调地址
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var static $instance
      */
-    protected static $instance;
+    protected static BaiDuController $instance;
 
     /**
      * BaiDu constructor.
@@ -50,7 +50,7 @@ class BaiDuController extends OAuthController
      * @param string $appSecret
      * @return BaiDuController
      */
-    public static function getInstance(string $appid, string $appSecret)
+    public static function getInstance(string $appid, string $appSecret): BaiDuController
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid, $appSecret);
@@ -64,7 +64,7 @@ class BaiDuController extends OAuthController
      * @param int $length
      * @return string
      */
-    public function getAuthUrl(int $length = 32, string $callback = '')
+    public function getAuthUrl(int $length = 32, string $callback = ''): string
     {
         /**
          * display desc
@@ -94,7 +94,7 @@ class BaiDuController extends OAuthController
      * @param string $code
      * @return array
      */
-    public function getAccessToken(string $code)
+    public function getAccessToken(string $code): array
     {
         $arr = [
             'grant_type'    => 'authorization_code',
@@ -116,7 +116,7 @@ class BaiDuController extends OAuthController
      * @param string $access_token
      * @return array
      */
-    public function getUserInfo2(string $access_token)
+    public function getUserInfo2(string $access_token): array
     {
         $arr = [
             'access_token' => $access_token,
@@ -135,7 +135,7 @@ class BaiDuController extends OAuthController
      * @param string $access_token
      * @return array
      */
-    public function getUserInfo(string $access_token)
+    public function getUserInfo(string $access_token): array
     {
         $arr = [
             'access_token' => $access_token,
@@ -155,7 +155,7 @@ class BaiDuController extends OAuthController
      * @param string $refreshToken
      * @return array
      */
-    public function refreshToken(string $refreshToken)
+    public function refreshToken(string $refreshToken): array
     {
         $arr = array(
             'grant_type'    => 'refresh_token',

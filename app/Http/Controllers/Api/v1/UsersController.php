@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Models\Api\v1\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class UsersController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getUsersLists(Request $request)
+    public function getUsersLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
@@ -22,9 +23,10 @@ class UsersController extends BaseController
 
     /**
      * todo:获取缓存用户列表
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getCacheUserLists(Request $request)
+    public function getCacheUserLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $result = $this->userService->getCacheUserList();
@@ -36,7 +38,7 @@ class UsersController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function updateUsers(Request $request)
+    public function updateUsers(Request $request): JsonResponse
     {
         $rules = [
             'username'     => 'required|string',
@@ -50,7 +52,7 @@ class UsersController extends BaseController
         ];
         validatePost($request->get('item'), $this->post, $rules);
         $_user = $request->get('unauthorized');
-        $user = $_user->id === $this->post['id'] ? $_user : $this->userService->getUser(['id' => $this->post['id']]);
+        $user = $_user->id === $this->post['id'] ? $_user : Users::getInstance()->getOne(['id' => $this->post['id']]);
         $result = $this->userService->updateUsers($this->post, $user, 'updated users successfully');
         return ajaxReturn($result);
     }

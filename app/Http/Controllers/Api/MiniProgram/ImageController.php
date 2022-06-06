@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\MiniProgram;
 
-use App\Http\Controllers\Service\v1\BaseService;
+use App\Http\Controllers\Service\v1\SystemConfigService;
 use App\Http\Controllers\Utils\Code;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,12 +15,12 @@ class ImageController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getImageLists(Request $request)
+    public function getImageLists(Request $request): JsonResponse
     {
         $start_time = microtime(true);
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string']);
         // todo: 单次请求记录超过限制
-        if (!empty($this->post['limit']) && $this->post['limit'] > intval((BaseService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
+        if (!empty($this->post['limit']) && $this->post['limit'] > intval((SystemConfigService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
             return ajaxReturn(['code' => Code::ERROR, 'message' => Code::PAGE_SIZE_MESSAGE]);
         }
         if (empty($this->post['token']) && $this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
@@ -41,7 +41,7 @@ class ImageController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function runningSpider(Request $request)
+    public function runningSpider(Request $request): JsonResponse
     {
         date_default_timezone_set('Asia/Shanghai');
         validatePost($request->get('item'), $this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
@@ -81,7 +81,7 @@ class ImageController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getHotKeyWords(Request $request)
+    public function getHotKeyWords(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $result = $this->imageService->getConfiguration(empty($this->post['keywords']) ? 'HotKeyWord' : $this->post['keywords']);

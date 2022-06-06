@@ -29,7 +29,7 @@ class Log extends Base
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): Log
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -54,7 +54,7 @@ class Log extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -64,7 +64,7 @@ class Log extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
@@ -74,7 +74,7 @@ class Log extends Base
      * @param $where
      * @return int
      */
-    public function removeOne($where)
+    public function removeOne($where): int
     {
         return $this->remove($this->table, $where);
     }

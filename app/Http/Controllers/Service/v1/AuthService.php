@@ -14,9 +14,9 @@ class AuthService extends BaseService
     private static $instance;
 
     /**
-     * @return static
+     * @return AuthService
      */
-    public static function getInstance()
+    public static function getInstance(): AuthService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -32,7 +32,7 @@ class AuthService extends BaseService
      * @param array $attr
      * @return array
      */
-    public function getLists($form, array $columns = ['*'], bool $getAll = false, array $attr = ['key' => 'id', 'ids' => array()])
+    public function getLists($form, array $columns = ['*'], bool $getAll = false, array $attr = ['key' => 'id', 'ids' => array()]): array
     {
         if ($getAll) {
             $this->return['lists'] = $this->authModel->getLists([], $columns, $attr, ['order' => 'path', 'direction' => 'asc']);
@@ -53,7 +53,7 @@ class AuthService extends BaseService
         if (is_numeric($form['id'])) {
             foreach ($this->return['lists'] as $auth) {
                 $auth->hasChildren = false;
-                if ($this->getAuth(['pid' => $auth->id])) {
+                if ($this->authModel->getOne(['pid' => $auth->id])) {
                     $auth->hasChildren = true;
                 }
             }
@@ -66,7 +66,7 @@ class AuthService extends BaseService
      * @param $form
      * @return array
      */
-    public function saveAuth($form)
+    public function saveAuth($form): array
     {
         $form['api'] = str_replace('/admin/', '/api/v1/', $form['href']);
         $id = $this->authModel->saveOne($form);
@@ -75,7 +75,7 @@ class AuthService extends BaseService
             $this->return['message'] = 'failed';
             return $this->return;
         }
-        $parent_result = $this->getAuth(['id' => $form['pid']], ['path']);
+        $parent_result = $this->authModel->getOne(['id' => $form['pid']], ['path']);
         $form['path'] = $id;
         $form['level'] = 0;
         if (!empty($parent_result)) {
@@ -97,7 +97,7 @@ class AuthService extends BaseService
      * @param $form
      * @return array
      */
-    public function updateAuth($form)
+    public function updateAuth($form): array
     {
         if (!empty($form['children']) && count($form['children']) >= 0) {
             unset($form['children']);
@@ -115,7 +115,7 @@ class AuthService extends BaseService
             return $this->return;
         }
         /* todo:修改权限 */
-        $result = $this->getAuth(['id' => $form['pid']]);
+        $result = $this->authModel->getOne(['id' => $form['pid']]);
         $form['path'] = !empty($result->path) ? $result->path . '-' . $form['id'] : $form['id'];
         $form['level'] = substr_count($form['path'], '-');
         $result = $this->authModel->updateOne(['id' => $form['id']], $form);
@@ -126,16 +126,5 @@ class AuthService extends BaseService
         }
         $this->return['lists'] = $form;
         return $this->return;
-    }
-
-    /**
-     * todo:获取权限规则
-     * @param $where
-     * @param array $columns
-     * @return Model|Builder|object|null
-     */
-    public function getAuth($where, array $columns = ['*'])
-    {
-        return $this->authModel->getOne($where, $columns);
     }
 }

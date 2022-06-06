@@ -39,101 +39,89 @@ class BaseService
     }
 
     /**
-     * @var static $instance
-     */
-    private static $instance;
-
-    /**
-     * @return static
-     */
-    public static function getInstance()
-    {
-        if (!self::$instance instanceof self) {
-            self::$instance = new static();
-        }
-        return self::$instance;
-    }
-
-    /**
      * @var Users $userModel
      */
-    protected $userModel;
+    protected Users $userModel;
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
-
-    protected $sendEMailModel;
+    protected RedisClient $redisClient;
+    /**
+     * @var SendEMail $SendEMail
+     */
+    protected SendEMail $sendEMailModel;
     /**
      * @var UserCenter $userCenterModel
      */
-    protected $userCenterModel;
+    protected UserCenter $userCenterModel;
     /**
      * @var Oauth $oauthModel
      */
-    protected $oauthModel;
+    protected Oauth $oauthModel;
     /**
      * @var Role $roleModel
      */
-    protected $roleModel;
+    protected Role $roleModel;
     /**
      * @var Auth $authModel
      */
-    protected $authModel;
+    protected Auth $authModel;
     /**
      * @var Area $areaModel
      */
-    protected $areaModel;
+    protected Area $areaModel;
     /**
      * @var TimeLine $timeLineModel
      */
-    protected $timeLineModel;
+    protected TimeLine $timeLineModel;
     /**
      * @var Log $logModel
      */
-    protected $logModel;
+    protected Log $logModel;
     /**
      * @var PermissionApply $permissionApplyModel
      */
-    protected $permissionApplyModel;
+    protected PermissionApply $permissionApplyModel;
     /**
      * @var PermissionApplyLog $permissionApplyLogModel
      */
-    protected $permissionApplyLogModel;
+    protected PermissionApplyLog $permissionApplyLogModel;
     /**
      * @var SystemConfig $systemConfigModel
      */
-    protected $systemConfigModel;
+    protected SystemConfig $systemConfigModel;
     /**
      * @var Push $pushModel
      */
-    protected $pushModel;
+    protected Push $pushModel;
     /**
      * @var ApiCategory $apiCategoryModel
      */
-    protected $apiCategoryModel;
+    protected ApiCategory $apiCategoryModel;
     /**
      * @var ApiDoc $apiDocModel
      */
-    protected $apiDocModel;
+    protected ApiDoc $apiDocModel;
     /**
      * @var ApiLists $apiListsModel
      */
-    protected $apiListsModel;
+    protected ApiLists $apiListsModel;
     /**
      * @var ApiLog $apiLogModel
      */
-    protected $apiLogModel;
+    protected ApiLog $apiLogModel;
     /**
      * @var AMap $aMapUtils
      */
-    protected $aMapUtils;
-
-    protected $emotionModel;
+    protected AMap $aMapUtils;
     /**
-     * @var $return
+     * @var Emotion $emotionModel
      */
-    protected $return;
+    protected Emotion $emotionModel;
+    /**
+     * @var array $return
+     */
+    protected array $return;
 
     public function __construct()
     {
@@ -169,7 +157,7 @@ class BaseService
      * @param int $timeout
      * @return array
      */
-    public function setVerifyCode($key, $value, int $timeout = 120)
+    public function setVerifyCode($key, $value, int $timeout = 120): array
     {
         $result = $this->redisClient->setValue($key, strtoupper($value), ['EX' => $timeout]);
         if (!$result) {
@@ -245,7 +233,7 @@ class BaseService
      * @param array $authIds
      * @return array
      */
-    public function getDefaultAuth(array $authIds = [])
+    public function getDefaultAuth(array $authIds = []): array
     {
         /* todo：获取默认的权限 */
         $_defaultAuth = Cache::get('_default_permission');
@@ -292,7 +280,7 @@ class BaseService
      * @param $userId
      * @return array
      */
-    public function getUserAuth($userId)
+    public function getUserAuth($userId): array
     {
         /* todo:获取用户信息 */
         $_user = $this->userModel->getOne(['id' => $userId], ['role_id']);
@@ -317,7 +305,7 @@ class BaseService
      * @param int $status
      * @return array
      */
-    protected function getRoleAuth($requestAuthID, int $status)
+    protected function getRoleAuth($requestAuthID, int $status): array
     {
         /* todo:獲取当前记录的信息 */
         $_requestAuth = $this->permissionApplyModel->getOne(['id' => $requestAuthID], ['user_id', 'href']);
@@ -363,7 +351,7 @@ class BaseService
      * @param $form
      * @return array
      */
-    protected function webPushMessage($form)
+    protected function webPushMessage($form): array
     {
         try {
             $form['state'] = Code::WEBSOCKET_STATE[2];

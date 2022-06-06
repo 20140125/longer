@@ -14,7 +14,7 @@ class ToolsService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): ToolsService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -25,9 +25,9 @@ class ToolsService extends BaseService
     /**
      * todo:获取定位
      * @param $form
-     * @return array|int|mixed|null
+     * @return array
      */
-    public function getAddress($form)
+    public function getAddress($form): array
     {
         $result = (array)$this->aMapUtils->getAddress($form['ip_address']);
         if (!empty($result['code'])) {
@@ -47,7 +47,7 @@ class ToolsService extends BaseService
      * @param $form
      * @return array
      */
-    public function getWeather($form)
+    public function getWeather($form): array
     {
         $result = $this->areaModel->getOne(['name' => $form['city_name']], ['forecast']);
         if (!$result) {

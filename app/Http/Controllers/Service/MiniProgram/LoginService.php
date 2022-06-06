@@ -17,9 +17,9 @@ class LoginService extends BaseService
     private static $instance;
 
     /**
-     * @return static
+     * @return LoginService
      */
-    public static function getInstance()
+    public static function getInstance(): LoginService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -32,7 +32,7 @@ class LoginService extends BaseService
      * @param $form
      * @return array
      */
-    public function getOpenId($form)
+    public function getOpenId($form): array
     {
         $url = 'https://api.weixin.qq.com/sns/jscode2session?';
         $data = array(
@@ -52,7 +52,7 @@ class LoginService extends BaseService
      * @param $form
      * @return array
      */
-    public function wxLogin($form)
+    public function wxLogin($form): array
     {
         try {
             $oauth = [

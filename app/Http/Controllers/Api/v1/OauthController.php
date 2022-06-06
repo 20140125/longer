@@ -13,7 +13,7 @@ class OauthController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getOAuthLists(Request $request)
+    public function getOAuthLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
@@ -23,9 +23,10 @@ class OauthController extends BaseController
 
     /**
      * todo:邮箱账号绑定
+     * @param Request $request
      * @return JsonResponse
      */
-    public function bindEmail(Request $request)
+    public function bindEmail(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['email' => 'required|email', 'code' => 'required|integer|between:8,8', 'id' => 'required|integer']);
         /* 校验Redis内验证码是否存在 */

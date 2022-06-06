@@ -21,7 +21,7 @@ class PermissionApplyService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): PermissionApplyService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -49,7 +49,7 @@ class PermissionApplyService extends BaseService
      * @param array|string[] $columns
      * @return array
      */
-    public function getPermissionApplyLists($user, array $where = [], array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'updated_at', 'direction' => 'desc'], array $columns = ['*'])
+    public function getPermissionApplyLists($user, array $where = [], array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'updated_at', 'direction' => 'desc'], array $columns = ['*']): array
     {
         $this->return['lists'] = $this->permissionApplyModel->getLists($user, $where, $pagination, $order, $columns);
         foreach ($this->return['lists']['data'] as &$item) {
@@ -70,7 +70,7 @@ class PermissionApplyService extends BaseService
      * @param $form
      * @return array
      */
-    public function savePermissionApply($form)
+    public function savePermissionApply($form): array
     {
         DB::beginTransaction();
         try {
@@ -115,7 +115,7 @@ class PermissionApplyService extends BaseService
      * @param $user
      * @return array
      */
-    public function updatePermissionApply($form, $user)
+    public function updatePermissionApply($form, $user): array
     {
         $form = ['id' => $form['id'], 'expires' => strtotime('+ 30 days'), 'updated_at' => time(), 'status' => $form['status']];
         DB::beginTransaction();
@@ -178,7 +178,7 @@ class PermissionApplyService extends BaseService
      * @param $user
      * @return array
      */
-    public function removePermissionApply($form, $user)
+    public function removePermissionApply($form, $user): array
     {
         $form = $this->getRoleAuth($form['id'], $form['status']);
         DB::beginTransaction();

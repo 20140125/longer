@@ -24,7 +24,7 @@ class UserService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): UserService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -42,7 +42,7 @@ class UserService extends BaseService
      * @param array $form
      * @return array
      */
-    public function getUserLists(object $user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'], array $form = [])
+    public function getUserLists(object $user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'], array $form = []): array
     {
         $this->return['lists'] = $this->userModel->getLists($user, $pagination, $order, $getAll, $column, $form);
         foreach ($this->return['lists']['data'] as &$item) {
@@ -58,9 +58,9 @@ class UserService extends BaseService
      * @param array $form
      * @return array
      */
-    public function loginSYS(array &$form)
+    public function loginSYS(array &$form): array
     {
-        $user = $this->getUser(['email' => $form['email']]);
+        $user = $this->userModel->getOne(['email' => $form['email']]);
         if (!empty($form['password'])) {
             /* 用户不存在 */
             if (!$user) {
@@ -84,7 +84,7 @@ class UserService extends BaseService
      * @param object $user
      * @return array
      */
-    protected function accountLogin(array $form, object $user)
+    protected function accountLogin(array $form, object $user): array
     {
         /* 密码错误 */
         $password = md5(md5($form['password']) . $user->salt);
@@ -103,7 +103,7 @@ class UserService extends BaseService
      * @param object $user
      * @return array
      */
-    protected function mailLogin(array $form, object $user)
+    protected function mailLogin(array $form, object $user): array
     {
         return !empty($user) ? $this->updateUsers($form, $user, 'mail login system successfully') : $this->registerUsers($form, 'mail register system successfully');
     }
@@ -115,7 +115,7 @@ class UserService extends BaseService
      * @param string $message
      * @return array
      */
-    public function updateUsers(array $form, object $user, string $message)
+    public function updateUsers(array $form, object $user, string $message): array
     {
         /* 更新用户信息 */
         $salt = getRoundNum(8, 'all');
@@ -148,7 +148,7 @@ class UserService extends BaseService
      * @param string $message
      * @return array
      */
-    protected function registerUsers(array $form, string $message)
+    protected function registerUsers(array $form, string $message): array
     {
         $form['avatar_url'] = $this->getUserAvatarImage();
         $form['salt'] = getRoundNum(8, 'all');
@@ -182,7 +182,7 @@ class UserService extends BaseService
      * todo:获取用户画像
      * @return int
      */
-    public function getUserAvatarImage()
+    public function getUserAvatarImage(): int
     {
         $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0], true);
         $avatarUrl = [];
@@ -198,7 +198,7 @@ class UserService extends BaseService
      * TODO:更新用户画像
      * @return int
      */
-    public function updateUsersAvatarImage()
+    public function updateUsersAvatarImage(): int
     {
         $_column = ['username as client_name', 'avatar_url as client_img', 'uuid', 'id', 'char'];
         $users = $this->userModel->getLists([], [], [], true, $_column);
@@ -216,7 +216,7 @@ class UserService extends BaseService
      * todo:获取推送用户列表
      * @return array
      */
-    public function getCacheUserList()
+    public function getCacheUserList(): array
     {
         $this->return['lists'] = Cache::get('_users_lists');
         if (empty($this->return['lists'])) {
@@ -225,16 +225,5 @@ class UserService extends BaseService
         }
         $this->return['message'] = 'successfully';
         return $this->return;
-    }
-
-    /**
-     * todo:获取用户
-     * @param $where
-     * @param string[] $columns
-     * @return Model|Builder|object|null
-     */
-    public function getUser($where, array $columns = ['*'])
-    {
-        return $this->userModel->getOne($where, $columns);
     }
 }

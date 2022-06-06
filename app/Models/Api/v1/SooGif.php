@@ -28,7 +28,7 @@ class SooGif extends Base
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): SooGif
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -53,7 +53,7 @@ class SooGif extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -63,7 +63,7 @@ class SooGif extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
@@ -73,7 +73,7 @@ class SooGif extends Base
      * @param $where
      * @return int
      */
-    public function removeOne($where)
+    public function removeOne($where): int
     {
         return $this->remove($this->table, $where);
     }
@@ -86,7 +86,7 @@ class SooGif extends Base
      * @param array|string[] $column
      * @return array
      */
-    public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $column = ['*'])
+    public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $column = ['*']): array
     {
         if ($order['order'] === 'rand') {
             $result['data'] = DB::table($this->table)->where($where)

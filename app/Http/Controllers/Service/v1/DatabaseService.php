@@ -7,17 +7,20 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseService extends BaseService
 {
-    /**
-     * @var static $instance
-     */
-    private static $instance;
-
     private function __clone()
     {
         // TODO: Implement __clone() method.
     }
 
-    public static function getInstance()
+    /**
+     * @var static $instance
+     */
+    private static $instance;
+
+    /**
+     * @return DatabaseService
+     */
+    public static function getInstance(): DatabaseService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -29,9 +32,9 @@ class DatabaseService extends BaseService
      * TODO:数据列表
      * @return array
      */
-    public function getDatabaseLists()
+    public function getDatabaseLists(): array
     {
-        $result = DB::select('SHOW TABLE STATUS');
+        $result = DB::select("SHOW TABLE STATUS");
         foreach ($result as $item) {
             $this->return['lists'][] = array(
                 'name'           => $item->Name,
@@ -81,7 +84,7 @@ class DatabaseService extends BaseService
      * @param string $tableName
      * @return string
      */
-    protected function createTable(string $tableName)
+    protected function createTable(string $tableName): string
     {
         $result = DB::select(sprintf('SHOW CREATE TABLE %s', $tableName));
         $sql = "-- ----------------------------\n-- " . date('Y-m-d H:i:s') . " backup table start\n-- ----------------------------\n";
@@ -100,7 +103,7 @@ class DatabaseService extends BaseService
      * @param string $tableName
      * @return string
      */
-    protected function sourceTable(string $tableName)
+    protected function sourceTable(string $tableName): string
     {
         $result = DB::select(sprintf('SELECT * FROM %s', $tableName));
         $sql = ";\n-- ----------------------------\n-- Records of $tableName\n-- ----------------------------\n";
@@ -127,7 +130,7 @@ class DatabaseService extends BaseService
      * @param $form
      * @return array
      */
-    public function repairTable($form)
+    public function repairTable($form): array
     {
         $result = DB::select(sprintf('REPAIR TABLE %s', $form['name']));
         if (!$result) {
@@ -145,7 +148,7 @@ class DatabaseService extends BaseService
      * @param $form
      * @return array
      */
-    public function optimizeTable($form)
+    public function optimizeTable($form): array
     {
         $result = $form['engine'] == 'MyISAM' ? DB::select(sprintf('OPTIMIZE TABLE %s', $form['name'])) : DB::select(sprintf('ANALYZE TABLE %s', $form['name']));
         if (!$result) {
@@ -163,9 +166,9 @@ class DatabaseService extends BaseService
      * @param $form
      * @return array
      */
-    public function commentTable($form)
+    public function commentTable($form): array
     {
-        DB::select(sprintf("ALTER TABLE %s COMMENT '%s'", $form['name'], $form['comment']));
+        DB::select(sprintf("ALTER TABLE %s COMMENT %s", $form['name'], $form['comment']));
         $this->return['lists'] = $form;
         $this->return['message'] = 'update table successfully';
         return $this->return;

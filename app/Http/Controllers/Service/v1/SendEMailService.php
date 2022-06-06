@@ -17,7 +17,7 @@ class SendEMailService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): SendEMailService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -30,7 +30,7 @@ class SendEMailService extends BaseService
      * @param $form
      * @return array
      */
-    public function sendMail($form)
+    public function sendMail($form): array
     {
         $form['verify_code'] = getRoundNum(8, 'number');
         //验证码保存到redis，10分钟有效
@@ -64,7 +64,7 @@ class SendEMailService extends BaseService
      * @param $data
      * @return int
      */
-    public function checkVerifyCode($data)
+    protected function checkVerifyCode($data): int
     {
         $where = [];
         $where[] = ['email', $data['email']];

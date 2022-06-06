@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
+use App\Models\Api\v1\Users;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -78,7 +79,7 @@ class LoginController extends BaseController
     public function logout(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['token' => 'required']);
-        $result = $this->userService->getUser(['remember_token' => $this->post['token']]);
+        $result = Users::getInstance()->getOne(['remember_token' => $this->post['token']]);
         if ($result) {
             /* 清空redis数据 */
             RedisClient::getInstance()->del($this->post['token']);

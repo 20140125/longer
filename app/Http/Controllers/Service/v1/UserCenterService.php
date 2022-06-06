@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utils\Code;
-use App\Jobs\SyncUserCenterProcess;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -16,13 +15,15 @@ class UserCenterService extends BaseService
      * @var static $instance
      */
     private static $instance;
-
-    private $json = ['tags', 'ip_address', 'local'];
+    /**
+     * @var array|string[]
+     */
+    private array $json = ['tags', 'ip_address', 'local'];
 
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): UserCenterService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -34,7 +35,7 @@ class UserCenterService extends BaseService
      * @param $form
      * @return array
      */
-    public function getUserInfo($form)
+    public function getUserInfo($form): array
     {
         $this->return['lists'] = $this->userCenterModel->getOne(['uid' => $form->id]);
         foreach ($this->json as $item) {
@@ -49,7 +50,7 @@ class UserCenterService extends BaseService
      * @param $_user
      * @return array
      */
-    public function updateUserInfo($form, $_user)
+    public function updateUserInfo($form, $_user): array
     {
         foreach ($this->json as $item) {
             $form[$item] = json_encode($form[$item] ?? [], JSON_UNESCAPED_UNICODE);

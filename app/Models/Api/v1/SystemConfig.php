@@ -28,7 +28,7 @@ class SystemConfig extends Base
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): SystemConfig
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -53,7 +53,7 @@ class SystemConfig extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -63,7 +63,7 @@ class SystemConfig extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
@@ -73,7 +73,7 @@ class SystemConfig extends Base
      * @param $where
      * @return int
      */
-    public function removeOne($where)
+    public function removeOne($where): int
     {
         return $this->remove($this->table, $where);
     }
@@ -85,7 +85,7 @@ class SystemConfig extends Base
      * @param string[] $columns
      * @return array
      */
-    public function getLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*']): array
     {
         $result['data'] = DB::table($this->table)->limit($pagination['limit'])->offset($pagination['limit'] * ($pagination['page'] - 1))->orderBy($order['order'], $order['direction'])->get($columns);
         $result['total'] = DB::table($this->table)->count();

@@ -10,9 +10,10 @@ class InterfaceCategoryController extends BaseController
 {
     /**
      * todo:获取接口列表
+     * @param Request $request
      * @return JsonResponse
      */
-    public function categoryLists(Request $request)
+    public function categoryLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $result = $this->interfaceCategoryService->getCategoryLists([], ['order' => 'path', 'direction' => 'asc']);
@@ -21,9 +22,10 @@ class InterfaceCategoryController extends BaseController
 
     /**
      * TODO：保存接口分类
+     * @param Request $request
      * @return JsonResponse
      */
-    public function saveCategory(Request $request)
+    public function saveCategory(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'pid' => 'required|integer']);
         $result = $this->interfaceCategoryService->saveCategory($this->post);

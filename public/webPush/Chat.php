@@ -9,11 +9,11 @@ class Chat
     /**
      * @var Redis $redisClient
      */
-    protected $redisClient;
+    protected Redis $redisClient;
     /**
      * @var string $hashKey
      */
-    protected $hashKey = 'unread_';
+    protected string $hashKey = 'unread_';
 
     /**
      * Chat constructor.
@@ -48,7 +48,7 @@ class Chat
      * @param int $limit
      * @return array
      */
-    public function getChatMsgLists($from, $to, $room_id, int $page = 1, int $limit = 19)
+    public function getChatMsgLists($from, $to, $room_id, int $page = 1, int $limit = 19): array
     {
         $message = array();
         $time = array();
@@ -114,7 +114,7 @@ class Chat
      * @param array $field
      * @return bool
      */
-    protected function compareJson($jsonA, $jsonB, array $field = ['type'])
+    protected function compareJson($jsonA, $jsonB, array $field = ['type']): bool
     {
         $jsonA = json_decode($jsonA, true);
         $jsonB = json_decode($jsonB, true);
@@ -136,7 +136,7 @@ class Chat
      * @param $key
      * @return int
      */
-    protected function getMsgLen($key)
+    protected function getMsgLen($key): int
     {
         return $this->redisClient->lLen($key);
     }
@@ -146,7 +146,7 @@ class Chat
      * @param $to
      * @return array
      */
-    public function getUnreadMsgAllCount($to)
+    public function getUnreadMsgAllCount($to): array
     {
         return $this->redisClient->hGetAll($this->hashKey . $to);
     }
@@ -155,7 +155,7 @@ class Chat
      * TODO：获取用户未读消息记录数（单个）
      * @param $to
      * @param $from
-     * @return string
+     * @return false|Redis|string
      */
     public function getUnreadMsgCount($to, $from)
     {
@@ -168,7 +168,7 @@ class Chat
      * @param $to
      * @return array
      */
-    public function getUnreadMsg($from, $to)
+    public function getUnreadMsg($from, $to): array
     {
         $countArr = $this->getUnreadMsgAllCount($to);
         $count = $countArr[$from];
@@ -182,7 +182,7 @@ class Chat
      * @param $to
      * @return int
      */
-    public function setUnreadMsgLists($from, $to)
+    public function setUnreadMsgLists($from, $to): int
     {
         return $this->redisClient->hIncrBy($this->hashKey . $to, $from, 1);
     }
@@ -204,7 +204,7 @@ class Chat
      * @param $value
      * @return bool
      */
-    public function sIsMember($key, $value)
+    public function sIsMember($key, $value): bool
     {
         return $this->redisClient->sIsMember($key, $value);
     }
@@ -214,7 +214,7 @@ class Chat
      * @param $key
      * @return array
      */
-    public function sMembers($key)
+    public function sMembers($key): array
     {
         return $this->redisClient->SMEMBERS($key);
     }
@@ -237,7 +237,7 @@ class Chat
      * @param int $timeout
      * @return bool
      */
-    public function setValue($key, $value, int $timeout = 0)
+    public function setValue($key, $value, int $timeout = 0): bool
     {
         return $this->redisClient->set($key, $value, $timeout);
     }
@@ -258,7 +258,7 @@ class Chat
      * @param $uid
      * @return int
      */
-    public function sRem(string $string, $uid)
+    public function sRem(string $string, $uid): int
     {
         return $this->redisClient->sRem($string, $uid);
     }

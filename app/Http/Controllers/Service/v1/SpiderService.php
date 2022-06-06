@@ -12,10 +12,25 @@ use App\Jobs\SyncSooGifImageProcess;
 class SpiderService extends BaseService
 {
     /**
+     * @var static $instance
+     */
+    private static $instance;
+
+    /**
+     * @return static
+     */
+    public static function getInstance(): SpiderService
+    {
+        if (!self::$instance instanceof self) {
+            self::$instance = new static();
+        }
+        return self::$instance;
+    }
+    /**
      * todo:获取爬虫配置
      * @return array
      */
-    public function getSpiderConfig()
+    public function getSpiderConfig(): array
     {
         $result = $this->systemConfigModel->getOne(['name' => 'SpiderConfig'], ['children'])->children;
         $this->return['lists'] = json_decode($result ?? (object)[], true);
@@ -30,7 +45,7 @@ class SpiderService extends BaseService
      * @param $form
      * @return array
      */
-    public function syncImageType($form)
+    public function syncImageType($form): array
     {
         dispatch(new SyncImageTypeProcess($form))->onQueue('spider');
         return $this->return;
@@ -41,7 +56,7 @@ class SpiderService extends BaseService
      * @param $form
      * @return array
      */
-    public function syncImageLists($form)
+    public function syncImageLists($form): array
     {
         dispatch(new SyncImageListsProcess($form))->onQueue('spider');
         return $this->return;
@@ -52,7 +67,7 @@ class SpiderService extends BaseService
      * @param $form
      * @return array
      */
-    public function syncImageSize($form)
+    public function syncImageSize($form): array
     {
         dispatch(new SyncImageSizeProcess($form))->onQueue('spider');
         return $this->return;
@@ -63,7 +78,7 @@ class SpiderService extends BaseService
      * @param $form
      * @return array
      */
-    public function syncImageListsForTags($form)
+    public function syncImageListsForTags($form): array
     {
         dispatch(new SyncImageListsForTagsProcess($form))->onQueue('spider');
         return $this->return;
@@ -73,7 +88,7 @@ class SpiderService extends BaseService
      * @param $form
      * @return array
      */
-    public function syncSpiderImageSoogif($form)
+    public function syncSpiderImageSoogif($form): array
     {
         dispatch(new SyncSooGifImageProcess($form))->onQueue('spider');
         return $this->return;
@@ -84,7 +99,7 @@ class SpiderService extends BaseService
      * @param $form
      * @return array
      */
-    public function syncOauth($form)
+    public function syncOauth($form): array
     {
         dispatch(new SyncOauthProcess($form))->onQueue('users');
         return $this->return;

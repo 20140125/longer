@@ -17,7 +17,7 @@ class EmotionService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): EmotionService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();

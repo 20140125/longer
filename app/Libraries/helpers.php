@@ -16,7 +16,7 @@ if (!function_exists('ajaxReturn')) {
      * @param int $code
      * @return JsonResponse
      */
-    function ajaxReturn(array $data = [], int $timestamp = 0, int $code = 200)
+    function ajaxReturn(array $data = [], int $timestamp = 0, int $code = 200): JsonResponse
     {
         $_item = array(
             'item' => $data,
@@ -111,7 +111,7 @@ if (!function_exists('getRoundNum')) {
      * @param $type
      * @return string
      */
-    function getRoundNum($length, $type)
+    function getRoundNum($length, $type): string
     {
         switch ($type) {
             case 'all':
@@ -245,7 +245,7 @@ if (!function_exists('getFileLists')) {
      * @param bool $recursion
      * @return array
      */
-    function getFileLists($filePath, array $permissionFile = [], int $sort_order = SORT_ASC, bool $recursion = false)
+    function getFileLists($filePath, array $permissionFile = [], int $sort_order = SORT_ASC, bool $recursion = false): array
     {
         try {
             $fileArr = array();
@@ -289,11 +289,15 @@ if (!function_exists('chmodFile')) {
     /**
      * TODO:获取权限
      * @param $filepath
-     * @return bool|string
+     * @return array|false|string
      */
     function chmodFile($filepath)
     {
-        return substr(base_convert(@fileperms($filepath), 10, 8), -3);
+        try {
+            return substr(base_convert(@fileperms($filepath), 10, 8), -3);
+        } catch (\Exception $exception) {
+            return ['code' => Code::SERVER_ERROR, 'message' => $exception->getMessage()];
+        }
     }
 }
 if (!function_exists('getFilePath')) {
@@ -611,7 +615,7 @@ if (!function_exists('getTree')) {
      * @param string $pidAttr
      * @return array
      */
-    function getTree(array $data, $pid, string $attr = 'data', string $pidAttr = 'pid')
+    function getTree(array $data, $pid, string $attr = 'data', string $pidAttr = 'pid'): array
     {
         try {
             $tree = array();
@@ -745,7 +749,7 @@ if (!function_exists('getXingLists')) {
      * todo:获取姓氏
      * @return string[]
      */
-    function getXingLists()
+    function getXingLists(): array
     {
         return array(
             '赵','钱','孙','李','周','吴','郑','王','冯','陈','褚','卫','蒋','沈','韩','杨','朱','秦','尤','许','何','吕','施','张','孔',
@@ -768,7 +772,7 @@ if (!function_exists('getMingLists')) {
      * todo:获取名字
      * @return string[]
      */
-    function getMingLists()
+    function getMingLists(): array
     {
         return array(
             '伟','刚','勇','毅','俊','峰','强','军','平','保','东','文','辉','力','明','永','健','世','广','志','义','兴','良','海','山','仁','波',

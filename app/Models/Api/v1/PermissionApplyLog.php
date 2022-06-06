@@ -27,7 +27,7 @@ class PermissionApplyLog extends Base
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): PermissionApplyLog
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -40,7 +40,7 @@ class PermissionApplyLog extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
@@ -52,7 +52,7 @@ class PermissionApplyLog extends Base
      * @param string[] $columns
      * @return Collection
      */
-    public function getLists(array $where = [], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getLists(array $where = [], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*']): Collection
     {
         return DB::table($this->table)->orderBy($order['order'], $order['direction'])->where($where)->limit(100)->get($columns);
     }

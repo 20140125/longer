@@ -9,9 +9,10 @@ class DatabaseController extends BaseController
 {
     /**
      * todo:获取数据表列表
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getDatabaseLists(Request $request)
+    public function getDatabaseLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $result = $this->databaseService->getDatabaseLists();
@@ -20,9 +21,10 @@ class DatabaseController extends BaseController
 
     /**
      * todo:数据表备份
+     * @param Request $request
      * @return JsonResponse
      */
-    public function backUpTable(Request $request)
+    public function backUpTable(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'form' => 'required|string|in:table,source,all']);
         $result = $this->databaseService->backUpTable($this->post);
@@ -31,10 +33,10 @@ class DatabaseController extends BaseController
 
     /**
      * TODO：修复数据表
-     * @param string name 数据库名称
+     * @param Request $request
      * @return JsonResponse
      */
-    public function repairTable(Request $request)
+    public function repairTable(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['name' => 'required|string']);
         $result = $this->databaseService->repairTable($this->post);
@@ -43,10 +45,10 @@ class DatabaseController extends BaseController
 
     /**
      * TODO：优化数据表
-     * @param string name 数据库名称
+     * @param Request $request
      * @return JsonResponse
      */
-    public function optimizeTabled(Request $request)
+    public function optimizeTabled(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'engine' => 'required|string']);
         $result = $this->databaseService->optimizeTable($this->post);
@@ -56,11 +58,10 @@ class DatabaseController extends BaseController
 
     /**
      * TODO：数据表修改
-     * @param string name 数据库名称
-     * @param string common 备注
+     * @param Request $request
      * @return JsonResponse
      */
-    public function alterTable(Request $request)
+    public function alterTable(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'comment' => 'required|string']);
         $result = $this->databaseService->commentTable($this->post);

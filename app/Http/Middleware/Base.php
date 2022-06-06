@@ -15,29 +15,29 @@ use Illuminate\Http\Request;
 class Base
 {
     /**
-     * @var $userService
+     * @var UserService $userService
      */
-    protected $userService;
+    protected UserService $userService;
     /**
-     * @var $oauthService
+     * @var OauthService $oauthService
      */
-    protected $oauthService;
+    protected OauthService $oauthService;
     /**
-     * @var $roleService
+     * @var RoleService $roleService
      */
-    protected $roleService;
+    protected RoleService $roleService;
     /**
-     * @var $ruleService
+     * @var AuthService $ruleService
      */
-    protected $ruleService;
+    protected AuthService $ruleService;
     /**
-     * @var $areaService
+     * @var AreaService $areaService
      */
-    protected $areaService;
+    protected AreaService $areaService;
     /**
-     * @var $redisClient
+     * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    protected RedisClient $redisClient;
     /**
      * @var $post
      */

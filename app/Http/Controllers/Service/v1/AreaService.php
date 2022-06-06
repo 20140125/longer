@@ -17,9 +17,9 @@ class AreaService extends BaseService
     private static $instance;
 
     /**
-     * @return static
+     * @return AreaService
      */
-    public static function getInstance()
+    public static function getInstance(): AreaService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -34,7 +34,7 @@ class AreaService extends BaseService
      * @param string[] $columns
      * @return array
      */
-    public function getAreaLists($form, bool $getAll = false, array $columns = ['id', 'parent_id as pid', 'name', 'code', 'info', 'forecast'])
+    public function getAreaLists($form, bool $getAll = false, array $columns = ['id', 'parent_id as pid', 'name', 'code', 'info', 'forecast']): array
     {
         if ($getAll) {
             $result = Cache::get('__cache_area');
@@ -63,7 +63,7 @@ class AreaService extends BaseService
      * @param $form
      * @return array
      */
-    public function getAreaWeather($form)
+    public function getAreaWeather($form): array
     {
         try {
             $_weather = (array)AMap::getInstance()->getWeather($form['code'], 'all');
@@ -102,7 +102,7 @@ class AreaService extends BaseService
      * @param array $form
      * @return array
      */
-    public function getCacheArea(array $form = [])
+    public function getCacheArea(array $form = []): array
     {
         $attr = !empty($form['type']) ? ['__cache_val' => '_weather', 'fields' => ['code', 'info', 'parent_id', 'id', 'name', 'forecast'], 'timeout' => 1] : ['__cache_val' => '_center', 'fields' => ['parent_id', 'id', 'name'], 'timeout' => 0];
         $result = Cache::get($attr['__cache_val']);

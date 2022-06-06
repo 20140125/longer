@@ -18,7 +18,7 @@ class OauthService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): OauthService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -36,7 +36,7 @@ class OauthService extends BaseService
      * @param array $form
      * @return array
      */
-    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $form = [], array $order = ['order' => 'updated_at', 'direction' => 'desc'], bool $getAll = false, array $column = ['*'])
+    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $form = [], array $order = ['order' => 'updated_at', 'direction' => 'desc'], bool $getAll = false, array $column = ['*']): array
     {
         $this->return['lists'] = $this->oauthModel->getLists($user, $pagination, $form, $order, $getAll, $column);
         foreach ($this->return['lists']['data'] as &$item) {
@@ -51,7 +51,7 @@ class OauthService extends BaseService
      * @param $form
      * @return array
      */
-    public function bindEmailAction($form)
+    public function bindEmailAction($form): array
     {
         $result = $this->oauthModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
@@ -63,14 +63,4 @@ class OauthService extends BaseService
         return $this->return;
     }
 
-    /**
-     * todo:获取授权用户
-     * @param $where
-     * @param string[] $columns
-     * @return Model|Builder|object|null
-     */
-    public function getOauth($where, $columns = ['*'])
-    {
-        return $this->oauthModel->getOne($where, $columns);
-    }
 }

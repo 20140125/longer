@@ -33,10 +33,9 @@ class Notice extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
+     * @return Notice
      */
-    public function build()
+    public function build(): Notice
     {
         return $this->view('email.notice')
             ->with([

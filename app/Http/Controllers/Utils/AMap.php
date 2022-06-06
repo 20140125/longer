@@ -24,15 +24,15 @@ class AMap extends Controller
     /**
      * @var string $url
      */
-    protected $url;
+    protected string $url;
     /**
      * @var array $data
      */
-    protected $data = array();
+    protected array $data = array();
     /**
      * @var Curl $Curl
      */
-    protected $Curl;
+    protected Curl $Curl;
 
     private function __clone()
     {
@@ -42,7 +42,7 @@ class AMap extends Controller
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): AMap
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();

@@ -15,7 +15,7 @@ class FileService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): FileService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -29,7 +29,7 @@ class FileService extends BaseService
      * @param array $permission
      * @return array
      */
-    public function getFileLists($form, array $permission = [])
+    public function getFileLists($form, array $permission = []): array
     {
         $this->return['lists'] = getFileLists(getFilePath($form['path'], $form['basename']), $permission);
         return $this->return;
@@ -136,17 +136,17 @@ class FileService extends BaseService
     /**
      * todo:设置文件权限
      * @param $form
-     * @return array|bool
+     * @return array
      */
     public function setFileAuth($form)
     {
         if (!file_exists($form['path'])) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'File does not exist';
+            return $this->return;
         }
-        chmod($form['path'], octdec((int)'0' . $form['auth']));
-        $result = chmodFile($form['path']) == $form['auth'];
-        !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
+        chmod($form['path'], octdec(0 . $form['auth']));
+        $this->return['lists'] = chmodFile($form['path']) == $form['auth'];
         return $this->return;
     }
 
@@ -168,7 +168,7 @@ class FileService extends BaseService
      * @param $form
      * @return array
      */
-    public function uploadFile($request, $form)
+    public function uploadFile($request, $form): array
     {
         $file = $request->file('file');
         if (!$file->isValid()) {

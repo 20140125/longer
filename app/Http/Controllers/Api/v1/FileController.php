@@ -9,9 +9,10 @@ class FileController extends BaseController
 {
     /**
      * todo:获取文件列表
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getFileLists(Request $request)
+    public function getFileLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string', 'basename' => 'required|string']);
         $permission = $this->fileService->getConfiguration('DefaultPermissionFile', 'CommonPermission');
@@ -21,9 +22,10 @@ class FileController extends BaseController
 
     /**
      * todo:读取文件内容
+     * @param Request $request
      * @return JsonResponse
      */
-    public function readFile(Request $request)
+    public function readFile(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string']);
         $result = $this->fileService->readFile($this->post);
@@ -32,9 +34,10 @@ class FileController extends BaseController
 
     /**
      * todo:文件更新
+     * @param Request $request
      * @return JsonResponse
      */
-    public function updateFile(Request $request)
+    public function updateFile(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string']);
         $result = $this->fileService->updateFile($this->post);
@@ -43,12 +46,10 @@ class FileController extends BaseController
 
     /**
      * TODO:：文件打包
-     * @param string path 文件路径
-     * @param string resource 打包后文件前缀
-     * @param array docLists 资源列表
+     * @param Request $request
      * @return JsonResponse
      */
-    public function gZipFile(Request $request)
+    public function gZipFile(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string', 'resource' => 'required|string', 'docLists' => 'required|array']);
         $result = $this->fileService->gZipFile($this->post);
@@ -57,11 +58,10 @@ class FileController extends BaseController
 
     /**
      * TODO:：文件解压
-     * @param string path 文件路径
-     * @param string resource 解压文件名称
+     * @param Request $request
      * @return JsonResponse
      */
-    public function unGZipFile(Request $request)
+    public function unGZipFile(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string', 'resource' => 'required|string']);
         $result = $this->fileService->unGZipFile($this->post);
@@ -70,10 +70,10 @@ class FileController extends BaseController
 
     /**
      * TODO:：文件删除
-     * @param string path 文件路径
+     * @param Request $request
      * @return JsonResponse
      */
-    public function removeFile(Request $request)
+    public function removeFile(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string']);
         $result = $this->fileService->removeFile($this->post);
@@ -82,10 +82,10 @@ class FileController extends BaseController
 
     /**
      * TODO:：文件新建
-     * @param string path 文件路径
+     * @param Request $request
      * @return JsonResponse
      */
-    public function createFile(Request $request)
+    public function createFile(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string']);
         $result = $this->fileService->createFile($this->post);
@@ -97,7 +97,7 @@ class FileController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function uploadFile(Request $request)
+    public function uploadFile(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $result = $this->fileService->uploadFile($request, $this->post);
@@ -106,9 +106,10 @@ class FileController extends BaseController
 
     /**
      * todo:设置文件权限
+     * @param Request $request
      * @return JsonResponse
      */
-    public function setFileAuth(Request $request)
+    public function setFileAuth(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string', 'auth' => 'required|integer|max:666']);
         $result = $this->fileService->setFileAuth($this->post);
@@ -117,9 +118,10 @@ class FileController extends BaseController
 
     /**
      * todo:文件重命名
+     * @param Request $request
      * @return JsonResponse
      */
-    public function renameFile(Request $request)
+    public function renameFile(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['oldFile' => 'required|string', 'newFile' => 'required|string']);
         $result = $this->fileService->renameFile($this->post);

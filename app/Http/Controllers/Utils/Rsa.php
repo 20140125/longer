@@ -32,7 +32,7 @@ class Rsa extends Controller
     /**
      * @return Rsa
      */
-    public static function getInstance()
+    public static function getInstance(): Rsa
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -53,7 +53,7 @@ class Rsa extends Controller
      * TODO:获取私钥
      * @return bool|resource
      */
-    protected function getPrivateKey()
+    protected function getPrivateKey(): bool
     {
         return openssl_pkey_get_private($this->privateKey);
     }
@@ -62,7 +62,7 @@ class Rsa extends Controller
      * TODO：获取公钥
      * @return bool|resource
      */
-    protected function getPublicKey()
+    protected function getPublicKey(): bool
     {
         return openssl_pkey_get_public($this->publicKey);
     }
@@ -72,7 +72,7 @@ class Rsa extends Controller
      * @param string $data
      * @return null|string
      */
-    public function privateEncrypt(string $data = '')
+    public function privateEncrypt(string $data = ''): ?string
     {
         if (!is_string($data)) {
             return null;
@@ -90,7 +90,7 @@ class Rsa extends Controller
      * @param string $encrypted
      * @return null
      */
-    public function publicDecrypt(string $encrypted = '')
+    public function publicDecrypt(string $encrypted = ''): ?string
     {
         if (!is_string($encrypted)) {
             return null;
@@ -108,7 +108,7 @@ class Rsa extends Controller
      * @param string $data
      * @return null|string
      */
-    public function publicEncrypt(string $data = '')
+    public function publicEncrypt(string $data = ''): ?string
     {
         if (!is_string($data)) {
             return null;
@@ -124,9 +124,9 @@ class Rsa extends Controller
     /**
      * TODO：私钥解密
      * @param string $encrypted
-     * @return null
+     * @return string|null
      */
-    public function privateDecrypt(string $encrypted = '')
+    public function privateDecrypt(string $encrypted = ''): ?string
     {
         if (!is_string($encrypted)) {
             return null;
@@ -142,13 +142,10 @@ class Rsa extends Controller
     /**
      * TODO：私钥生成签名
      * @param string $data
-     * @return string|null
+     * @return string
      */
-    public function makeSign(string $data)
+    public function makeSign(string $data): string
     {
-        if (!is_string($data)) {
-            return null;
-        }
         // 摘要及签名的算法
         $digestAlgo = 'sha512';
         // 生成摘要
@@ -162,15 +159,12 @@ class Rsa extends Controller
 
     /**
      * TODO：公钥验证签名
-     * @param string $data 参数
-     * @param string $signature 签名
-     * @return int|null
+     * @param string $data
+     * @param string $signature
+     * @return false|int
      */
     public function checkSign(string $data, string $signature)
     {
-        if (!is_string($data)) {
-            return null;
-        }
         // 摘要及签名的算法，同上面一致
         $digestAlgo = 'sha512';
         // 生成摘要

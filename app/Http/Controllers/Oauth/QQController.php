@@ -17,27 +17,27 @@ class QQController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string API 业务域名
      */
-    protected $apiUrl = 'https://graph.qq.com/';
+    protected string $apiUrl = 'https://graph.qq.com/';
     /**
      * @var string 授权成功回调地址
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var string $openid
      */
-    public $openid;
+    public string $openid;
     /**
      * @var static $instance
      */
-    protected static $instance;
+    protected static QQController $instance;
 
     /**
      * QQController constructor.
@@ -113,7 +113,7 @@ class QQController extends OAuthController
     /**
      * TODO:：获取用户的openid
      * @param string $access_token
-     * @return array
+     * @return array | string
      * @throws Exception
      */
     public function getOpenId(string $access_token)
@@ -137,7 +137,7 @@ class QQController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function refreshToken(string $refreshToken)
+    public function refreshToken(string $refreshToken): array
     {
         $arr = [
             'grant_type'    => 'refresh_token',

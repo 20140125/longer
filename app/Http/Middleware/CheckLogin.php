@@ -3,6 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\Utils\Code;
+use App\Models\Api\v1\Auth;
+use App\Models\Api\v1\Role;
+use App\Models\Api\v1\Users;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -53,14 +56,14 @@ class CheckLogin extends Base
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] === Code::SUCCESS) {
             /* todo:用户信息 */
-            $_user = $this->userService->getUser(['remember_token' => $this->post['token']]) ?? $this->oauthService->getOauth(['remember_token' => $this->post['token']]);
+            $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Auth::getInstance()->getOne(['remember_token' => $this->post['token']]);
             /* todo:用户令牌过期 */
             if (empty($_user)) {
                 $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::TOKEN_EXPIRED_MESSAGE)));
                 return $next($request);
             }
             /* todo:角色信息 */
-            $_role = $this->roleService->getRole(['id' => $_user->role_id], ['auth_api', 'status']);
+            $_role = Role::getInstance()->getOne(['id' => $_user->role_id], ['auth_api', 'status']);
             /* todo:刷新用户Redis存储时间 */
             $this->userService->setVerifyCode($this->post['token'], $this->post['token'], config('app.app_refresh_login_time'));
             /* todo:存储在线用户 */

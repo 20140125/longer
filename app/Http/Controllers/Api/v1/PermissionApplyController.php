@@ -13,7 +13,7 @@ class PermissionApplyController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getPermissionApplyLists(Request $request)
+    public function getPermissionApplyLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
@@ -23,9 +23,10 @@ class PermissionApplyController extends BaseController
 
     /**
      * todo:获取用户权限
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getUserAuth(Request $request)
+    public function getUserAuth(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['user_id' => 'required|integer']);
         $result = $this->permissionApplyService->getUserAuth(is_numeric($this->post['user_id']) ? $this->post['user_id'] : decrypt($this->post['user_id']));
@@ -34,9 +35,10 @@ class PermissionApplyController extends BaseController
 
     /**
      * todo:添加申请权限
+     * @param Request $request
      * @return JsonResponse
      */
-    public function savePermissionApply(Request $request)
+    public function savePermissionApply(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, [
             'user_id' => 'required|integer',
@@ -50,9 +52,10 @@ class PermissionApplyController extends BaseController
 
     /**
      * todo:更新申请权限
+     * @param Request $request
      * @return JsonResponse
      */
-    public function updatePermissionApply(Request $request)
+    public function updatePermissionApply(Request $request): JsonResponse
     {
         $rules = ['status' => 'required|integer|in:1,2', 'id' => 'required|integer'];
         validatePost($request->get('item'), $this->post, $rules);

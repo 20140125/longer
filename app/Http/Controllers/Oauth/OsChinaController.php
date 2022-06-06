@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Oauth;
 
 use App\Http\Controllers\Utils\Code;
+use Exception;
 
 /**
  * Class OsChinaController
@@ -14,23 +15,23 @@ class OsChinaController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var static $instance
      */
-    protected static $instance;
+    protected static OsChinaController $instance;
     /**
      * @var string API 业务域名
      */
-    protected $apiUrl = 'https://www.oschina.net/';
+    protected string $apiUrl = 'https://www.oschina.net/';
 
     /**
      * OsChinaController constructor.
@@ -50,7 +51,7 @@ class OsChinaController extends OAuthController
      * @param string $appSecret
      * @return static
      */
-    public static function getInstance(string $appid, string $appSecret)
+    public static function getInstance(string $appid, string $appSecret): OsChinaController
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid, $appSecret);
@@ -64,7 +65,7 @@ class OsChinaController extends OAuthController
      * @param string $callback
      * @return string
      */
-    public function getAuthUrl(int $length = 32, string $callback = '')
+    public function getAuthUrl(int $length = 32, string $callback = ''): string
     {
         $arr = [
             'client_id'     => $this->appid,
@@ -79,9 +80,9 @@ class OsChinaController extends OAuthController
      * TODO:：获取access_token
      * @param string $code
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
-    public function getAccessToken(string $code)
+    public function getAccessToken(string $code): array
     {
         $arr = [
             'client_id'     => $this->appid,
@@ -104,9 +105,9 @@ class OsChinaController extends OAuthController
      * TODO:：刷新AccessToken续期
      * @param string $refreshToken
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
-    public function refreshToken(string $refreshToken)
+    public function refreshToken(string $refreshToken): array
     {
         $arr = [
             'client_id'     => $this->appid,
@@ -130,7 +131,7 @@ class OsChinaController extends OAuthController
      * @param string $access_token
      * @return array
      */
-    public function getUserInfo(string $access_token)
+    public function getUserInfo(string $access_token): array
     {
         $arr = [
             'access_token' => $access_token,
@@ -151,7 +152,7 @@ class OsChinaController extends OAuthController
      * @param string $friend
      * @return array
      */
-    public function getUserInformation(string $access_token, string $user, string $friend)
+    public function getUserInformation(string $access_token, string $user, string $friend): array
     {
         $arr = [
             'access_token' => $access_token,

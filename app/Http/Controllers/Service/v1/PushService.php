@@ -15,7 +15,7 @@ class PushService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): PushService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -32,7 +32,7 @@ class PushService extends BaseService
      * @param array|string[] $columns
      * @return array
      */
-    public function getPushLists($form, $user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getPushLists($form, $user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*']): array
     {
         $where = [];
         if (!empty($form['state'])) {
@@ -59,7 +59,7 @@ class PushService extends BaseService
      * @param $form
      * @return array
      */
-    public function savePush($form)
+    public function savePush($form): array
     {
         $form['state'] = Code::WEBSOCKET_STATE[2];
         $form['created_at'] = strtotime($form['created_at']);
@@ -87,7 +87,7 @@ class PushService extends BaseService
      * @param $form
      * @return array
      */
-    public function updatePush($form)
+    public function updatePush($form): array
     {
         $form['created_at'] = gettype($form['created_at']) === 'integer' ?  $form['created_at'] : strtotime($form['created_at']);
         if ($form['see'] > 0) unset($form['disabled']);
@@ -108,7 +108,7 @@ class PushService extends BaseService
      * @param $form
      * @return array
      */
-    public function removePush($form)
+    public function removePush($form): array
     {
         $result = $this->pushModel->removeOne(['id' => $form['id']]);
         if (!$result) {

@@ -16,7 +16,7 @@ class LogService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): LogService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -31,7 +31,7 @@ class LogService extends BaseService
      * @param array $columns
      * @return array
      */
-    public function getLog($user, $where, array $columns = ['*'])
+    public function getLog($user, $where, array $columns = ['*']): array
     {
         $where = [['id', $where['id']]];
         if ($user->role_id != 1) {
@@ -46,7 +46,7 @@ class LogService extends BaseService
      * @param $form
      * @return array
      */
-    public function saveLog($form)
+    public function saveLog($form): array
     {
         $this->return['lists'] = $this->logModel->saveOne($form);
         return $this->return;
@@ -58,7 +58,7 @@ class LogService extends BaseService
      * @param $pagination
      * @return array
      */
-    public function getLists($user, $pagination)
+    public function getLists($user, $pagination): array
     {
         $where = [];
         if ($user->role_id != 1) {
@@ -78,7 +78,7 @@ class LogService extends BaseService
      * @param $form
      * @return array
      */
-    public function removeLog($user, $form)
+    public function removeLog($user, $form): array
     {
         $where[] = ['id', $form['id']];
         if ($user->role_id != 1) {

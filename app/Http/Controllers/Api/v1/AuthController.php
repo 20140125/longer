@@ -9,9 +9,10 @@ class AuthController extends BaseController
 {
     /**
      * todo:获取权限列表
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getAuthLists(Request $request)
+    public function getAuthLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $result = $this->authService->getLists([], ['*'], true);
@@ -20,9 +21,10 @@ class AuthController extends BaseController
 
     /**
      * todo:获取权限树
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getAuthTree(Request $request)
+    public function getAuthTree(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $result = $this->authService->getLists(['status' => 1, 'level' => 2, 'id' => '']);
@@ -31,9 +33,10 @@ class AuthController extends BaseController
 
     /**
      * todo:添加权限
+     * @param Request $request
      * @return JsonResponse
      */
-    public function saveAuth(Request $request)
+    public function saveAuth(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['name' => 'required|string|unique:os_auth', 'href' => 'required|string|unique:os_auth', 'status' => 'required|in:1,2|integer', 'pid' => 'required|integer']);
         $result = $this->authService->saveAuth($this->post);
@@ -42,9 +45,10 @@ class AuthController extends BaseController
 
     /**
      * todo:更新权限
+     * @param Request $request
      * @return JsonResponse
      */
-    public function updateAuth(Request $request)
+    public function updateAuth(Request $request): JsonResponse
     {
         $rules = ['status' => 'required|in:1,2|integer', 'id' => 'required|integer'];
         if (empty($this->post['act'])) {

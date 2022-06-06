@@ -30,10 +30,9 @@ class Oauth extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
+     * @return Oauth
      */
-    public function build()
+    public function build(): Oauth
     {
         return $this->view('email.oauth')->with([
             'code'     => $this->request['verify_code'],

@@ -54,7 +54,7 @@ class Code extends Controller
     /**
      * @return Code|static
      */
-    public static function getInstance()
+    public static function getInstance(): Code
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();

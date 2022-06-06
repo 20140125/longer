@@ -32,14 +32,14 @@ date_default_timezone_set("Asia/Shanghai");
 
 class Events
 {
-    protected static $db = '';
+    protected static $db;
     protected static $chat;
     protected static $redisUsers;
     /**
      * @todo 自动回复消息默认配置
      * @var string[]
      */
-    protected static $sysRobot = [
+    protected static array $sysRobot = [
         'client_id'   => 'longer7f00000108fc00000001',
         'client_name' => '客服',
         'client_img'  => 'https://cdn.pixabay.com/photo/2016/12/13/21/20/alien-1905155_960_720.png',
@@ -53,7 +53,7 @@ class Events
      * @return bool
      * @throws Exception|boolean
      */
-    public static function onMessage($from_client_id, $message)
+    public static function onMessage($from_client_id, $message): bool
     {
         /* 客户端传递的是json数据 */
         $message_data = json_decode($message, true);
@@ -277,7 +277,7 @@ class Events
      * @param $redisUser
      * @return array
      */
-    protected static function getUserLists($redisUser)
+    protected static function getUserLists($redisUser): array
     {
         self::$chat = new Chat();
         $users = json_decode(self::$chat->sMembers(CHAT_KEY)[0], true);

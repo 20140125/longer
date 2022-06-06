@@ -12,7 +12,7 @@ class LoginController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getOpenId(Request $request)
+    public function getOpenId(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['code' => 'required|string']);
         $result = $this->loginService->getOpenId($this->post);
@@ -24,7 +24,7 @@ class LoginController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['nickName' => 'required|string', 'avatarUrl' => 'required|string', 'code2Session' => 'required|Array']);
         $result = $this->loginService->wxLogin($this->post);

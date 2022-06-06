@@ -25,7 +25,7 @@ class OauthLoginController extends Controller
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    protected RedisClient $redisClient;
 
     /**
      * OauthLoginController constructor.

@@ -8,6 +8,8 @@ use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\SooGif;
 use App\Models\Api\v1\SooGifType;
 use App\Models\Api\v1\SystemConfig;
+use Illuminate\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 
 class BaseService extends Controller
 {
@@ -17,56 +19,41 @@ class BaseService extends Controller
     }
 
     /**
-     * @var static $instance
-     */
-    private static $instance;
-
-    /**
-     * @return static
-     */
-    public static function getInstance()
-    {
-        if (!self::$instance instanceof self) {
-            self::$instance = new static();
-        }
-        return self::$instance;
-    }
-    /**
-     * @var mixed
+     * @var Repository|Application|mixed
      */
     protected $appid;
     /**
-     * @var mixed
+     * @var Repository|Application|mixed
      */
     protected $appSecret;
     /**
      * @var Oauth $oauthModel
      */
-    protected $oauthModel;
+    protected Oauth $oauthModel;
     /**
      * @var SystemConfig $systemConfigModel
      */
-    protected $systemConfigModel;
+    protected SystemConfig $systemConfigModel;
     /**
      * @var SooGif $sooGifModel
      */
-    protected $sooGifModel;
+    protected SooGif $sooGifModel;
     /**
      * @var SooGifType $sooGifTypeModel
      */
-    protected $sooGifTypeModel;
+    protected SooGifType $sooGifTypeModel;
     /**
      * @var $systemConfig
      */
     protected $systemConfig;
     /**
-     * @var $hotKeyWords
+     * @var array $configuration
      */
-    protected $configuration;
+    protected array $configuration;
     /**
      * @var array $return
      */
-    protected $return;
+    protected array $return;
 
     public function __construct()
     {
@@ -115,7 +102,7 @@ class BaseService extends Controller
      * @param string $keyWords
      * @return string[]
      */
-    public function getConfiguration(string $keyWords = 'hotKeyWord')
+    public function getConfiguration(string $keyWords = 'hotKeyWord'): array
     {
         $this->configuration = $this->getSystemConfig($keyWords);
         $this->return['lists'] = explode(',', $this->configuration);

@@ -29,7 +29,7 @@ class Auth extends Base
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): Auth
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -43,7 +43,7 @@ class Auth extends Base
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOne($where, $columns = ['*'])
+    public function getOne($where, array $columns = ['*'])
     {
         return $this->getResult($this->table, $where, $columns);
     }
@@ -54,7 +54,7 @@ class Auth extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -64,7 +64,7 @@ class Auth extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
@@ -77,7 +77,7 @@ class Auth extends Base
      * @param string[] $order
      * @return Collection
      */
-    public function getLists(array $where = [], array $column = ['*'], array $attr = ['key' => 'id', 'ids' => array()], array $order = ['order' => 'id', 'direction' => 'asc'])
+    public function getLists(array $where = [], array $column = ['*'], array $attr = ['key' => 'id', 'ids' => array()], array $order = ['order' => 'id', 'direction' => 'asc']): Collection
     {
         if (count($attr['ids']) > 0) {
             return DB::table($this->table)->where($where)->whereIn($attr['key'], $attr['ids'])->orderBy($order['order'], $order['direction'])->get($column);

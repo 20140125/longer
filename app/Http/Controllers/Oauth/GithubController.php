@@ -14,19 +14,19 @@ class GithubController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var static $instance
      */
-    protected static $instance;
+    protected static GithubController $instance;
     /**
      * @var string API 业务域名
      */
@@ -50,7 +50,7 @@ class GithubController extends OAuthController
      * @param string $appSecret
      * @return GithubController
      */
-    public static function getInstance(string $appid, string $appSecret)
+    public static function getInstance(string $appid, string $appSecret): GithubController
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid, $appSecret);
@@ -65,7 +65,7 @@ class GithubController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'user:email')
+    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'user:email'): string
     {
         $arr = [
             'client_id'    => $this->appid,
@@ -84,7 +84,7 @@ class GithubController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function getAccessToken(string $code, string $state)
+    public function getAccessToken(string $code, string $state): array
     {
         $arr = [
             'client_id'     => $this->appid,
@@ -107,7 +107,7 @@ class GithubController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function getUserInfo(string $access_token)
+    public function getUserInfo(string $access_token): array
     {
         $this->curl->setHeader("Authorization", "token $access_token");
         $result = $this->curl->get('https://api.github.com/user');
@@ -124,7 +124,7 @@ class GithubController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function getUserRepos(string $access_token)
+    public function getUserRepos(string $access_token): array
     {
         $this->curl->setHeader("Authorization", "token $access_token");
         $result = $this->curl->get('https://api.github.com/user/repos');

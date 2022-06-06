@@ -15,7 +15,7 @@ class SystemConfigService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): SystemConfigService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -29,7 +29,7 @@ class SystemConfigService extends BaseService
      * @param array|string[] $order
      * @param array|string[] $columns
      */
-    public function getSystemConfigLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getSystemConfigLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*']): array
     {
         $this->return['lists'] = $this->systemConfigModel->getLists($pagination, $order, $columns);
         $intFields = ['status', 'id', 'pid'];
@@ -52,7 +52,7 @@ class SystemConfigService extends BaseService
      * @param $user
      * @return array
      */
-    public function getConfig($form, $user)
+    public function getConfig($form, $user): array
     {
         if (empty($user)) {
             $form['name'] = 'Oauth';
@@ -67,7 +67,7 @@ class SystemConfigService extends BaseService
      * @param $form
      * @return array
      */
-    public function saveSystemConfig($form)
+    public function saveSystemConfig($form): array
     {
         foreach ($form['children'] as &$item) {
             $item['created_at'] = date('Y-m-d H:i:s', time());
@@ -93,7 +93,7 @@ class SystemConfigService extends BaseService
      * @param $form
      * @return array
      */
-    public function updateSystemConfig($form)
+    public function updateSystemConfig($form): array
     {
         foreach ($form['children'] as $key => &$item) {
             $item['updated_at'] = date('Y-m-d H:i:s', time());
@@ -119,7 +119,7 @@ class SystemConfigService extends BaseService
      * @param $form
      * @return array
      */
-    public function pluginAction($form)
+    public function pluginAction($form): array
     {
         $result = $this->systemConfigModel->getOne(['id' => $form['pid']]);
         if (empty($result)) {

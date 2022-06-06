@@ -43,7 +43,7 @@ class Area extends Base
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOne($where, $columns = ['*'])
+    public function getOne($where, array $columns = ['*'])
     {
         return $this->getResult($this->table, $where, $columns);
     }
@@ -54,7 +54,7 @@ class Area extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -64,7 +64,7 @@ class Area extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
@@ -75,7 +75,7 @@ class Area extends Base
      * @param string[] $columns
      * @return Collection
      */
-    public function getAreaLists($where, array $columns = ['*'])
+    public function getAreaLists($where, array $columns = ['*']): Collection
     {
         return DB::table($this->table)->where($where)->get($columns);
     }

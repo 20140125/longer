@@ -12,7 +12,7 @@ class LogController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getLogLists(Request $request)
+    public function getLogLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
@@ -25,7 +25,7 @@ class LogController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getLog(Request $request)
+    public function getLog(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['id' => 'required|integer']);
         $_user = $request->get('unauthorized');
@@ -38,7 +38,7 @@ class LogController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function removeLog(Request $request)
+    public function removeLog(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['id' => 'required|integer']);
         $_user = $request->get('unauthorized');

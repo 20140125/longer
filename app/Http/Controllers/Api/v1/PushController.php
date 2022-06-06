@@ -13,7 +13,7 @@ class PushController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getPushLists(Request $request)
+    public function getPushLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
@@ -25,7 +25,7 @@ class PushController extends BaseController
      * todo:发布站内通知
      * @return JsonResponse
      */
-    public function savePush(Request $request)
+    public function savePush(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['info' => 'required|string', 'username' => 'required|string', 'status' => 'required|integer|in:1,2', 'uuid' => 'required|string']);
         $result = $this->pushService->savePush($this->post);
@@ -36,7 +36,7 @@ class PushController extends BaseController
      * todo:更新站内通知
      * @return JsonResponse
      */
-    public function updatePush(Request $request)
+    public function updatePush(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['id' => 'required|integer', 'info' => 'required|string', 'username' => 'required|string', 'status' => 'required|integer|in:1,2', 'uuid' => 'required|string']);
         $result = $this->pushService->updatePush($this->post);
@@ -47,7 +47,7 @@ class PushController extends BaseController
      * todo:删除站内通知
      * @return JsonResponse
      */
-    public function removePush(Request $request)
+    public function removePush(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['id' => 'required|integer']);
         $result = $this->pushService->removePush($this->post);

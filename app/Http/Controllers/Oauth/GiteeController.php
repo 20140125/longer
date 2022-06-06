@@ -15,23 +15,23 @@ class GiteeController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var string API 业务域名
      */
-    protected $apiUrl = 'https://gitee.com/';
+    protected string $apiUrl = 'https://gitee.com/';
     /**
      * @var static $instance
      */
-    protected static $instance;
+    protected static GiteeController $instance;
 
     /**
      * GithubController constructor.
@@ -51,7 +51,7 @@ class GiteeController extends OAuthController
      * @param string $appSecret
      * @return GiteeController
      */
-    public static function getInstance(string $appid, string $appSecret)
+    public static function getInstance(string $appid, string $appSecret): GiteeController
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid, $appSecret);
@@ -65,7 +65,7 @@ class GiteeController extends OAuthController
      * @param string $callback
      * @return string
      */
-    public function getAuthUrl(int $length = 32, string $callback = '')
+    public function getAuthUrl(int $length = 32, string $callback = ''): string
     {
         $arr = array(
             'client_id'     => $this->appid,
@@ -82,7 +82,7 @@ class GiteeController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function getAccessToken(string $code)
+    public function getAccessToken(string $code): array
     {
         $arr = [
             'grant_type'    => 'authorization_code',
@@ -105,7 +105,7 @@ class GiteeController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function refreshToken(string $refresh_token)
+    public function refreshToken(string $refresh_token): array
     {
         $arr = [
             'grant_type'    => 'refresh_token',
@@ -125,7 +125,7 @@ class GiteeController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function getUserInfo(string $access_token)
+    public function getUserInfo(string $access_token): array
     {
         $result = $this->curl->get($this->apiUrl . "api/v5/user?access_token=$access_token");
         if (!$result) {

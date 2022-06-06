@@ -16,7 +16,7 @@ class InterfaceCategoryService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): InterfaceCategoryService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -31,7 +31,7 @@ class InterfaceCategoryService extends BaseService
      * @param array|string[] $columns
      * @return array
      */
-    public function getCategoryLists(array $where = [], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getCategoryLists(array $where = [], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*']): array
     {
         $this->return['lists'] = $this->apiCategoryModel->getLists($where, $order, $columns);
         return $this->return;
@@ -42,7 +42,7 @@ class InterfaceCategoryService extends BaseService
      * @param $form
      * @return array
      */
-    public function saveCategory($form)
+    public function saveCategory($form): array
     {
         $id = $this->apiCategoryModel->saveOne($form);
         if (!$id) {
@@ -73,7 +73,7 @@ class InterfaceCategoryService extends BaseService
      * @param $form
      * @return array
      */
-    public function updateCategory($form)
+    public function updateCategory($form): array
     {
         $parent_result = $this->apiCategoryModel->getOne(['id' => $form['pid']], ['path']);
         $form['path'] = !empty($parent_result->path) ? $parent_result->path . '-' . $form['id'] : $form['id'];
@@ -94,7 +94,7 @@ class InterfaceCategoryService extends BaseService
      * @param $form
      * @return array
      */
-    public function removeCategory($form)
+    public function removeCategory($form): array
     {
         $result = $this->apiCategoryModel->removeOne(['id' => $form['id']]);
         if (!$result) {

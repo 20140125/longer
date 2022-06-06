@@ -15,7 +15,7 @@ class ImageService extends BaseService
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): ImageService
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -31,7 +31,7 @@ class ImageService extends BaseService
      * @param string[] $columns
      * @return array
      */
-    public function getImageLists($form, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getImageLists($form, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*']): array
     {
         $where = [];
         if (!empty($form['id'])) {

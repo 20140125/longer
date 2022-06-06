@@ -10,9 +10,10 @@ class SpiderController extends BaseController
 {
     /**
      * todo:获取系统配置
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getSpiderConfig(Request $request)
+    public function getSpiderConfig(Request $request): JsonResponse
     {
         validatePost($request->get('item'));
         $result = $this->spiderService->getSpiderConfig();
@@ -49,7 +50,7 @@ class SpiderController extends BaseController
      * @param $_user
      * @return JsonResponse
      */
-    protected function syncImageType($_user)
+    protected function syncImageType($_user): JsonResponse
     {
         $result = $this->spiderService->syncImageType(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
@@ -60,7 +61,7 @@ class SpiderController extends BaseController
      * @param $_user
      * @return JsonResponse
      */
-    protected function syncImageLists($_user)
+    protected function syncImageLists($_user): JsonResponse
     {
         $result = $this->spiderService->syncImageLists(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
@@ -71,7 +72,7 @@ class SpiderController extends BaseController
      * @param $_user
      * @return JsonResponse
      */
-    protected function syncImageSize($_user)
+    protected function syncImageSize($_user): JsonResponse
     {
         $result = $this->spiderService->syncImageSize(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
@@ -82,7 +83,7 @@ class SpiderController extends BaseController
      * @param $_user
      * @return JsonResponse
      */
-    protected function syncOauth($_user)
+    protected function syncOauth($_user): JsonResponse
     {
         $result = $this->spiderService->syncOauth(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
@@ -93,7 +94,7 @@ class SpiderController extends BaseController
      * @param $_user
      * @return JsonResponse
      */
-    protected function syncImageListsForTags($_user)
+    protected function syncImageListsForTags($_user): JsonResponse
     {
         $result = $this->spiderService->syncImageListsForTags(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);
@@ -103,7 +104,7 @@ class SpiderController extends BaseController
      * @param $_user
      * @return JsonResponse
      */
-    protected function syncSpiderImageSoogif($_user)
+    protected function syncSpiderImageSoogif($_user): JsonResponse
     {
         $result = $this->spiderService->syncSpiderImageSoogif(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
         return ajaxReturn($result);

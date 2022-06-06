@@ -15,11 +15,11 @@ class OAuthController extends Controller
     /**
      * @var string $state
      */
-    public $state;
+    public string $state;
     /**
      * @var Curl $curl
      */
-    protected $curl;
+    protected Curl $curl;
 
     public function __construct()
     {
@@ -35,7 +35,7 @@ class OAuthController extends Controller
      * @param int $length
      * @return string
      */
-    public function getState(int $length = 32)
+    public function getState(int $length = 32): string
     {
         $this->state = substr(encrypt(getRoundNum($length, 'all')), 0, $length);
         return $this->state;
@@ -57,7 +57,7 @@ class OAuthController extends Controller
      * @param $message
      * @return array
      */
-    public function error($code, $message)
+    public function error($code, $message): array
     {
         return array('code' => $code, 'message' => $message);
     }
@@ -66,7 +66,7 @@ class OAuthController extends Controller
      * @param $data
      * @return array
      */
-    public function __getAccessToken($data)
+    public function __getAccessToken($data): array
     {
         $queryParts = explode('&', $data);
         $paramsArr = array();

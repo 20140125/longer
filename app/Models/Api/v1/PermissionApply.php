@@ -28,7 +28,7 @@ class PermissionApply extends Base
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): PermissionApply
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -53,7 +53,7 @@ class PermissionApply extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -63,7 +63,7 @@ class PermissionApply extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
@@ -77,7 +77,7 @@ class PermissionApply extends Base
      * @param string[] $columns
      * @return array
      */
-    public function getLists($user, array $where = [], array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*'])
+    public function getLists($user, array $where = [], array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $columns = ['*']): array
     {
         if (!empty($user) && $user->role_id != 1) {
             $where[] = ['user_id', empty($user->oauth_type) ? $user->id : $user->uid];

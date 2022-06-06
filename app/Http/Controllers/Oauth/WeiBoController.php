@@ -15,23 +15,23 @@ class WeiBoController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var string $apiUrl 授权业务域名
      */
-    protected $apiUrl = 'https://api.weibo.com/';
+    protected string $apiUrl = 'https://api.weibo.com/';
     /**
      * @var static $instance
      */
-    protected static $instance;
+    protected static WeiBoController $instance;
 
     /**
      * WeiboController constructor.
@@ -51,7 +51,7 @@ class WeiBoController extends OAuthController
      * @param string $appSecret
      * @return WeiBoController
      */
-    public static function getInstance(string $appid, string $appSecret)
+    public static function getInstance(string $appid, string $appSecret): WeiBoController
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid, $appSecret);
@@ -66,7 +66,7 @@ class WeiBoController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'all,email')
+    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'all,email'): string
     {
         $this->redirectUri = empty($callback) ? $this->redirectUri : $callback;
         $arr = [
@@ -87,7 +87,7 @@ class WeiBoController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function getAccessToken(string $code)
+    public function getAccessToken(string $code): array
     {
         $arr = [
             'client_id'     => $this->appid,
@@ -111,7 +111,7 @@ class WeiBoController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function getUserInfo(string $access_token, string $uid)
+    public function getUserInfo(string $access_token, string $uid): array
     {
         $result = $this->curl->get($this->apiUrl . "2/users/show.json?access_token=$access_token&uid=$uid");
         if (!$result) {

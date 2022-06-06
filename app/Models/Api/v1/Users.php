@@ -29,7 +29,7 @@ class Users extends Base
     /**
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): Users
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static();
@@ -54,7 +54,7 @@ class Users extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -64,7 +64,7 @@ class Users extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }

@@ -31,13 +31,13 @@ class OauthCallbackController extends Controller
     /**
      * @var OAuth $oauthModel
      */
-    protected $oauthModel;
+    protected Oauth $oauthModel;
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    protected RedisClient $redisClient;
     /**
-     * @var string $state ;
+     * @var string $state
      */
     protected $state;
 

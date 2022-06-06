@@ -9,9 +9,10 @@ class ApiController extends BaseController
 {
     /**
      * todo:获取接口详情
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getInterface(Request $request)
+    public function getInterface(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['id' => 'required|integer', 'source' => 'required|string|in:markdown,json']);
         $result = $this->post['source'] === 'json' ? $this->apiService->getApiList($this->post) : $this->apiService->getMarkDownList($this->post);
@@ -20,9 +21,10 @@ class ApiController extends BaseController
 
     /**
      * todo:添加接口
+     * @param Request $request
      * @return JsonResponse
      */
-    public function saveInterface(Request $request)
+    public function saveInterface(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, $this->setRules($this->post['source'] ?? 'json', 'save'));
         $user = $request->get('unauthorized');
@@ -32,9 +34,10 @@ class ApiController extends BaseController
 
     /**
      * todo:更新接口
+     * @param Request $request
      * @return JsonResponse
      */
-    public function updateInterface(Request $request)
+    public function updateInterface(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, $this->setRules($this->post['source'] ?? 'json', 'update'));
         $user = $request->get('unauthorized');
@@ -48,7 +51,7 @@ class ApiController extends BaseController
      * @param $action
      * @return string[]
      */
-    private function setRules($source, $action)
+    private function setRules($source, $action): array
     {
         $rules = $source === 'json' ?
             [
