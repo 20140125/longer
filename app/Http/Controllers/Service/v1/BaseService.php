@@ -121,7 +121,7 @@ class BaseService
     /**
      * @var array $return
      */
-    protected array $return;
+    protected $return;
 
     public function __construct()
     {
