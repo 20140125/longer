@@ -12,15 +12,15 @@ class BaseController extends Controller
     /**
      * @var LoginService $loginService
      */
-    protected $loginService;
+    protected LoginService $loginService;
     /**
      * @var ImageService $imageService
      */
-    protected $imageService;
+    protected ImageService $imageService;
     /**
      * @var array $post
      */
-    protected $post;
+    protected array $post;
 
     /**
      * WxUsersController constructor.

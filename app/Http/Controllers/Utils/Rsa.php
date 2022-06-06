@@ -16,13 +16,13 @@ class Rsa extends Controller
      */
     protected static $instance;
     /**
-     * @var false|string
+     * @var string
      */
-    protected $publicKey = '';
+    protected string $publicKey = '';
     /**
-     * @var false|string
+     * @var string
      */
-    protected $privateKey = '';
+    protected string $privateKey = '';
 
     private function __clone()
     {
@@ -51,7 +51,7 @@ class Rsa extends Controller
 
     /**
      * TODO:获取私钥
-     * @return bool|resource
+     * @return bool
      */
     protected function getPrivateKey(): bool
     {
@@ -60,7 +60,7 @@ class Rsa extends Controller
 
     /**
      * TODO：获取公钥
-     * @return bool|resource
+     * @return bool
      */
     protected function getPublicKey(): bool
     {
@@ -88,7 +88,7 @@ class Rsa extends Controller
     /**
      * TODO：公钥解密
      * @param string $encrypted
-     * @return null
+     * @return string|null
      */
     public function publicDecrypt(string $encrypted = ''): ?string
     {

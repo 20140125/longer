@@ -15,15 +15,15 @@ class OsChinaController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var static $instance
      */
@@ -31,7 +31,7 @@ class OsChinaController extends OAuthController
     /**
      * @var string API 业务域名
      */
-    protected $apiUrl = 'https://www.oschina.net/';
+    protected string $apiUrl = 'https://www.oschina.net/';
 
     /**
      * OsChinaController constructor.

@@ -21,11 +21,11 @@ class BaseService extends Controller
     /**
      * @var Repository|Application|mixed
      */
-    protected $appid;
+    protected mixed $appid;
     /**
      * @var Repository|Application|mixed
      */
-    protected $appSecret;
+    protected mixed $appSecret;
     /**
      * @var Oauth $oauthModel
      */
@@ -45,7 +45,7 @@ class BaseService extends Controller
     /**
      * @var $systemConfig
      */
-    protected $systemConfig;
+    protected mixed $systemConfig;
     /**
      * @var array $configuration
      */
@@ -74,7 +74,7 @@ class BaseService extends Controller
      * @param string $name
      * @return mixed
      */
-    public function getSystemConfiguration(string $name = 'ImageBed')
+    public function getSystemConfiguration(string $name = 'ImageBed'): mixed
     {
         $this->systemConfig = $this->systemConfigModel->getOne(['name' => $name], ['children'])->children;
         return $this->systemConfig;
@@ -85,7 +85,7 @@ class BaseService extends Controller
      * @param $key
      * @return mixed|string
      */
-    public function getSystemConfig($key)
+    public function getSystemConfig($key): mixed
     {
         $value = '';
         $systemConfig = json_decode($this->systemConfig, true);

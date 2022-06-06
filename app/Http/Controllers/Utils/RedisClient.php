@@ -41,7 +41,7 @@ class RedisClient extends Controller
      * @param int $index
      * @return mixed
      */
-    public function selectDB(int $index = 0)
+    public function selectDB(int $index = 0): mixed
     {
         return Redis::select($index);
     }
@@ -63,7 +63,7 @@ class RedisClient extends Controller
      * @param $key
      * @return mixed
      */
-    public function getValue($key)
+    public function getValue($key): mixed
     {
         return Redis::get($key);
     }
@@ -84,7 +84,7 @@ class RedisClient extends Controller
      * @param $key
      * @return mixed
      */
-    public function sMembers($key)
+    public function sMembers($key): mixed
     {
         return Redis::sMembers($key);
     }
@@ -95,7 +95,7 @@ class RedisClient extends Controller
      * @param $value
      * @return mixed
      */
-    public function sIsMember($key, $value)
+    public function sIsMember($key, $value): mixed
     {
         return Redis::sIsMember($key, $value);
     }
@@ -106,7 +106,7 @@ class RedisClient extends Controller
      * @param $value
      * @return mixed
      */
-    public function sRem($key, $value)
+    public function sRem($key, $value): mixed
     {
         return Redis::sRem($key, $value);
     }
@@ -116,7 +116,7 @@ class RedisClient extends Controller
      * @param $key
      * @return mixed
      */
-    public function del($key)
+    public function del($key): mixed
     {
         return Redis::del($key);
     }
@@ -127,7 +127,7 @@ class RedisClient extends Controller
      * @param $value
      * @return mixed
      */
-    public function lPush($key, $value)
+    public function lPush($key, $value): mixed
     {
         return Redis::lPush($key, $value);
     }
@@ -137,7 +137,7 @@ class RedisClient extends Controller
      * @param $key
      * @return bool|int
      */
-    public function lPop($key)
+    public function lPop($key): bool|int
     {
         return Redis::lPop($key);
     }
@@ -148,7 +148,7 @@ class RedisClient extends Controller
      * @param $value
      * @return bool|int
      */
-    public function rPush($key, $value)
+    public function rPush($key, $value): bool|int
     {
         return Redis::rPush($key, $value);
     }
@@ -158,7 +158,7 @@ class RedisClient extends Controller
      * @param $key
      * @return bool|int
      */
-    public function rPop($key)
+    public function rPop($key): bool|int
     {
         return Redis::rPop($key);
     }
@@ -170,7 +170,7 @@ class RedisClient extends Controller
      * @param $num
      * @return mixed
      */
-    public function lRange($key, $start, $num)
+    public function lRange($key, $start, $num): mixed
     {
         return Redis::lRange($key, $start, $num);
     }
@@ -180,7 +180,7 @@ class RedisClient extends Controller
      * @param $key
      * @return mixed
      */
-    public function hGetAll($key)
+    public function hGetAll($key): mixed
     {
         return Redis::hGetAll($key);
     }
@@ -202,7 +202,7 @@ class RedisClient extends Controller
      * @param $to
      * @return mixed
      */
-    public function hDel($from, $to)
+    public function hDel($from, $to): mixed
     {
         return Redis::hDel($to, $from);
     }

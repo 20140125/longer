@@ -74,7 +74,7 @@ class LoginService extends BaseService
                 $result->remember_token = encrypt($oauth['username'] . time());
                 $this->oauthModel->updateOne(['id' => $result->id], ['remember_token' => $result->remember_token]);
                 /* 缓存用户登录标识（脚本缓存有时间延时） */
-                \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($result->remember_token, $result->remember_token, config('app.app_refresh_login_time'));
+                UserService::getInstance()->setVerifyCode($result->remember_token, $result->remember_token, config('app.app_refresh_login_time'));
                 Artisan::call("longer:sync-oauth $result->remember_token");
                 $this->return['lists'] = $result;
                 return $this->return;
@@ -85,7 +85,7 @@ class LoginService extends BaseService
                 return $this->return;
             }
             /* 缓存用户登录标识（脚本缓存有时间延时） */
-            \App\Http\Controllers\Service\v1\BaseService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
+            UserService::getInstance()->setVerifyCode($oauth['remember_token'], $oauth['remember_token'], config('app.app_refresh_login_time'));
             Artisan::call("longer:sync-oauth {$oauth['remember_token']}");
             $this->return['lists'] = $oauth;
             /* 邮件通知 */
