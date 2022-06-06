@@ -18,7 +18,7 @@ class UserCenterService extends BaseService
     /**
      * @var array|string[]
      */
-    private array $json = ['tags', 'ip_address', 'local'];
+    private $json = ['tags', 'ip_address', 'local'];
 
     /**
      * @return static
