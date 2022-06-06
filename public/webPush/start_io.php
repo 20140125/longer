@@ -185,7 +185,7 @@ $sender_io->on('workerStart', function () {
      * @param $user
      * @return mixed
      */
-    function pushData($user)
+    function pushData($user): mixed
     {
         global $db;
         return $db->select('*')->from('os_push')->where("uuid = '{$user}' and see < 1 ")->orderByDESC(['created_at'])->limit(30)->query();
@@ -195,7 +195,7 @@ $sender_io->on('workerStart', function () {
      * TODO:获取日志信息
      * @return array
      */
-    function getLogCount()
+    function getLogCount(): array
     {
         global $db, $day, $times;
         $log = $db->select('day,count(*) as total')->from('os_system_log')->where("day>=" . date('Ymd', strtotime("-{$times} day")))->groupBy(['day'])->query();
@@ -219,7 +219,7 @@ $sender_io->on('workerStart', function () {
      * TODO：获取站内通知(成功)
      * @return array
      */
-    function getPushCount()
+    function getPushCount(): array
     {
         global $db, $day, $times;
         $push = $db->select("FROM_UNIXTIME(created_at,'%Y%m%d') as day,count(*) as total")->from('os_push')
@@ -245,7 +245,7 @@ $sender_io->on('workerStart', function () {
      * TODO：获取授权用户
      * @return array
      */
-    function getOauthCount()
+    function getOauthCount(): array
     {
         global $db, $day, $times;
         $oauth = $db->select("FROM_UNIXTIME(created_at,'%Y%m%d') as day,count(*) as total")->from('os_users')
