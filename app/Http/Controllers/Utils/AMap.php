@@ -20,19 +20,19 @@ class AMap extends Controller
     /**
      * @var Repository|mixed
      */
-    protected mixed $a_map_key;
+    protected $a_map_key;
     /**
      * @var string $url
      */
-    protected string $url;
+    protected $url;
     /**
      * @var array $data
      */
-    protected array $data = array();
+    protected $data = array();
     /**
      * @var Curl $Curl
      */
-    protected Curl $Curl;
+    protected $Curl;
 
     private function __clone()
     {

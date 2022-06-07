@@ -21,39 +21,39 @@ class BaseService extends Controller
     /**
      * @var Repository|Application|mixed
      */
-    protected mixed $appid;
+    protected $appid;
     /**
      * @var Repository|Application|mixed
      */
-    protected mixed $appSecret;
+    protected $appSecret;
     /**
      * @var Oauth $oauthModel
      */
-    protected Oauth $oauthModel;
+    protected $oauthModel;
     /**
      * @var SystemConfig $systemConfigModel
      */
-    protected SystemConfig $systemConfigModel;
+    protected $systemConfigModel;
     /**
      * @var SooGif $sooGifModel
      */
-    protected SooGif $sooGifModel;
+    protected $sooGifModel;
     /**
      * @var SooGifType $sooGifTypeModel
      */
-    protected SooGifType $sooGifTypeModel;
+    protected $sooGifTypeModel;
     /**
      * @var $systemConfig
      */
-    protected mixed $systemConfig;
+    protected $systemConfig;
     /**
      * @var string $configuration
      */
-    protected string $configuration;
+    protected $configuration;
     /**
      * @var array $return
      */
-    protected array $return;
+    protected $return;
 
     public function __construct()
     {

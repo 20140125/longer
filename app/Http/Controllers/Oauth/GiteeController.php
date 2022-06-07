@@ -15,19 +15,19 @@ class GiteeController extends OAuthController
     /**
      * @var string $appid
      */
-    protected string $appid;
+    protected $appid;
     /**
      * @var string $appSecret
      */
-    protected string $appSecret;
+    protected $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected string $redirectUri;
+    protected $redirectUri;
     /**
      * @var string API 业务域名
      */
-    protected string $apiUrl = 'https://gitee.com/';
+    protected $apiUrl = 'https://gitee.com/';
     /**
      * @var static $instance
      */

@@ -18,11 +18,11 @@ class Rsa extends Controller
     /**
      * @var string
      */
-    protected string $publicKey = '';
+    protected $publicKey = '';
     /**
      * @var string
      */
-    protected string $privateKey = '';
+    protected $privateKey = '';
 
     private function __clone()
     {

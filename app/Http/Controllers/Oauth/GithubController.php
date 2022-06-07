@@ -14,15 +14,15 @@ class GithubController extends OAuthController
     /**
      * @var string $appid
      */
-    protected string $appid;
+    protected $appid;
     /**
      * @var string $appSecret
      */
-    protected string $appSecret;
+    protected $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected string $redirectUri;
+    protected $redirectUri;
     /**
      * @var static $instance
      */
@@ -30,7 +30,7 @@ class GithubController extends OAuthController
     /**
      * @var string API 业务域名
      */
-    protected string $apiUrl = 'https://github.com/';
+    protected $apiUrl = 'https://github.com/';
 
     /**
      * GithubController constructor.

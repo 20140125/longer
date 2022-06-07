@@ -15,19 +15,19 @@ class WeiBoController extends OAuthController
     /**
      * @var string $appid
      */
-    protected string $appid;
+    protected $appid;
     /**
      * @var string $appSecret
      */
-    protected string $appSecret;
+    protected $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected string $redirectUri;
+    protected $redirectUri;
     /**
      * @var string $apiUrl 授权业务域名
      */
-    protected string $apiUrl = 'https://api.weibo.com/';
+    protected $apiUrl = 'https://api.weibo.com/';
     /**
      * @var static $instance
      */

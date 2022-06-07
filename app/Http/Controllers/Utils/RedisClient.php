@@ -41,7 +41,7 @@ class RedisClient extends Controller
      * @param int $index
      * @return mixed
      */
-    public function selectDB(int $index = 0): mixed
+    public function selectDB(int $index = 0)
     {
         return Redis::select($index);
     }
@@ -63,7 +63,7 @@ class RedisClient extends Controller
      * @param $key
      * @return mixed
      */
-    public function getValue($key): mixed
+    public function getValue($key)
     {
         return Redis::get($key);
     }
@@ -84,7 +84,7 @@ class RedisClient extends Controller
      * @param $key
      * @return mixed
      */
-    public function sMembers($key): mixed
+    public function sMembers($key)
     {
         return Redis::sMembers($key);
     }
@@ -95,7 +95,7 @@ class RedisClient extends Controller
      * @param $value
      * @return mixed
      */
-    public function sIsMember($key, $value): mixed
+    public function sIsMember($key, $value)
     {
         return Redis::sIsMember($key, $value);
     }
@@ -106,7 +106,7 @@ class RedisClient extends Controller
      * @param $value
      * @return mixed
      */
-    public function sRem($key, $value): mixed
+    public function sRem($key, $value)
     {
         return Redis::sRem($key, $value);
     }
@@ -116,7 +116,7 @@ class RedisClient extends Controller
      * @param $key
      * @return mixed
      */
-    public function del($key): mixed
+    public function del($key)
     {
         return Redis::del($key);
     }
@@ -127,7 +127,7 @@ class RedisClient extends Controller
      * @param $value
      * @return mixed
      */
-    public function lPush($key, $value): mixed
+    public function lPush($key, $value)
     {
         return Redis::lPush($key, $value);
     }
@@ -170,7 +170,7 @@ class RedisClient extends Controller
      * @param $num
      * @return mixed
      */
-    public function lRange($key, $start, $num): mixed
+    public function lRange($key, $start, $num)
     {
         return Redis::lRange($key, $start, $num);
     }
@@ -180,7 +180,7 @@ class RedisClient extends Controller
      * @param $key
      * @return mixed
      */
-    public function hGetAll($key): mixed
+    public function hGetAll($key)
     {
         return Redis::hGetAll($key);
     }
@@ -202,7 +202,7 @@ class RedisClient extends Controller
      * @param $to
      * @return mixed
      */
-    public function hDel($from, $to): mixed
+    public function hDel($from, $to)
     {
         return Redis::hDel($to, $from);
     }

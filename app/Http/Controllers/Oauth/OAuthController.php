@@ -15,11 +15,11 @@ class OAuthController extends Controller
     /**
      * @var string $state
      */
-    public string $state;
+    public $state;
     /**
      * @var Curl $curl
      */
-    protected Curl $curl;
+    protected $curl;
 
     public function __construct()
     {

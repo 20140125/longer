@@ -12,11 +12,11 @@ class BaseController extends Controller
     /**
      * @var LoginService $loginService
      */
-    protected LoginService $loginService;
+    protected $loginService;
     /**
      * @var ImageService $imageService
      */
-    protected ImageService $imageService;
+    protected $imageService;
     /**
      * @var array $post
      */
