@@ -74,7 +74,7 @@ class BaseService extends Controller
      * @param string $name
      * @return mixed
      */
-    public function getSystemConfiguration(string $name = 'ImageBed'): mixed
+    public function getSystemConfiguration(string $name = 'ImageBed')
     {
         $this->systemConfig = $this->systemConfigModel->getOne(['name' => $name], ['children'])->children;
         return $this->systemConfig;
@@ -85,7 +85,7 @@ class BaseService extends Controller
      * @param $key
      * @return string
      */
-    public function getSystemConfig($key): mixed
+    public function getSystemConfig($key): string
     {
         $value = '';
         $systemConfig = json_decode($this->systemConfig, true);
