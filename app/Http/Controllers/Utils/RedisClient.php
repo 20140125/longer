@@ -137,7 +137,7 @@ class RedisClient extends Controller
      * @param $key
      * @return bool|int
      */
-    public function lPop($key): bool|int
+    public function lPop($key)
     {
         return Redis::lPop($key);
     }
@@ -148,7 +148,7 @@ class RedisClient extends Controller
      * @param $value
      * @return bool|int
      */
-    public function rPush($key, $value): bool|int
+    public function rPush($key, $value)
     {
         return Redis::rPush($key, $value);
     }
@@ -158,7 +158,7 @@ class RedisClient extends Controller
      * @param $key
      * @return bool|int
      */
-    public function rPop($key): bool|int
+    public function rPop($key)
     {
         return Redis::rPop($key);
     }
