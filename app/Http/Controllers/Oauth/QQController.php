@@ -57,7 +57,7 @@ class QQController extends OAuthController
      * @param string $appSecret
      * @return QQController
      */
-    public static function getInstance(string $appid, string $appSecret)
+    public static function getInstance(string $appid, string $appSecret): QQController
     {
         if (!self::$instance instanceof self) {
             self::$instance = new static($appid, $appSecret);
@@ -72,7 +72,7 @@ class QQController extends OAuthController
      * @param string $scope
      * @return string
      */
-    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'get_user_info')
+    public function getAuthUrl(int $length = 32, string $callback = '', string $scope = 'get_user_info'): string
     {
         $arr = [
             'response_type' => 'code',
@@ -91,14 +91,15 @@ class QQController extends OAuthController
      * @return array
      * @throws Exception
      */
-    public function getAccessToken(string $code)
+    public function getAccessToken(string $code): array
     {
         $arr = [
             'grant_type'    => 'authorization_code',
             'client_id'     => $this->appid,
             'client_secret' => $this->appSecret,
             'code'          => $code,
-            'redirect_uri'  => $this->redirectUri
+            'redirect_uri'  => $this->redirectUri,
+            'fmt'           => 'json'
         ];
         $result = $this->curl->get($this->apiUrl . 'oauth2.0/token?' . http_build_query($arr));
         if (!$result) {
@@ -119,7 +120,8 @@ class QQController extends OAuthController
     public function getOpenId(string $access_token)
     {
         $arr = [
-            'access_token' => $access_token
+            'access_token' => $access_token,
+            'fmt'          => 'json'
         ];
         $result = $this->curl->get($this->apiUrl . 'oauth2.0/me?' . http_build_query($arr));
         if (!$result) {
@@ -143,7 +145,8 @@ class QQController extends OAuthController
             'grant_type'    => 'refresh_token',
             'client_id'     => $this->appid,
             'client_secret' => $this->appSecret,
-            'refresh_token' => $refreshToken
+            'refresh_token' => $refreshToken,
+            'fmt'           => 'json'
         ];
         $result = $this->curl->get($this->apiUrl . 'oauth2.0/token?' . http_build_query($arr));
         if (!$result) {
@@ -167,7 +170,8 @@ class QQController extends OAuthController
         $arr = [
             'access_token'       => $access_token,
             'oauth_consumer_key' => $this->appid,
-            'openid'             => $this->openid
+            'openid'             => $this->openid,
+            'fmt'                => 'json'
         ];
         $result = $this->curl->get($this->apiUrl . 'user/get_user_info?' . http_build_query($arr));
         if (!$result) {

@@ -17,7 +17,7 @@ class Base
     /**
      * @var UserService $userService
      */
-    protected $userService;
+    protected UserService $userService;
     /**
      * @var OauthService $oauthService
      */

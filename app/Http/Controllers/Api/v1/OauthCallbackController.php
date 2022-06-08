@@ -9,7 +9,7 @@ use App\Http\Controllers\Oauth\GithubController;
 use App\Http\Controllers\Oauth\OsChinaController;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Oauth\WeiBoController;
-use App\Http\Controllers\Service\v1\BaseService;
+use App\Http\Controllers\Service\v1\OauthService;
 use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use App\Mail\Register;
@@ -267,7 +267,7 @@ class OauthCallbackController extends Controller
         $data['updated_at'] = time();
         $oauth = $this->oauthModel->getOne($where);
         /* 换成用户登录标识（脚本缓存有时间延时） */
-        BaseService::getInstance()->setVerifyCode($data['remember_token'], $data['remember_token'], config('app.app_refresh_login_time'));
+        OauthService::getInstance()->setVerifyCode($data['remember_token'], $data['remember_token'], config('app.app_refresh_login_time'));
         /* 授权用户存在直接跳转到欢迎页 */
         if (!empty($oauth)) {
             unset($data['username']);
