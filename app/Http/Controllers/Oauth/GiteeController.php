@@ -91,7 +91,7 @@ class GiteeController extends OAuthController
             'redirect_uri'  => $this->redirectUri,
             'client_secret' => $this->appSecret
         ];
-        $result = $this->curl->post($this->apiUrl . "oauth/token?" . http_build_query($arr));
+        $result = $this->curl->post($this->apiUrl . 'oauth/token?' . http_build_query($arr));
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
@@ -111,7 +111,7 @@ class GiteeController extends OAuthController
             'grant_type'    => 'refresh_token',
             'refresh_token' => $refresh_token
         ];
-        $result = $this->curl->post($this->apiUrl . "oauth/token?" . http_build_query($arr));
+        $result = $this->curl->post($this->apiUrl . 'oauth/token?' . http_build_query($arr));
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }

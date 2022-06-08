@@ -105,10 +105,11 @@ class QQController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        if (isset($this->json($result)['error'])) {
-            return $this->error(Code::ERROR, $this->json($result)['error_description']);
+        $result = json_decode($result, true);
+        if (isset($result['error'])) {
+            return $this->error(Code::ERROR, $result['error_description']);
         }
-        return $this->__getAccessToken($result);
+        return $result['access_token'];
     }
 
     /**
@@ -127,10 +128,11 @@ class QQController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        if (isset($this->json($result)['error'])) {
-            return $this->error(Code::ERROR, $this->json($result)['error_description']);
+        $result = json_decode($result, true);
+        if (isset($result['error'])) {
+            return $this->error(Code::ERROR, $result['error_description']);
         }
-        return $this->json($result)['openid'];
+        return $result['openid'];
     }
 
     /**
@@ -152,10 +154,11 @@ class QQController extends OAuthController
         if (!$result) {
             return $this->error(Code::ERROR, 'request interface failed');
         }
-        if (isset($this->json($result)['error'])) {
-            return $this->error(Code::ERROR, $this->json($result)['error_description']);
+        $result = json_decode($result, true);
+        if (isset($result['error'])) {
+            return $this->error(Code::ERROR, $result['error_description']);
         }
-        return $this->__getAccessToken($result);
+        return $result['access_token'];
     }
 
     /**
