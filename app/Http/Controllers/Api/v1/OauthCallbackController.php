@@ -263,31 +263,24 @@ class OauthCallbackController extends Controller
      */
     protected function oauth($data, $where)
     {
-        $data['created_at'] = time();
         $data['updated_at'] = time();
         $oauth = $this->oauthModel->getOne($where);
         /* 换成用户登录标识（脚本缓存有时间延时） */
         OauthService::getInstance()->setVerifyCode($data['remember_token'], $data['remember_token'], config('app.app_refresh_login_time'));
-        /* 授权用户存在直接跳转到欢迎页 */
         if (!empty($oauth)) {
-            unset($data['username']);
-            unset($data['avatar_url']);
+            $data['created_at'] = strtotime($oauth['created_at']);
             $oauthRes = $this->oauthModel->updateOne($where, $data);
-            if (!empty($oauthRes)) {
-                /*  同步用户数据 */
-                Artisan::call("longer:sync-oauth {$data['remember_token']}");
-                return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send() : redirect('/#/?token='.rawurlencode($data['remember_token']))->send();
-            }
-            return redirect('/login')->send();
+        } else {
+            $data['uid'] = 0;
+            $data['role_id'] = 2;
+            $data['created_at'] = time();
+            $oauthRes = $this->oauthModel->saveOne($data);
         }
-        /* todo:授权用户第一次登陆跳转到绑定页 */
-        $data['uid'] = 0;
-        $data['role_id'] = 2;
-        $oauthRes = $this->oauthModel->saveOne($data);
         if (!empty($oauthRes)) {
             Artisan::call("longer:sync-oauth {$data['remember_token']}");
             Mail::to(config('app.username'))->send(new Register(array('name' => $data['username'])));
             $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 60]);
+            // 根据state的长度区分是客户端还是PC端
             return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send() : redirect('/#/?token='.rawurlencode($data['remember_token']))->send();
         }
         return redirect('/login')->send();
