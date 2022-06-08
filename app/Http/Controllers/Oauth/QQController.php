@@ -109,7 +109,7 @@ class QQController extends OAuthController
         if (isset($result['error'])) {
             return $this->error(Code::ERROR, $result['error_description']);
         }
-        return $result['access_token'];
+        return $result;
     }
 
     /**
