@@ -21,23 +21,23 @@ class Base
     /**
      * @var OauthService $oauthService
      */
-    protected $oauthService;
+    protected OauthService $oauthService;
     /**
      * @var RoleService $roleService
      */
-    protected $roleService;
+    protected RoleService $roleService;
     /**
      * @var AuthService $ruleService
      */
-    protected $ruleService;
+    protected AuthService $ruleService;
     /**
      * @var AreaService $areaService
      */
-    protected $areaService;
+    protected AreaService $areaService;
     /**
      * @var RedisClient $redisClient
      */
-    protected $redisClient;
+    protected RedisClient $redisClient;
     /**
      * @var array $post
      */

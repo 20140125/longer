@@ -17,23 +17,23 @@ class QQController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string API 业务域名
      */
-    protected $apiUrl = 'https://graph.qq.com/';
+    protected string $apiUrl = 'https://graph.qq.com/';
     /**
      * @var string 授权成功回调地址
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var string $openid
      */
-    public $openid;
+    public string $openid;
     /**
      * @var static $instance
      */

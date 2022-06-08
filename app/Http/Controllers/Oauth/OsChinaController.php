@@ -15,15 +15,15 @@ class OsChinaController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string $redirectUri
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var static $instance
      */

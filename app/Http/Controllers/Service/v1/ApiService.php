@@ -17,7 +17,7 @@ class ApiService extends BaseService
     /**
      * @var array|string[]
      */
-    protected $json_str = ['request', 'response', 'response_string'];
+    protected array $json_str = ['request', 'response', 'response_string'];
 
     /**
      * @return ApiService

@@ -14,19 +14,19 @@ class BaiDuController extends OAuthController
     /**
      * @var string $appid
      */
-    protected $appid;
+    protected string $appid;
     /**
      * @var string $appSecret
      */
-    protected $appSecret;
+    protected string $appSecret;
     /**
      * @var string API 业务域名
      */
-    protected $apiUrl = 'https://openapi.baidu.com/';
+    protected string $apiUrl = 'https://openapi.baidu.com/';
     /**
      * @var string 授权成功回调地址
      */
-    protected $redirectUri;
+    protected string $redirectUri;
     /**
      * @var static $instance
      */
