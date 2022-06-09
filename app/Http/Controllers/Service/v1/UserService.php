@@ -81,10 +81,10 @@ class UserService extends BaseService
     /**
      * todo：账号密码登录
      * @param array $form
-     * @param object $user
+     * @param $user
      * @return array
      */
-    protected function accountLogin(array $form, object $user): array
+    protected function accountLogin(array $form, $user): array
     {
         /* 密码错误 */
         $password = md5(md5($form['password']) . $user->salt);
@@ -100,10 +100,10 @@ class UserService extends BaseService
     /**
      * todo:邮箱登录
      * @param array $form
-     * @param object $user
+     * @param $user
      * @return array
      */
-    protected function mailLogin(array $form, object $user): array
+    protected function mailLogin(array $form, $user): array
     {
         return !empty($user) ? $this->updateUsers($form, $user, 'mail login system successfully') : $this->registerUsers($form, 'mail register system successfully');
     }
@@ -111,11 +111,11 @@ class UserService extends BaseService
     /**
      * todo:更新用户信息
      * @param array $form
-     * @param object $user
+     * @param $user
      * @param string $message
      * @return array
      */
-    public function updateUsers(array $form, object $user, string $message): array
+    public function updateUsers(array $form, $user, string $message): array
     {
         /* 更新用户信息 */
         $salt = getRoundNum(8, 'all');
