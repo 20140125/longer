@@ -31,7 +31,7 @@ class OsChinaController extends OAuthController
     /**
      * @var string API 业务域名
      */
-    protected $apiUrl = 'https://www.oschina.net/';
+    protected string $apiUrl = 'https://www.oschina.net/';
 
     /**
      * OsChinaController constructor.
