@@ -180,9 +180,9 @@ class UserService extends BaseService
 
     /**
      * todo:获取用户画像
-     * @return int
+     * @return string
      */
-    public function getUserAvatarImage(): int
+    public function getUserAvatarImage(): string
     {
         $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0], true);
         $avatarUrl = [];
