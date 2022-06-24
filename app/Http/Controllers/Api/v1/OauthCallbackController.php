@@ -268,7 +268,6 @@ class OauthCallbackController extends Controller
         /* 换成用户登录标识（脚本缓存有时间延时） */
         OauthService::getInstance()->setVerifyCode($data['remember_token'], $data['remember_token'], config('app.app_refresh_login_time'));
         if (!empty($oauth)) {
-            $data['created_at'] = strtotime($oauth->created_at);
             $oauthRes = $this->oauthModel->updateOne($where, $data);
         } else {
             $data['uid'] = 0;
