@@ -64,7 +64,7 @@ class SpiderImageService extends Command
             $bar = $this->output->createProgressBar($pageSize);
             foreach (range(1, $pageSize) as $page) {
                 $lists = $client->request('GET', sprintf('%s%s',  $url, '?page='.$page));
-                $this->info(sprintf('%s%s%s', '爬取地址：',  $url, 'photo/list/?page=1'));
+                $this->info(sprintf('%s%s%s', "\r\n爬取地址：",  $url, 'photo/list/?page=1'));
                 $lists->filter('.page-content a')->each(function ($node, $index) use ($client) {
                     $arr = [
                         'href' => $node->filter('.img-responsive')->attr('data-original'),
