@@ -62,9 +62,9 @@ class SpiderImageService extends Command
             $promise = $client->request('GET', $url);
             $pageSize = $promise->filter('.pagination li .page-link')->eq(count($promise->filter('.pagination li .page-link')) - 2)->text();
             $bar = $this->output->createProgressBar($pageSize);
-            foreach (range(40, $pageSize) as $page) {
+            foreach (range(1, $pageSize) as $page) {
                 $lists = $client->request('GET', sprintf('%s%s',  $url, '?page='.$page));
-                $this->info(sprintf('%s%s%s', "\r\n爬取地址：",  $url, 'photo/list/?page=1'));
+                $this->info(sprintf('%s%s%s', "\r\n爬取地址：",  $url, 'photo/list/?page='.$page));
                 $lists->filter('.page-content a')->each(function ($node, $index) use ($client) {
                     $arr = [
                         'href' => $node->filter('.img-responsive')->attr('data-original'),
