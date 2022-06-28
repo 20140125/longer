@@ -62,13 +62,13 @@ class SpiderImageService extends Command
             $promise = $client->request('GET', $url);
             $pageSize = $promise->filter('.pagination li .page-link')->eq(count($promise->filter('.pagination li .page-link')) - 2)->text();
             $bar = $this->output->createProgressBar($pageSize);
-            foreach (range(1, $pageSize) as $page) {
+            foreach (range(268, $pageSize) as $page) {
                 $lists = $client->request('GET', sprintf('%s%s',  $url, '?page='.$page));
                 $this->info(sprintf('%s%s%s', "\r\n爬取地址：",  $url, 'photo/list/?page='.$page));
                 $lists->filter('.page-content a')->each(function ($node, $index) use ($client) {
                     $arr = [
                         'href' => $node->filter('.img-responsive')->attr('data-original'),
-                        'name' => $node->filter('.img-responsive')->attr('alt') ?? '斗图啦~',
+                        'name' => mb_substr($node->filter('.img-responsive')->attr('alt'), 0, 50) ?? '斗图啦~',
                     ];
                     if (SooGif::getInstance()->getOne(['href' => $arr['href']])) {
                         $this->warn('Image already exists: ' . $arr['href']);
