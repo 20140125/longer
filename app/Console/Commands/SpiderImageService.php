@@ -14,7 +14,7 @@ class SpiderImageService extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image {url=https://www.pkdoutu.com/photo/list/} {uuid=longer7f00000108fc00000001}';
+    protected $signature = 'longer:sync-spider_image {url=https://www.pkdoutu.com/photo/list/} {page=2375} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -62,7 +62,7 @@ class SpiderImageService extends Command
             $promise = $client->request('GET', $url);
             $pageSize = $promise->filter('.pagination li .page-link')->eq(count($promise->filter('.pagination li .page-link')) - 2)->text();
             $bar = $this->output->createProgressBar($pageSize);
-            foreach (range(268, $pageSize) as $page) {
+            foreach (range($this->arguments('page'), $pageSize) as $page) {
                 $lists = $client->request('GET', sprintf('%s%s',  $url, '?page='.$page));
                 $this->info(sprintf('%s%s%s', "\r\n爬取地址：",  $url, 'photo/list/?page='.$page));
                 $lists->filter('.page-content a')->each(function ($node, $index) use ($client) {
