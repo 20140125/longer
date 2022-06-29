@@ -80,7 +80,7 @@ class SyncSpiderImageType extends Command
                         SooGifType::getInstance()->saveOne([
                             'href' => $this->fbqURL . $node->attr('href'),
                             'name' => $node->filter('.header')->text(),
-                            'type' => 2
+                            'source' => 2
                         ]);
                         $this->info('successfully save link address： ' . $this->fbqURL . $node->attr('href'));
                     }
@@ -115,7 +115,7 @@ class SyncSpiderImageType extends Command
                         SooGifType::getInstance()->saveOne([
                             'href' => $node->attr('href'),
                             'name' => mb_substr($node->filter('.random_title')->text(), 0, 100),
-                            'type' => 1
+                            'source' => 1
                         ]);
                         $this->info('successfully save link address： ' . $node->attr('href'));
                     }
