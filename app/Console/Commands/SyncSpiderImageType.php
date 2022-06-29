@@ -13,7 +13,7 @@ class SyncSpiderImageType extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image_type {source=pk} {type=hot} {page=1} {uuid=longer7f00000108fc00000001}';
+    protected $signature = 'longer:sync-spider_image_type {source=pk} {page=1} {type=hot} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -77,7 +77,11 @@ class SyncSpiderImageType extends Command
                     if (SooGifType::getInstance()->getOne(['href' => $this->fbqURL . $node->attr('href')])) {
                         $this->warn('link address already exists: ' . $this->fbqURL . $node->attr('href'));
                     } else {
-                        SooGifType::getInstance()->saveOne(['href' => $this->fbqURL . $node->attr('href'), 'name' => $node->filter('.header')->text()]);
+                        SooGifType::getInstance()->saveOne([
+                            'href' => $this->fbqURL . $node->attr('href'),
+                            'name' => $node->filter('.header')->text(),
+                            'type' => 2
+                        ]);
                         $this->info('successfully save link address： ' . $this->fbqURL . $node->attr('href'));
                     }
                 });
@@ -108,7 +112,11 @@ class SyncSpiderImageType extends Command
                     if (SooGifType::getInstance()->getOne(['href' => $node->attr('href')])) {
                         $this->warn('link address already exists: ' . $node->attr('href'));
                     } else if (!empty($node->attr('href'))) {
-                        SooGifType::getInstance()->saveOne(['href' => $node->attr('href'), 'name' => mb_substr($node->filter('.random_title')->text(), 0, 100)]);
+                        SooGifType::getInstance()->saveOne([
+                            'href' => $node->attr('href'),
+                            'name' => mb_substr($node->filter('.random_title')->text(), 0, 100),
+                            'type' => 1
+                        ]);
                         $this->info('successfully save link address： ' . $node->attr('href'));
                     }
                 });
