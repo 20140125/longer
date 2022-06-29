@@ -13,7 +13,7 @@ class SyncSpiderImageType extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image_type {type=hot} {uuid=longer7f00000108fc00000001}';
+    protected $signature = 'longer:sync-spider_image_type {source=pk} {type=hot} {page=1} {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -28,7 +28,15 @@ class SyncSpiderImageType extends Command
     /**
      * @var string $baseUrl
      */
-    protected string $baseUrl;
+    protected string $fbqURL = 'https://www.fabiaoqing.com';
+    /**
+     * @var string $pkURL
+     */
+    protected string $pkURL = 'https://www.pkdoutu.com/article/list/';
+    /**
+     * @var string
+     */
+    protected string $image = 'https://img.pkdoutu.com/';
 
     /**
      * Create a new command instance.
@@ -38,8 +46,6 @@ class SyncSpiderImageType extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->startPage = 1;
-        $this->baseUrl = 'https://www.fabiaoqing.com';
     }
 
     /**
@@ -48,39 +54,65 @@ class SyncSpiderImageType extends Command
      */
     public function handle(): void
     {
-        $this->getImageType();
+        $this->argument('source') === 'pk' ? $this->getPkImageType() : $this->getFbqImageType();
     }
 
     /**
      * todo:获取图片类型
      */
-    protected function getImageType()
+    protected function getFbqImageType()
     {
         $type = $this->argument('type');
         try {
             $client = new Client();
-            $promise = $client->request('GET', $this->baseUrl . "/bqb/lists/type/$type.html");
-            $pageSize = $promise->filter('#mobilepage')->text();
-            $pageRange = range($this->startPage, explode('/', $pageSize)[1]);
-            $bar = $this->output->createProgressBar(explode('/', $pageSize)[1]);
-            foreach ($pageRange as $item) {
-                $url = $this->baseUrl . "/bqb/lists/type/$type/page/$item.html";
-                $this->info('current spider image url：' . $url);
-                webPush('current spider image url：' . $url, $this->argument('uuid'), 'command');
+            $promise = $client->request('GET', $this->fbqURL . "/bqb/lists/type/$type.html");
+            $pageSize = (int)$promise->filter('.pagination .item')->eq(count($promise->filter('.pagination .item')) - 3)->text();
+            $bar = $this->output->createProgressBar($pageSize - $this->argument('page'));
+            foreach (range($this->argument('page'), $pageSize) as $page) {
+                $url = sprintf('%s/%s', $this->fbqURL, "/bqb/lists/type/$type/page/$page.html");
+                $this->info("\r\ncurrent spider image url：" . $url);
                 sleep(1);
                 $hotPromise = $client->request('GET', $url);
                 $hotPromise->filter('.bqba')->each(function ($node) use ($client) {
-                    if (SooGifType::getInstance()->getOne(['href' => $this->baseUrl . $node->attr('href')])) {
-                        $this->warn('link address already exists: ' . $this->baseUrl . $node->attr('href'));
-                        webPush('link address already exists: ' . $this->baseUrl . $node->attr('href'), $this->argument('uuid'), 'command');
+                    if (SooGifType::getInstance()->getOne(['href' => $this->fbqURL . $node->attr('href')])) {
+                        $this->warn('link address already exists: ' . $this->fbqURL . $node->attr('href'));
                     } else {
-                        SooGifType::getInstance()->saveOne(['href' => $this->baseUrl . $node->attr('href'), 'name' => $node->filter('.header')->text()]);
-                        $this->info('successfully save link address： ' . $this->baseUrl . $node->attr('href'));
-                        webPush('successfully save link address： ' . $this->baseUrl . $node->attr('href'), $this->argument('uuid'), 'command');
+                        SooGifType::getInstance()->saveOne(['href' => $this->fbqURL . $node->attr('href'), 'name' => $node->filter('.header')->text()]);
+                        $this->info('successfully save link address： ' . $this->fbqURL . $node->attr('href'));
                     }
                 });
                 $this->info('successfully spider image url： ' . $url);
-                webPush('successfully spider image url： ' . $url, $this->argument('uuid'), 'command');
+                $bar->advance();
+            }
+            $bar->finish();
+        } catch (\Exception $exception) {
+            $this->error($exception->getMessage());
+        }
+    }
+
+    /**
+     * todo:同步pkdoutu套图
+     * @return void
+     */
+    protected function getPkImageType()
+    {
+        try {
+            $client = new Client();
+            $promise = $client->request('GET', $this->pkURL);
+            $pageSize = (int)$promise->filter('.pagination li .page-link')->eq(count($promise->filter('.pagination li .page-link')) - 2)->text();
+            $bar = $this->output->createProgressBar($pageSize - $this->argument('page'));
+            foreach (range($this->argument('page'), $pageSize) as $page) {
+                $lists = $client->request('GET', sprintf('%s%s',   $this->pkURL, '?page='.$page));
+                $this->info(sprintf('%s%s%s', "\r\ncurrent spider image url：",  $this->pkURL, '?page='.$page));
+                $lists->filter('.center-wrap .list-group-item')->each(function ($node) use ($client) {
+                    if (SooGifType::getInstance()->getOne(['href' => $node->attr('href')])) {
+                        $this->warn('link address already exists: ' . $node->attr('href'));
+                    } else if (!empty($node->attr('href'))) {
+                        SooGifType::getInstance()->saveOne(['href' => $node->attr('href'), 'name' => mb_substr($node->filter('.random_title')->text(), 0, 100)]);
+                        $this->info('successfully save link address： ' . $node->attr('href'));
+                    }
+                });
+                sleep(2);
                 $bar->advance();
             }
             $bar->finish();

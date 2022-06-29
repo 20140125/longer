@@ -25,10 +25,6 @@ class SpiderImageService extends Command
     /**
      * @var string
      */
-    protected string $href = 'https://www.pkdoutu.com/';
-    /**
-     * @var string
-     */
     protected string $image = 'https://img.pkdoutu.com/';
     /**
      * Create a new command instance.
@@ -60,18 +56,18 @@ class SpiderImageService extends Command
         try {
             $client = new Client();
             $promise = $client->request('GET', $url);
-            $pageSize = $promise->filter('.pagination li .page-link')->eq(count($promise->filter('.pagination li .page-link')) - 2)->text();
+            $pageSize = (int)$promise->filter('.pagination li .page-link')->eq(count($promise->filter('.pagination li .page-link')) - 2)->text();
             $bar = $this->output->createProgressBar($pageSize - $this->argument('page'));
             foreach (range($this->argument('page'), $pageSize) as $page) {
                 $lists = $client->request('GET', sprintf('%s%s',  $url, '?page='.$page));
-                $this->info(sprintf('%s%s%s', "\r\n爬取地址：",  $url, 'photo/list/?page='.$page));
+                $this->info(sprintf('%s%s%s', "\r\ncurrent spider image url：",  $url, '?page='.$page));
                 $lists->filter('.page-content a')->each(function ($node, $index) use ($client) {
                     $arr = [
                         'href' => $node->filter('.img-responsive')->attr('data-original'),
                         'name' => mb_substr($node->filter('.img-responsive')->attr('alt'), 0, 50) ?? '斗图啦~',
                     ];
                     if (SooGif::getInstance()->getOne(['href' => $arr['href']])) {
-                        $this->warn('Image already exists: ' . $arr['href']);
+                        $this->warn('image already exists: ' . $arr['href']);
                     } else {
                         SooGif::getInstance()->saveOne($arr);
                         $this->info('successfully save image： ' . $arr['href']);
