@@ -61,7 +61,11 @@ class SyncSpiderImage extends Command
             $bar = $this->output->createProgressBar(count($result));
             $client = new Client();
             foreach ($result as $item) {
-                $this->spiderFbqImage($currentId, $item, $client, $bar);
+                $currentId = $item->id;
+                $promise = $client->request('GET', $item->href);
+                $this->info("\r\ncurrent spider image url：" . $item->href);
+                sleep(1);
+                $item->source === 1 ? $this->spiderPkImage($promise, $item, $client, $bar) : $this->spiderFbqImage($promise, $item, $client, $bar);
             }
             $bar->finish();
         } catch (\Exception $exception) {
@@ -72,38 +76,54 @@ class SyncSpiderImage extends Command
 
     /**
      * todo:获取图片
-     * @param $currentId
+     * @param $promise
      * @param $item
      * @param $client
      * @param $bar
      * @return void
      */
-    private function spiderFbqImage($currentId, $item, $client, $bar)
+    private function spiderFbqImage($promise, $item, $client, $bar)
     {
         try {
-            $currentId = $item->id;
-            $this->info('current spider image url：' . $item->href);
-            WebPush('current spider image url：' . $item->href, $this->argument('uuid'), 'command');
-            $promise = $client->request('GET', $item->href);
-            sleep(1);
             $promise->filter('.bqpp .bqppdiv1')->each(function ($node) use ($client) {
-                if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $node->filter('img')->attr('data-original'))])) {
-                    $this->warn('image already exists: ' . str_replace('http', 'https', $node->filter('img')->attr('data-original')));
-                    WebPush('image already exists: ' . str_replace('http', 'https', $node->filter('img')->attr('data-original')), $this->argument('uuid'), 'command');
+                $href = str_replace('http', 'https', $node->filter('img')->attr('data-original'));
+                if (SooGif::getInstance()->getOne(['href' => $href])) {
+                    $this->warn('image already exists: ' . $href);
                 } else {
-                    SooGif::getInstance()->saveOne([
-                        'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),
-                        'name' => mb_substr($node->text(), 0, 50)
-                    ]);
-                    $this->info('successfully save image： ' . $node->filter('img')->attr('data-original'));
-                    WebPush('successfully save image： ' . $node->filter('img')->attr('data-original'), $this->argument('uuid'), 'command');
+                    SooGif::getInstance()->saveOne(['href' => $href,'name' => mb_substr($node->text(), 0, 50)]);
+                    $this->info('successfully save image： ' . $href);
                 }
             });
             $this->info('successfully spider image url： ' . $item->href);
-            WebPush('successfully spider image url： ' . $item->href, $this->argument('uuid'), 'command');
             $bar->advance();
         } catch (\Exception $exception) {
-            $this->error($exception->getMessage() . ' currentId：' . $currentId);
+            $this->error($exception->getMessage());
         }
+    }
+
+    /**
+     * todo；爬取图片
+     * @param $promise
+     * @param $item
+     * @param $client
+     * @param $bar
+     * @return void
+     */
+    private function spiderPkImage($promise, $item, $client, $bar)
+    {
+       try {
+           $promise->filter('.artile_des img')->each(function ($node) use ($client, $item) {
+               $href = $node->attr('src');
+               if (SooGif::getInstance()->getOne(['href' => $href])) {
+                   $this->warn('image already exists: ' . $href);
+               } else {
+                   SooGif::getInstance()->saveOne(['href' => $href,'name' => $item->name]);
+                   $this->info('successfully save image： ' . $href);
+               }
+           });
+           $bar->advance();
+       } catch (\Exception $exception) {
+           $this->error($exception->getMessage());
+       }
     }
 }
