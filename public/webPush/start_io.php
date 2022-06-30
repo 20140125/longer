@@ -52,7 +52,7 @@ $sender_io->on('connection', function ($socket) {
         global $redis, $online_user_count, $redisUser, $sender_io, $day, $log_last_count, $push_last_count, $oauth_last_count,$user_push_state;
         $socket->uid = $uid;
         /* 在线用户存在Events.php文件中 */
-        $redisUser = $redis->SMEMBERS(REDIS_KEY);
+        $redisUser = $redis->SMEMBERS('laravel_database_'.REDIS_KEY);
         $online_user_count = count($redisUser);
         /* 将这个连接加入到uid分组，方便针对uid推送数据 */
         $socket->join($uid);
@@ -83,9 +83,9 @@ $sender_io->on('connection', function ($socket) {
     /* 用户离线 */
     $socket->on('disconnect', function () use ($socket) {
         global $redis;
-        if ($redis->sIsMember(REDIS_KEY, $socket->uid)) {
+        if ($redis->sIsMember('laravel_database_'.REDIS_KEY, $socket->uid)) {
             /* 用户离线删除redis里的值 */
-            $redis->sREM(REDIS_KEY, $socket->uid);
+            $redis->sREM('laravel_database_'.REDIS_KEY, $socket->uid);
         }
     });
 });
@@ -116,7 +116,7 @@ $sender_io->on('workerStart', function () {
                 $to = @$post['to'];
                 $post['content'] = trim(htmlspecialchars(@$post['content']));
                 /* todo:http接口返回，如果用户离线socket返回fail */
-                if ($to && !$redis->sIsMember(REDIS_KEY, $to)) {
+                if ($to && !$redis->sIsMember('laravel_database_'.REDIS_KEY, $to)) {
                     return $http_connection->send('offline');
                 }
                 if ($to) {
@@ -133,7 +133,7 @@ $sender_io->on('workerStart', function () {
                 $to = @$post['to'];
                 $post['content'] = trim(htmlspecialchars(@$post['content']));
                 /* todo:http接口返回，如果用户离线socket返回fail */
-                if ($to && !$redis->sIsMember(REDIS_KEY, $to)) {
+                if ($to && !$redis->sIsMember('laravel_database_'.REDIS_KEY, $to)) {
                     return $http_connection->send('offline');
                 }
                 /* todo:向uid所在socket组发送数据 */
@@ -147,7 +147,7 @@ $sender_io->on('workerStart', function () {
     /* todo:定时器 (只有在客户端在线数变化了才广播，减少不必要的客户端通讯)  */
     Timer::add(1, function () {
         global $sender_io, $redis, $day, $log_last_count, $push_last_count, $online_user_count, $oauth_last_count, $times, $user_push_state;
-        $redisUser = $redis->SMEMBERS(REDIS_KEY);
+        $redisUser = $redis->SMEMBERS('laravel_database_'.REDIS_KEY);
         foreach ($redisUser as $user) {
             $pushData = pushData($user);
             //站内通知推送
@@ -183,9 +183,9 @@ $sender_io->on('workerStart', function () {
     /**
      * TODO:获取站内通知
      * @param $user
-     * @return mixed
+     * @return void
      */
-    function pushData($user): mixed
+    function pushData($user)
     {
         global $db;
         return $db->select('*')->from('os_push')->where("uuid = '{$user}' and see < 1 ")->orderByDESC(['created_at'])->limit(30)->query();

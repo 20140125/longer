@@ -62,7 +62,7 @@ class Events
         }
         self::$chat = new Chat();
         /* 获取在线用户 */
-        self::$redisUsers = self::$chat->sMembers(REDIS_KEY);
+        self::$redisUsers = self::$chat->sMembers('laravel_database_'.REDIS_KEY);
         $clients_list = self::getUserLists(self::$redisUsers);
         /* 根据类型执行不同的业务 */
         switch ($message_data['type']) {
@@ -83,8 +83,8 @@ class Events
                 $_SESSION['client_name'] = $from_client_name;
                 $_SESSION['uuid'] = $message_data['uuid'];
                 /* 添加用户到redis */
-                if (!self::$chat->sIsMember(REDIS_KEY, $message_data['uuid'])) {
-                    self::$chat->sAdd(REDIS_KEY, $message_data['uuid']);
+                if (!self::$chat->sIsMember('laravel_database_'.REDIS_KEY, $message_data['uuid'])) {
+                    self::$chat->sAdd('laravel_database_'.REDIS_KEY, $message_data['uuid']);
                 }
                 /* 转播给当前房间的所有客户端，xx进入聊天室 message {type:login, client_id:xx, name:xx} */
                 $new_message = array(
@@ -280,7 +280,7 @@ class Events
     protected static function getUserLists($redisUser): array
     {
         self::$chat = new Chat();
-        $users = json_decode(self::$chat->sMembers(CHAT_KEY)[0], true);
+        $users = json_decode(self::$chat->sMembers('laravel_database_'.CHAT_KEY)[0], true);
         foreach ($users as $key => $item) {
             $users[$key]['unread_count'] = 0;
             $users[$key]['type'] = 'login';
