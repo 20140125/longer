@@ -22,10 +22,6 @@ class SyncSpiderImage extends Command
      * @var string
      */
     protected $description = 'synchronizing image from id';
-    /**
-     * @var string $baseUrl
-     */
-    protected string $baseUrl;
 
     /**
      * Create a new command instance.
@@ -35,7 +31,6 @@ class SyncSpiderImage extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->baseUrl = 'https://www.fabiaoqing.com';
     }
 
     /**
@@ -45,8 +40,7 @@ class SyncSpiderImage extends Command
      */
     public function handle(): void
     {
-        $startId = $this->argument('id');
-        $this->spiderImage($startId);
+        $this->spiderImage($this->argument('id'));
     }
 
     /**
