@@ -40,7 +40,7 @@ class Test extends Command
     public function handle()
     {
         $columns = ['href', 'name', 'width', 'height', 'id'];
-        $result = ImageService::getInstance()->getImageLists(['name' => '奥运会'], ['page' => 1, 'limit' => 10], ['order' => 'rand', 'direction' => 'desc'], $columns);
+        $result = ImageService::getInstance()->getImageLists([], ['page' => 1, 'limit' => 10], ['order' => 'rand', 'direction' => 'desc'], $columns);
         $this->info(json_encode($result));
     }
 }
