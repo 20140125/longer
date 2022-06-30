@@ -37,7 +37,7 @@ class ImageController extends BaseController
     }
 
     /**
-     * todo:执行脚本
+     * todo:执行脚本(待废弃)
      * @param Request $request
      * @return JsonResponse
      */
@@ -45,34 +45,6 @@ class ImageController extends BaseController
     {
         date_default_timezone_set('Asia/Shanghai');
         validatePost($request->get('item'), $this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
-        $_user = $request->get('unauthorized');
-        switch ($this->post['method']) {
-            case 'syncImageType':
-                Artisan::call("longer:sync-spider_image_type {$this->post['keywords']} $_user->uuid");
-                break;
-            case 'syncImageLists':
-                if (is_numeric($this->post['keywords'])) {
-                    $keywords = intval($this->post['keywords']);
-                    Artisan::call("longer:sync-spider_image_id $keywords $_user->uuid");
-                } else {
-                    Artisan::call("longer:sync-spider_image_url {$this->post['keywords']} $_user->uuid");
-                }
-                break;
-            case 'syncImageSize':
-                Artisan::call("longer:sync-spider_image_size {$this->post['keywords']} $_user->uuid");
-                break;
-            case 'syncOauth':
-                $rememberToken = !empty($this->post['keywords']) ?  $this->post['keywords'] :  $this->post['remember_token'];
-                Artisan::call("longer:sync-oauth $rememberToken $_user->uuid");
-                break;
-            case 'syncImageListsForTags':
-                Artisan::call("longer:sync-spider_image_tag_url {$this->post['keywords']} $_user->uuid");
-                break;
-            case 'syncSpiderImageSoogif':
-                Artisan::call("longer:sync-spider_image_form_soogif {$this->post['keywords']} $_user->uuid");
-                break;
-
-        }
         return ajaxReturn(['code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => [$this->post]]);
     }
 

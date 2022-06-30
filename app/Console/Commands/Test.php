@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Service\MiniProgram\ImageService;
 use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\UserCenter;
 use App\Models\Api\v1\Users;
@@ -38,13 +39,8 @@ class Test extends Command
      */
     public function handle()
     {
-//        $users = Users::getInstance()->getLists([], [], [], true);
-//        foreach ($users as $user) {
-//            $user->remember_token =  encrypt($user->username.time());
-//            Users::getInstance()->updateOne(['id' => $user->id], ['remember_token' => $user->remember_token]);
-//            Oauth::getInstance()->updateOne(['uid' => $user->id], ['remember_token' => $user->remember_token]);
-//            UserCenter::getInstance()->updateOne(['uid' => $user->id], ['token' => $user->remember_token]);
-//        }
-        $this->info(json_encode(getFileLists(getFilePath('base_path', '/www/wwwroot/longer/storage/app/public/20210713/'), [])));
+        $columns = ['href', 'name', 'width', 'height', 'id'];
+        $result = ImageService::getInstance()->getImageLists(['name' => '奥运会'], ['page' => 1, 'limit' => 10], ['order' => 'rand', 'direction' => 'desc'], $columns);
+        $this->info(json_encode($result));
     }
 }

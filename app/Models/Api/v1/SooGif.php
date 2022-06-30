@@ -12,18 +12,13 @@ class SooGif extends Base
     use HasFactory;
 
     /**
-     * @var string $table
-     */
-    public $table = 'os_soogif';
-    /**
      * @var static $instance
      */
     private static $instance;
-
-    private function __clone()
-    {
-        // TODO: Implement __clone() method.
-    }
+    /**
+     * @var string $table
+     */
+    public $table = 'os_soogif';
 
     /**
      * @return static
@@ -89,11 +84,8 @@ class SooGif extends Base
     public function getLists($where, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'desc'], array $column = ['*']): array
     {
         if ($order['order'] === 'rand') {
-            $result['data'] = DB::table($this->table)->where($where)
-                ->limit($pagination['limit'])
-                ->offset($pagination['limit'] * ($pagination['page'] - 1))
-                ->orderByRaw('rand()')
-                ->get($column);
+            $offset = $pagination['limit'] * ($pagination['page'] - 1);
+            $result['data'] = DB::select("SELECT * FROM `os_soogif` AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM `os_soogif`)-(SELECT MIN(id) FROM `os_soogif`))+(SELECT MIN(id) FROM `os_soogif`)) AS id) AS t2 WHERE AND t1.id >= t2.id ORDER BY t1.id LIMIT {$offset}, {$pagination['limit']}");
             $result['total'] = DB::table($this->table)->where($where)->count();
             return $result;
         }
@@ -104,5 +96,10 @@ class SooGif extends Base
             ->get($column);
         $result['total'] = DB::table($this->table)->where($where)->count();
         return $result;
+    }
+
+    private function __clone()
+    {
+        // TODO: Implement __clone() method.
     }
 }

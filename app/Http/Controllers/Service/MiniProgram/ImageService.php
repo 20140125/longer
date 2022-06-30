@@ -34,6 +34,7 @@ class ImageService extends BaseService
         $where = [];
         if (!empty($form['name'])) {
             $where[] = ['name', 'like', "%{$form['name']}%"];
+            $order = ['order' => 'id', 'direction' => 'desc'];
         }
         $this->return['lists'] = $this->sooGifModel->getLists($where, $pagination, $order, $columns);
         return $this->return;
