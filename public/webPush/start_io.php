@@ -183,9 +183,9 @@ $sender_io->on('workerStart', function () {
     /**
      * TODO:获取站内通知
      * @param $user
-     * @return void
+     * @return array
      */
-    function pushData($user)
+    function pushData($user): array
     {
         global $db;
         return $db->select('*')->from('os_push')->where("uuid = '{$user}' and see < 1 ")->orderByDESC(['created_at'])->limit(30)->query();

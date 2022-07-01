@@ -47,7 +47,7 @@ class SyncWebDriveService extends Command
 
     /**
      * todo:数据抓取
-     * @param $url
+     * @param $url  https://www.dbbqb.com/ (访问封IP, 需要充值会员)
      * @return void
      */
     protected function getImageLists2($url)
