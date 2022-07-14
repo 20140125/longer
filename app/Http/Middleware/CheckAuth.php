@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Controllers\Service\v1\SystemConfigService;
 use App\Http\Controllers\Utils\Code;
-use App\Models\Api\v1\Auth;
+use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\Role;
 use App\Models\Api\v1\Users;
 use Closure;
@@ -37,7 +37,7 @@ class CheckAuth extends Base
             return $next($request);
         }
         /* todo：鉴权获取用户信息 */
-        $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Auth::getInstance()->getOne(['remember_token' => $this->post['token']]);
+        $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]);
         if (!$this->redisClient->getValue('oauth_register')) {
             /* todo: 非法途径访问 */
             if (empty($request->header('Authorization'))) {

@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\Utils\Code;
-use App\Models\Api\v1\Auth;
+use App\Models\Api\v1\Oauth;
 use App\Models\Api\v1\Role;
 use App\Models\Api\v1\Users;
 use Closure;
@@ -56,7 +56,7 @@ class CheckLogin extends Base
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] === Code::SUCCESS) {
             /* todo:用户信息 */
-            $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Auth::getInstance()->getOne(['remember_token' => $this->post['token']]);
+            $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]);
             /* todo:用户令牌过期 */
             if (empty($_user)) {
                 $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::TOKEN_EXPIRED_MESSAGE)));
