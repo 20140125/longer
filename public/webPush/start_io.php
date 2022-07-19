@@ -31,6 +31,8 @@ if (in_array(PHP_OS, ['WINNT', 'Darwin'])) {
             'local_cert'  => '/www/server/panel/vhost/cert/www.fanglonger.com/fullchain.pem',//你证书的pem文件
             'local_pk'    => '/www/server/panel/vhost/cert/www.fanglonger.com/privkey.pem',//你证书的key文件
             'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => false,
         )
     );
     $sender_io = new SocketIO(2120, $context);
