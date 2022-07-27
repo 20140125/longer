@@ -183,7 +183,7 @@ class PermissionApplyService extends BaseService
         $form = $this->getRoleAuth($form['id'], $form['status']);
         DB::beginTransaction();
         try {
-            $result = $this->permissionApplyModel->updateOne(['id' => $form['request_auth_id']], ['status' => 2, 'created_at' => time(), 'expires' => 0]);
+            $result = $this->permissionApplyModel->updateOne(['id' => $form['request_auth_id']], ['status' => 2, 'updated_at' => time(), 'expires' => 0]);
             if (empty($result)) {
                 $this->return['code'] = Code::ERROR;
                 $this->return['message'] = 'failed';

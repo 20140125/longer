@@ -305,7 +305,7 @@ class BaseService
      * @param int $status
      * @return array
      */
-    protected function getRoleAuth($requestAuthID, int $status): array
+    public function getRoleAuth($requestAuthID, int $status): array
     {
         /* todo:獲取当前记录的信息 */
         $_requestAuth = $this->permissionApplyModel->getOne(['id' => $requestAuthID], ['user_id', 'href']);
