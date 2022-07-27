@@ -59,8 +59,7 @@ class SyncPermissionApply extends Command
         $lists = PermissionApply::getInstance()->getLists([], [['expires', '<', time()], ['status', '=', 1]]);
         foreach ($lists['data'] as &$item)
         {
-            $item->status = 2;
-            $form = PermissionApplyService::getInstance()->getRoleAuth($item->id, $item->status);
+            $form = PermissionApplyService::getInstance()->getRoleAuth($item->id, 2);
             DB::beginTransaction();
             try {
                 $result = PermissionApply::getInstance()->updateOne(['id' => $form['request_auth_id']], ['status' => 2, 'updated_at' => time(), 'expires' => 0]);
