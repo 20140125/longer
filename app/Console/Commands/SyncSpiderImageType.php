@@ -28,7 +28,7 @@ class SyncSpiderImageType extends Command
     /**
      * @var string $baseUrl
      */
-    protected string $fbqURL = 'https://www.fabiaoqing.com';
+    protected string $fbqURL = 'https://www.fabiaoqing.com/';
     /**
      * @var string $pkURL
      */
@@ -65,11 +65,14 @@ class SyncSpiderImageType extends Command
         $type = $this->argument('type');
         try {
             $client = new Client();
-            $promise = $client->request('GET', $this->fbqURL . "/bqb/lists/type/$type.html");
-            $pageSize = (int)$promise->filter('.pagination .item')->eq(count($promise->filter('.pagination .item')) - 3)->text();
+            $promise = $client->request('GET', $this->fbqURL . "bqb/lists/type/$type.html");
+            $pageSize = (int)$promise->filter('.pagination .item')->eq(count($promise->filter('.pagination .item')) - 2)->text();
+            if ($this->argument('type') === 'hot') {
+                $pageSize = (int)$promise->filter('.pagination .item')->eq(count($promise->filter('.pagination .item')) - 3)->text();
+            }
             $bar = $this->output->createProgressBar($pageSize - $this->argument('page'));
             foreach (range($this->argument('page'), $pageSize) as $page) {
-                $url = sprintf('%s/%s', $this->fbqURL, "/bqb/lists/type/$type/page/$page.html");
+                $url = sprintf('%s%s', $this->fbqURL, "bqb/lists/type/$type/page/$page.html");
                 $this->info("\r\ncurrent spider image url：" . $url);
                 sleep(1);
                 $hotPromise = $client->request('GET', $url);
