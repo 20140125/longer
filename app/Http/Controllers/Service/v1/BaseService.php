@@ -335,6 +335,7 @@ class BaseService
             }
         }
         array_multisort($_authIds, SORT_ASC);
+        \Illuminate\Support\Facades\Log::error(json_encode($_authIds, JSON_UNESCAPED_UNICODE));
         $_authLists = $this->authModel->getLists([], ['api'], ['key' => 'id', 'ids' => $_authIds]);
         $_auth_api = array();
         foreach ($_authLists as $item) {

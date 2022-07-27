@@ -56,7 +56,7 @@ class SyncPermissionApply extends Command
 
     protected function getPermissionApplyLists()
     {
-        $lists = PermissionApply::getInstance()->getLists([], [['expires', '<', time()], ['status', '=', 1]]);
+        $lists = PermissionApply::getInstance()->getLists([], [['expires', '<', time()], ['status', '=', 1]], ['page'=> 1, 'limit'=> 1000]);
         foreach ($lists['data'] as &$item)
         {
             $form = PermissionApplyService::getInstance()->getRoleAuth($item->id, 2);
