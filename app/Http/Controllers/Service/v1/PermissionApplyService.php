@@ -131,22 +131,23 @@ class PermissionApplyService extends BaseService
                 DB::rollBack();
                 return $this->return;
             }
-            $_roleAuth = $this->getRoleAuth($form['id'], $form['status']);
-            /* todo:审批权限添加角色 */
-            $_role = $this->roleModel->getOne(['id' => $_roleAuth['user']->id]);
+            /* todo:用户权限续期只修改申请权限数据 */
+            $_role = $this->roleModel->getOne(['id' => $permission->user_id]);
             if (!empty($_role)) {
-                $this->roleModel->updateOne(['id' => $_roleAuth['user']->role_id], $_roleAuth['form']);
                 $this->permissionApplyLogModel->saveOne([
                     'apply_id' => $form['id'],
-                    'desc' => '管理员通过权限申请',
+                    'desc' => '用户权限续期成功',
                     'user_name' => $user->username,
                     'created_at' => date(time()),
                     'user_id' => $user->id
                 ]);
+                $this->return['message'] = '用户权限续期成功';
                 $this->return['lists'] = $form;
                 DB::commit();
                 return $this->return;
             }
+            /* todo:审批权限添加角色 */
+            $_roleAuth = $this->getRoleAuth($form['id'], $form['status']);
             $_roleAuth['form']['id'] = $_roleAuth['user']->id;
             $_roleAuth['form']['created_at'] = time();
             $_roleAuth['form']['status'] = 1;
@@ -156,11 +157,12 @@ class PermissionApplyService extends BaseService
             $this->userModel->updateOne(['id' => $_roleAuth['form']['id']], ['role_id' => $_roleAuth['form']['id']]);
             $this->permissionApplyLogModel->saveOne([
                 'apply_id' => $form['id'],
-                'desc' => '用户权限续期成功',
+                'desc' => '管理员通过权限申请',
                 'user_name' => $user->username,
                 'created_at' => date(time()),
                 'user_id' => $user->id
             ]);
+            $this->return['message'] = '管理员通过权限申请';
             $this->return['lists'] = $form;
             DB::commit();
             return $this->return;
