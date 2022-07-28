@@ -197,9 +197,14 @@ class BaseService
      */
     public function setUnauthorized($_user, $_role): array
     {
-        $adCode = request()->ip() === '127.0.0.1' ? 440305 : getCityCode();
+        $cityCode = Cache::get('cityCode');
+        if (empty($cityCode)) {
+            $cityCode = $this->getConfiguration('CityCode', 'CommonPermission');
+            Cache::put('cityCode', $cityCode, Carbon::now()->addDays());
+        }
+        $adCode = request()->ip() === '127.0.0.1' ? $cityCode[0] : getCityCode();
         if (!empty($adCode['code']) && $adCode['code'] === Code::SERVER_ERROR) {
-            $adCode = 440305;
+            $adCode = $cityCode[0];
         }
         $area = $this->areaModel->getOne(['code' => $adCode], ['name', 'parent_id', 'info', 'forecast']);
         $province = $this->areaModel->getOne(['id' => $area->parent_id ?? 1], ['name']);
