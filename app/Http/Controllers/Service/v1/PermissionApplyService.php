@@ -30,17 +30,6 @@ class PermissionApplyService extends BaseService
     }
 
     /**
-     * todo:获取角色
-     * @param $where
-     * @param string[] $columns
-     * @return Model|Builder|object|null
-     */
-    public function getPermissionApply($where, array $columns = ['*'])
-    {
-        return $this->roleModel->getOne($where, $columns);
-    }
-
-    /**
      * todo:获取申请权限列表
      * @param $user
      * @param array $where
@@ -117,12 +106,13 @@ class PermissionApplyService extends BaseService
      */
     public function updatePermissionApply($form, $user): array
     {
-        $form = ['id' => $form['id'], 'expires' => strtotime('+ 30 days'), 'updated_at' => time(), 'status' => $form['status']];
+        $permissionExpires = $this->getConfiguration('PermissionExpires', 'CommonPermission');
+        $form = ['id' => $form['id'], 'expires' => strtotime("+ $permissionExpires days"), 'updated_at' => time(), 'status' => $form['status']];
         DB::beginTransaction();
         try {
             $permission = $this->permissionApplyModel->getOne(['id' => $form['id']]);
             if (!empty($permission)) {
-                $form['expires'] = $permission->expires - 30 * 24 * 3600 > time()  ? $permission->expires : strtotime('+ 30 days');
+                $form['expires'] = strtotime("+ $permissionExpires days");
             }
             $result = $this->permissionApplyModel->updateOne(['id' => $form['id']], $form);
             if (empty($result)) {
@@ -185,7 +175,7 @@ class PermissionApplyService extends BaseService
         $form = $this->getRoleAuth($form['id'], $form['status']);
         DB::beginTransaction();
         try {
-            $result = $this->permissionApplyModel->updateOne(['id' => $form['request_auth_id']], ['status' => 2, 'updated_at' => time(), 'expires' => 0]);
+            $result = $this->permissionApplyModel->updateOne(['id' => $form['request_auth_id']], ['status' => 2, 'updated_at' => time(), 'expires' => strtotime('-1 seconds')]);
             if (empty($result)) {
                 $this->return['code'] = Code::ERROR;
                 $this->return['message'] = 'failed';
