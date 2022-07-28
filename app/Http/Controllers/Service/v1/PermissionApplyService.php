@@ -75,13 +75,13 @@ class PermissionApplyService extends BaseService
                 $result = $this->permissionApplyModel->saveOne($permission);
                 if (empty($result)) {
                     $this->return['code'] = Code::ERROR;
-                    $this->return['message'] = 'save authorization failed';
+                    $this->return['message'] = 'failed permissions request';
                     DB::rollBack();
                     return $this->return;
                 }
                 $this->permissionApplyLogModel->saveOne([
                     'apply_id' => $result,
-                    'desc' => '用户申请权限',
+                    'desc' => '新用户申请权限',
                     'user_name' => $permission['username'],
                     'created_at' => date(time()),
                     'user_id' =>  $form['user_id']
@@ -122,8 +122,13 @@ class PermissionApplyService extends BaseService
                 return $this->return;
             }
             /* todo:用户权限续期只修改申请权限数据 */
+            $_roleAuth = $this->getRoleAuth($form['id'], $form['status']);
             $_role = $this->roleModel->getOne(['id' => $permission->user_id]);
             if (!empty($_role)) {
+                /* todo：用户是否授权操作 */
+                if (!empty($form['act'])) {
+                    $this->roleModel->updateOne(['id' => $_roleAuth['user']->role_id], $_roleAuth['form']);
+                }
                 $this->permissionApplyLogModel->saveOne([
                     'apply_id' => $form['id'],
                     'desc' => '用户权限续期成功',
@@ -131,13 +136,12 @@ class PermissionApplyService extends BaseService
                     'created_at' => date(time()),
                     'user_id' => $user->id
                 ]);
-                $this->return['message'] = '用户权限续期成功';
+                $this->return['message'] = 'successfully permissions renewal';
                 $this->return['lists'] = $form;
                 DB::commit();
                 return $this->return;
             }
             /* todo:审批权限添加角色 */
-            $_roleAuth = $this->getRoleAuth($form['id'], $form['status']);
             $_roleAuth['form']['id'] = $_roleAuth['user']->id;
             $_roleAuth['form']['created_at'] = time();
             $_roleAuth['form']['status'] = 1;
@@ -152,7 +156,7 @@ class PermissionApplyService extends BaseService
                 'created_at' => date(time()),
                 'user_id' => $user->id
             ]);
-            $this->return['message'] = '管理员通过权限申请';
+            $this->return['message'] = 'successfully permissions application';
             $this->return['lists'] = $form;
             DB::commit();
             return $this->return;
@@ -178,14 +182,16 @@ class PermissionApplyService extends BaseService
             $result = $this->permissionApplyModel->updateOne(['id' => $form['request_auth_id']], ['status' => 2, 'updated_at' => time(), 'expires' => strtotime('-1 seconds')]);
             if (empty($result)) {
                 $this->return['code'] = Code::ERROR;
-                $this->return['message'] = 'failed';
+                $this->return['message'] = 'failed reclaimed user permissions';
                 DB::rollBack();
                 return $this->return;
             }
-            $result = $this->roleModel->updateOne(['id' => $form['user']->role_id], $form['form']);
-            $this->return['lists'] = $form;
-            $this->return['code'] = $result ? Code::SUCCESS : Code::ERROR;
-            $this->return['message'] = $result ? 'remove authorization successfully' : 'remove authorization failed';
+            if (empty($this->roleModel->updateOne(['id' => $form['user']->role_id], $form['form']))) {
+                $this->return['lists'] = $form;
+                $this->return['message'] = 'failed reclaimed user permissions';
+                $this->return['code'] = Code::ERROR;
+                return $this->return;
+            }
             $this->permissionApplyLogModel->saveOne([
                 'apply_id' => $form['request_auth_id'],
                 'desc' => '管理员收回用户权限',
@@ -193,6 +199,8 @@ class PermissionApplyService extends BaseService
                 'created_at' => date(time()),
                 'user_id' => $user->id
             ]);
+            $this->return['lists'] = $form;
+            $this->return['message'] = 'successfully reclaimed user permissions';
             DB::commit();
             return $this->return;
         } catch (\Exception $exception) {
