@@ -57,6 +57,7 @@ class SyncPermissionApply extends Command
     protected function getPermissionApplyLists()
     {
         $lists = PermissionApply::getInstance()->getLists([], [['expires', '<', time()], ['status', '=', 1]], ['page'=> 1, 'limit'=> 1000]);
+        $bar = $this->output->createProgressBar(count($lists['data']));
         foreach ($lists['data'] as &$item)
         {
             $form = PermissionApplyService::getInstance()->getRoleAuth($item->id, 2);
@@ -82,6 +83,8 @@ class SyncPermissionApply extends Command
                 $this->error($exception->getMessage());
                 DB::rollBack();
             }
+            $bar->advance();
         }
+        $bar->finish();
     }
 }

@@ -85,7 +85,7 @@ class SooGif extends Base
     {
         if ($order['order'] === 'rand') {
             $offset = $pagination['limit'] * ($pagination['page'] - 1);
-            $result['data'] = DB::select("SELECT * FROM `os_soogif` AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM `os_soogif`)-(SELECT MIN(id) FROM `os_soogif`))+(SELECT MIN(id) FROM `os_soogif`)) AS id) AS t2 WHERE t1.id >= t2.id ORDER BY t1.id LIMIT {$offset}, {$pagination['limit']}");
+            $result['data'] = DB::select("SELECT t1.* FROM `os_soogif` AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM `os_soogif`)-(SELECT MIN(id) FROM `os_soogif`))+(SELECT MIN(id) FROM `os_soogif`)) AS id) AS t2 WHERE t1.id >= t2.id ORDER BY t1.id LIMIT {$offset}, {$pagination['limit']}");
             $result['total'] = DB::table($this->table)->where($where)->count();
             return $result;
         }
