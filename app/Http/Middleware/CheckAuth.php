@@ -22,13 +22,13 @@ class CheckAuth extends Base
     {
         parent::handle($request, $next);
         if (empty($this->post['token'])) {
-            $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::NOT_LOGIN_MESSAGE)));
+            $request->merge(array('item' => array('code' => Code::NOT_LOGIN, 'message' => Code::NOT_LOGIN_MESSAGE)));
             return $next($request);
         }
-        /* todo:用户是否登录 */
+        /* todo:令牌无效 */
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] !== Code::SUCCESS) {
-            $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::NOT_LOGIN_MESSAGE)));
+            $request->merge(array('item' => array('code' => Code::VALID_TOKEN, 'message' => Code::VALID_TOKEN_MESSAGE)));
             return $next($request);
         }
         /* todo: 单次请求记录超过限制 */

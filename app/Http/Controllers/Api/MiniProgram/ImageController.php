@@ -24,7 +24,7 @@ class ImageController extends BaseController
             return ajaxReturn(['code' => Code::ERROR, 'message' => Code::PAGE_SIZE_MESSAGE]);
         }
         if (empty($this->post['token']) && $this->post['page'] > intval($this->imageService->getSystemConfig('NoLoginMaxPageNum'))) {
-            return ajaxReturn(['code' => Code::ERROR, 'message' => Code::NOT_LOGIN_MESSAGE]);
+            return ajaxReturn(['code' => Code::NOT_LOGIN, 'message' => Code::NOT_LOGIN_MESSAGE]);
         }
         $sensitiveKeywords = explode(',', $this->imageService->getSystemConfig('SensitiveKeywords'));
         if (!empty($this->post['name']) && in_array($this->post['name'], $sensitiveKeywords)) {

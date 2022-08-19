@@ -12,6 +12,8 @@ class Code extends Controller
     const ERROR = '20001';
     /* todo:邮箱验证失败码 */
     const VERIFY_CODE_ERROR = '20002';
+    /* todo:没有登录系统 */
+    const NOT_LOGIN = '20003';
     /* todo:没有权限 */
     const UNAUTHORIZED = '40001';
     /* todo:非法操作 */
