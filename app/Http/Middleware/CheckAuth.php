@@ -46,7 +46,7 @@ class CheckAuth extends Base
             }
             /* todo: 用户不存在或者验签参数错误 */
             if (empty($_user) || $this->post['token'] !== $request->header('Authorization')) {
-                $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::TOKEN_EXPIRED_MESSAGE, 'unauthorized' => $_user)));
+                $request->merge(array('item' => array('code' => Code::VALID_TOKEN, 'message' => Code::VALID_TOKEN_MESSAGE, 'unauthorized' => $_user)));
                 return $next($request);
             }
         }

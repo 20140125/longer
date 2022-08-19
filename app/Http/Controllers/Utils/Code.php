@@ -12,8 +12,10 @@ class Code extends Controller
     const ERROR = '20001';
     /* todo:邮箱验证失败码 */
     const VERIFY_CODE_ERROR = '20002';
-    /* todo:没有登录 */
+    /* todo:没有权限 */
     const UNAUTHORIZED = '40001';
+    /* todo:非法操作 */
+    const VALID_TOKEN = '40002';
     /* todo:拒绝访问 */
     const FORBIDDEN = '40003';
     /* todo:页面不存在 */
@@ -28,6 +30,8 @@ class Code extends Controller
     const FORBIDDEN_MESSAGE = 'Forbidden Access URL';
     /* todo:单次请求记录超过限制 */
     const PAGE_SIZE_MESSAGE = 'Exceeded Single Page Request Record Limit';
+    /* todo:非法操作 */
+    const VALID_TOKEN_MESSAGE = 'Invalid Token';
     /* todo:没有登录 */
     const NOT_LOGIN_MESSAGE = 'Please Login System';
     /* todo:令牌为空 */
