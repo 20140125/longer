@@ -16,7 +16,7 @@ class Code extends Controller
     const NOT_LOGIN = '20003';
     /* todo:没有权限 */
     const UNAUTHORIZED = '40001';
-    /* todo:非法操作 */
+    /* todo:非法TOKEN操作 */
     const VALID_TOKEN = '40002';
     /* todo:拒绝访问 */
     const FORBIDDEN = '40003';
