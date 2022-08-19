@@ -59,7 +59,7 @@ class CheckLogin extends Base
             $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]);
             /* todo:用户令牌过期 */
             if (empty($_user)) {
-                $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::TOKEN_EXPIRED_MESSAGE)));
+                $request->merge(array('item' => array('code' => Code::VALID_TOKEN, 'message' => Code::VALID_TOKEN_MESSAGE)));
                 return $next($request);
             }
             /* todo:角色信息 */
