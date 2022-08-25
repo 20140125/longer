@@ -28,11 +28,11 @@
         "php-webdriver/webdriver": "^1.11",
         "predis/predis": "^1.1",
         "w7corp/easywechat": "^5.16",
-        "workerman/gateway-worker" : "v3.0.23",
+        "workerman/gateway-worker": "^3.0",
         "workerman/globaldata": "^1.0",
         "workerman/mysql": "^1.0",
         "workerman/phpsocket.io": "^1.1",
-        "workerman/workerman": "^4.0.0"
+        "workerman/workerman": "^4.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
