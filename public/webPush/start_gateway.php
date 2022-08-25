@@ -25,8 +25,7 @@ if (in_array(PHP_OS, ['WINNT', 'Darwin'])) {
         'ssl' => array(
             'local_cert'  => '/www/server/panel/vhost/cert/www.fanglonger.com/fullchain.pem',//你证书的pem文件
             'local_pk'    => '/www/server/panel/vhost/cert/www.fanglonger.com/privkey.pem',//你证书的key文件
-            'verify_peer' => false,
-            'verify_peer_name' => false
+            'verify_peer' => false
         )
     );
     $gateway = new Gateway('Websocket://0.0.0.0:7272', $context);
