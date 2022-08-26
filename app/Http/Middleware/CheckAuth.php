@@ -38,17 +38,15 @@ class CheckAuth extends Base
         }
         /* todo：鉴权获取用户信息 */
         $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]);
-        if (!$this->redisClient->getValue('oauth_register')) {
-            /* todo: 非法途径访问 */
-            if (empty($request->header('Authorization'))) {
-                $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::TOKEN_EMPTY_MESSAGE, 'unauthorized' => $_user)));
-                return $next($request);
-            }
-            /* todo: 用户不存在或者验签参数错误 */
-            if (empty($_user) || $this->post['token'] !== $request->header('Authorization')) {
-                $request->merge(array('item' => array('code' => Code::VALID_TOKEN, 'message' => Code::VALID_TOKEN_MESSAGE, 'unauthorized' => $_user)));
-                return $next($request);
-            }
+        /* todo: 非法途径访问 */
+        if (empty($request->header('Authorization'))) {
+            $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::TOKEN_EMPTY_MESSAGE, 'unauthorized' => $_user)));
+            return $next($request);
+        }
+        /* todo: 用户不存在或者验签参数错误 */
+        if (empty($_user) || $this->post['token'] !== $request->header('Authorization')) {
+            $request->merge(array('item' => array('code' => Code::VALID_TOKEN, 'message' => Code::VALID_TOKEN_MESSAGE, 'unauthorized' => $_user)));
+            return $next($request);
         }
         /* todo:用户被禁用 */
         if ($_user->status === 2) {
