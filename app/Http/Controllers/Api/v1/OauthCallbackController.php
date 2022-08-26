@@ -279,7 +279,7 @@ class OauthCallbackController extends Controller
             }
         }
         if (!empty($oauthRes)) {
-            $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 600]);
+//            $this->redisClient->setValue('oauth_register', $data['remember_token'], ['EX' => 600]);
             Artisan::call("longer:sync-oauth {$data['remember_token']}");
             // 根据state的长度区分是客户端还是PC端
             return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send() : redirect('/'.$data['remember_token'])->send();
