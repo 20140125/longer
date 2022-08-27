@@ -19,7 +19,7 @@ class EmotionController extends BaseController
     public function getLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'type' => 'required|required']);
-        $result = $this->emotionService->getLists(['page' => $this->post['page'], 'limit' => $this->post['limit']], $this->post['type'], ['order' => 'id', 'direction' => 'asc'], $this->post['all'] ?? false, ['icon', 'title']);
+        $result = $this->emotionService->getLists(['page' => $this->post['page'], 'limit' => $this->post['limit']], $this->post['type'], ['order' => 'id', 'direction' => 'asc'], $this->post['all'] ?? false, ['icon', 'title', 'name']);
         return ajaxReturn($result);
     }
 }
