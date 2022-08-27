@@ -41,7 +41,7 @@ class Test extends Command
     public function handle()
     {
         $value = RedisClient::getInstance()->getValue('emotion_type_3');
-        $list = mb_substr($value, 1, strripos($value, '"') - 1);
+        $list = mb_substr($value, 0, strripos($value, '"') + 3);
         $this->info($list);
     }
 }
