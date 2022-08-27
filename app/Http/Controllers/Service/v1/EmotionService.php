@@ -37,11 +37,11 @@ class EmotionService extends BaseService
      */
     public function getLists(array $pagination = ['page' => 1, 'limit' => 10], string $where = '', array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*']): array
     {
-        $this->return['lists'] = Cache::get('emotion_lists_', $where);
+        $this->return['lists'] = Cache::get('emotion_type_', $where);
         if (empty($this->return['lists'])) {
             $this->return['lists'] = $this->emotionModel->getLists($pagination, $where, $order, $getAll, $column);
             if ($getAll) {
-                Cache::forever('emotion_lists_'.$where, $this->return['lists']);
+                Cache::forever('emotion_type_'.$where, $this->return['lists']);
             }
         }
         return $this->return;
