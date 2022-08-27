@@ -76,9 +76,9 @@ class Emotion extends Base
      * @param array $order
      * @param bool $getAll
      * @param array $column
-     * @return array|Collection
+     * @return array
      */
-    public function getLists(array $pagination = ['page' => 1, 'limit' => 10], string $type = '', array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
+    public function getLists(array $pagination = ['page' => 1, 'limit' => 10], string $type = '', array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*']): array
     {
         if ($getAll) {
             $result['data'] = DB::table($this->table)->where(['type' => $type])->get($column);
