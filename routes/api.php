@@ -27,8 +27,6 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
         Route::match(['get', 'post'], 'mail/send', [App\Http\Controllers\Api\v1\LoginController::class, 'sendMail'])->name('sendMail');
         /* todo:授权登录信息 */
         Route::match(['get', 'post'], 'oauth/config', [App\Http\Controllers\Api\v1\SystemConfigController::class, 'getSystemConfig'])->name('getSystemConfig');
-        /* todo:表情图 */
-        Route::match(['get', 'post'], 'emotion/index', [App\Http\Controllers\Api\v1\EmotionController::class, 'getLists'])->name('getEmotion');
         /* todo:小程序(魔盒逗图) */
         Route::match(['get', 'post'], 'mini_program/login', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'login'])->name('wxLogin');
         Route::match(['get', 'post'], 'mini_program/openid', [App\Http\Controllers\Api\MiniProgram\LoginController::class, 'getOpenId'])->name('getOpenId');
@@ -40,6 +38,8 @@ Route::middleware('throttle:60,1')->namespace('Api')->prefix('v1')->group(functi
     });
     /* todo:登录后鉴权 */
     Route::middleware('checkAuth')->group(function () {
+        /* todo:表情图 */
+        Route::match(['get', 'post'], 'emotion/index', [App\Http\Controllers\Api\v1\EmotionController::class, 'getLists'])->name('getEmotion');
         /* todo:首页权限 */
         Route::match(['get', 'post'], 'common/menu', [App\Http\Controllers\Api\v1\HomeController::class, 'getMenu'])->name('getMenu');
         Route::match(['get', 'post'], 'timeline/index', [App\Http\Controllers\Api\v1\TimeLineController::class, 'getLists'])->name('getPlan');

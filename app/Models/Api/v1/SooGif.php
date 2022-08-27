@@ -89,7 +89,8 @@ class SooGif extends Base
             $result['total'] = DB::table($this->table)->where($where)->count();
             return $result;
         }
-        $result['data'] = DB::table($this->table)->where($where)
+        $result['data'] = DB::table($this->table)
+            ->where($where)
             ->limit($pagination['limit'])
             ->offset($pagination['limit'] * ($pagination['page'] - 1))
             ->orderBy($order['order'], $order['direction'])

@@ -81,7 +81,8 @@ class Emotion extends Base
     public function getLists(array $pagination = ['page' => 1, 'limit' => 10], string $type = '', array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
     {
         if ($getAll) {
-            return DB::table($this->table)->get($column);
+            $result['data'] = DB::table($this->table)->where(['type' => $type])->get($column);
+            return $result;
         }
         $result['data'] = DB::table($this->table)
             ->limit($pagination['limit'])
