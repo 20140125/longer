@@ -41,7 +41,7 @@ class EmotionService extends BaseService
         if (empty($this->return['lists'])) {
             $this->return['lists'] = $this->emotionModel->getLists($pagination, $where, $order, $getAll, $column);
             if ($getAll) {
-                $this->return['lists'] = $this->redisClient->setValue('emotion_type_'.$where, json_encode($this->return['lists']), config('app.app_refresh_login_time'));
+                $this->return['lists'] = $this->redisClient->setValue('emotion_type_'.$where, json_encode($this->return['lists']), ['EX'=> config('app.app_refresh_login_time')]);
             }
         }
         return $this->return;
