@@ -82,7 +82,6 @@ class Emotion extends Base
     {
         if ($getAll) {
             $result['data'] = DB::table($this->table)->where(['type' => $type])->get($column);
-            \Illuminate\Support\Facades\Log::error(json_encode($result));
             return $result;
         }
         $result['data'] = DB::table($this->table)
@@ -92,7 +91,6 @@ class Emotion extends Base
             ->orderBy($order['order'], $order['direction'])
             ->get($column);
         $result['total'] = DB::table($this->table)->where(['type' => $type])->count();
-        \Illuminate\Support\Facades\Log::error(json_encode($result));
         return $result;
     }
 }
