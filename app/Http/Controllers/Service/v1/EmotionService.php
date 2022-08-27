@@ -37,14 +37,6 @@ class EmotionService extends BaseService
      */
     public function getLists(array $pagination = ['page' => 1, 'limit' => 10], string $where = '', array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*']): array
     {
-//        $value = $this->redisClient->getValue('emotion_type_'.$where);
-//        $this->return['lists'] = json_decode(mb_substr($value, 0, strripos($value, '"') + 4), true);
-//        if (empty($this->return['lists'])) {
-//            $this->return['lists'] = $this->emotionModel->getLists($pagination, $where, $order, $getAll, $column);
-//            if ($getAll) {
-//                $this->return['lists'] = $this->redisClient->setValue('emotion_type_'.$where, json_encode($this->return['lists']), ['EX'=> config('app.app_refresh_login_time')]);
-//            }
-//        }
         $this->return['lists'] = $this->emotionModel->getLists($pagination, $where, $order, $getAll, $column);
         return $this->return;
     }
