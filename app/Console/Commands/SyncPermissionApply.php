@@ -58,8 +58,7 @@ class SyncPermissionApply extends Command
     {
         $lists = PermissionApply::getInstance()->getLists([], [['expires', '<', time()], ['status', '=', 1]], ['page'=> 1, 'limit'=> 1000]);
         $bar = $this->output->createProgressBar(count($lists['data']));
-        foreach ($lists['data'] as &$item)
-        {
+        foreach ($lists['data'] as &$item) {
             $form = PermissionApplyService::getInstance()->getRoleAuth($item->id, 2);
             DB::beginTransaction();
             try {
