@@ -168,7 +168,7 @@ class DatabaseService extends BaseService
      */
     public function commentTable($form): array
     {
-        DB::select("ALTER TABLE {$form['name']} COMMENT {$form['content']}");
+        DB::select("ALTER TABLE {$form['name']} COMMENT {$form['comment']}");
         $this->return['lists'] = $form;
         $this->return['message'] = 'update table successfully';
         return $this->return;
