@@ -40,12 +40,12 @@ class CheckAuth extends Base
         $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]);
         /* todo: 非法途径访问 */
         if (empty($request->header('Authorization'))) {
-            $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::TOKEN_EMPTY_MESSAGE, 'unauthorized' => $_user)));
+            $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::TOKEN_EMPTY_MESSAGE), 'unauthorized' => $_user));
             return $next($request);
         }
         /* todo: 用户不存在或者验签参数错误 */
         if (empty($_user) || $this->post['token'] !== $request->header('Authorization')) {
-            $request->merge(array('item' => array('code' => Code::VALID_TOKEN, 'message' => Code::VALID_TOKEN_MESSAGE, 'unauthorized' => $_user)));
+            $request->merge(array('item' => array('code' => Code::VALID_TOKEN, 'message' => Code::VALID_TOKEN_MESSAGE), 'unauthorized' => $_user));
             return $next($request);
         }
         /* todo:用户被禁用 */
@@ -68,7 +68,7 @@ class CheckAuth extends Base
         if ($_user->role_id !== 1) {
             /* todo: 角色鉴权 */
             if (!in_array($request->getRequestUri(), json_decode($_role->auth_api, true))) {
-                $request->merge(array('item' => array('code' => Code::FORBIDDEN, 'message' => Code::FORBIDDEN_MESSAGE)));
+                $request->merge(array('item' => array('code' => Code::FORBIDDEN, 'message' => Code::FORBIDDEN_MESSAGE), 'unauthorized' => $_user));
                 return $next($request);
             }
         }
