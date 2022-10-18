@@ -48,11 +48,11 @@ class OauthCallbackController extends Controller
     public function __construct(Request $request)
     {
         if (empty($request->get('code')) || empty($request->get('state'))) {
-            exit(redirect('/admin/home/login'));
+            exit(redirect('/admin/login'));
         }
         $this->redisClient = RedisClient::getInstance();
         if (!$this->redisClient->getValue($request->get('state'))) {
-            exit(redirect('/admin/home/login'));
+            exit(redirect('/admin/login'));
         }
         $this->state = $this->redisClient->getValue($request->get('state'));
         $this->oauthModel = Oauth::getInstance();
@@ -281,9 +281,9 @@ class OauthCallbackController extends Controller
         if (!empty($oauthRes)) {
             Artisan::call("longer:sync-oauth {$data['remember_token']}");
             // 根据state的长度区分是客户端还是PC端
-            return strlen($this->state) == 32 ? redirect('/admin/home/index/' . $data['remember_token'])->send() : redirect('/'.$data['remember_token'])->send();
+            return strlen($this->state) == 32 ? redirect('/admin/index/' . $data['remember_token'])->send() : redirect('/'.$data['remember_token'])->send();
         }
-        return redirect('/login')->send();
+        return redirect('/admin/login')->send();
     }
 
     /**
@@ -295,7 +295,7 @@ class OauthCallbackController extends Controller
     {
         if (isset($response['code']) && $response['code'] === Code::ERROR) {
             setCode(Code::ERROR);
-            return redirect('/admin/home/login');
+            return redirect('/admin/login');
         }
         return true;
     }
