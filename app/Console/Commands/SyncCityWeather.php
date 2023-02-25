@@ -48,7 +48,7 @@ class SyncCityWeather extends Command
     }
 
     /**
-     * todo:同步城市天气
+     * 同步城市天气
      */
     protected function syncCityWeather()
     {

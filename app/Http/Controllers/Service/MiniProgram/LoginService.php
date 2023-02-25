@@ -28,7 +28,7 @@ class LoginService extends BaseService
     }
 
     /**
-     * todo:获取openID
+     * 获取openID
      * @param $form
      * @return array
      */
@@ -48,7 +48,7 @@ class LoginService extends BaseService
     }
 
     /**
-     * todo:小程序登录
+     * 小程序登录
      * @param $form
      * @return array
      */

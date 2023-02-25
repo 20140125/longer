@@ -24,7 +24,7 @@ class SystemConfigService extends BaseService
     }
 
     /**
-     * todo:获取系统配置
+     * 获取系统配置
      * @param array|int[] $pagination
      * @param array|string[] $order
      * @param array|string[] $columns
@@ -47,7 +47,7 @@ class SystemConfigService extends BaseService
     }
 
     /**
-     * todo:获取系统配置
+     * 获取系统配置
      * @param $form
      * @param $user
      * @return array
@@ -63,7 +63,7 @@ class SystemConfigService extends BaseService
     }
 
     /**
-     * todo:数据保存
+     * 数据保存
      * @param $form
      * @return array
      */
@@ -89,7 +89,7 @@ class SystemConfigService extends BaseService
     }
 
     /**
-     * todo:更新配置
+     * 更新配置
      * @param $form
      * @return array
      */
@@ -115,7 +115,7 @@ class SystemConfigService extends BaseService
     }
 
     /**
-     * todo:插件安装、卸载
+     * 插件安装、卸载
      * @param $form
      * @return array
      */

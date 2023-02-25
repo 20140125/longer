@@ -25,7 +25,7 @@ class InterfaceCategoryService extends BaseService
     }
 
     /**
-     * todo:获取分类列表
+     * 获取分类列表
      * @param array $where
      * @param array|string[] $order
      * @param array|string[] $columns
@@ -38,7 +38,7 @@ class InterfaceCategoryService extends BaseService
     }
 
     /**
-     * todo:数据添加
+     * 数据添加
      * @param $form
      * @return array
      */
@@ -69,7 +69,7 @@ class InterfaceCategoryService extends BaseService
     }
 
     /**
-     * todo:数据更新
+     * 数据更新
      * @param $form
      * @return array
      */
@@ -90,7 +90,7 @@ class InterfaceCategoryService extends BaseService
     }
 
     /**
-     * todo:删除记录
+     * 删除记录
      * @param $form
      * @return array
      */
@@ -102,7 +102,7 @@ class InterfaceCategoryService extends BaseService
             $this->return['message'] = 'delete category failed';
             return $this->return;
         }
-        /* todo:删除接口详情 */
+        /* 删除接口详情 */
         $this->return['lists'] = $form;
         $this->return['message'] = 'delete category successfully';
         return $this->return;

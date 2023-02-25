@@ -9,7 +9,7 @@ class DatabaseService extends BaseService
 {
     private function __clone()
     {
-        // TODO: Implement __clone() method.
+        // Implement __clone() method.
     }
 
     /**
@@ -29,7 +29,7 @@ class DatabaseService extends BaseService
     }
 
     /**
-     * TODO:数据列表
+     * 数据列表
      * @return array
      */
     public function getDatabaseLists(): array
@@ -51,7 +51,7 @@ class DatabaseService extends BaseService
     }
 
     /**
-     * todo:数据表备份
+     * 数据表备份
      * @param $form
      * @return array|int
      */
@@ -80,7 +80,7 @@ class DatabaseService extends BaseService
     }
 
     /**
-     * TODO:创建数据表SQL
+     * 创建数据表SQL
      * @param string $tableName
      * @return string
      */
@@ -99,7 +99,7 @@ class DatabaseService extends BaseService
     }
 
     /**
-     * TODO:数据表数据SQL
+     * 数据表数据SQL
      * @param string $tableName
      * @return string
      */
@@ -126,7 +126,7 @@ class DatabaseService extends BaseService
     }
 
     /**
-     * TODO:数据表修复
+     * 数据表修复
      * @param $form
      * @return array
      */
@@ -144,7 +144,7 @@ class DatabaseService extends BaseService
     }
 
     /**
-     * TODO:数据表优化
+     * 数据表优化
      * @param $form
      * @return array
      */
@@ -162,7 +162,7 @@ class DatabaseService extends BaseService
     }
 
     /**
-     * TODO:修改数据表注释
+     * 修改数据表注释
      * @param $form
      * @return array
      */

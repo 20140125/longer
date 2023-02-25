@@ -33,11 +33,11 @@ class RedisClient extends Controller
      */
     public function __construct()
     {
-        // TODO: Implement __clone() method.
+        // Implement __clone() method.
     }
 
     /**
-     * todo: Select 命令用于切换到指定的数据库，数据库索引号 index 用数字值指定，以 0 作为起始索引值。
+     * Select 命令用于切换到指定的数据库，数据库索引号 index 用数字值指定，以 0 作为起始索引值。
      * @param int $index
      * @return mixed
      */
@@ -47,7 +47,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO：数据存储 （Redis 字符串(String)）
+     * 数据存储 （Redis 字符串(String)）
      * @param $key
      * @param $value
      * @param array $timeout
@@ -59,7 +59,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:数据获取（Redis 字符串(String)）
+     * 数据获取（Redis 字符串(String)）
      * @param $key
      * @return mixed
      */
@@ -69,7 +69,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:数据存储（Redis 集合(Set)）
+     * 数据存储（Redis 集合(Set)）
      * @param $key
      * @param $value
      * @return mixed
@@ -80,7 +80,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:数据获取（Redis 集合(Set)）
+     * 数据获取（Redis 集合(Set)）
      * @param $key
      * @return mixed
      */
@@ -90,7 +90,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO：判读数据是否存在（Redis 集合(Set)）
+     * 判读数据是否存在（Redis 集合(Set)）
      * @param $key
      * @param $value
      * @return mixed
@@ -101,7 +101,7 @@ class RedisClient extends Controller
     }
 
     /**
-     *  TODO：数据删除（Redis 集合(Set)）
+     *  数据删除（Redis 集合(Set)）
      * @param $key
      * @param $value
      * @return mixed
@@ -112,7 +112,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:删除指定的键。如果键不存在，则将其忽略。
+     * 删除指定的键。如果键不存在，则将其忽略。
      * @param $key
      * @return mixed
      */
@@ -122,7 +122,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:数据添加（列表头部 Redis 列表(List)）
+     * 数据添加（列表头部 Redis 列表(List)）
      * @param $key
      * @param $value
      * @return mixed
@@ -133,7 +133,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:移除并返回列表的第一个元素（ Redis 列表(List)）
+     * 移除并返回列表的第一个元素（ Redis 列表(List)）
      * @param $key
      * @return bool|int
      */
@@ -143,7 +143,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:数据添加（列表尾部 Redis 列表(List)）
+     * 数据添加（列表尾部 Redis 列表(List)）
      * @param $key
      * @param $value
      * @return bool|int
@@ -154,7 +154,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:移除并返回列表的最末元素（ Redis 列表(List)）
+     * 移除并返回列表的最末元素（ Redis 列表(List)）
      * @param $key
      * @return bool|int
      */
@@ -164,7 +164,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:返回列表中指定区间内的元素（ Redis 列表(List)）
+     * 返回列表中指定区间内的元素（ Redis 列表(List)）
      * @param $key
      * @param $start
      * @param $num
@@ -176,7 +176,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:Redis hGetAll 命令用于返回哈希表中，所有的字段和值。（ Redis 哈希 (hash)）
+     * Redis hGetAll 命令用于返回哈希表中，所有的字段和值。（ Redis 哈希 (hash)）
      * @param $key
      * @return mixed
      */
@@ -186,7 +186,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:命令用于为哈希表中的字段值加上指定增量值。（ Redis 哈希 (hash)）
+     * 命令用于为哈希表中的字段值加上指定增量值。（ Redis 哈希 (hash)）
      * @param $from
      * @param $to
      * @return int
@@ -197,7 +197,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:命令用于删除哈希表 key 中的一个或多个指定字段，不存在的字段将被忽略。（ Redis 哈希 (hash)）
+     * 命令用于删除哈希表 key 中的一个或多个指定字段，不存在的字段将被忽略。（ Redis 哈希 (hash)）
      * @param $from
      * @param $to
      * @return mixed
@@ -208,7 +208,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:获取所有的Key
+     * 获取所有的Key
      * @param $pattern
      * @return array
      */
@@ -218,7 +218,7 @@ class RedisClient extends Controller
     }
 
     /**
-     * TODO:获取聊天记录长度
+     * 获取聊天记录长度
      * @param $key
      * @return int
      */

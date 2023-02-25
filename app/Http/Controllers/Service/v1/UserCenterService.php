@@ -45,7 +45,7 @@ class UserCenterService extends BaseService
     }
 
     /**
-     * todo：更新用户信息
+     * 更新用户信息
      * @param $form
      * @param $_user
      * @return array

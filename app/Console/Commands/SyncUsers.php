@@ -51,7 +51,7 @@ class SyncUsers extends Command
     }
 
     /**
-     * todo:同步授权用户信息
+     * 同步授权用户信息
      * @return false|void
      */
     protected function syncUsers()
@@ -63,12 +63,12 @@ class SyncUsers extends Command
                 $this->error('Remember token is invalid');
                 return false;
             }
-            /* todo：更新授权用户信息 */
+            /* 更新授权用户信息 */
             if (Oauth::getInstance()->getOne(['uid' => $users->id])) {
                 Oauth::getInstance()->updateOne(['uid' => $users->id], ['remember_token' => $this->argument('remember_token')]);
             }
             $this->info('Successfully updated Oauth Token： ' . $users->username);
-            /* todo：更新用户个人中心 */
+            /* 更新用户个人中心 */
             UserCenter::getInstance()->updateOne(['uid' => $users->id], ['token' => $this->argument('remember_token'), 'u_name' => $users->username]);
             DB::commit();
         } catch (\Exception $exception) {

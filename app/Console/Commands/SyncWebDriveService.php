@@ -46,7 +46,7 @@ class SyncWebDriveService extends Command
     }
 
     /**
-     * todo:数据抓取
+     * 数据抓取
      * @param $url  https://www.dbbqb.com/ (访问封IP, 需要充值会员)
      * @return void
      */
@@ -71,42 +71,42 @@ class SyncWebDriveService extends Command
 
     protected function spiderImage2(ChromeDriver $driver)
     {
-       try {
-           $this->info($driver->getCurrentURL());
-           // 按钮切换
-           if ($this->argument('tab')) {
-               $btn = $driver->findElements(WebDriverBy::cssSelector('.MuiTabs-flexContainer .MuiTab-wrapper'));
-               foreach ($btn as $b) {
-                   if ($b->getText() === '精选套图') {
-                       $b->click();
-                   }
-               }
-           }
-           $elements = $driver->findElements(WebDriverBy::cssSelector('.jss49 .lazyload-wrapper'));
-           foreach($elements as $item) {
-               if ($this->hasElement($driver,'.jss51')) {
-                   $arr = [
+        try {
+            $this->info($driver->getCurrentURL());
+            // 按钮切换
+            if ($this->argument('tab')) {
+                $btn = $driver->findElements(WebDriverBy::cssSelector('.MuiTabs-flexContainer .MuiTab-wrapper'));
+                foreach ($btn as $b) {
+                    if ($b->getText() === '精选套图') {
+                        $b->click();
+                    }
+                }
+            }
+            $elements = $driver->findElements(WebDriverBy::cssSelector('.jss49 .lazyload-wrapper'));
+            foreach ($elements as $item) {
+                if ($this->hasElement($driver, '.jss51')) {
+                    $arr = [
                        'href' => str_replace('//', 'https://', $item->findElement(WebDriverBy::cssSelector('.jss51'))->getAttribute('src')),
                        'name' => ['来呀，快活呀', '你怕不是逗比吧', '来啊，造作啊'][rand(0, 2)]
                    ];
-                   if (SooGif::getInstance()->getOne(['href' => $arr['href']])) {
-                       $this->warn('image already exists: ' . $arr['href']);
-                   } else {
-                       SooGif::getInstance()->saveOne(['href' => $arr['href'], 'name' => $arr['name']]);
-                       $this->info('successfully save image： ' . $arr['href']);
-                   }
-               }
-           }
-       } catch (\Exception $e) {
-           $driver->quit();
-           sleep(5);
-           $this->getImageLists2($this->argument('url'));
-           $this->error($e->getMessage());
-       }
+                    if (SooGif::getInstance()->getOne(['href' => $arr['href']])) {
+                        $this->warn('image already exists: ' . $arr['href']);
+                    } else {
+                        SooGif::getInstance()->saveOne(['href' => $arr['href'], 'name' => $arr['name']]);
+                        $this->info('successfully save image： ' . $arr['href']);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            $driver->quit();
+            sleep(5);
+            $this->getImageLists2($this->argument('url'));
+            $this->error($e->getMessage());
+        }
     }
 
     /**
-     * todo:判断节点是否存在
+     * 判断节点是否存在
      * @param ChromeDriver $driver
      * @param string $element
      * @return bool
@@ -123,7 +123,7 @@ class SyncWebDriveService extends Command
     }
 
     /**
-     * todo:获取图片
+     * 获取图片
      * @param $url
      */
     protected function getImageLists($url)
@@ -144,7 +144,7 @@ class SyncWebDriveService extends Command
     }
 
     /**
-     * todo:数据抓取
+     * 数据抓取
      * @param ChromeDriver $driver
      */
     protected function spiderImage(ChromeDriver $driver)
@@ -164,12 +164,12 @@ class SyncWebDriveService extends Command
             }
         }
         sleep(5);
-        /* todo:页码切换 */
+        /* 页码切换 */
         $this->currentPageChange($driver);
     }
 
     /**
-     * todo:分页切换
+     * 分页切换
      * @param ChromeDriver $driver
      * @return void
      */

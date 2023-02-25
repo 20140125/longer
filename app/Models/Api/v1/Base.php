@@ -18,7 +18,7 @@ class Base extends Model
     }
 
     /**
-     * todo:获取一条记录
+     * 获取一条记录
      * @param $table
      * @param $where
      * @param string[] $columns
@@ -30,7 +30,7 @@ class Base extends Model
     }
 
     /**
-     * todo:删除一条记录
+     * 删除一条记录
      * @param $table
      * @param $where
      * @return int
@@ -41,7 +41,7 @@ class Base extends Model
     }
 
     /**
-     * todo:保存数据
+     * 保存数据
      * @param $table
      * @param $where
      * @param $form
@@ -53,7 +53,7 @@ class Base extends Model
     }
 
     /**
-     * todo:添加数据
+     * 添加数据
      * @param $table
      * @param $form
      * @return int

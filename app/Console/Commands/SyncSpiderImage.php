@@ -44,7 +44,7 @@ class SyncSpiderImage extends Command
     }
 
     /**
-     * todo:爬取图片
+     * 爬取图片
      * @param $startId
      */
     protected function spiderImage($startId)
@@ -69,7 +69,7 @@ class SyncSpiderImage extends Command
     }
 
     /**
-     * todo:获取图片
+     * 获取图片
      * @param $promise
      * @param $item
      * @param $client
@@ -96,7 +96,7 @@ class SyncSpiderImage extends Command
     }
 
     /**
-     * todo；爬取图片
+     * 爬取图片
      * @param $promise
      * @param $item
      * @param $client
@@ -105,19 +105,19 @@ class SyncSpiderImage extends Command
      */
     private function spiderPkImage($promise, $item, $client, $bar)
     {
-       try {
-           $promise->filter('.artile_des img')->each(function ($node) use ($client, $item) {
-               $href = $node->attr('src');
-               if (SooGif::getInstance()->getOne(['href' => $href])) {
-                   $this->warn('image already exists: ' . $href);
-               } else {
-                   SooGif::getInstance()->saveOne(['href' => $href,'name' => $item->name]);
-                   $this->info('successfully save image： ' . $href);
-               }
-           });
-           $bar->advance();
-       } catch (\Exception $exception) {
-           $this->error($exception->getMessage());
-       }
+        try {
+            $promise->filter('.artile_des img')->each(function ($node) use ($client, $item) {
+                $href = $node->attr('src');
+                if (SooGif::getInstance()->getOne(['href' => $href])) {
+                    $this->warn('image already exists: ' . $href);
+                } else {
+                    SooGif::getInstance()->saveOne(['href' => $href,'name' => $item->name]);
+                    $this->info('successfully save image： ' . $href);
+                }
+            });
+            $bar->advance();
+        } catch (\Exception $exception) {
+            $this->error($exception->getMessage());
+        }
     }
 }

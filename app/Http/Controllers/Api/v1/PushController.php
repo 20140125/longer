@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class PushController extends BaseController
 {
     /**
-     * todo:获取站内消息
+     * 获取站内消息
      * @param Request $request
      * @return JsonResponse
      */
@@ -22,7 +22,8 @@ class PushController extends BaseController
     }
 
     /**
-     * todo:发布站内通知
+     * 发布站内通知
+     * @param Request $request
      * @return JsonResponse
      */
     public function savePush(Request $request): JsonResponse
@@ -33,7 +34,8 @@ class PushController extends BaseController
     }
 
     /**
-     * todo:更新站内通知
+     * 更新站内通知
+     * @param Request $request
      * @return JsonResponse
      */
     public function updatePush(Request $request): JsonResponse
@@ -44,7 +46,8 @@ class PushController extends BaseController
     }
 
     /**
-     * todo:删除站内通知
+     * 删除站内通知
+     * @param Request $request
      * @return JsonResponse
      */
     public function removePush(Request $request): JsonResponse

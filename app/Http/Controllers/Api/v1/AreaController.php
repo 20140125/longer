@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AreaController extends BaseController
 {
     /**
-     * todo:获取成功列表
+     * 获取成功列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -21,7 +21,7 @@ class AreaController extends BaseController
     }
 
     /**
-     * todo:获取城市天气
+     * 获取城市天气
      * @param Request $request
      * @return JsonResponse
      */
@@ -33,7 +33,7 @@ class AreaController extends BaseController
     }
 
     /**
-     * todo:获取缓存数据
+     * 获取缓存数据
      * @return JsonResponse
      */
     public function getCacheArea(): JsonResponse

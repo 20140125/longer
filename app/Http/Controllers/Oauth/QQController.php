@@ -66,7 +66,7 @@ class QQController extends OAuthController
     }
 
     /**
-     * TODO:：获取登录页面跳转转URL
+     * 获取登录页面跳转转URL
      * @param int $length
      * @param string $callback
      * @param string $scope
@@ -86,7 +86,7 @@ class QQController extends OAuthController
     }
 
     /**
-     * TODO:：获取access_token
+     * 获取access_token
      * @param string $code
      * @return array
      * @throws Exception
@@ -113,7 +113,7 @@ class QQController extends OAuthController
     }
 
     /**
-     * TODO:：获取用户的openid
+     * 获取用户的openid
      * @param string $access_token
      * @return array | string
      * @throws Exception
@@ -136,7 +136,7 @@ class QQController extends OAuthController
     }
 
     /**
-     * TODO:：刷新AccessToken续期
+     * 刷新AccessToken续期
      * @param string $refreshToken
      * @return array
      * @throws Exception
@@ -162,7 +162,7 @@ class QQController extends OAuthController
     }
 
     /**
-     * TODO:：获取用户信息
+     * 获取用户信息
      * @param string $access_token
      * @return JsonResponse|mixed
      * @throws Exception

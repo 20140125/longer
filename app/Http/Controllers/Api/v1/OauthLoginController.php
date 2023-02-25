@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Routing\Redirector;
 
 /**
- * TODO:：第三方授权
+ * ：第三方授权
  * Class OauthLoginController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1
@@ -36,7 +36,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * TODO:：QQ跳转到授权登录页面
+     * ：QQ跳转到授权登录页面
      * @param string $source
      * @return Application|RedirectResponse|Redirector
      */
@@ -51,7 +51,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * TODO:：Github跳转到授权登录页面
+     * ：Github跳转到授权登录页面
      * @param string $source
      * @return Application|RedirectResponse|Redirector
      */
@@ -66,7 +66,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * TODO:：Weibo跳转到授权登录页面
+     * ：Weibo跳转到授权登录页面
      * @param string $source
      * @return Application|RedirectResponse|Redirector
      */
@@ -81,7 +81,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * TODO:：Gitee跳转到授权登录页面
+     * ：Gitee跳转到授权登录页面
      * @param string $source
      * @return Application|RedirectResponse|Redirector
      */
@@ -96,7 +96,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * TODO:：Gitee跳转到授权登录页面
+     * ：Gitee跳转到授权登录页面
      * @param string $source
      * @return Application|RedirectResponse|Redirector
      */
@@ -111,7 +111,7 @@ class OauthLoginController extends Controller
     }
 
     /**
-     * TODO:：OsChina跳转到授权登录页面
+     * ：OsChina跳转到授权登录页面
      * @param string $source
      * @return Application|RedirectResponse|Redirector
      */

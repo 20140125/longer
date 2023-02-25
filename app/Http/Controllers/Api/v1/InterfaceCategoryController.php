@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class InterfaceCategoryController extends BaseController
 {
     /**
-     * todo:获取接口列表
+     * 获取接口列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -21,7 +21,7 @@ class InterfaceCategoryController extends BaseController
     }
 
     /**
-     * TODO：保存接口分类
+     * 保存接口分类
      * @param Request $request
      * @return JsonResponse
      */
@@ -33,10 +33,11 @@ class InterfaceCategoryController extends BaseController
     }
 
     /**
-     * todo:更新接口分类
+     * 更新接口分类
+     * @param Request $request
      * @return JsonResponse
      */
-    public function updateCategory(Request $request)
+    public function updateCategory(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['name' => 'required|string', 'pid' => 'required|integer', 'id' => 'required|integer', 'level' => 'required|integer']);
         $result = $this->interfaceCategoryService->updateCategory($this->post);
@@ -44,10 +45,11 @@ class InterfaceCategoryController extends BaseController
     }
 
     /**
-     * todo：删除接口
+     * 删除接口
+     * @param Request $request
      * @return JsonResponse
      */
-    public function removeCategory(Request $request)
+    public function removeCategory(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['id' => 'required|integer']);
         $result = $this->interfaceCategoryService->removeCategory($this->post);

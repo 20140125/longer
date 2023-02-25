@@ -58,7 +58,7 @@ class SyncSpiderImageType extends Command
     }
 
     /**
-     * todo:获取图片类型
+     * 获取图片类型
      */
     protected function getFbqImageType()
     {
@@ -98,7 +98,7 @@ class SyncSpiderImageType extends Command
     }
 
     /**
-     * todo:同步pkdoutu套图
+     * 同步pkdoutu套图
      * @return void
      */
     protected function getPkImageType()
@@ -109,12 +109,12 @@ class SyncSpiderImageType extends Command
             $pageSize = (int)$promise->filter('.pagination li .page-link')->eq(count($promise->filter('.pagination li .page-link')) - 2)->text();
             $bar = $this->output->createProgressBar($pageSize - $this->argument('page'));
             foreach (range($this->argument('page'), $pageSize) as $page) {
-                $lists = $client->request('GET', sprintf('%s%s',   $this->pkURL, '?page='.$page));
-                $this->info(sprintf('%s%s%s', "\r\ncurrent spider image url：",  $this->pkURL, '?page='.$page));
+                $lists = $client->request('GET', sprintf('%s%s', $this->pkURL, '?page='.$page));
+                $this->info(sprintf('%s%s%s', "\r\ncurrent spider image url：", $this->pkURL, '?page='.$page));
                 $lists->filter('.center-wrap .list-group-item')->each(function ($node) use ($client) {
                     if (SooGifType::getInstance()->getOne(['href' => $node->attr('href')])) {
                         $this->warn('link address already exists: ' . $node->attr('href'));
-                    } else if (!empty($node->attr('href'))) {
+                    } elseif (!empty($node->attr('href'))) {
                         SooGifType::getInstance()->saveOne([
                             'href' => $node->attr('href'),
                             'name' => mb_substr($node->filter('.random_title')->text(), 0, 100),

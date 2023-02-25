@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 class ImageController extends BaseController
 {
     /**
-     * todo:获取图片列表
+     * 获取图片列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -19,7 +19,7 @@ class ImageController extends BaseController
     {
         $start_time = microtime(true);
         validatePost($request->get('item'), $this->post, ['page' => 'required|integer', 'limit' => 'required|integer', 'source' => 'required|string']);
-        // todo: 单次请求记录超过限制
+        //  单次请求记录超过限制
         if (!empty($this->post['limit']) && $this->post['limit'] > intval((SystemConfigService::getInstance()->getConfiguration('MaxPageLimit', 'ImageBed')[0]))) {
             return ajaxReturn(['code' => Code::ERROR, 'message' => Code::PAGE_SIZE_MESSAGE]);
         }
@@ -37,7 +37,7 @@ class ImageController extends BaseController
     }
 
     /**
-     * todo:执行脚本(待废弃)
+     * 执行脚本(待废弃)
      * @param Request $request
      * @return JsonResponse
      */
@@ -49,7 +49,7 @@ class ImageController extends BaseController
     }
 
     /**
-     * todo:获取关键字
+     * 获取关键字
      * @param Request $request
      * @return JsonResponse
      */

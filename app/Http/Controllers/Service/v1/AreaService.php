@@ -59,7 +59,7 @@ class AreaService extends BaseService
     }
 
     /**
-     * todo：获取天气预报
+     * 获取天气预报
      * @param $form
      * @return array
      */

@@ -43,7 +43,7 @@ class SyncLogAddress extends Command
     }
 
     /**
-     * todo:同步日志地址
+     * 同步日志地址
      */
     protected function syncLogAddress()
     {

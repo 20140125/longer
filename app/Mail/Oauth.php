@@ -14,7 +14,7 @@ class Oauth extends Mailable
     protected $request;
 
     /**
-     * TODO:Create a new message instance
+     * Create a new message instance
      * Oauth constructor.
      * @param $request
      */

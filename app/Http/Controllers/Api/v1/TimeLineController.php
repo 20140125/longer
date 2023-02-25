@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class TimeLineController extends BaseController
 {
     /**
-     * todo：获取列表
+     * 获取列表
      * @param Request $request
      * @return JsonResponse
      */

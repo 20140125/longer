@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class UserCenterController extends BaseController
 {
     /**
-     * todo:获取用户信息
+     * 获取用户信息
      * @param Request $request
      * @return JsonResponse
      */
@@ -22,7 +22,7 @@ class UserCenterController extends BaseController
     }
 
     /**
-     * todo:更新用户信息
+     * 更新用户信息
      * @param Request $request
      * @return JsonResponse
      */

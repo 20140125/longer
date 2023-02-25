@@ -26,7 +26,7 @@ class RoleService extends BaseService
     }
 
     /**
-     * todo:获取角色列表
+     * 获取角色列表
      * @param $user
      * @param int[] $pagination
      * @param string[] $order
@@ -48,7 +48,7 @@ class RoleService extends BaseService
     }
 
     /**
-     * todo:角色添加
+     * 角色添加
      * @param $form
      * @return array
      */
@@ -69,7 +69,7 @@ class RoleService extends BaseService
     }
 
     /**
-     * todo:角色更新
+     * 角色更新
      * @param $form
      * @return array
      */
@@ -95,7 +95,7 @@ class RoleService extends BaseService
     }
 
     /**
-     * todo:角色信息初始化
+     * 角色信息初始化
      * @param $form
      * @return mixed
      */

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AuthController extends BaseController
 {
     /**
-     * todo:获取权限列表
+     * 获取权限列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -20,7 +20,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo:获取权限树
+     * 获取权限树
      * @param Request $request
      * @return JsonResponse
      */
@@ -32,7 +32,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo:添加权限
+     * 添加权限
      * @param Request $request
      * @return JsonResponse
      */
@@ -44,7 +44,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo:更新权限
+     * 更新权限
      * @param Request $request
      * @return JsonResponse
      */

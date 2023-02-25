@@ -24,7 +24,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:获取文件列表
+     * 获取文件列表
      * @param $form
      * @param array $permission
      * @return array
@@ -36,7 +36,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo：获取文件内容
+     * 获取文件内容
      * @param $form
      * @return array|string
      */
@@ -56,7 +56,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:写入文件内容
+     * 写入文件内容
      * @param $form
      * @return array|int
      */
@@ -73,7 +73,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:文件打包
+     * 文件打包
      * @param $form
      * @return array|bool
      */
@@ -89,7 +89,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:文件解压
+     * 文件解压
      * @param $form
      * @return array|bool
      */
@@ -105,7 +105,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:文件删除
+     * 文件删除
      * @param $form
      * @return array|bool
      */
@@ -122,7 +122,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:文件添加
+     * 文件添加
      * @param $form
      * @return array|bool
      */
@@ -134,7 +134,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:设置文件权限
+     * 设置文件权限
      * @param $form
      * @return array
      */
@@ -151,7 +151,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo:文件重命名
+     * 文件重命名
      * @param $form
      * @return array|bool
      */
@@ -163,7 +163,7 @@ class FileService extends BaseService
     }
 
     /**
-     * TODO:：文件上传
+     * ：文件上传
      * @param $request
      * @param $form
      * @return array
@@ -176,20 +176,20 @@ class FileService extends BaseService
             $this->return['message'] = 'upload file failed';
             return $this->return;
         }
-        /* todo:获取文件的扩展名 */
+        /* 获取文件的扩展名 */
         $ext = $file->getClientOriginalExtension();
-        /* todo:获取文件的绝对路径 */
+        /* 获取文件的绝对路径 */
         $path = $file->getRealPath();
         $imgExt = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array(strtolower($ext), $imgExt)) {
-            /* todo:图片大小上传错误 */
+            /* 图片大小上传错误 */
             if ($file->getSize() > 2 * 1024 * 1024) {
                 $this->return['code'] = Code::ERROR;
                 $this->return['message'] = 'upload image size error';
                 return $this->return;
             }
         }
-        /* todo:视频大小校验 */
+        /* 视频大小校验 */
         if (strtolower($ext) == 'mp4') {
             if ($file->getSize() > 5 * 1024 * 1024) {
                 $this->return['code'] = Code::ERROR;
@@ -198,13 +198,13 @@ class FileService extends BaseService
             }
         }
         $imgExt[] = 'mp4';
-        /* todo：只允许上传图片和视频（根据个人情况修改） */
+        /* 只允许上传图片和视频（根据个人情况修改） */
         if (!in_array(strtolower($ext), $imgExt)) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Unsupported file format';
             return $this->return;
         }
-        /* todo：文件名称随机 */
+        /* 文件名称随机 */
         if (in_array(strtolower($ext), $imgExt) && !empty($form['round_name'])) {
             $filename = date('Ymd') . '/' . time() . '.' . $ext;
             Storage::disk('public')->put($filename, file_get_contents($path));
@@ -213,12 +213,12 @@ class FileService extends BaseService
             $this->return['lists'] = array('src' => config('app.url') . 'storage/' . $filename, 'file_type' => $form['file_type'] ?? '');
             return $this->return;
         }
-        /* todo：覆盖上传文件名称 */
+        /* 覆盖上传文件名称 */
         $imgExt[] = 'php';
         if (in_array(strtolower($ext), $imgExt) && empty($form['round_name'])) {
-            /* todo:获取文件名 */
+            /* 获取文件名 */
             $filename = $file->getClientOriginalName();
-            /* todo:文件移动 */
+            /* 文件移动 */
             $file->move($form['path'], $filename);
             $this->return['code'] = Code::SUCCESS;
             $this->return['message'] = 'upload file successfully';

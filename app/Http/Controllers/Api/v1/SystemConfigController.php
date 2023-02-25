@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class SystemConfigController extends BaseController
 {
     /**
-     * todo:获取系统配置列表
+     * 获取系统配置列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -21,7 +21,7 @@ class SystemConfigController extends BaseController
     }
 
     /**
-     * todo:获取系统配置(登录态或未登录)
+     * 获取系统配置(登录态或未登录)
      * @param Request $request
      * @return JsonResponse
      */
@@ -33,7 +33,7 @@ class SystemConfigController extends BaseController
     }
 
     /**
-     * todo:保存系统配置
+     * 保存系统配置
      * @return JsonResponse
      */
     public function saveSystemConfig(Request $request): JsonResponse
@@ -44,7 +44,7 @@ class SystemConfigController extends BaseController
     }
 
     /**
-     * todo:更新系统配置
+     * 更新系统配置
      * @param Request $request
      * @return JsonResponse
      */
@@ -56,7 +56,7 @@ class SystemConfigController extends BaseController
     }
 
     /**
-     * todo:插件安装、卸载
+     * 插件安装、卸载
      * @param Request $request
      * @return JsonResponse
      */

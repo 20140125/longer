@@ -25,7 +25,7 @@ class TimeLineService extends BaseService
     }
 
     /**
-     * todo:获取用户
+     * 获取用户
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null
@@ -36,7 +36,7 @@ class TimeLineService extends BaseService
     }
 
     /**
-     * todo:获取列表
+     * 获取列表
      * @param int[] $pagination
      * @param string[] $order
      * @param false $getAll

@@ -23,7 +23,7 @@ class CheckLogin extends Base
     public function handle(Request $request, Closure $next)
     {
         parent::handle($request, $next);
-        /* todo:默认不鉴权 */
+        /* 默认不鉴权 */
         $permissionArray = empty($this->post['token']) ?
             [
                 route('getSystemConfig'),
@@ -39,7 +39,7 @@ class CheckLogin extends Base
         if (in_array(substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(), $permissionArray)) {
             return $next($request);
         }
-        /* todo: Web页面鉴权 */
+        /*  Web页面鉴权 */
         if (empty($this->post['token']) && in_array(
             substr_replace(config('app.url'), '', strlen(config('app.url')) - 1).$request->getRequestUri(),
             [
@@ -54,21 +54,21 @@ class CheckLogin extends Base
         )) {
             return $next($request);
         }
-        /* todo:判断用户是登录 */
+        /* 判断用户是登录 */
         $authorization = $this->userService->getVerifyCode($this->post['token'], $this->post['token']);
         if ($authorization['code'] === Code::SUCCESS) {
-            /* todo:用户信息 */
+            /* 用户信息 */
             $_user = Users::getInstance()->getOne(['remember_token' => $this->post['token']]) ?? Oauth::getInstance()->getOne(['remember_token' => $this->post['token']]);
-            /* todo:用户令牌过期 */
+            /* 用户令牌过期 */
             if (empty($_user)) {
                 $request->merge(array('item' => array('code' => Code::UNAUTHORIZED, 'message' => Code::USER_NOT_FOUND_MESSAGE)));
                 return $next($request);
             }
-            /* todo:角色信息 */
+            /* 角色信息 */
             $_role = Role::getInstance()->getOne(['id' => $_user->role_id], ['auth_api', 'status']);
-            /* todo:刷新用户Redis存储时间 */
+            /* 刷新用户Redis存储时间 */
             $this->userService->setVerifyCode($this->post['token'], $this->post['token'], config('app.app_refresh_login_time'));
-            /* todo:存储在线用户 */
+            /* 存储在线用户 */
             if (!$this->redisClient->sIsMember(config('app.redis_user_key'), $_user->uuid)) {
                 $this->redisClient->sAdd(config('app.redis_user_key'), $_user->uuid);
             }

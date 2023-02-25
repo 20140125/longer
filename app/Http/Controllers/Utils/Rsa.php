@@ -26,7 +26,7 @@ class Rsa extends Controller
 
     private function __clone()
     {
-        // TODO: Implement __clone() method.
+        //  Implement __clone() method.
     }
 
     /**
@@ -50,7 +50,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO:获取私钥
+     * 获取私钥
      * @return bool
      */
     protected function getPrivateKey(): bool

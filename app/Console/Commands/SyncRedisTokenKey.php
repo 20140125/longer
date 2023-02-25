@@ -56,7 +56,7 @@ class SyncRedisTokenKey extends Command
     }
 
     /**
-     * todo:获取redisToken
+     * 获取redisToken
      * @return void
      */
     public function getRedisToken(): void

@@ -32,7 +32,7 @@ class SooGif extends Base
     }
 
     /**
-     * todo:根据条件查询数据
+     * 根据条件查询数据
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null
@@ -43,7 +43,7 @@ class SooGif extends Base
     }
 
     /**
-     * todo:保存数据
+     * 保存数据
      * @param $where
      * @param $form
      * @return int
@@ -54,7 +54,7 @@ class SooGif extends Base
     }
 
     /**
-     * todo:添加数据
+     * 添加数据
      * @param $form
      * @return int
      */
@@ -64,7 +64,7 @@ class SooGif extends Base
     }
 
     /**
-     * todo:删除记录
+     * 删除记录
      * @param $where
      * @return int
      */
@@ -74,7 +74,7 @@ class SooGif extends Base
     }
 
     /**
-     * todo:获取数据列表
+     * 获取数据列表
      * @param $where
      * @param array|int[] $pagination
      * @param array|string[] $order
@@ -101,6 +101,6 @@ class SooGif extends Base
 
     private function __clone()
     {
-        // TODO: Implement __clone() method.
+        //  Implement __clone() method.
     }
 }

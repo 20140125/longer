@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 class HomeController extends BaseController
 {
     /**
-     * todo：获取导航栏
+     * 获取导航栏
      * @param Request $request
      * @return JsonResponse
      */

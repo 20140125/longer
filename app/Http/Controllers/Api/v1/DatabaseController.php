@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class DatabaseController extends BaseController
 {
     /**
-     * todo:获取数据表列表
+     * 获取数据表列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -20,7 +20,7 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * todo:数据表备份
+     * 数据表备份
      * @param Request $request
      * @return JsonResponse
      */

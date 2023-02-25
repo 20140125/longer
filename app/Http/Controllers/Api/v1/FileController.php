@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class FileController extends BaseController
 {
     /**
-     * todo:获取文件列表
+     * 获取文件列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -21,7 +21,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:读取文件内容
+     * 读取文件内容
      * @param Request $request
      * @return JsonResponse
      */
@@ -33,7 +33,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:文件更新
+     * 文件更新
      * @param Request $request
      * @return JsonResponse
      */
@@ -45,7 +45,7 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件打包
+     * ：文件打包
      * @param Request $request
      * @return JsonResponse
      */
@@ -57,7 +57,7 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件解压
+     * ：文件解压
      * @param Request $request
      * @return JsonResponse
      */
@@ -69,7 +69,7 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件删除
+     * ：文件删除
      * @param Request $request
      * @return JsonResponse
      */
@@ -81,7 +81,7 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件新建
+     * ：文件新建
      * @param Request $request
      * @return JsonResponse
      */
@@ -93,7 +93,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:图片上传
+     * 图片上传
      * @param Request $request
      * @return JsonResponse
      */
@@ -105,7 +105,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:设置文件权限
+     * 设置文件权限
      * @param Request $request
      * @return JsonResponse
      */
@@ -117,7 +117,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:文件重命名
+     * 文件重命名
      * @param Request $request
      * @return JsonResponse
      */

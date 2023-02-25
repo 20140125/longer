@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class RoleController extends BaseController
 {
     /**
-     * todo:获取角色信息
+     * 获取角色信息
      * @param Request $request
      * @return JsonResponse
      */
@@ -22,7 +22,8 @@ class RoleController extends BaseController
     }
 
     /**
-     * todo:获取角色权限
+     * 获取角色权限
+     * @param Request $request
      * @return JsonResponse
      */
     public function getRoleAuth(Request $request): JsonResponse
@@ -33,7 +34,8 @@ class RoleController extends BaseController
     }
 
     /**
-     * todo:保存角色
+     * 保存角色
+     * @param Request $request
      * @return JsonResponse
      */
     public function saveRole(Request $request): JsonResponse
@@ -44,7 +46,8 @@ class RoleController extends BaseController
     }
 
     /**
-     * todo:保存角色
+     * 保存角色
+     * @param Request $request
      * @return JsonResponse
      */
     public function updateRole(Request $request): JsonResponse

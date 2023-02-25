@@ -9,14 +9,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * TODO:用户登录
+ * 用户登录
  * Class LoginController
  * @package App\Http\Controllers\Api\v1
  */
 class LoginController extends BaseController
 {
     /**
-     * TODO:登录系统
+     * 登录系统
      * @param Request $request
      * @return JsonResponse
      */
@@ -38,7 +38,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * TODO:检验登录态
+     * 检验登录态
      * @param Request $request
      * @return JsonResponse
      */
@@ -49,7 +49,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * TODO:验证码上报
+     * 验证码上报
      * @param Request $request
      * @return JsonResponse
      */
@@ -60,7 +60,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * TODO:发送邮件
+     * 发送邮件
      * @param Request $request
      * @return JsonResponse
      */
@@ -72,7 +72,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * todo:登出系统
+     * 登出系统
      * @param Request $request
      * @return JsonResponse
      */

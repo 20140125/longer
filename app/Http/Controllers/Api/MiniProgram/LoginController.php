@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class LoginController extends BaseController
 {
     /**
-     * TODO: 微信获取用户的openid
+     *  微信获取用户的openid
      * @param Request $request
      * @return JsonResponse
      */
@@ -20,7 +20,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * todo:小程序登录
+     * 小程序登录
      * @param Request $request
      * @return JsonResponse
      */

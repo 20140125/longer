@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 if (!function_exists('ajaxReturn')) {
     /**
-     * TODO:返回JSON数据
+     * 返回JSON数据
      * @param array $data
      * @param int $timestamp
      * @param int $code
@@ -30,7 +30,7 @@ if (!function_exists('ajaxReturn')) {
 }
 if (!function_exists('validatePost')) {
     /**
-     * TODO:错误信息输出
+     * 错误信息输出
      * @param $unauthorized
      * @param array $post
      * @param array $rules
@@ -48,7 +48,7 @@ if (!function_exists('validatePost')) {
             exit(json_encode($_data, JSON_UNESCAPED_UNICODE));
         }
         if (!empty($rules)) {
-            /* todo:字段验证 */
+            /* 字段验证 */
             $_validate = Validator::make($post, $rules, $message);
             if ($_validate->fails()) {
                 $_data = array(
@@ -63,7 +63,7 @@ if (!function_exists('validatePost')) {
 }
 if (!function_exists('saveLog')) {
     /**
-     *  TODO:日志保存
+     *  日志保存
      * @param $form
      * @return array|int
      */
@@ -91,7 +91,7 @@ if (!function_exists('saveLog')) {
 }
 if (!function_exists('getCityCode')) {
     /**
-     * TODO:获取城市CODE
+     * 获取城市CODE
      * @return bool|mixed|string
      */
     function getCityCode()
@@ -106,7 +106,7 @@ if (!function_exists('getCityCode')) {
 }
 if (!function_exists('getRoundNum')) {
     /**
-     * TODO:生成随机字符串
+     * 生成随机字符串
      * @param $length
      * @param $type
      * @return string
@@ -142,7 +142,7 @@ if (!function_exists('getRoundNum')) {
 }
 if (!function_exists('getServerIp')) {
     /**
-     * TODO:获取服务器ip地址
+     * 获取服务器ip地址
      * @return array|false|string
      */
     function getServerIp()
@@ -177,7 +177,7 @@ if (!function_exists('getServerIp')) {
 }
 if (!function_exists('setCode')) {
     /**
-     * TODO: 发送HTTP状态
+     *  发送HTTP状态
      * @param $code
      */
     function setCode($code)
@@ -238,7 +238,7 @@ if (!function_exists('setCode')) {
 }
 if (!function_exists('getFileLists')) {
     /**
-     * TODO:获取文件列表
+     * 获取文件列表
      * @param $filePath
      * @param array $permissionFile
      * @param int $sort_order
@@ -270,7 +270,7 @@ if (!function_exists('getFileLists')) {
                     $fileType[] = filetype($filePath . $file);
                 }
             }
-            /* TODO:是否递归操作 */
+            /* 是否递归操作 */
             if ($recursion) {
                 foreach ($fileArr as $index => &$item) {
                     if ($item['file_type'] === 'dir') {
@@ -287,7 +287,7 @@ if (!function_exists('getFileLists')) {
 }
 if (!function_exists('chmodFile')) {
     /**
-     * TODO:获取权限
+     * 获取权限
      * @param $filepath
      * @return array|false|string
      */
@@ -302,7 +302,7 @@ if (!function_exists('chmodFile')) {
 }
 if (!function_exists('getFilePath')) {
     /**
-     * TODO:文件路径
+     * 文件路径
      * @param $path
      * @param $basename
      * @return false|string
@@ -315,7 +315,7 @@ if (!function_exists('getFilePath')) {
 }
 if (!function_exists('getFileContent')) {
     /**
-     * TODO: 文件读取
+     *  文件读取
      * @param $filepath
      * @return array | string
      */
@@ -336,7 +336,7 @@ if (!function_exists('getFileContent')) {
 }
 if (!function_exists('writeFile')) {
     /**
-     * TODO:文件写入
+     * 文件写入
      * @param $filepath
      * @param $content
      * @return int | array
@@ -353,7 +353,7 @@ if (!function_exists('writeFile')) {
 }
 if (!function_exists('renameFile')) {
     /**
-     * TODO:文件重命名
+     * 文件重命名
      * @param $oldFile
      * @param $newFile
      * @return bool | array
@@ -372,7 +372,7 @@ if (!function_exists('renameFile')) {
 }
 if (!function_exists('createFile')) {
     /**
-     * TODO:保存文件
+     * 保存文件
      * @param $filepath
      * @return bool | array
      */
@@ -396,7 +396,7 @@ if (!function_exists('createFile')) {
 }
 if (!function_exists('gZipFile')) {
     /**
-     * TODO:文件压缩
+     * 文件压缩
      * @param array $docLists 文件列表
      * @param string $zipProductPath 文件路径
      * @param string $filename 文件名
@@ -422,7 +422,7 @@ if (!function_exists('gZipFile')) {
 }
 if (!function_exists('unGZipFile')) {
     /**
-     * TODO:文件解压
+     * 文件解压
      * @param string $path 文件路径
      * @param string $resource 解压包文件名称
      * @param boolean $removeResource
@@ -456,7 +456,7 @@ if (!function_exists('unGZipFile')) {
 }
 if (!function_exists('addFileToZip')) {
     /**
-     * TODO:zip文件压缩
+     * zip文件压缩
      * @param $path
      * @param ZipArchive $zip
      * @return array | bool
@@ -479,7 +479,7 @@ if (!function_exists('addFileToZip')) {
 }
 if (!function_exists('removeFiles')) {
     /**
-     * TODO:删除文件
+     * 删除文件
      * @param $path
      * @return bool | array
      */
@@ -506,7 +506,7 @@ if (!function_exists('removeFiles')) {
 }
 if (!function_exists('emptyDir')) {
     /**
-     * TODO:判断目录是否为空
+     * 判断目录是否为空
      * @param $path
      * @return bool | array
      */
@@ -522,7 +522,7 @@ if (!function_exists('emptyDir')) {
 if (!function_exists('cuttingFile')) {
 
     /**
-     * TODO:文件的分割
+     * 文件的分割
      * @param string $filename 文件名
      * @param string $block 文件分割大小
      * @return bool | array
@@ -553,7 +553,7 @@ if (!function_exists('cuttingFile')) {
 }
 if (!function_exists('mergerFile')) {
     /**
-     * TODO:合并文件
+     * 合并文件
      * @param $targetFile
      * @param $filePath
      * @return array | true
@@ -580,7 +580,7 @@ if (!function_exists('mergerFile')) {
 }
 if (!function_exists('webPush')) {
     /**
-     * TODO:站内消息推送
+     * 站内消息推送
      * @param $content
      * @param string $type
      * @param string $uid
@@ -608,7 +608,7 @@ if (!function_exists('webPush')) {
 }
 if (!function_exists('getTree')) {
     /**
-     * TODO: 树形结构
+     *  树形结构
      * @param array $data
      * @param $pid
      * @param string $attr
@@ -634,7 +634,7 @@ if (!function_exists('getTree')) {
 }
 if (!function_exists('formatBates')) {
     /**
-     * TODO:大小格式转换
+     * 大小格式转换
      * @param String $size
      * @param string $delimiter 分割符
      * @return string | array
@@ -654,7 +654,7 @@ if (!function_exists('formatBates')) {
 }
 if (!function_exists('getFirstChar')) {
     /**
-     * todo:获取中文首字母
+     * 获取中文首字母
      * @param string $s0
      * @return array | string
      */
@@ -746,7 +746,7 @@ if (!function_exists('getFirstChar')) {
 }
 if (!function_exists('getXingLists')) {
     /**
-     * todo:获取姓氏
+     * 获取姓氏
      * @return string[]
      */
     function getXingLists(): array
@@ -769,7 +769,7 @@ if (!function_exists('getXingLists')) {
 }
 if (!function_exists('getMingLists')) {
     /**
-     * todo:获取名字
+     * 获取名字
      * @return string[]
      */
     function getMingLists(): array

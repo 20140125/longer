@@ -24,7 +24,7 @@ class PushService extends BaseService
     }
 
     /**
-     * todo:获取推送列表
+     * 获取推送列表
      * @param $form
      * @param $user
      * @param array|int[] $pagination
@@ -55,7 +55,7 @@ class PushService extends BaseService
     }
 
     /**
-     * todo:站内推送
+     * 站内推送
      * @param $form
      * @return array
      */
@@ -83,14 +83,16 @@ class PushService extends BaseService
     }
 
     /**
-     * todo:更新站内通知
+     * 更新站内通知
      * @param $form
      * @return array
      */
     public function updatePush($form): array
     {
         $form['created_at'] = gettype($form['created_at']) === 'integer' ?  $form['created_at'] : strtotime($form['created_at']);
-        if ($form['see'] > 0) unset($form['disabled']);
+        if ($form['see'] > 0) {
+            unset($form['disabled']);
+        }
         $form = (intval($form['status']) == 1 && intval($form['see']) === 0) ? $this->webPushMessage($form) : $form;
         $result = $this->pushModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
@@ -104,7 +106,7 @@ class PushService extends BaseService
     }
 
     /**
-     * todo:删除站内通知
+     * 删除站内通知
      * @param $form
      * @return array
      */

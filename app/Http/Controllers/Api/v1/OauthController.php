@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class OauthController extends BaseController
 {
     /**
-     * todo:获取授权用户列表
+     * 获取授权用户列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -22,7 +22,7 @@ class OauthController extends BaseController
     }
 
     /**
-     * todo:邮箱账号绑定
+     * 邮箱账号绑定
      * @param Request $request
      * @return JsonResponse
      */

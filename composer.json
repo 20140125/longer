@@ -15,6 +15,7 @@
         "ext-pdo": "*",
         "ext-redis": "*",
         "ext-zip": "*",
+        "ext-openssl": "*",
         "baidu/aip-sdk": "^2.2",
         "fabpot/goutte": "^4.0",
         "fideloper/proxy": "^4.4",

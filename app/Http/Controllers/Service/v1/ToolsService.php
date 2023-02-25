@@ -23,7 +23,7 @@ class ToolsService extends BaseService
     }
 
     /**
-     * todo:获取定位
+     * 获取定位
      * @param $form
      * @return array
      */
@@ -43,7 +43,7 @@ class ToolsService extends BaseService
     }
 
     /**
-     * todo:获取天气
+     * 获取天气
      * @param $form
      * @return array
      */

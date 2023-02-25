@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ApiController extends BaseController
 {
     /**
-     * todo:获取接口详情
+     * 获取接口详情
      * @param Request $request
      * @return JsonResponse
      */
@@ -20,7 +20,7 @@ class ApiController extends BaseController
     }
 
     /**
-     * todo:添加接口
+     * 添加接口
      * @param Request $request
      * @return JsonResponse
      */
@@ -33,7 +33,7 @@ class ApiController extends BaseController
     }
 
     /**
-     * todo:更新接口
+     * 更新接口
      * @param Request $request
      * @return JsonResponse
      */
@@ -46,7 +46,7 @@ class ApiController extends BaseController
     }
 
     /**
-     * todo:设置验证规则
+     * 设置验证规则
      * @param $source
      * @param $action
      * @return string[]

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class SpiderController extends BaseController
 {
     /**
-     * todo:获取系统配置
+     * 获取系统配置
      * @param Request $request
      * @return JsonResponse
      */
@@ -21,7 +21,7 @@ class SpiderController extends BaseController
     }
 
     /**
-     * todo:执行脚本
+     * 执行脚本
      * @param Request $request
      * @return JsonResponse|void
      */
@@ -46,7 +46,7 @@ class SpiderController extends BaseController
     }
 
     /**
-     * todo:获取图片列表
+     * 获取图片列表
      * @param $_user
      * @return JsonResponse
      */
@@ -57,7 +57,7 @@ class SpiderController extends BaseController
     }
 
     /**
-     * todo:获取图片列表
+     * 获取图片列表
      * @param $_user
      * @return JsonResponse
      */
@@ -68,7 +68,7 @@ class SpiderController extends BaseController
     }
 
     /**
-     * todo:同步图片宽高
+     * 同步图片宽高
      * @param $_user
      * @return JsonResponse
      */
@@ -79,7 +79,7 @@ class SpiderController extends BaseController
     }
 
     /**
-     * todo:同步授权用户信息
+     * 同步授权用户信息
      * @param $_user
      * @return JsonResponse
      */
@@ -90,7 +90,7 @@ class SpiderController extends BaseController
     }
 
     /**
-     * todo:同步授权用户信息
+     * 同步授权用户信息
      * @param $_user
      * @return JsonResponse
      */
@@ -100,7 +100,7 @@ class SpiderController extends BaseController
         return ajaxReturn($result);
     }
     /**
-     * todo:同步授权用户信息
+     * 同步授权用户信息
      * @param $_user
      * @return JsonResponse
      */

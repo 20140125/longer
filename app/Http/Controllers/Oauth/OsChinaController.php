@@ -60,7 +60,7 @@ class OsChinaController extends OAuthController
     }
 
     /**
-     * TODO:：获取github授权页面
+     * 获取github授权页面
      * @param int $length
      * @param string $callback
      * @return string
@@ -77,7 +77,7 @@ class OsChinaController extends OAuthController
     }
 
     /**
-     * TODO:：获取access_token
+     * 获取access_token
      * @param string $code
      * @return array
      * @throws Exception
@@ -102,7 +102,7 @@ class OsChinaController extends OAuthController
     }
 
     /**
-     * TODO:：刷新AccessToken续期
+     * 刷新AccessToken续期
      * @param string $refreshToken
      * @return array
      * @throws Exception

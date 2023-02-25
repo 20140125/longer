@@ -15,7 +15,7 @@ class BaseService extends Controller
 {
     private function __clone()
     {
-        // TODO: Implement __clone() method.
+        // Implement __clone() method.
     }
 
     /**
@@ -43,7 +43,7 @@ class BaseService extends Controller
      */
     protected SooGifType $sooGifTypeModel;
     /**
-     * @var $systemConfig
+     * @var string $systemConfig
      */
     protected string $systemConfig;
     /**
@@ -63,14 +63,14 @@ class BaseService extends Controller
         $this->systemConfigModel = SystemConfig::getInstance();
         $this->sooGifModel = SooGif::getInstance();
         $this->sooGifTypeModel = SooGifType::getInstance();
-        /* todo:信息输出 */
+        /* 信息输出 */
         $this->return = array('code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => []);
-        /* todo：获取小程序配置 */
+        /* 获取小程序配置 */
         $this->getSystemConfiguration();
     }
 
     /**
-     * todo:获取系统配置
+     * 获取系统配置
      * @param string $name
      * @return mixed
      */
@@ -81,7 +81,7 @@ class BaseService extends Controller
     }
 
     /**
-     * todo:获取配置
+     * 获取配置
      * @param $key
      * @return string
      */
@@ -98,7 +98,7 @@ class BaseService extends Controller
     }
 
     /**
-     * todo:获取配置
+     * 获取配置
      * @param string $keyWords
      * @return string[]
      */
