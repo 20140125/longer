@@ -23,8 +23,6 @@ use App\Http\Controllers\Service\v1\UserCenterService;
 use App\Http\Controllers\Service\v1\UserService;
 use App\Http\Controllers\Service\v1\TimeLineService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-
 /**
  * @class BaseController
  * @author <fl140125@gmail.com>

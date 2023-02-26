@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
 
 class OauthService extends BaseService
 {
@@ -39,7 +35,7 @@ class OauthService extends BaseService
     public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $form = [], array $order = ['order' => 'updated_at', 'direction' => 'desc'], bool $getAll = false, array $column = ['*']): array
     {
         $this->return['lists'] = $this->oauthModel->getLists($user, $pagination, $form, $order, $getAll, $column);
-        foreach ($this->return['lists']['data'] as &$item) {
+        foreach ($this->return['lists']['data'] as $item) {
             $item->created_at = date('Y-m-d H:i:s', $item->created_at);
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
         }

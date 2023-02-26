@@ -15,7 +15,7 @@ class FileController extends BaseController
     public function getFileLists(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['path' => 'required|string', 'basename' => 'required|string']);
-        $permission = $this->fileService->getConfiguration('DefaultPermissionFile', 'CommonPermission');
+        $permission = $this->fileService->getConfiguration('DefaultPermissionFile');
         $result = $this->fileService->getFileLists($this->post, $permission);
         return ajaxReturn($result);
     }

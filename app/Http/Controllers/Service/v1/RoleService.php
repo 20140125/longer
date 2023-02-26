@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;
 
 class RoleService extends BaseService
@@ -40,7 +38,7 @@ class RoleService extends BaseService
             $where[] = ['id', $user->role_id];
         }
         $this->return['lists'] = $this->roleModel->getLists($where, $pagination, $order, false, $columns);
-        foreach ($this->return['lists']['data'] as &$item) {
+        foreach ($this->return['lists']['data'] as $item) {
             $item->created_at = date("Y-m-d H:i:s", $item->created_at);
             $item->updated_at = date("Y-m-d H:i:s", $item->updated_at);
         }

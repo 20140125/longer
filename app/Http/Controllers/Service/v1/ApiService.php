@@ -39,14 +39,14 @@ class ApiService extends BaseService
     {
         $this->return['lists'] = $this->apiListsModel->getOne(['api_id' => $form['id']]);
         if (!$this->return['lists']) {
-            $this->return['lists'] = (object)array();
+            $this->return['lists'] = json_encode(array('apiLog' => [], 'source' => 'json'));
             return $this->return;
         }
         foreach ($this->json_str as $item) {
             $this->return['lists']->$item = json_decode($this->return['lists']->$item, true);
         }
         $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->api_id, 'source' => 2], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
-        foreach ($apiLog as &$item) {
+        foreach ($apiLog as $item) {
             $item->json = json_decode($item->json, true);
             foreach ($this->json_str as $str) {
                 $item->json[$str] = json_decode($item->json[$str], true);
@@ -67,11 +67,11 @@ class ApiService extends BaseService
     {
         $this->return['lists'] = $this->apiDocModel->getOne(['api_id' => $form['id']]);
         if (!$this->return['lists']) {
-            $this->return['lists'] = (object)array();
+            $this->return['lists'] = json_encode(array('apiLog' => [], 'source' => 'markdown'));
             return $this->return;
         }
         $apiLog = $this->apiLogModel->getLists(['api_id' => $this->return['lists']->api_id, 'source' => 1], ['order' => 'id', 'direction' => 'desc'], ['username', 'updated_at', 'json', 'desc', 'source']);
-        foreach ($apiLog as &$item) {
+        foreach ($apiLog as $item) {
             $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
         }
         $this->return['lists']->apiLog = $apiLog;
@@ -90,9 +90,7 @@ class ApiService extends BaseService
         if (!empty($form['source'])) {
             unset($form['source']);
         }
-        if (count($form['apiLog']) >= 0) {
-            unset($form['apiLog']);
-        }
+        unset($form['apiLog']);
         foreach ($this->json_str as $item) {
             $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
         }
@@ -120,9 +118,7 @@ class ApiService extends BaseService
         if (!empty($form['source'])) {
             unset($form['source']);
         }
-        if (count($form['apiLog']) >= 0) {
-            unset($form['apiLog']);
-        }
+        unset($form['apiLog']);
         foreach ($this->json_str as $item) {
             $form[$item] = json_encode($form[$item], JSON_UNESCAPED_UNICODE);
         }
@@ -150,9 +146,7 @@ class ApiService extends BaseService
         if (!empty($form['source'])) {
             unset($form['source']);
         }
-        if (count($form['apiLog']) >= 0) {
-            unset($form['apiLog']);
-        }
+        unset($form['apiLog']);
         $result = $this->apiDocModel->saveOne($form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;
@@ -177,9 +171,7 @@ class ApiService extends BaseService
         if (!empty($form['source'])) {
             unset($form['source']);
         }
-        if (count($form['apiLog']) >= 0) {
-            unset($form['apiLog']);
-        }
+        unset($form['apiLog']);
         $result = $this->apiDocModel->updateOne(['id' => $form['id']], $form);
         if (!$result) {
             $this->return['code'] = Code::ERROR;

@@ -199,7 +199,7 @@ class BaseService
     {
         $cityCode = Cache::get('cityCode');
         if (empty($cityCode)) {
-            $cityCode = $this->getConfiguration('CityCode', 'CommonPermission');
+            $cityCode = $this->getConfiguration('CityCode');
             Cache::put('cityCode', $cityCode, Carbon::now()->addDays());
         }
         $adCode = request()->ip() === '127.0.0.1' ? $cityCode[0] : getCityCode();
@@ -243,7 +243,7 @@ class BaseService
         /* 获取默认的权限 */
         $_defaultAuth = Cache::get('_default_permission');
         if (empty($_defaultAuth)) {
-            $attr = ['key' => 'pid', 'ids' => $this->getConfiguration('PID', 'CommonPermission')];
+            $attr = ['key' => 'pid', 'ids' => $this->getConfiguration('PID')];
             $_defaultAuth = $this->authModel->getLists([], ['id'], $attr);
             Cache::put('_default_permission', $_defaultAuth, Carbon::now()->addHours(2));
         }

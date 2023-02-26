@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 
 class AuthService extends BaseService
 {
@@ -99,7 +97,7 @@ class AuthService extends BaseService
      */
     public function updateAuth($form): array
     {
-        if (!empty($form['children']) && count($form['children']) >= 0) {
+        if (!empty($form['children'])) {
             unset($form['children']);
         }
         /* 修改权限状态 */

@@ -2,12 +2,6 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
-
 class EmotionService extends BaseService
 {
     /**

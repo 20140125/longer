@@ -38,9 +38,9 @@ class FileService extends BaseService
     /**
      * 获取文件内容
      * @param $form
-     * @return array|string
+     * @return array
      */
-    public function readFile($form)
+    public function readFile($form): array
     {
         if (!file_exists($form['path'])) {
             $this->return['code'] = Code::ERROR;
@@ -58,9 +58,9 @@ class FileService extends BaseService
     /**
      * 写入文件内容
      * @param $form
-     * @return array|int
+     * @return array
      */
-    public function updateFile($form)
+    public function updateFile($form): array
     {
         if (!file_exists($form['path'])) {
             $this->return['code'] = Code::ERROR;
@@ -75,9 +75,9 @@ class FileService extends BaseService
     /**
      * 文件打包
      * @param $form
-     * @return array|bool
+     * @return array
      */
-    public function gZipFile($form)
+    public function gZipFile($form): array
     {
         if (!file_exists($form['path'])) {
             $this->return['code'] = Code::ERROR;
@@ -91,15 +91,15 @@ class FileService extends BaseService
     /**
      * 文件解压
      * @param $form
-     * @return array|bool
+     * @return array
      */
-    public function unGZipFile($form)
+    public function unGZipFile($form): array
     {
         if (!file_exists($form['path'])) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'File does not exist';
         }
-        $result = unGZipFile($form['path'], $form['resource'], false);
+        $result = unGZipFile($form['path'], $form['resource']);
         !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
         return $this->return;
     }
@@ -107,9 +107,9 @@ class FileService extends BaseService
     /**
      * 文件删除
      * @param $form
-     * @return array|bool
+     * @return array
      */
-    public function removeFile($form)
+    public function removeFile($form): array
     {
         if (!file_exists($form['path'])) {
             $this->return['code'] = Code::ERROR;
@@ -124,9 +124,9 @@ class FileService extends BaseService
     /**
      * 文件添加
      * @param $form
-     * @return array|bool
+     * @return array
      */
-    public function createFile($form)
+    public function createFile($form): array
     {
         $result = createFile($form['path']);
         !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
@@ -138,7 +138,7 @@ class FileService extends BaseService
      * @param $form
      * @return array
      */
-    public function setFileAuth($form)
+    public function setFileAuth($form): array
     {
         if (!file_exists($form['path'])) {
             $this->return['code'] = Code::ERROR;
@@ -153,9 +153,9 @@ class FileService extends BaseService
     /**
      * 文件重命名
      * @param $form
-     * @return array|bool
+     * @return array
      */
-    public function renameFile($form)
+    public function renameFile($form): array
     {
         $result = renameFile($form['oldFile'], $form['newFile']);
         !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;

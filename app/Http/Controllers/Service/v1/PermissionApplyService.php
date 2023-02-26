@@ -106,7 +106,7 @@ class PermissionApplyService extends BaseService
      */
     public function updatePermissionApply($form, $user): array
     {
-        $permissionExpires = $this->getConfiguration('PermissionExpires', 'CommonPermission');
+        $permissionExpires = $this->getConfiguration('PermissionExpires');
         $form = ['id' => $form['id'], 'expires' => strtotime("+ $permissionExpires[0] days"), 'updated_at' => time(), 'status' => $form['status']];
         DB::beginTransaction();
         try {

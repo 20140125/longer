@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 
 class LogService extends BaseService
 {
@@ -42,17 +40,6 @@ class LogService extends BaseService
     }
 
     /**
-     * 保存日志
-     * @param $form
-     * @return array
-     */
-    public function saveLog($form): array
-    {
-        $this->return['lists'] = $this->logModel->saveOne($form);
-        return $this->return;
-    }
-
-    /**
      * 獲取日志列表
      * @param $user
      * @param $pagination
@@ -65,7 +52,7 @@ class LogService extends BaseService
             $where[] = ['username', $user->username];
         }
         $this->return['lists'] = $this->logModel->getLists($where, $pagination, false, ['order' => 'id', 'direction' => 'desc'], ['id', 'username', 'url', 'ip_address', 'created_at', 'day', 'local', 'log']);
-        foreach ($this->return['lists']['data'] as &$item) {
+        foreach ($this->return['lists']['data'] as $item) {
             $item->created_at = date("Y-m-d H:i:s", $item->created_at);
             $item->log = json_decode($item->log, true);
         }

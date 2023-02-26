@@ -114,7 +114,7 @@ class DatabaseService extends BaseService
         foreach ($result as $item) {
             $sql .= sprintf('INSERT INTO %s VALUES %s', $tableName, '(');
             foreach ($item as $rows) {
-                $sql .= "'{$rows}',";
+                $sql .= "'$rows',";
             }
             $sql .= ');';
             //删除最后三个字符串

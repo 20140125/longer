@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Service\v1;
 use App\Http\Controllers\Utils\AMap;
 use App\Http\Controllers\Utils\Code;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 
 class AreaService extends BaseService
@@ -47,7 +46,7 @@ class AreaService extends BaseService
             return $this->return;
         }
         $this->return['lists'] = $this->areaModel->getAreaLists(['parent_id' => $form['parent_id']], $columns);
-        foreach ($this->return['lists'] as &$item) {
+        foreach ($this->return['lists'] as $item) {
             $item->hasChildren = false;
             $item->info = json_decode($item->info, true);
             $item->forecast = json_decode($item->forecast, true);
@@ -92,7 +91,7 @@ class AreaService extends BaseService
             $this->redisClient->setValue($form['code'], ['info' => $form['info'], 'forecast' => $form['forecast']], ['EX' => 3600]);
             $this->return['lists'] = $form;
             return $this->return;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return ['code' => Code::ERROR, 'message' => $exception->getMessage()];
         }
     }

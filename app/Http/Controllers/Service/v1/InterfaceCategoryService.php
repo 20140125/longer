@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Service\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Utils\Code;
-use Illuminate\Http\Request;
 
 class InterfaceCategoryService extends BaseService
 {

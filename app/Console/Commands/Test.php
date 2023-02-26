@@ -2,11 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Service\MiniProgram\ImageService;
-use App\Http\Controllers\Utils\RedisClient;
-use App\Models\Api\v1\Oauth;
-use App\Models\Api\v1\UserCenter;
-use App\Models\Api\v1\Users;
+use App\Models\Api\v1\Role;
 use Illuminate\Console\Command;
 
 class Test extends Command
@@ -40,8 +36,11 @@ class Test extends Command
      */
     public function handle()
     {
-        $value = RedisClient::getInstance()->getValue('emotion_type_3');
-        $list = mb_substr($value, 0, strripos($value, '"') + 4);
-        $this->info($list);
+        $roleLists = Role::getInstance()->getLists([]);
+        foreach ($roleLists['data'] as $item) {
+            $item->created_at = date("Y-m-d H:i:s", $item->created_at);
+            $item->updated_at = date("Y-m-d H:i:s", $item->updated_at);
+        }
+        $this->info(json_encode($roleLists, JSON_UNESCAPED_UNICODE));
     }
 }
