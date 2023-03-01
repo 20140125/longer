@@ -7,7 +7,7 @@ use Illuminate\Support\ServiceProvider;
 class HelperServiceProvider extends ServiceProvider
 {
     /**
-     * todo: Register services.
+     * Register services.
      */
     public function register()
     {
