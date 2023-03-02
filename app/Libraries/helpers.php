@@ -143,9 +143,9 @@ if (!function_exists('getRoundNum')) {
 if (!function_exists('getServerIp')) {
     /**
      * 获取服务器ip地址
-     * @return array|false|string
+     * @return string
      */
-    function getServerIp()
+    function getServerIp(): string
     {
         $preg = "/\A((([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\.){3}(([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\Z/";
         //获取windows Mac
