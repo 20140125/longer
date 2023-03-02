@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Service\v1;
 
 use App\Http\Controllers\Utils\Code;
 use App\Mail\Login;
-use Illuminate\Support\Facades\Log;
+use Exception;
 use Illuminate\Support\Facades\Mail;
 
 class SendEMailService extends BaseService
@@ -56,7 +56,7 @@ class SendEMailService extends BaseService
                 return $this->return;
             }
             return array('code' => Code::ERROR, 'message' => Mail::failures());
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return array('code' => Code::ERROR, 'message' => $exception->getMessage());
         }
     }
