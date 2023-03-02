@@ -28,7 +28,7 @@ class LoginController extends BaseController
         }
         validatePost($request->get('item'), $this->post, $rules);
         /* 校验Redis内验证码是否存在 */
-        $verifyCode = $this->sendEMailService->getVerifyCode($this->post['loginType'] === 'password' ? $this->post['verify_code'] : $this->post['email'], $this->post['verify_code']);
+        $verifyCode = $this->sendEMailService->getVerifyCode($this->post['email'], $this->post['verify_code']);
         if ($verifyCode['code'] === Code::VERIFY_CODE_ERROR) {
             return ajaxReturn($verifyCode);
         }
@@ -56,7 +56,7 @@ class LoginController extends BaseController
     public function reportCode(Request $request): JsonResponse
     {
         validatePost($request->get('item'), $this->post, ['verify_code' => 'required']);
-        return ajaxReturn($this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']));
+        return ajaxReturn($this->userService->setVerifyCode($this->post['email'], $this->post['verify_code']));
     }
 
     /**
