@@ -50,6 +50,8 @@ class SendEMailService extends BaseService
                     $this->return['message'] = 'Failed send mail';
                     return $this->return;
                 }
+                // 邮箱验证码
+                $form['verify_code'] = '';
                 $this->return['lists'] = $form;
                 return $this->return;
             }
