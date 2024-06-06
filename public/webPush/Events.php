@@ -43,7 +43,7 @@ class Events
      * @return bool
      * @throws Exception|boolean
      */
-    public static function onMessage($from_client_id, $message)
+    public static function onMessage($from_client_id, $message): bool
     {
         /* 客户端传递的是json数据 */
         $message_data = json_decode($message, true);

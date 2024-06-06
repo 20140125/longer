@@ -262,7 +262,7 @@ if (!function_exists('getFileLists')) {
                         'file_type' => filetype($filePath . $file),
                         'children'  => [],
                         'path'      => filetype($filePath . $file) == 'dir' ? $filePath . $file . '/' : $filePath . $file,
-                        'name'       => md5($filePath . $file),
+                        'name'      => md5($filePath . $file),
                         'auth'      => chmodFile($filePath . $file),
                         'time'      => date('Y-m-d H:i:s', fileatime($filePath . $file)),
                         'size'      => formatBates(filesize($filePath . $file))

@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Routing\Redirector;
 
 /**
- * ：第三方授权
+ * 第三方授权
  * Class OauthLoginController
  * @author <fl140125@gmail.com>
  * @package App\Http\Controllers\Api\v1

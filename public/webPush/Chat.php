@@ -17,6 +17,7 @@ class Chat
 
     /**
      * Chat constructor.
+     * @throws RedisException
      */
     public function __construct()
     {
