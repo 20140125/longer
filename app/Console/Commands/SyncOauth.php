@@ -79,10 +79,10 @@ class SyncOauth extends Command
             }
             $users = Users::getInstance()->getOne(['id' => $oauth->uid]);
             if ($users) {
-                /* todo：更新用户信息 */
+                /* 更新用户信息 */
                 Users::getInstance()->updateOne(['id' => $oauth->uid], ['remember_token' => $this->argument('remember_token')]);
                 WebPush('Successfully updated users： ' . $users->username, $this->argument('uuid'), 'command');
-                /* todo：更新用户个人中心 */
+                /* 更新用户个人中心 */
                 $userCenter = UserCenter::getInstance()->getOne(['uid' => $oauth->uid]);
                 if ($userCenter) {
                     UserCenter::getInstance()->updateOne(['id' => $userCenter->id], ['token' => $this->argument('remember_token'), 'u_name' => $oauth->username]);

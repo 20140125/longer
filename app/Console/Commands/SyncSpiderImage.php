@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Api\v1\SooGif;
-use App\Models\Api\v1\SooGifType;
 use Goutte\Client;
 use Illuminate\Console\Command;
 
@@ -14,7 +12,7 @@ class SyncSpiderImage extends Command
      *
      * @var string
      */
-    protected $signature = 'longer:sync-spider_image_id {id=1} {uuid=longer7f00000108fc00000001}';
+    protected $signature = 'longer:sync-spider_image {uuid=longer7f00000108fc00000001}';
 
     /**
      * The console command description.
@@ -26,6 +24,14 @@ class SyncSpiderImage extends Command
      * @var string $baseUrl
      */
     protected $baseUrl;
+    /**
+     * @var array $data
+     */
+    protected $data;
+    /**
+     * @var string[] $dirName
+     */
+    protected $dirName;
 
     /**
      * Create a new command instance.
@@ -36,6 +42,8 @@ class SyncSpiderImage extends Command
     {
         parent::__construct();
         $this->baseUrl = 'https://www.fabiaoqing.com';
+        $this->data = [];
+        $this->dirName = ['emoji', 'liaomei', 'qunliao', 'doutu', 'duiren', 'hot'];
     }
 
     /**
@@ -45,48 +53,57 @@ class SyncSpiderImage extends Command
      */
     public function handle()
     {
-        $startId = $this->argument('id');
-        $this->spiderImage($startId);
+        $this->spiderImage();
     }
 
     /**
      * 爬取图片
-     * @param $startId
      */
-    protected function spiderImage($startId)
+    protected function spiderImage()
     {
-        global $currentId;
         try {
-            $result = SooGifType::getInstance()->getLists([['id', '>=', $startId]]);
-            $bar = $this->output->createProgressBar(count($result));
             $client = new Client();
-            foreach ($result as $item) {
-                $currentId = $item->id;
-                $this->info('current spider image url：' . $item->href);
-                WebPush('current spider image url：' . $item->href, $this->argument('uuid'), 'command');
-                $promise = $client->request('GET', $item->href);
-                sleep(1);
-                $promise->filter('.bqpp .bqppdiv1')->each(function ($node) use ($client) {
-                    if (SooGif::getInstance()->getOne(['href' => str_replace('http', 'https', $node->filter('img')->attr('data-original'))])) {
-                        $this->warn('image already exists: ' . str_replace('http', 'https', $node->filter('img')->attr('data-original')));
-                        WebPush('image already exists: ' . str_replace('http', 'https', $node->filter('img')->attr('data-original')), $this->argument('uuid'), 'command');
-                    } else {
-                        SooGif::getInstance()->saveOne([
-                            'href' => str_replace('http', 'https', $node->filter('img')->attr('data-original')),
-                            'name' => mb_substr($node->text(), 0, 50)
-                        ]);
-                        $this->info('successfully save image： ' . $node->filter('img')->attr('data-original'));
-                        WebPush('successfully save image： ' . $node->filter('img')->attr('data-original'), $this->argument('uuid'), 'command');
-                    }
-                });
-                $this->info('successfully spider image url： ' . $item->href);
-                WebPush('successfully spider image url： ' . $item->href, $this->argument('uuid'), 'command');
-                $bar->advance();
+            foreach ($this->dirName as $dir) {
+                $filePath = public_path("json/$dir/image.json");
+                $this->info("current spider dir：$filePath");
+                $result = json_decode(getFileContent($filePath));
+                if (!$result) continue;
+                $bar = $this->output->createProgressBar(count($result));
+                foreach ($result as $item) {
+                    $this->info("current spider image url： $item->href");
+                    $promise = $client->request('GET', $item->href);
+                    sleep(1);
+                    $promise->filter('.bqpp .bqppdiv1')->each(function ($node) use ($client) {
+                        $fileInfo = getimagesize($node->filter('img')->attr('data-original'));
+                        $content = [
+                            'href' => $node->filter('img')->attr('data-original'),
+                            'name' => $node->text(),
+                            'width' => $fileInfo[0] || 100,
+                            'height' => $fileInfo[1] || 100
+                        ];
+                        $this->data[] = $content;
+                        $this->info(json_encode($content));
+                    });
+                    $this->info("successfully spider image url： $item->href");
+                    $bar->advance();
+                }
+                $this->info("successfully spider dir：$filePath");
+                // 1.打开文件 不存在则创建
+                $fileName = public_path("json/$dir");
+                if (!file_exists($fileName)) {
+                    mkdir($fileName, 0777, true);
+                }
+                // 2.写入内容之前删除已有的文件
+                $imageUrlPath = $fileName.DIRECTORY_SEPARATOR.'image-url.json';
+                if (file_exists($imageUrlPath)) {
+                    removeFiles($imageUrlPath);
+                }
+                // 3.写入内容
+                writeFile($imageUrlPath, json_encode($this->data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+                $bar->finish();
             }
-            $bar->finish();
         } catch (\Exception $exception) {
-            $this->error($exception->getMessage() . ' currentId：' . $currentId);
-            $this->spiderImage($currentId);
+            $this->error($exception->getMessage());
         }
     }
 }

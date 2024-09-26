@@ -36,7 +36,7 @@ class FileService extends BaseService
     }
 
     /**
-     * todo：获取文件内容
+     * 获取文件内容
      * @param $form
      * @return array|string
      */
@@ -68,7 +68,7 @@ class FileService extends BaseService
         }
         $result = writeFile($form['path'], $form['content']);
         !empty($result['code']) ? $this->return = $result : $this->return['lists'] = $form;
-        $this->return['message'] = !empty($result['code']) ? $this->return['message'] = $result['message'] : 'update file successfully';
+        $this->return['message'] = !empty($result['code']) ?  $result['message'] : 'update file successfully';
         return $this->return;
     }
 
@@ -198,13 +198,13 @@ class FileService extends BaseService
             }
         }
         $imgExt[] = 'mp4';
-        /* todo：只允许上传图片和视频（根据个人情况修改） */
+        /* 只允许上传图片和视频（根据个人情况修改） */
         if (!in_array(strtolower($ext), $imgExt)) {
             $this->return['code'] = Code::ERROR;
             $this->return['message'] = 'Unsupported file format';
             return $this->return;
         }
-        /* todo：文件名称随机 */
+        /* 文件名称随机 */
         if (in_array(strtolower($ext), $imgExt) && !empty($form['round_name'])) {
             $filename = date('Ymd') . '/' . time() . '.' . $ext;
             Storage::disk('public')->put($filename, file_get_contents($path));
@@ -213,7 +213,7 @@ class FileService extends BaseService
             $this->return['lists'] = array('src' => config('app.url') . 'storage/' . $filename, 'file_type' => $form['file_type'] ?? '');
             return $this->return;
         }
-        /* todo：覆盖上传文件名称 */
+        /* 覆盖上传文件名称 */
         $imgExt[] = 'php';
         if (in_array(strtolower($ext), $imgExt) && empty($form['round_name'])) {
             /* 获取文件名 */

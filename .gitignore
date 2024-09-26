@@ -1,5 +1,5 @@
 /node_modules
-/public/hot
+/public/json
 /public/storage
 /public/rsa/rsa_public_key.pem
 /public/rsa/rsa_private_key.pem
