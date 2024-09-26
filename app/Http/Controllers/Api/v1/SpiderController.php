@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class SpiderController extends BaseController
 {
     /**
-     * todo:获取系统配置
+     * 获取系统配置
      * @return JsonResponse
      */
     public function getSpiderConfig()
@@ -19,92 +19,92 @@ class SpiderController extends BaseController
     }
 
     /**
-     * todo:执行脚本
+     * 执行脚本
      * @param Request $request
      * @return JsonResponse|void
      */
     public function runningSpider(Request $request)
     {
         validatePost($this->post, ['keywords' => 'required|string', 'method' => 'required|string']);
-        $_user = $request->get('unauthorized');
+        $user = $request->get('unauthorized');
         switch ($this->post['method']) {
             case 'syncImageType':
-                return $this->syncImageType($_user);
+                return $this->syncImageType($user);
             case 'syncImageLists':
-                return $this->syncImageLists($_user);
+                return $this->syncImageLists($user);
             case 'syncImageSize':
-                return $this->syncImageSize($_user);
+                return $this->syncImageSize($user);
             case 'syncOauth':
-                return $this->syncOauth($_user);
+                return $this->syncOauth($user);
             case 'syncImageListsForTags':
-                return $this->syncImageListsForTags($_user);
+                return $this->syncImageListsForTags($user);
             case 'syncSpiderImageSoogif':
-                return $this->syncSpiderImageSoogif($_user);
+                return $this->syncSpiderImageSoogif($user);
         }
     }
 
     /**
-     * todo:获取图片列表
-     * @param $_user
+     * 获取图片列表
+     * @param $user
      * @return JsonResponse
      */
-    protected function syncImageType($_user)
+    protected function syncImageType($user)
     {
-        $result = $this->spiderService->syncImageType(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
+        $result = $this->spiderService->syncImageType(['keywords' => $this->post['keywords'], 'uuid' => $user->uuid]);
         return ajaxReturn($result);
     }
 
     /**
-     * todo:获取图片列表
-     * @param $_user
+     * 获取图片列表
+     * @param $user
      * @return JsonResponse
      */
-    protected function syncImageLists($_user)
+    protected function syncImageLists($user)
     {
-        $result = $this->spiderService->syncImageLists(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
+        $result = $this->spiderService->syncImageLists(['keywords' => $this->post['keywords'], 'uuid' => $user->uuid]);
         return ajaxReturn($result);
     }
 
     /**
-     * todo:同步图片宽高
-     * @param $_user
+     * 同步图片宽高
+     * @param $user
      * @return JsonResponse
      */
-    protected function syncImageSize($_user)
+    protected function syncImageSize($user)
     {
-        $result = $this->spiderService->syncImageSize(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
+        $result = $this->spiderService->syncImageSize(['keywords' => $this->post['keywords'], 'uuid' => $user->uuid]);
         return ajaxReturn($result);
     }
 
     /**
-     * todo:同步授权用户信息
-     * @param $_user
+     * 同步授权用户信息
+     * @param $user
      * @return JsonResponse
      */
-    protected function syncOauth($_user)
+    protected function syncOauth($user)
     {
-        $result = $this->spiderService->syncOauth(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
+        $result = $this->spiderService->syncOauth(['keywords' => $this->post['keywords'], 'uuid' => $user->uuid]);
         return ajaxReturn($result);
     }
 
     /**
-     * todo:同步授权用户信息
-     * @param $_user
+     * 同步授权用户信息
+     * @param $user
      * @return JsonResponse
      */
-    protected function syncImageListsForTags($_user)
+    protected function syncImageListsForTags($user)
     {
-        $result = $this->spiderService->syncImageListsForTags(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
+        $result = $this->spiderService->syncImageListsForTags(['keywords' => $this->post['keywords'], 'uuid' => $user->uuid]);
         return ajaxReturn($result);
     }
     /**
-     * todo:同步授权用户信息
-     * @param $_user
+     * 同步授权用户信息
+     * @param $user
      * @return JsonResponse
      */
-    protected function syncSpiderImageSoogif($_user)
+    protected function syncSpiderImageSoogif($user)
     {
-        $result = $this->spiderService->syncSpiderImageSoogif(['keywords' => $this->post['keywords'], 'uuid' => $_user->uuid]);
+        $result = $this->spiderService->syncSpiderImageSoogif(['keywords' => $this->post['keywords'], 'uuid' => $user->uuid]);
         return ajaxReturn($result);
     }
 }

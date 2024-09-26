@@ -33,7 +33,7 @@ class UserService extends BaseService
     }
 
     /**
-     * todo:获取用户列表
+     * 获取用户列表
      * @param $user
      * @param array|int[] $pagination
      * @param array|string[] $order
@@ -54,7 +54,7 @@ class UserService extends BaseService
     }
 
     /**
-     * todo:用户登录
+     * 用户登录
      * @param $form
      * @return array
      */
@@ -98,7 +98,7 @@ class UserService extends BaseService
     }
 
     /**
-     * todo:邮箱登录
+     * 邮箱登录
      * @return array
      */
     protected function mailLogin($form, $user)
@@ -107,7 +107,7 @@ class UserService extends BaseService
     }
 
     /**
-     * todo:更新用户信息
+     * 更新用户信息
      * @param $form
      * @param $user
      * @param $message
@@ -139,7 +139,7 @@ class UserService extends BaseService
     }
 
     /**
-     * todo:用户注册
+     * 用户注册
      * @param $form
      * @param $message
      * @return array
@@ -174,7 +174,7 @@ class UserService extends BaseService
     }
 
     /**
-     * todo:获取用户画像
+     * 获取用户画像
      * @return int
      */
     private function getUserAvatarImage()
@@ -190,7 +190,7 @@ class UserService extends BaseService
     }
 
     /**
-     * TODO:更新用户画像
+     * 更新用户画像
      * @return int
      */
     public function updateUsersAvatarImage()
@@ -208,7 +208,7 @@ class UserService extends BaseService
     }
 
     /**
-     * todo:获取推送用户列表
+     * 获取推送用户列表
      * @return array
      */
     public function getCacheUserList()
@@ -223,7 +223,7 @@ class UserService extends BaseService
     }
 
     /**
-     * todo:获取用户
+     * 获取用户
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null

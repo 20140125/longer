@@ -27,7 +27,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * todo:基础服务
+ * 基础服务
  * Class BaseService
  * @package App\Http\Controllers\Service\v1
  */
@@ -35,7 +35,7 @@ class BaseService
 {
     private function __clone()
     {
-        // TODO: Implement __clone() method.
+        //  Implement __clone() method.
     }
 
     /**
@@ -158,12 +158,12 @@ class BaseService
         $this->aMapUtils = AMap::getInstance();
         $this->emotionModel = Emotion::getInstance();
 
-        /* todo:信息输出 */
+        /* 信息输出 */
         $this->return = array('code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => []);
     }
 
     /**
-     * todo:设置验证码
+     * 设置验证码
      * @param $key
      * @param $value
      * @param int $timeout
@@ -183,7 +183,7 @@ class BaseService
     }
 
     /**
-     * todo:获取验证码
+     * 获取验证码
      * @param $key
      * @param $value
      * @return array
@@ -202,7 +202,7 @@ class BaseService
     }
 
     /**
-     * todo:设置权限信息
+     * 设置权限信息
      * @param $_user
      * @param $_role
      * @return array
@@ -241,13 +241,13 @@ class BaseService
     }
 
     /**
-     * todo:设置默认的权限
+     * 设置默认的权限
      * @param array $authIds
      * @return array
      */
     protected function getDefaultAuth(array $authIds = [])
     {
-        /* todo：获取默认的权限 */
+        /* 获取默认的权限 */
         $_defaultAuth = Cache::get('_default_permission');
         if (empty($_defaultAuth)) {
             $commonPermissions = $this->systemConfigModel->getOne(['name' => 'CommonPermission'], ['children']);
@@ -273,18 +273,18 @@ class BaseService
     }
 
     /**
-     * todo:获取用户权限
+     * 获取用户权限
      * @param $userId
      * @return array
      */
     public function getUserAuth($userId)
     {
-        /* todo:获取用户信息 */
+        /* 获取用户信息 */
         $_user = $this->userModel->getOne(['id' => $userId], ['role_id']);
-        /* todo:获取角色信息 */
+        /* 获取角色信息 */
         $_role = $this->roleModel->getOne(['id' => $_user->role_id], ['auth_api']);
         $_userAuth = json_decode($_role->auth_api, true);
-        /* todo:获取所有权限 */
+        /* 获取所有权限 */
         $_authLists = $this->authModel->getLists([], ['api', 'name', 'level'], ['key' => 'id', 'ids' => array()], ['order' => 'path', 'direction' => 'asc']);
         foreach ($_authLists as &$item) {
             $item->disable = false;
@@ -297,33 +297,33 @@ class BaseService
     }
 
     /**
-     * todo:获取角色权限
+     * 获取角色权限
      * @param $requestAuthID
      * @param int $status
      * @return array
      */
     protected function getRoleAuth($requestAuthID, int $status)
     {
-        /* todo:獲取当前记录的信息 */
+        /* 獲取当前记录的信息 */
         $_requestAuth = $this->permissionApplyModel->getOne(['id' => $requestAuthID], ['user_id', 'href']);
-        /* todo:获取当前用户权限 */
+        /* 获取当前用户权限 */
         $_user = $this->userModel->getOne(['id' => $_requestAuth->user_id], ['role_id', 'id', 'username']);
-        /* todo；获取用户的角色信息 */
+        /* 获取用户的角色信息 */
         $_role_authIds = json_decode($this->roleModel->getOne(['id' => $_user->role_id], ['auth_ids'])->auth_ids, true);
-        /* todo:根据地址获取权限信息 */
+        /* 根据地址获取权限信息 */
         $_auth = $this->authModel->getOne(['api' => $_requestAuth->href], ['id']);
-        /* todo:更新角色信息 */
+        /* 更新角色信息 */
         $_authIds = [];
-        /* todo:权限续期 */
+        /* 权限续期 */
         if ($status == 1) {
-            array_push($_role_authIds, $_auth->id);
+            $_role_authIds[] = $_auth->id;
             foreach ($_role_authIds as $item) {
                 if (!in_array($_auth->id, $_authIds)) {
                     $_authIds[] = (int)$item;
                 }
             }
         }
-        /* todo:权限收回 */
+        /* 权限收回 */
         if ($status == 2) {
             foreach ($_role_authIds as $item) {
                 if ($item != $_auth->id) {
@@ -344,7 +344,7 @@ class BaseService
     }
 
     /**
-     * TODO：推送站内信息处理
+     * 推送站内信息处理
      * @param $form
      * @return array
      */
@@ -352,13 +352,13 @@ class BaseService
     {
         try {
             $form['state'] = Code::WEBSOCKET_STATE[2];
-            /* todo:推送给所有人 */
+            /* 推送给所有人 */
             if ($form['uuid'] == config('app.client_id')) {
                 if (webPush($form['info'])) {
                     $form['state'] = Code::WEBSOCKET_STATE[0];
                 }
             }
-            /* todo: 推送给个人 */
+            /*  推送给个人 */
             if ($this->redisClient->sIsMember(config('app.redis_user_key'), $form['uuid'])) {
                 $form['state'] = webPush($form['info'], $form['uuid']) ? Code::WEBSOCKET_STATE[0] : Code::WEBSOCKET_STATE[1];
             }

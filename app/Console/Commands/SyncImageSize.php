@@ -45,7 +45,7 @@ class SyncImageSize extends Command
     }
 
     /**
-     * TODO:获取文件信息
+     * 获取文件信息
      */
     protected function setFileInfo()
     {

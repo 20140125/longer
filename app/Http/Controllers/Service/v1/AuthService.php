@@ -31,7 +31,7 @@ class AuthService extends BaseService
     }
 
     /**
-     * todo:获取权限列表
+     * 获取权限列表
      * @param $form
      * @param string[] $columns
      * @param bool $getAll
@@ -45,7 +45,7 @@ class AuthService extends BaseService
             return $this->return;
         }
         $where = [['status', $form['status'] ?? 1], ['level', '<', $form['level'] ?? 2]];
-        /* todo:权限导航栏 */
+        /* 权限导航栏 */
         if (!empty($form['role_id']) && $form['role_id'] !== 1) {
             $ids = $this->roleModel->getOne(['id' => $form['role_id']], ['auth_ids as ids'])->ids;
             $this->return['lists'] = $this->authModel->getLists($where, $columns, ['key' => 'id', 'ids' => json_decode($ids, true)]);
@@ -54,7 +54,7 @@ class AuthService extends BaseService
         if (is_numeric($form['id'])) {
             $where = [['pid', (int)$form['id']]];
         }
-        /* todo:数据列表 */
+        /* 数据列表 */
         $this->return['lists'] = $this->authModel->getLists($where, $columns, $attr);
         if (is_numeric($form['id'])) {
             foreach ($this->return['lists'] as $auth) {
@@ -68,7 +68,7 @@ class AuthService extends BaseService
     }
 
     /**
-     * todo:数据添加
+     * 数据添加
      * @param $form
      * @return array
      */
@@ -99,7 +99,7 @@ class AuthService extends BaseService
     }
 
     /**
-     * todo:数据更新
+     * 数据更新
      * @param $form
      * @return array
      */
@@ -108,7 +108,7 @@ class AuthService extends BaseService
         if (!empty($form['children']) && count($form['children']) >= 0) {
             unset($form['children']);
         }
-        /* todo:修改权限状态 */
+        /* 修改权限状态 */
         if (!empty($form['act'])) {
             unset($form['act']);
             $result = $this->authModel->updateOne(['id' => (int)$form['id']], $form);
@@ -120,7 +120,7 @@ class AuthService extends BaseService
             $this->return['lists'] = $form;
             return $this->return;
         }
-        /* todo:修改权限 */
+        /* 修改权限 */
         $result = $this->getAuth(['id' => $form['pid']]);
         $form['path'] = !empty($result->path) ? $result->path . '-' . $form['id'] : $form['id'];
         $form['level'] = substr_count($form['path'], '-');
@@ -135,7 +135,7 @@ class AuthService extends BaseService
     }
 
     /**
-     * todo:获取权限规则
+     * 获取权限规则
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null

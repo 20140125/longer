@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class PermissionApplyController extends BaseController
 {
     /**
-     * todo:获取申请权限列表
+     * 获取申请权限列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -22,7 +22,7 @@ class PermissionApplyController extends BaseController
     }
 
     /**
-     * todo:获取用户权限
+     * 获取用户权限
      * @return JsonResponse
      */
     public function getUserAuth()
@@ -33,7 +33,7 @@ class PermissionApplyController extends BaseController
     }
 
     /**
-     * todo:添加申请权限
+     * 添加申请权限
      * @return JsonResponse
      */
     public function savePermissionApply()
@@ -49,7 +49,7 @@ class PermissionApplyController extends BaseController
     }
 
     /**
-     * todo:更新申请权限
+     * 更新申请权限
      * @return JsonResponse
      */
     public function updatePermissionApply(Request $request)

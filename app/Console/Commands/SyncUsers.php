@@ -48,7 +48,7 @@ class SyncUsers extends Command
     }
 
     /**
-     * todo:同步授权用户信息
+     * 同步授权用户信息
      * @return false|void
      */
     protected function syncUsers()
@@ -62,10 +62,10 @@ class SyncUsers extends Command
             }
             $users = Users::getInstance()->getOne(['id' => $oauth->uid]);
             if ($users) {
-                /* todo：更新用户信息 */
+                /* 更新用户信息 */
                 Users::getInstance()->updateOne(['id' => $oauth->uid], ['remember_token' => $this->argument('remember_token')]);
                 $this->info('Successfully updated users： ' . $users->username);
-                /* todo：更新用户个人中心 */
+                /* 更新用户个人中心 */
                 $userCenter = UserCenter::getInstance()->getOne(['uid' => $oauth->uid]);
                 if ($userCenter) {
                     UserCenter::getInstance()->updateOne(['id' => $userCenter->id], ['token' => $this->argument('remember_token'), 'u_name' => $oauth->username]);
@@ -83,7 +83,7 @@ class SyncUsers extends Command
     }
 
     /**
-     * todo:添加用户
+     * 添加用户
      * @param $oauth
      * @return false|void
      */
@@ -116,7 +116,7 @@ class SyncUsers extends Command
     }
 
     /**
-     * todo:添加用户中心记录
+     * 添加用户中心记录
      * @param $oauth
      */
     protected function saveUserCenter($oauth)

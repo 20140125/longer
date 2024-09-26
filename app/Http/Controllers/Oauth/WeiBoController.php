@@ -60,7 +60,7 @@ class WeiBoController extends OAuthController
     }
 
     /**
-     * TODO:：获取授权登录URL
+     * 获取授权登录URL
      * @param int $length
      * @param string $callback
      * @param string $scope
@@ -82,7 +82,7 @@ class WeiBoController extends OAuthController
     }
 
     /**
-     * TODO:：获取access_token
+     * 获取access_token
      * @param string $code
      * @return array
      * @throws Exception
@@ -105,7 +105,7 @@ class WeiBoController extends OAuthController
     }
 
     /**
-     * TODO:：获取用户信息
+     * 获取用户信息
      * @param string $access_token
      * @param string $uid
      * @return array

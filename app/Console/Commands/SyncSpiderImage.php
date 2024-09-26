@@ -50,7 +50,7 @@ class SyncSpiderImage extends Command
     }
 
     /**
-     * todo:爬取图片
+     * 爬取图片
      * @param $startId
      */
     protected function spiderImage($startId)

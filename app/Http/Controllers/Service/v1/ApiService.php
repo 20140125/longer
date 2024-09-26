@@ -29,7 +29,7 @@ class ApiService extends BaseService
     }
 
     /**
-     * todo：获取编辑器格式接口详情
+     * 获取编辑器格式接口详情
      * @param $form
      * @return array
      */
@@ -57,7 +57,7 @@ class ApiService extends BaseService
     }
 
     /**
-     * todo：获取markdown格式接口详情
+     * 获取markdown格式接口详情
      * @param $form
      * @return array
      */
@@ -78,7 +78,7 @@ class ApiService extends BaseService
     }
 
     /**
-     * todo:保存API接口详情
+     * 保存API接口详情
      * @param $form
      * @param $user
      * @return array
@@ -107,7 +107,7 @@ class ApiService extends BaseService
     }
 
     /**
-     * todo:更新API接口详情
+     * 更新API接口详情
      * @param $form
      * @param $user
      * @return array
@@ -136,7 +136,7 @@ class ApiService extends BaseService
     }
 
     /**
-     * todo:保存markdown
+     * 保存markdown
      * @param $form
      * @param $user
      * @return array
@@ -162,7 +162,7 @@ class ApiService extends BaseService
     }
 
     /**
-     * todo:更新markdown
+     * 更新markdown
      * @param $form
      * @param $user
      * @return array
@@ -188,7 +188,7 @@ class ApiService extends BaseService
     }
 
     /**
-     * todo:保存操作日志
+     * 保存操作日志
      * @param $form
      * @param $user
      */

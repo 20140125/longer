@@ -55,7 +55,7 @@ class OauthCallbackController extends Controller
             exit(redirect('/login'));
         }
         $this->redisClient = RedisClient::getInstance();
-        if ($this->redisClient->getValue($request->get('state')) == false) {
+        if (!$this->redisClient->getValue($request->get('state'))) {
             exit(redirect('/login'));
         }
         if ($this->redisClient->getValue('users')) {
@@ -66,7 +66,7 @@ class OauthCallbackController extends Controller
     }
 
     /**
-     * TODO：QQ授权登录回调地址
+     * QQ授权登录回调地址
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
      * @throws Exception
@@ -99,7 +99,7 @@ class OauthCallbackController extends Controller
     }
 
     /**
-     * TODO：gitHub授权回调
+     * gitHub授权回调
      * @param Request $request （code，state）
      * @return RedirectResponse|Redirector
      * @throws Exception
@@ -132,7 +132,7 @@ class OauthCallbackController extends Controller
     }
 
     /**
-     * TODO：Weibo授权回调
+     * Weibo授权回调
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
      * @throws Exception
@@ -165,7 +165,7 @@ class OauthCallbackController extends Controller
     }
 
     /**
-     * TODO：Weibo授权回调
+     * Weibo授权回调
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
      * @throws Exception
@@ -198,7 +198,7 @@ class OauthCallbackController extends Controller
     }
 
     /**
-     * TODO：Baidu授权回调
+     * Baidu授权回调
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
      */
@@ -230,7 +230,7 @@ class OauthCallbackController extends Controller
     }
 
     /**
-     *  TODO：OsChina授权回调
+     *  OsChina授权回调
      * @param Request $request （code）
      * @return RedirectResponse|Redirector
      * @throws Exception
@@ -263,7 +263,7 @@ class OauthCallbackController extends Controller
     }
 
     /**
-     * TODO：授权信息添加
+     * 授权信息添加
      * @param $data
      * @param $where
      * @return RedirectResponse|Redirector
@@ -308,7 +308,7 @@ class OauthCallbackController extends Controller
     }
 
     /**
-     * TODO：异常捕获
+     * 异常捕获
      * @param $response
      * @return RedirectResponse|Redirector|boolean
      */

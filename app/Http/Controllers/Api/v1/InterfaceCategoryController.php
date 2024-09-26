@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 class InterfaceCategoryController extends BaseController
 {
     /**
-     * todo:获取接口列表
+     * 获取接口列表
      * @return JsonResponse
      */
     public function categoryLists()
@@ -18,7 +18,7 @@ class InterfaceCategoryController extends BaseController
     }
 
     /**
-     * TODO：保存接口分类
+     * 保存接口分类
      * @return JsonResponse
      */
     public function saveCategory()
@@ -29,7 +29,7 @@ class InterfaceCategoryController extends BaseController
     }
 
     /**
-     * todo:更新接口分类
+     * 更新接口分类
      * @return JsonResponse
      */
     public function updateCategory()
@@ -40,7 +40,7 @@ class InterfaceCategoryController extends BaseController
     }
 
     /**
-     * todo：删除接口
+     * 删除接口
      * @return JsonResponse
      */
     public function removeCategory()

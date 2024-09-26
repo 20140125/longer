@@ -59,7 +59,7 @@ class GithubController extends OAuthController
     }
 
     /**
-     * TODO:：获取github授权页面
+     * 获取github授权页面
      * @param int $length
      * @param string $callback
      * @param string $scope
@@ -78,7 +78,7 @@ class GithubController extends OAuthController
     }
 
     /**
-     * TODO:：获取access_token
+     * 获取access_token
      * @param string $code
      * @param string $state
      * @return array
@@ -102,7 +102,7 @@ class GithubController extends OAuthController
     }
 
     /**
-     * TODO:：获取用户信息
+     * 获取用户信息
      * @param string $access_token
      * @return array
      * @throws Exception
@@ -119,7 +119,7 @@ class GithubController extends OAuthController
     }
 
     /**
-     * TODO:：获取用户信息(包含所有项目)
+     * 获取用户信息(包含所有项目)
      * @param string $access_token
      * @return array
      * @throws Exception

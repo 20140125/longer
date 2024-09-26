@@ -52,7 +52,7 @@ class SyncSpiderImageType extends Command
     }
 
     /**
-     * todo:获取图片类型
+     * 获取图片类型
      */
     protected function getImageType()
     {

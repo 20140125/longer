@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class LogController extends BaseController
 {
     /**
-     * todo:获取日志列表
+     * 获取日志列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -21,7 +21,7 @@ class LogController extends BaseController
     }
 
     /**
-     * todo:日志删除
+     * 日志删除
      * @param Request $request
      * @return JsonResponse
      */

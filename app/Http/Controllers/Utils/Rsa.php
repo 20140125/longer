@@ -26,7 +26,7 @@ class Rsa extends Controller
 
     private function __clone()
     {
-        // TODO: Implement __clone() method.
+        //  Implement __clone() method.
     }
 
     /**
@@ -50,7 +50,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO:获取私钥
+     * 获取私钥
      * @return bool|resource
      */
     protected function getPrivateKey()
@@ -59,7 +59,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO：获取公钥
+     * 获取公钥
      * @return bool|resource
      */
     protected function getPublicKey()
@@ -68,7 +68,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO：私钥加密
+     * 私钥加密
      * @param string $data
      * @return null|string
      */
@@ -86,7 +86,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO：公钥解密
+     * 公钥解密
      * @param string $encrypted
      * @return null
      */
@@ -104,7 +104,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO：公钥加密
+     * 公钥加密
      * @param string $data
      * @return null|string
      */
@@ -122,7 +122,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO：私钥解密
+     * 私钥解密
      * @param string $encrypted
      * @return null
      */
@@ -140,7 +140,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO：私钥生成签名
+     * 私钥生成签名
      * @param string $data
      * @return string|null
      */
@@ -161,7 +161,7 @@ class Rsa extends Controller
     }
 
     /**
-     * TODO：公钥验证签名
+     * 公钥验证签名
      * @param string $data 参数
      * @param string $signature 签名
      * @return int|null

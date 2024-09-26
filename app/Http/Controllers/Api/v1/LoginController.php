@@ -8,14 +8,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * TODO:用户登录
+ * 用户登录
  * Class LoginController
  * @package App\Http\Controllers\Api\v1
  */
 class LoginController extends BaseController
 {
     /**
-     * TODO:登录系统
+     * 登录系统
      * @return JsonResponse
      */
     public function login()
@@ -36,7 +36,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * TODO:检验登录态
+     * 检验登录态
      * @param Request $request
      * @return JsonResponse
      */
@@ -46,7 +46,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * TODO:验证码上报
+     * 验证码上报
      * @return JsonResponse
      */
     public function reportCode()
@@ -56,7 +56,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * TODO:发送邮件
+     * 发送邮件
      * @return JsonResponse
      */
     public function sendMail()

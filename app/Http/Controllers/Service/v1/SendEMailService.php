@@ -26,7 +26,7 @@ class SendEMailService extends BaseService
     }
 
     /**
-     * todo:邮件发送
+     * 邮件发送
      * @param $form
      * @return array
      */
@@ -60,7 +60,7 @@ class SendEMailService extends BaseService
     }
 
     /**
-     * todo:校验验证码
+     * 校验验证码
      * @param $data
      * @return int
      */

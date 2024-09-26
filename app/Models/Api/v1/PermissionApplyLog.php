@@ -21,7 +21,7 @@ class PermissionApplyLog extends Base
 
     private function __clone()
     {
-        // TODO: Implement __clone() method.
+        //  Implement __clone() method.
     }
 
     /**
@@ -36,7 +36,7 @@ class PermissionApplyLog extends Base
     }
 
     /**
-     * todo:添加数据
+     * 添加数据
      * @param $form
      * @return int
      */
@@ -46,7 +46,7 @@ class PermissionApplyLog extends Base
     }
 
     /**
-     * todo:获取申请权限列表
+     * 获取申请权限列表
      * @param array $where
      * @param string[] $order
      * @param string[] $columns

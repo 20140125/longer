@@ -12,7 +12,7 @@ use App\Jobs\SyncSooGifImageProcess;
 class SpiderService extends BaseService
 {
     /**
-     * todo:获取爬虫配置
+     * 获取爬虫配置
      * @return array
      */
     public function getSpiderConfig()
@@ -26,7 +26,7 @@ class SpiderService extends BaseService
     }
 
     /**
-     * todo:同步图片类型
+     * 同步图片类型
      * @param $form
      * @return array
      */
@@ -37,7 +37,7 @@ class SpiderService extends BaseService
     }
 
     /**
-     * todo:同步图片列表
+     * 同步图片列表
      * @param $form
      * @return array
      */
@@ -48,7 +48,7 @@ class SpiderService extends BaseService
     }
 
     /**
-     * todo:同步图片大小
+     * 同步图片大小
      * @param $form
      * @return array
      */
@@ -59,7 +59,7 @@ class SpiderService extends BaseService
     }
 
     /**
-     * todo:同步授权用户
+     * 同步授权用户
      * @param $form
      * @return array
      */
@@ -69,7 +69,7 @@ class SpiderService extends BaseService
         return $this->return;
     }
     /**
-     * todo:同步动态图片
+     * 同步动态图片
      * @param $form
      * @return array
      */
@@ -80,7 +80,7 @@ class SpiderService extends BaseService
     }
 
     /**
-     * todo:同步授权用户
+     * 同步授权用户
      * @param $form
      * @return array
      */

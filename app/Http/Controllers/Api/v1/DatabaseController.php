@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 class DatabaseController extends BaseController
 {
     /**
-     * todo:获取数据表列表
+     * 获取数据表列表
      * @return JsonResponse
      */
     public function getDatabaseLists()
@@ -17,7 +17,7 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * todo:数据表备份
+     * 数据表备份
      * @return JsonResponse
      */
     public function backUpTable()
@@ -28,8 +28,7 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * TODO：修复数据表
-     * @param string name 数据库名称
+     * 修复数据表
      * @return JsonResponse
      */
     public function repairTable()
@@ -40,8 +39,7 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * TODO：优化数据表
-     * @param string name 数据库名称
+     * 优化数据表
      * @return JsonResponse
      */
     public function optimizeTabled()
@@ -53,9 +51,7 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * TODO：数据表修改
-     * @param string name 数据库名称
-     * @param string common 备注
+     * 数据表修改
      * @return JsonResponse
      */
     public function alterTable()

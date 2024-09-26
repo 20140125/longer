@@ -43,7 +43,7 @@ class UserCenterService extends BaseService
     }
 
     /**
-     * todo：更新用户信息
+     * 更新用户信息
      * @param $form
      * @param $_user
      * @return array
@@ -60,7 +60,7 @@ class UserCenterService extends BaseService
             $this->return['message'] = 'Error update user center';
             return $this->return;
         }
-        /* todo：执行用户相关信息 */
+        /* 执行用户相关信息 */
         dispatch(new SyncUserCenterProcess($form))->onQueue('users');
         $this->return['message'] = 'Successfully updated user center';
         $this->return['lists'] = $form;

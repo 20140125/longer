@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 class TimeLineController extends BaseController
 {
     /**
-     * todo：获取列表
+     * 获取列表
      * @return JsonResponse
      */
     public function getLists()

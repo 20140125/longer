@@ -31,7 +31,7 @@ class PermissionApplyService extends BaseService
     }
 
     /**
-     * todo:获取角色
+     * 获取角色
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null
@@ -42,7 +42,7 @@ class PermissionApplyService extends BaseService
     }
 
     /**
-     * todo:获取申请权限列表
+     * 获取申请权限列表
      * @param $user
      * @param array $where
      * @param array|int[] $pagination
@@ -64,7 +64,7 @@ class PermissionApplyService extends BaseService
     }
 
     /**
-     * todo:添加申请权限
+     * 添加申请权限
      * @param $form
      * @return array
      */
@@ -97,7 +97,7 @@ class PermissionApplyService extends BaseService
     }
 
     /**
-     * todo:申请权限更新
+     * 申请权限更新
      * @param $form
      * @param $user
      * @return array
@@ -115,7 +115,7 @@ class PermissionApplyService extends BaseService
                 return $this->return;
             }
             $_roleAuth = $this->getRoleAuth($form['id'], $form['status']);
-            /* todo:审批权限添加角色 */
+            /* 审批权限添加角色 */
             $_role = $this->roleModel->getOne(['id' => $_roleAuth['user']->id]);
             if (!empty($_role)) {
                 $this->roleModel->updateOne(['id' => $_roleAuth['user']->role_id], $_roleAuth['form']);
@@ -129,7 +129,7 @@ class PermissionApplyService extends BaseService
             $_roleAuth['form']['status'] = 1;
             $_roleAuth['form']['role_name'] = $_roleAuth['user']->username;
             $this->roleModel->saveOne($_roleAuth['form']);
-            /* todo:更新用户角色 */
+            /* 更新用户角色 */
             $this->userModel->updateOne(['id' => $_roleAuth['form']['id']], ['role_id' => $_roleAuth['form']['id']]);
             $this->permissionApplyLogModel->saveOne(['apply_id' => $form['id'], 'desc' => '用户权限续期成功', 'user_name' => $user->username, 'created_at' => date(time())]);
             $this->return['lists'] = $form;
@@ -145,7 +145,7 @@ class PermissionApplyService extends BaseService
     }
 
     /**
-     * todo:删除权限
+     * 删除权限
      * @param $form
      * @param $user
      * @return array

@@ -59,7 +59,7 @@ class OsChinaController extends OAuthController
     }
 
     /**
-     * TODO:：获取github授权页面
+     * 获取github授权页面
      * @param int $length
      * @param string $callback
      * @return string
@@ -76,10 +76,9 @@ class OsChinaController extends OAuthController
     }
 
     /**
-     * TODO:：获取access_token
+     * 获取access_token
      * @param string $code
-     * @return array|bool|mixed
-     * @throws \Exception
+     * @return array
      */
     public function getAccessToken(string $code)
     {
@@ -101,10 +100,9 @@ class OsChinaController extends OAuthController
     }
 
     /**
-     * TODO:：刷新AccessToken续期
+     * 刷新AccessToken续期
      * @param string $refreshToken
-     * @return array|mixed
-     * @throws \Exception
+     * @return array
      */
     public function refreshToken(string $refreshToken)
     {
@@ -128,7 +126,7 @@ class OsChinaController extends OAuthController
     /**
      * TODO:获取用户信息
      * @param string $access_token
-     * @return array|mixed
+     * @return array
      */
     public function getUserInfo(string $access_token)
     {

@@ -26,7 +26,7 @@ class EmotionService extends BaseService
     }
 
     /**
-     * todo:获取列表
+     * 获取列表
      * @param int[] $pagination
      * @param string $where
      * @param string[] $order

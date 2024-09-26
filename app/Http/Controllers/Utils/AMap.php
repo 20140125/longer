@@ -36,7 +36,7 @@ class AMap extends Controller
 
     private function __clone()
     {
-        // TODO: Implement __clone() method.
+        //  Implement __clone() method.
     }
 
     /**
@@ -62,7 +62,7 @@ class AMap extends Controller
     }
 
     /**
-     * TODO:获取天气状况
+     * 获取天气状况
      * @param $ad_code
      * @param string $extensions
      * @return mixed
@@ -80,7 +80,7 @@ class AMap extends Controller
     }
 
     /**
-     * TODO:根据IP地位
+     * 根据IP地位
      * @param string $ipAddress
      * @return int|mixed|null
      */
@@ -96,7 +96,7 @@ class AMap extends Controller
     }
 
     /**
-     * TODO:根据IP地位
+     * 根据IP地位
      * @param string $ipAddress
      * @return int|mixed|null
      */
@@ -112,7 +112,7 @@ class AMap extends Controller
     }
 
     /**
-     * TODO:地理/逆地理编码
+     * 地理/逆地理编码
      * @param $city
      * @param string $address
      * @return int|mixed|null
@@ -130,7 +130,7 @@ class AMap extends Controller
     }
 
     /**
-     * TODO:路径规划
+     * 路径规划
      * @param string $origin 出发点 规则： lon，lat（经度，纬度）， “,”分割，如117.500244, 40.417801     经纬度小数点不超过6位
      * @param string $destination 目的地  规则： lon，lat（经度，纬度）， “,”分割，如117.500244, 40.417801     经纬度小数点不超过6位
      * @return int|mixed|null
@@ -148,7 +148,7 @@ class AMap extends Controller
     }
 
     /**
-     * TODO:可在此location附近优先返回搜索关键词信息
+     * 可在此location附近优先返回搜索关键词信息
      * @param string $keywords
      * @param string $location 建议使用location参数，可在此location附近优先返回搜索关键词信息
      * @param string $city 可选值：citycode、adcode

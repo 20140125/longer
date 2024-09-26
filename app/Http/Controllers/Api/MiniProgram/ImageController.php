@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 class ImageController extends BaseController
 {
     /**
-     * todo:获取图片列表
+     * 获取图片列表
      * @return JsonResponse
      */
     public function getImageLists()
@@ -21,7 +21,7 @@ class ImageController extends BaseController
     }
 
     /**
-     * todo:获取最新图片
+     * 获取最新图片
      * @return JsonResponse
      */
     public function getNewImageLists()
@@ -35,7 +35,7 @@ class ImageController extends BaseController
     }
 
     /**
-     * todo:获取关键词图片
+     * 获取关键词图片
      * @return JsonResponse
      */
     public function getHotImageLists()
@@ -53,7 +53,7 @@ class ImageController extends BaseController
     }
 
     /**
-     * todo:获取关键字
+     * 获取关键字
      * @return JsonResponse
      */
     public function getHotKeyWords()

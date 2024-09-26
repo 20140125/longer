@@ -28,7 +28,7 @@ class AreaService extends BaseService
     }
 
     /**
-     * todo:获取城市列表
+     * 获取城市列表
      * @param $form
      * @param bool $getAll
      * @param string[] $columns
@@ -59,7 +59,7 @@ class AreaService extends BaseService
     }
 
     /**
-     * todo：获取天气预报
+     * 获取天气预报
      * @param $form
      * @return array
      */
@@ -98,7 +98,7 @@ class AreaService extends BaseService
     }
 
     /**
-     * todo:获取城市缓存
+     * 获取城市缓存
      * @param array $form
      * @return array
      */
@@ -118,7 +118,7 @@ class AreaService extends BaseService
     }
 
     /**
-     * todo:获取天气
+     * 获取天气
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null

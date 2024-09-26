@@ -27,7 +27,7 @@ class OauthService extends BaseService
     }
 
     /**
-     * todo:获取用户列表
+     * 获取用户列表
      * @param $user
      * @param array|int[] $pagination
      * @param array|string[] $order
@@ -47,7 +47,7 @@ class OauthService extends BaseService
     }
 
     /**
-     * todo:邮箱账号绑定
+     * 邮箱账号绑定
      * @param $form
      * @return array
      */
@@ -64,12 +64,12 @@ class OauthService extends BaseService
     }
 
     /**
-     * todo:获取授权用户
+     * 获取授权用户
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    public function getOauth($where, $columns = ['*'])
+    public function getOauth($where, array $columns = ['*'])
     {
         return $this->oauthModel->getOne($where, $columns);
     }

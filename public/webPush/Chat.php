@@ -25,12 +25,13 @@ class Chat
     }
 
     /**
-     * TODO：缓存用户聊天记录
+     * 缓存用户聊天记录
      * @param $from
      * @param $to
      * @param $room_id
      * @param $message
      * @return bool|int
+     * @throws RedisException
      */
     public function setChatMsgLists($from, $to, $room_id, $message)
     {
@@ -40,13 +41,14 @@ class Chat
     }
 
     /**
-     * TODO：获取聊天记录
+     * 获取聊天记录
      * @param $from
      * @param $to
      * @param $room_id
      * @param int $page
      * @param int $limit
      * @return array
+     * @throws RedisException
      */
     public function getChatMsgLists($from, $to, $room_id, int $page = 1, int $limit = 19)
     {
@@ -59,7 +61,7 @@ class Chat
             $num = $this->getMsgLen($recName);
             $recList = $offset + $limit >= $num ? $this->redisClient->lRange($recName, $offset, $num) : $this->redisClient->lRange($recName, $offset, $offset + $limit);
             foreach ($recList as $item) {
-                array_push($message, json_decode($item, true));
+                $message[] = json_decode($item, true);
                 $time[] = json_decode($item, true)['time'];
             }
             array_multisort($message, $time, SORT_ASC);
@@ -70,7 +72,7 @@ class Chat
         $recNum = $this->getMsgLen($recName);
         $recList = $offset + $limit >= $recNum ? $this->redisClient->lRange($recName, $offset, $recNum) : $this->redisClient->lRange($recName, $offset, $offset + $limit);
         foreach ($recList as $item) {
-            array_push($message, json_decode($item, true));
+            $message[] = json_decode($item, true);
             $time[] = json_decode($item, true)['time'];
         }
         //发送的消息
@@ -78,7 +80,7 @@ class Chat
         $sendNum = $this->getMsgLen($sendName);
         $sendLists = $offset + $limit >= $sendNum ? $this->redisClient->lRange($sendName, $offset, $sendNum) : $this->redisClient->lRange($sendName, $offset, $offset + $limit);
         foreach ($sendLists as $item) {
-            array_push($message, json_decode($item, true));
+            $message[] = json_decode($item, true);
             $time[] = json_decode($item, true)['time'];
         }
         array_multisort($message, $time, SORT_ASC);
@@ -86,8 +88,9 @@ class Chat
     }
 
     /**
-     * todo:消息撤回：删除redis缓存数据并告知用户/消息删除：直接删除消息
+     * 消息撤回：删除redis缓存数据并告知用户/消息删除：直接删除消息
      * @param $message
+     * @throws RedisException
      */
     public function recallMessage($message)
     {
@@ -108,7 +111,7 @@ class Chat
     }
 
     /**
-     * todo:json字符串比较
+     * json字符串比较
      * @param $jsonA
      * @param $jsonB
      * @param array $field
@@ -132,9 +135,10 @@ class Chat
     }
 
     /**
-     * TODO:获取聊天记录长度
+     * 获取聊天记录长度
      * @param $key
      * @return int
+     * @throws RedisException
      */
     protected function getMsgLen($key)
     {
@@ -142,9 +146,10 @@ class Chat
     }
 
     /**
-     * TODO：获取用户未读消息记录数(所有)
+     * 获取用户未读消息记录数(所有)
      * @param $to
      * @return array
+     * @throws RedisException
      */
     public function getUnreadMsgAllCount($to)
     {
@@ -152,10 +157,11 @@ class Chat
     }
 
     /**
-     * TODO：获取用户未读消息记录数（单个）
+     * 获取用户未读消息记录数（单个）
      * @param $to
      * @param $from
      * @return string
+     * @throws RedisException
      */
     public function getUnreadMsgCount($to, $from)
     {
@@ -163,10 +169,11 @@ class Chat
     }
 
     /**
-     * TODO：包括所有未读消息内容的数组
+     * 包括所有未读消息内容的数组
      * @param $from
      * @param $to
      * @return array
+     * @throws RedisException
      */
     public function getUnreadMsg($from, $to)
     {
@@ -177,10 +184,11 @@ class Chat
     }
 
     /**
-     * TODO:添加用户未读消息记录数
+     * 添加用户未读消息记录数
      * @param $from
      * @param $to
      * @return int
+     * @throws RedisException
      */
     public function setUnreadMsgLists($from, $to)
     {
@@ -188,10 +196,11 @@ class Chat
     }
 
     /**
-     * TODO:删除未读消息
+     * 删除未读消息
      * @param $from
      * @param $to
      * @return bool|int
+     * @throws RedisException
      */
     public function delUnreadMsg($from, $to)
     {
@@ -199,10 +208,11 @@ class Chat
     }
 
     /**
-     * TODO:判断是否存在
+     * 判断是否存在
      * @param $key
      * @param $value
      * @return bool
+     * @throws RedisException
      */
     public function sIsMember($key, $value)
     {
@@ -210,9 +220,10 @@ class Chat
     }
 
     /**
-     * TODO：获取集合
+     * 获取集合
      * @param $key
      * @return array
+     * @throws RedisException
      */
     public function sMembers($key)
     {
@@ -220,7 +231,7 @@ class Chat
     }
 
     /**
-     * TODO:添加数据到集合
+     * 添加数据到集合
      * @param string $string
      * @param $uid
      * @return bool|int
@@ -231,11 +242,12 @@ class Chat
     }
 
     /**
-     * TODO：数据存储 （Redis 字符串(String)）
+     * 数据存储 （Redis 字符串(String)）
      * @param $key
      * @param $value
      * @param int $timeout
      * @return bool
+     * @throws RedisException
      */
     public function setValue($key, $value, int $timeout = 0)
     {
@@ -243,9 +255,10 @@ class Chat
     }
 
     /**
-     * TODO:数据获取（Redis 字符串(String)）
+     * 数据获取（Redis 字符串(String)）
      * @param $key
      * @return bool|string
+     * @throws RedisException
      */
     public function getValue($key)
     {
@@ -253,7 +266,7 @@ class Chat
     }
 
     /**
-     * todo:删除集合数据
+     * 删除集合数据
      * @param string $string
      * @param $uid
      * @return int

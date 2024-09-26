@@ -46,6 +46,11 @@ class SyncSpiderImageSoogif extends Command
         $this->getImageLists($this->argument('url'));
     }
 
+    /**
+     * 获取图片列表
+     * @param $url
+     * @return void
+     */
     protected function getImageLists($url)
     {
         try {

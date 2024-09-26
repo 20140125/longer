@@ -45,7 +45,7 @@ class SyncWebPush extends Command
     }
 
     /**
-     * todo；站内推送
+     * 站内推送
      * @return false|void
      */
     protected function sendWebPusherMessage()
@@ -64,7 +64,7 @@ class SyncWebPush extends Command
                         return false;
                     }
                     switch ($item->status) {
-                        /*todo:立即推送*/
+                        /* 立即推送 */
                         case 1:
                             if (webPush($item->info, $item->uuid)) {
                                 $item->state = Code::WEBSOCKET_STATE[0];
@@ -74,7 +74,7 @@ class SyncWebPush extends Command
                                 $this->error('【' . $item->username . '】：Failed push notification');
                             }
                             break;
-                        /*todo:定时推送*/
+                        /* 定时推送 */
                         case 2:
                             if ($item->created_at > time()) {
                                 $this->warn('【' . $item->username . '】：Push time yet to come');
@@ -94,7 +94,7 @@ class SyncWebPush extends Command
                     Push::getInstance()->updateOne(['id' => $item->id], (array)$item);
                     $bar->advance();
                 }
-                
+
             }
             $bar->finish();
         } catch (\Exception $exception) {

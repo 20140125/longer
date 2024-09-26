@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ToolsController extends BaseController
 {
     /**
-     * todo:获取地址
+     * 获取地址
      * @return JsonResponse
      */
     public function getAddress()
@@ -19,7 +19,7 @@ class ToolsController extends BaseController
     }
 
     /**
-     * todo:获取城市天气
+     * 获取城市天气
      * @return JsonResponse
      */
     public function getWeather()

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class FileController extends BaseController
 {
     /**
-     * todo:获取文件列表
+     * 获取文件列表
      * @return JsonResponse
      */
     public function getFileLists()
@@ -19,7 +19,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:读取文件内容
+     * 读取文件内容
      * @return JsonResponse
      */
     public function readFile()
@@ -30,7 +30,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:文件更新
+     * 文件更新
      * @return JsonResponse
      */
     public function updateFile()
@@ -41,10 +41,7 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件打包
-     * @param string path 文件路径
-     * @param string resource 打包后文件前缀
-     * @param array docLists 资源列表
+     * 文件打包
      * @return JsonResponse
      */
     public function gZipFile()
@@ -55,9 +52,7 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件解压
-     * @param string path 文件路径
-     * @param string resource 解压文件名称
+     * 文件解压
      * @return JsonResponse
      */
     public function unGZipFile()
@@ -68,8 +63,7 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件删除
-     * @param string path 文件路径
+     * 文件删除
      * @return JsonResponse
      */
     public function removeFile()
@@ -80,8 +74,7 @@ class FileController extends BaseController
     }
 
     /**
-     * TODO:：文件新建
-     * @param string path 文件路径
+     * 文件新建
      * @return JsonResponse
      */
     public function createFile()
@@ -92,7 +85,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:图片上传
+     * 图片上传
      * @param Request $request
      * @return JsonResponse
      */
@@ -103,7 +96,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:设置文件权限
+     * 设置文件权限
      * @return JsonResponse
      */
     public function setFileAuth()
@@ -114,7 +107,7 @@ class FileController extends BaseController
     }
 
     /**
-     * todo:文件重命名
+     * 文件重命名
      * @return JsonResponse
      */
     public function renameFile()

@@ -36,7 +36,7 @@ class Events
     protected static $chat;
     protected static $redisUsers;
     /**
-     * @todo 自动回复消息默认配置
+     * 自动回复消息默认配置
      * @var string[]
      */
     protected static $sysRobot = [
@@ -51,7 +51,7 @@ class Events
      * @param $from_client_id //workerman 生成的client_id
      * @param $message
      * @return bool
-     * @throws \Exception|boolean
+     * @throws Exception|boolean
      */
     public static function onMessage($from_client_id, $message)
     {
@@ -74,7 +74,7 @@ class Events
             case 'login':
                 /* 判断是否有房间号 */
                 if (!isset($message_data['room_id'])) {
-                    throw new \Exception("\$message_data['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']} \$message:$message");
+                    throw new Exception("\$message_data['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']} \$message:$message");
                 }
                 /* 把房间号昵称放到session中 */
                 $room_id = $message_data['room_id'];
@@ -169,7 +169,7 @@ class Events
                 }
                 /* 非法请求 */
                 if (!isset($_SESSION['room_id'])) {
-                    throw new \Exception("\$_SESSION['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']}");
+                    throw new Exception("\$_SESSION['room_id'] not set. client_ip:{$_SERVER['REMOTE_ADDR']}");
                 }
                 /* 群聊 */
                 $new_message = array(
@@ -210,7 +210,7 @@ class Events
     }
 
     /**
-     * todo:消息撤回删除
+     * 消息撤回删除
      * @param $message_data
      * @param $clients_list
      */
@@ -230,7 +230,7 @@ class Events
     /**
      * 当客户端断开连接时
      * @param $client_id //客户端id
-     * @throws \Exception
+     * @throws Exception
      */
     public static function onClose($client_id)
     {
@@ -251,7 +251,7 @@ class Events
     }
 
     /**
-     * todo:自动回复消息
+     * 自动回复消息
      * @param $room_id
      */
     protected static function getRobotMessage($room_id)
@@ -273,9 +273,10 @@ class Events
     }
 
     /**
-     * todo:获取管理员列表
+     * 获取管理员列表
      * @param $redisUser
      * @return array
+     * @throws RedisException
      */
     protected static function getUserLists($redisUser)
     {
@@ -306,7 +307,7 @@ class Events
     }
 
     /**
-     * todo:获取历史记录(数据库查询数据)
+     * 获取历史记录(数据库查询数据)
      * @param $redisMessage
      * @param $message
      * @return array|false
@@ -326,7 +327,7 @@ class Events
                     ->select('content')
                     ->query();
                 foreach ($lists as $item) {
-                    array_push($redisMessage['lists'], json_decode($item['content']));
+                    $redisMessage['lists'][] = json_decode($item['content']);
                 }
                 $result['lists'] = $redisMessage['lists'];
                 /* 总记录数 */
@@ -341,7 +342,7 @@ class Events
                     ->select('content')
                     ->query();
                 foreach ($lists as $item) {
-                    array_push($redisMessage['list'], json_decode($item['content']));
+                    $redisMessage['list'][] = json_decode($item['content']);
                 }
                 $result['list'] = $redisMessage['list'];
                 /* 总记录数 */
@@ -352,7 +353,7 @@ class Events
             }
             $result['total'] = (int)$total[0]['total'] + (int)$redisMessage['total'];
             return $result;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             self::$db->closeConnection();
             echo $exception;
         }

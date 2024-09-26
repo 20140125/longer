@@ -24,7 +24,7 @@ class PushService extends BaseService
     }
 
     /**
-     * todo:获取推送列表
+     * 获取推送列表
      * @param $form
      * @param $user
      * @param array|int[] $pagination
@@ -55,7 +55,7 @@ class PushService extends BaseService
     }
 
     /**
-     * todo:站内推送
+     * 站内推送
      * @param $form
      * @return array
      */
@@ -83,7 +83,7 @@ class PushService extends BaseService
     }
 
     /**
-     * todo:更新站内通知
+     * 更新站内通知
      * @param $form
      * @return array
      */
@@ -104,7 +104,7 @@ class PushService extends BaseService
     }
 
     /**
-     * todo:删除站内通知
+     * 删除站内通知
      * @param $form
      * @return array
      */

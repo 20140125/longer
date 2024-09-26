@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class UsersController extends BaseController
 {
     /**
-     * todo:获取用户列表
+     * 获取用户列表
      * @param Request $request
      * @return JsonResponse
      */
@@ -21,7 +21,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * todo:获取缓存用户列表
+     * 获取缓存用户列表
      * @return JsonResponse
      */
     public function getCacheUserLists()
@@ -31,7 +31,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * todo:更新用户
+     * 更新用户
      * @param Request $request
      * @return JsonResponse
      */

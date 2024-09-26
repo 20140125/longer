@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class SystemConfigController extends BaseController
 {
     /**
-     * todo:获取系统配置列表
+     * 获取系统配置列表
      * @return JsonResponse
      */
     public function getSystemConfigLists()
@@ -19,20 +19,20 @@ class SystemConfigController extends BaseController
     }
 
     /**
-     * todo:获取系统配置(登录态或未登录)
+     * 获取系统配置(登录态或未登录)
      * @param Request $request
      * @return JsonResponse
      */
     public function getSystemConfig(Request $request)
     {
         validatePost($this->post, ['name' => 'required|string']);
-        $_user = $request->get('unauthorized');
-        $result = $this->systemConfigService->getConfig($this->post, $_user);
+        $user = $request->get('unauthorized');
+        $result = $this->systemConfigService->getConfig($this->post, $user);
         return ajaxReturn($result);
     }
 
     /**
-     * todo:保存系统配置
+     * 保存系统配置
      * @return JsonResponse
      */
     public function saveSystemConfig()
@@ -43,7 +43,7 @@ class SystemConfigController extends BaseController
     }
 
     /**
-     * todo:更新系统配置
+     * 更新系统配置
      * @return JsonResponse
      */
     public function updateSystemConfig()

@@ -9,19 +9,18 @@ use Illuminate\Http\Request;
 class UserCenterController extends BaseController
 {
     /**
-     * todo:获取用户信息
+     * 获取用户信息
      * @param Request $request
      * @return JsonResponse
      */
     public function getUserInfo(Request $request)
     {
-        $_user = $request->get('unauthorized');
-        $result = $this->userCenterService->getUserInfo($_user);
+        $result = $this->userCenterService->getUserInfo($request->get('unauthorized'));
         return ajaxReturn($result);
     }
 
     /**
-     * todo:更新用户信息
+     * 更新用户信息
      * @param Request $request
      * @return JsonResponse
      */
@@ -40,8 +39,7 @@ class UserCenterController extends BaseController
                 'local'         => 'required|array'
             ]
         );
-        $_user = $request->get('unauthorized');
-        $result = $this->userCenterService->updateUserInfo($this->post, $_user);
+        $result = $this->userCenterService->updateUserInfo($this->post, $request->get('unauthorized'));
         return ajaxReturn($result);
     }
 }

@@ -31,7 +31,7 @@ class OAuthController extends Controller
     }
 
     /**
-     * TODO:：获取状态值
+     * 获取状态值
      * @param int $length
      * @return string
      */
@@ -42,7 +42,7 @@ class OAuthController extends Controller
     }
 
     /**
-     * TODO:：校验标识是否正确
+     * 校验标识是否正确
      * @param $storeState
      * @param $state
      * @return bool
@@ -53,7 +53,7 @@ class OAuthController extends Controller
     }
 
     /**
-     * TODO:：数据转换成数组格式
+     * 数据转换成数组格式
      * @param $data
      * @return mixed
      */
@@ -63,7 +63,7 @@ class OAuthController extends Controller
     }
 
     /**
-     * TODO:：获取错误信息
+     * 获取错误信息
      * @param $code
      * @param $message
      * @return array

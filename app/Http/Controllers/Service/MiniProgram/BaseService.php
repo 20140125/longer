@@ -60,9 +60,9 @@ class BaseService extends Controller
         $this->systemConfigModel = SystemConfig::getInstance();
         $this->sooGifModel = SooGif::getInstance();
         $this->sooGifTypeModel = SooGifType::getInstance();
-        /* todo:信息输出 */
+        /* 信息输出 */
         $this->return = array('code' => Code::SUCCESS, 'message' => 'successfully', 'lists' => []);
-        /* todo：获取小程序配置 */
+        /* 获取小程序配置 */
         $this->getImageConfiguration();
     }
 
@@ -76,7 +76,7 @@ class BaseService extends Controller
     }
 
     /**
-     * todo:获取配置
+     * 获取配置
      * @param $key
      * @return mixed|string
      */
@@ -93,7 +93,7 @@ class BaseService extends Controller
     }
 
     /**
-     * todo:获取配置
+     * 获取配置
      * @param string $keyWords
      * @return string[]
      */

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class AuthController extends BaseController
 {
     /**
-     * todo:获取权限列表
+     * 获取权限列表
      * @return JsonResponse
      */
     public function getAuthLists()
@@ -20,7 +20,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo:获取权限树
+     * 获取权限树
      * @return JsonResponse
      */
     public function getAuthTree()
@@ -30,7 +30,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo:添加权限
+     * 添加权限
      * @return JsonResponse
      */
     public function saveAuth()
@@ -41,7 +41,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo:更新权限
+     * 更新权限
      * @return JsonResponse
      */
     public function updateAuth()

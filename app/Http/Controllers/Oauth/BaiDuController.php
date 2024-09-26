@@ -59,7 +59,7 @@ class BaiDuController extends OAuthController
     }
 
     /**
-     * TODO：获取授权地址
+     * 获取授权地址
      * @param string $callback
      * @param int $length
      * @return string
@@ -90,7 +90,7 @@ class BaiDuController extends OAuthController
     }
 
     /**
-     * TODO：获取access_token
+     * 获取access_token
      * @param string $code
      * @return array
      */
@@ -112,7 +112,7 @@ class BaiDuController extends OAuthController
     }
 
     /**
-     * TODO:获取用户信息（待废弃）
+     * 获取用户信息（待废弃）
      * @param string $access_token
      * @return array
      */
@@ -131,7 +131,7 @@ class BaiDuController extends OAuthController
     }
 
     /**
-     * TODO:获取用户信息
+     * 获取用户信息
      * @param string $access_token
      * @return array
      */
@@ -151,7 +151,7 @@ class BaiDuController extends OAuthController
     }
 
     /**
-     * TODO：刷新AccessToken
+     * 刷新AccessToken
      * @param string $refreshToken
      * @return array
      */

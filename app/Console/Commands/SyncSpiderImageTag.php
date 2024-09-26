@@ -53,7 +53,7 @@ class SyncSpiderImageTag extends Command
     }
 
     /**
-     * todo:获取图片
+     * 获取图片
      * @param $url
      */
     protected function getImageLists($url)

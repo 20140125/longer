@@ -7,8 +7,7 @@ use Illuminate\Http\JsonResponse;
 class LoginController extends BaseController
 {
     /**
-     * TODO: 微信获取用户的openid
-     * @param string code 微信code
+     * 微信获取用户的openid
      * @return JsonResponse
      */
     public function getOpenId()
@@ -19,7 +18,7 @@ class LoginController extends BaseController
     }
 
     /**
-     * todo:小程序登录
+     * 小程序登录
      * @return JsonResponse
      */
     public function login()

@@ -55,7 +55,7 @@ class SyncOauth extends Command
     }
 
     /**
-     * todo:同步客户端用户列表
+     * 同步客户端用户列表
      */
     protected function syncClientList()
     {
@@ -65,7 +65,7 @@ class SyncOauth extends Command
     }
 
     /**
-     * todo:同步授权用户信息
+     * 同步授权用户信息
      * @return false|void
      */
     protected function syncOauth()
@@ -100,7 +100,7 @@ class SyncOauth extends Command
     }
 
     /**
-     * todo:添加用户
+     * 添加用户
      * @param $oauth
      * @return false|void
      */
@@ -133,7 +133,7 @@ class SyncOauth extends Command
     }
 
     /**
-     * todo:添加用户中心记录
+     * 添加用户中心记录
      * @param $oauth
      */
     protected function saveUserCenter($oauth)

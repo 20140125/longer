@@ -47,7 +47,7 @@ class SyncWebDriveService extends Command
     }
 
     /**
-     * todo:获取图片
+     * 获取图片
      * @param $url
      */
     protected function getImageLists($url)
@@ -68,7 +68,7 @@ class SyncWebDriveService extends Command
     }
 
     /**
-     * todo:数据抓取
+     * 数据抓取
      * @param ChromeDriver $driver
      */
     protected function spiderImage(ChromeDriver $driver)
@@ -88,11 +88,11 @@ class SyncWebDriveService extends Command
             }
         }
         sleep(5);
-        /* todo:页码切换 */
+        /* 页码切换 */
         $this->currentPageChange($driver);
     }
 
-    /* todo:分页切换 */
+    /* 分页切换 */
     protected function currentPageChange(ChromeDriver $driver)
     {
         $pageButton = $driver->findElements(WebDriverBy::cssSelector('.pagination a'));

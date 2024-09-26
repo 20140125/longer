@@ -25,7 +25,7 @@ class TimeLineService extends BaseService
     }
 
     /**
-     * todo:获取用户
+     * 获取用户
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null
@@ -36,12 +36,12 @@ class TimeLineService extends BaseService
     }
 
     /**
-     * todo:获取列表
+     * 获取列表
      * @param int[] $pagination
      * @param string[] $order
      * @param false $getAll
      * @param string[] $column
-     * @return array|Collection
+     * @return array
      */
     public function getLists(array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'])
     {

@@ -25,7 +25,7 @@ class LogService extends BaseService
     }
 
     /**
-     * todo:获取日志
+     * 获取日志
      * @param $where
      * @param string[] $columns
      * @return Model|Builder|object|null
@@ -36,7 +36,7 @@ class LogService extends BaseService
     }
 
     /**
-     * todo:保存日志
+     * 保存日志
      * @param $form
      * @return int
      */
@@ -47,7 +47,7 @@ class LogService extends BaseService
     }
 
     /**
-     * todo:獲取日志列表
+     * 獲取日志列表
      * @param $user
      * @param $pagination
      * @return array
@@ -67,7 +67,7 @@ class LogService extends BaseService
     }
 
     /**
-     * todo:删除日志
+     * 删除日志
      * @param $user
      * @param $form
      * @return array
