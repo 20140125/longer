@@ -77,15 +77,15 @@ class SyncOauth extends Command
                 WebPush('Remember token is invalid', $this->argument('uuid'), 'command');
                 return false;
             }
-            $users = Users::getInstance()->getOne(['id' => $oauth->uid]);
+            $users = Users::getInstance()->getOne(['id' => $oauth->user_id]);
             if ($users) {
                 /* 更新用户信息 */
-                Users::getInstance()->updateOne(['id' => $oauth->uid], ['remember_token' => $this->argument('remember_token')]);
+                Users::getInstance()->updateOne(['id' => $oauth->user_id], ['remember_token' => $this->argument('remember_token')]);
                 WebPush('Successfully updated users： ' . $users->username, $this->argument('uuid'), 'command');
                 /* 更新用户个人中心 */
-                $userCenter = UserCenter::getInstance()->getOne(['uid' => $oauth->uid]);
+                $userCenter = UserCenter::getInstance()->getOne(['user_id' => $oauth->user_id]);
                 if ($userCenter) {
-                    UserCenter::getInstance()->updateOne(['id' => $userCenter->id], ['token' => $this->argument('remember_token'), 'u_name' => $oauth->username]);
+                    UserCenter::getInstance()->updateOne(['id' => $userCenter->id], ['token' => $this->argument('remember_token'), 'nickname' => $oauth->username]);
                     WebPush('Successfully updated users center： ' . $users->username, $this->argument('uuid'), 'command');
                 }
                 return false;
@@ -106,23 +106,7 @@ class SyncOauth extends Command
      */
     protected function saveUsers($oauth)
     {
-        $salt = getRoundNum(8, 'all');
-        $userArray = [
-            'username'       => $oauth->username,
-            'avatar_url'     => $oauth->avatar_url,
-            'remember_token' => $oauth->remember_token,
-            'email'          => $oauth->email ?? '',
-            'salt'           => $salt,
-            'password'       => md5(md5('123456789') . $salt),
-            'role_id'        => $oauth->role_id,
-            'ip_address'     => request()->ip(),
-            'created_at'     => time(),
-            'updated_at'     => time(),
-            'status'         => $oauth->status,
-            'phone_number'   => '',
-            'uuid'           => ''
-        ];
-        $userId = Users::getInstance()->saveOne($userArray);
+        $userId = Users::getInstance()->saveOne($oauth);
         if (!$userId) {
             WebPush('Failed save users ' . $oauth->username, $this->argument('uuid'), 'command');
             return false;

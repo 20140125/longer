@@ -77,7 +77,7 @@ class OAuthController extends Controller
      * @param $data
      * @return array
      */
-    public function __getAccessToken($data)
+    public function __getAccessToken($data): array
     {
         $queryParts = explode('&', $data);
         $paramsArr = array();

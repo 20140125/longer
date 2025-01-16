@@ -6,6 +6,7 @@ use App\Http\Controllers\Utils\Code;
 use App\Http\Controllers\Utils\RedisClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use RedisException;
 
 /**
  * 用户登录
@@ -17,8 +18,9 @@ class LoginController extends BaseController
     /**
      * 登录系统
      * @return JsonResponse
+     * @throws RedisException
      */
-    public function login()
+    public function login(): JsonResponse
     {
         $rules = ['email' => 'required|between:8,64|email', 'verify_code' => 'required|integer', 'loginType' => 'required'];
         if ($this->post['loginType'] === 'password') {
@@ -40,7 +42,7 @@ class LoginController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function checkAuthorized(Request $request)
+    public function checkAuthorized(Request $request): JsonResponse
     {
         return ajaxReturn($this->authService->setUnauthorized($request->get('unauthorized'), $request->get('role')));
     }
@@ -49,7 +51,7 @@ class LoginController extends BaseController
      * 验证码上报
      * @return JsonResponse
      */
-    public function reportCode()
+    public function reportCode(): JsonResponse
     {
         validatePost($this->post, ['verify_code' => 'required']);
         return ajaxReturn($this->userService->setVerifyCode($this->post['verify_code'], $this->post['verify_code']));
@@ -59,7 +61,7 @@ class LoginController extends BaseController
      * 发送邮件
      * @return JsonResponse
      */
-    public function sendMail()
+    public function sendMail(): JsonResponse
     {
         validatePost($this->post, ['email' => 'required|between:8,64|email']);
         $result = $this->sendEMailService->sendMail($this->post);
@@ -67,10 +69,11 @@ class LoginController extends BaseController
     }
 
     /**
-     * todo:登出系统
+     * 登出系统
      * @return JsonResponse
+     * @throws RedisException
      */
-    public function logout()
+    public function logout(): JsonResponse
     {
         validatePost($this->post, ['remember_token' => 'required']);
         $result = $this->userService->getUser(['remember_token' => $this->post['remember_token']]);

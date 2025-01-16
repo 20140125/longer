@@ -24,7 +24,7 @@ class Base extends Model
      * @param string[] $columns
      * @return Model|Builder|object|null
      */
-    protected function getResult($table, $where, $columns = ['*'])
+    protected function getResult($table, $where, array $columns = ['*'])
     {
         return DB::table($table)->where($where)->first($columns);
     }
@@ -35,7 +35,7 @@ class Base extends Model
      * @param $where
      * @return int
      */
-    protected function remove($table, $where)
+    protected function remove($table, $where): int
     {
         return DB::table($table)->where($where)->delete();
     }

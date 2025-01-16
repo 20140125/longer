@@ -72,7 +72,7 @@ class Rsa extends Controller
      * @param string $data
      * @return null|string
      */
-    public function privateEncrypt(string $data = '')
+    public function privateEncrypt(string $data = ''): ?string
     {
         if (!is_string($data)) {
             return null;
@@ -90,7 +90,7 @@ class Rsa extends Controller
      * @param string $encrypted
      * @return null
      */
-    public function publicDecrypt(string $encrypted = '')
+    public function publicDecrypt(string $encrypted = ''): ?string
     {
         if (!is_string($encrypted)) {
             return null;
@@ -108,7 +108,7 @@ class Rsa extends Controller
      * @param string $data
      * @return null|string
      */
-    public function publicEncrypt(string $data = '')
+    public function publicEncrypt(string $data = ''): ?string
     {
         if (!is_string($data)) {
             return null;
@@ -126,7 +126,7 @@ class Rsa extends Controller
      * @param string $encrypted
      * @return null
      */
-    public function privateDecrypt(string $encrypted = '')
+    public function privateDecrypt(string $encrypted = ''): ?string
     {
         if (!is_string($encrypted)) {
             return null;
@@ -144,11 +144,8 @@ class Rsa extends Controller
      * @param string $data
      * @return string|null
      */
-    public function makeSign(string $data)
+    public function makeSign(string $data): ?string
     {
-        if (!is_string($data)) {
-            return null;
-        }
         // 摘要及签名的算法
         $digestAlgo = 'sha512';
         // 生成摘要
@@ -166,11 +163,8 @@ class Rsa extends Controller
      * @param string $signature 签名
      * @return int|null
      */
-    public function checkSign(string $data, string $signature)
+    public function checkSign(string $data, string $signature): ?int
     {
-        if (!is_string($data)) {
-            return null;
-        }
         // 摘要及签名的算法，同上面一致
         $digestAlgo = 'sha512';
         // 生成摘要

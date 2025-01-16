@@ -54,19 +54,35 @@ class Users extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
 
     /**
      * 添加数据
-     * @param $form
+     * @param $oauth
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($oauth): int
     {
-        return $this->saveResult($this->table, $form);
+        $salt = getRoundNum(8, 'all');
+        $userArray = [
+            'username'       => $oauth->username,
+            'avatar_url'     => $oauth->avatar_url,
+            'remember_token' => $oauth->remember_token,
+            'email'          => $oauth->email ?? '',
+            'salt'           => $salt,
+            'password'       => md5(md5('123456789') . $salt),
+            'role_id'        => $oauth->role_id,
+            'ip_address'     => request()->ip(),
+            'created_at'     => time(),
+            'updated_at'     => time(),
+            'status'         => $oauth->status,
+            'phone_number'   => '',
+            'uuid'           => ''
+        ];
+        return $this->saveResult($this->table, $userArray);
     }
 
     /**

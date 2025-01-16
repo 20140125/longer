@@ -9,6 +9,7 @@ use App\Models\Api\v1\UserCenter;
 use App\Models\Api\v1\Users;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use RedisException;
 
 class SyncUsers extends Command
 {
@@ -39,6 +40,7 @@ class SyncUsers extends Command
 
     /**
      *
+     * @throws RedisException
      */
     public function handle()
     {
@@ -60,13 +62,13 @@ class SyncUsers extends Command
                 $this->error('Remember token is invalid');
                 return false;
             }
-            $users = Users::getInstance()->getOne(['id' => $oauth->uid]);
+            $users = Users::getInstance()->getOne(['id' => $oauth->user_id]);
             if ($users) {
                 /* 更新用户信息 */
-                Users::getInstance()->updateOne(['id' => $oauth->uid], ['remember_token' => $this->argument('remember_token')]);
+                Users::getInstance()->updateOne(['id' => $oauth->user_id], ['remember_token' => $this->argument('remember_token')]);
                 $this->info('Successfully updated users： ' . $users->username);
                 /* 更新用户个人中心 */
-                $userCenter = UserCenter::getInstance()->getOne(['uid' => $oauth->uid]);
+                $userCenter = UserCenter::getInstance()->getOne(['user_id' => $oauth->user_id]);
                 if ($userCenter) {
                     UserCenter::getInstance()->updateOne(['id' => $userCenter->id], ['token' => $this->argument('remember_token'), 'u_name' => $oauth->username]);
                     $this->info('Successfully updated users center： ' . $users->username);
@@ -89,23 +91,7 @@ class SyncUsers extends Command
      */
     protected function saveUsers($oauth)
     {
-        $salt = getRoundNum(8, 'all');
-        $userArray = [
-            'username'       => $oauth->username,
-            'avatar_url'     => $oauth->avatar_url,
-            'remember_token' => $oauth->remember_token,
-            'email'          => $oauth->email ?? '',
-            'salt'           => $salt,
-            'password'       => md5(md5('123456789') . $salt),
-            'role_id'        => $oauth->role_id,
-            'ip_address'     => request()->ip(),
-            'created_at'     => time(),
-            'updated_at'     => time(),
-            'status'         => $oauth->status,
-            'phone_number'   => '',
-            'uuid'           => ''
-        ];
-        $userId = Users::getInstance()->saveOne($userArray);
+        $userId = Users::getInstance()->saveOne($oauth);
         if (!$userId) {
             $this->error('Failed save users ' . $oauth->username);
             return false;

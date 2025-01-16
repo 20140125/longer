@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use RedisException;
 
 /**
  * Class UserService
@@ -42,7 +43,7 @@ class UserService extends BaseService
      * @param array $form
      * @return array
      */
-    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'], array $form = [])
+    public function getUserLists($user, array $pagination = ['page' => 1, 'limit' => 10], array $order = ['order' => 'id', 'direction' => 'asc'], bool $getAll = false, array $column = ['*'], array $form = []): array
     {
         $this->return['lists'] = $this->userModel->getLists($user, $pagination, $order, $getAll, $column, $form);
         foreach ($this->return['lists']['data'] as &$item) {
@@ -57,8 +58,9 @@ class UserService extends BaseService
      * 用户登录
      * @param $form
      * @return array
+     * @throws RedisException
      */
-    public function loginSYS(&$form)
+    public function loginSYS(&$form): array
     {
         $user = $this->getUser(['email' => $form['email']]);
         if (!empty($form['password'])) {
@@ -79,12 +81,13 @@ class UserService extends BaseService
     }
 
     /**
-     * todo：账号密码登录
+     * 账号密码登录
      * @param $form
      * @param $user
      * @return array
+     * @throws RedisException
      */
-    protected function accountLogin($form, $user)
+    protected function accountLogin($form, $user): array
     {
         /* 密码错误 */
         $password = md5(md5($form['password']) . $user->salt);
@@ -99,9 +102,12 @@ class UserService extends BaseService
 
     /**
      * 邮箱登录
+     * @param $form
+     * @param $user
      * @return array
+     * @throws RedisException
      */
-    protected function mailLogin($form, $user)
+    protected function mailLogin($form, $user): array
     {
         return !empty($user) ? $this->updateUsers($form, $user, 'mail login system successfully') : $this->registerUsers($form, 'mail register system successfully');
     }
@@ -112,21 +118,22 @@ class UserService extends BaseService
      * @param $user
      * @param $message
      * @return array
+     * @throws RedisException
      */
-    public function updateUsers($form, $user, $message)
+    public function updateUsers($form, $user, $message): array
     {
         /* 更新用户信息 */
         $salt = getRoundNum(8, 'all');
-        $form['password'] = md5(md5($form['password']) . $user->salt) === $user->password ? $user->password : md5(md5($form['password']) . $salt);
+        $form['password'] = md5(md5($form['password']) . $salt);
         $form['salt'] = $salt;
         /* 自己修改信息时，修改用户标识。管理员修改其他用户时不修改用户标识 */
-        $form['remember_token'] = encrypt($form['password']);
+        $form['remember_token'] = substr(encrypt($form['password']), 0, 100);
         $form['ip_address'] = getServerIp();
         $form['updated_at'] = time();
         $this->userModel->updateOne(['id' => $user->id], $form);
         /* 设置用户标识 */
         $this->setVerifyCode($form['remember_token'], $form['remember_token'], config('app.app_refresh_login_time'));
-        $form['uuid'] = $user->uuid ?? '';
+        $form['uuid'] = config('app.client_id') . $user->id;
         $form['avatar_url'] = $user->avatar_url ?? $this->getUserAvatarImage();
         $form['username'] = $user->username ?? $form['email'];
         $form['socket'] = config('app.socket_url');
@@ -143,13 +150,14 @@ class UserService extends BaseService
      * @param $form
      * @param $message
      * @return array
+     * @throws RedisException
      */
-    protected function registerUsers($form, $message)
+    protected function registerUsers($form, $message): array
     {
         $form['avatar_url'] = $this->getUserAvatarImage();
         $form['salt'] = getRoundNum(8, 'all');
         $form['password'] = md5(md5(getRoundNum(9, 'all')) . $form['salt']);
-        $form['remember_token'] = encrypt($form['password']);
+        $form['remember_token'] = substr(encrypt($form['password']), 0, 100);
         $form['ip_address'] = getServerIp();
         $form['updated_at'] = time();
         $form['created_at'] = time();
@@ -176,8 +184,9 @@ class UserService extends BaseService
     /**
      * 获取用户画像
      * @return int
+     * @throws RedisException
      */
-    private function getUserAvatarImage()
+    private function getUserAvatarImage(): int
     {
         $users = json_decode($this->redisClient->sMembers(config('app.chat_user_key'))[0], true);
         $avatarUrl = [];
@@ -192,13 +201,14 @@ class UserService extends BaseService
     /**
      * 更新用户画像
      * @return int
+     * @throws RedisException
      */
-    public function updateUsersAvatarImage()
+    public function updateUsersAvatarImage(): int
     {
         $_column = ['username as client_name', 'avatar_url as client_img', 'uuid', 'id'];
         $users = $this->userModel->getLists([], [], [], true, $_column);
         foreach ($users as &$user) {
-            $user->centerInfo = $this->userCenterModel->getOne(['uid' => $user->id], ['desc', 'tags', 'ip_address', 'local']);
+            $user->centerInfo = $this->userCenterModel->getOne(['user_id' => $user->id], ['signature']);
             $user->id = encrypt($user->id);
         }
         if ($this->redisClient->sMembers(config('app.chat_user_key'))) {
@@ -211,7 +221,7 @@ class UserService extends BaseService
      * 获取推送用户列表
      * @return array
      */
-    public function getCacheUserList()
+    public function getCacheUserList(): array
     {
         $this->return['lists'] = Cache::get('_users_lists');
         if (empty($this->return['lists'])) {

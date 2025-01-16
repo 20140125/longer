@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use RedisException;
 
 /**
  * Class OauthCallbackController
@@ -48,6 +49,7 @@ class OauthCallbackController extends Controller
     /**
      * OauthCallbackController constructor.
      * @param Request $request (code:第三方授权返回code，state:自定义标识)
+     * @throws RedisException
      */
     public function __construct(Request $request)
     {

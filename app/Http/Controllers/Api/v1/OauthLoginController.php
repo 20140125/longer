@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Oauth\QQController;
 use App\Http\Controllers\Controller;
 use Illuminate\Routing\Redirector;
+use RedisException;
 
 /**
  * 第三方授权
@@ -37,6 +38,7 @@ class OauthLoginController extends Controller
     /**
      * QQ跳转到授权登录页面
      * @return RedirectResponse|Redirector
+     * @throws RedisException
      */
     public function QQ($source = '')
     {
@@ -51,6 +53,7 @@ class OauthLoginController extends Controller
     /**
      * Github跳转到授权登录页面
      * @return RedirectResponse|Redirector
+     * @throws RedisException
      */
     public function gitHub($source = '')
     {
@@ -65,6 +68,7 @@ class OauthLoginController extends Controller
     /**
      * Weibo跳转到授权登录页面
      * @return RedirectResponse|Redirector
+     * @throws RedisException
      */
     public function weibo($source = '')
     {
@@ -79,6 +83,7 @@ class OauthLoginController extends Controller
     /**
      * Gitee跳转到授权登录页面
      * @return RedirectResponse|Redirector
+     * @throws RedisException
      */
     public function gitee($source = '')
     {
@@ -93,6 +98,7 @@ class OauthLoginController extends Controller
     /**
      * Gitee跳转到授权登录页面
      * @return RedirectResponse|Redirector
+     * @throws RedisException
      */
     public function baidu($source = '')
     {
@@ -107,6 +113,7 @@ class OauthLoginController extends Controller
     /**
      * OsChina跳转到授权登录页面
      * @return RedirectResponse|Redirector
+     * @throws RedisException
      */
     public function osChina($source = '')
     {

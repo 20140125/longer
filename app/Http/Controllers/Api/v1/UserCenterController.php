@@ -13,7 +13,7 @@ class UserCenterController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getUserInfo(Request $request)
+    public function getUserInfo(Request $request): JsonResponse
     {
         $result = $this->userCenterService->getUserInfo($request->get('unauthorized'));
         return ajaxReturn($result);
@@ -24,13 +24,13 @@ class UserCenterController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function updateUserInfo(Request $request)
+    public function updateUserInfo(Request $request): JsonResponse
     {
         validatePost($this->post,
             [
                 'u_name'        => 'required|string',
                 'id'            => 'required|integer',
-                'desc'          => 'required|string|max:128',
+                'signature'     => 'required|string|max:128',
                 'tags'          => 'required|array|max:128',
                 'notice_status' => 'required|integer|in:1,2',
                 'user_status'   => 'required|integer|in:1,2',

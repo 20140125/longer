@@ -33,9 +33,9 @@ class UserCenterService extends BaseService
      * @param $form
      * @return array
      */
-    public function getUserInfo($form)
+    public function getUserInfo($form): array
     {
-        $this->return['lists'] = $this->userCenterModel->getOne(['uid' => $form->id]);
+        $this->return['lists'] = $this->userCenterModel->getOne(['user_id' => $form->id]);
         foreach ($this->json as $item) {
             $this->return['lists']->$item = empty($this->return['lists']->$item) ? [] : json_decode($this->return['lists']->$item, true);
         }
@@ -48,7 +48,7 @@ class UserCenterService extends BaseService
      * @param $_user
      * @return array
      */
-    public function updateUserInfo($form, $_user)
+    public function updateUserInfo($form, $_user): array
     {
         foreach ($this->json as $item) {
             $form[$item] = json_encode($form[$item] ?? [], JSON_UNESCAPED_UNICODE);

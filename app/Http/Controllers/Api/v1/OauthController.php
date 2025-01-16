@@ -13,7 +13,7 @@ class OauthController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getOAuthLists(Request $request)
+    public function getOAuthLists(Request $request): JsonResponse
     {
         validatePost($this->post, ['page' => 'required|integer', 'limit' => 'required|integer']);
         $_user = $request->get('unauthorized');
@@ -25,7 +25,7 @@ class OauthController extends BaseController
      * 邮箱账号绑定
      * @return JsonResponse
      */
-    public function bindEmail()
+    public function bindEmail(): JsonResponse
     {
         validatePost($this->post, ['email' => 'required|email', 'code' => 'required|integer|between:8,8', 'id' => 'required|integer']);
         /* 校验Redis内验证码是否存在 */

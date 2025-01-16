@@ -54,7 +54,7 @@ class Oauth extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -86,7 +86,7 @@ class Oauth extends Base
         }
         $where = [];
         if (!empty($user) && $user->role_id != 1) {
-            $where[] = ['uid', $user->id];
+            $where[] = ['user_id', $user->id];
         }
         if (!empty($form['username'])) {
             $where[] = ['username', $form['username']];

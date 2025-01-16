@@ -25,6 +25,7 @@ use App\Models\Api\v1\UserCenter;
 use App\Models\Api\v1\Users;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use RedisException;
 
 /**
  * 基础服务
@@ -168,8 +169,9 @@ class BaseService
      * @param $value
      * @param int $timeout
      * @return array
+     * @throws RedisException
      */
-    public function setVerifyCode($key, $value, int $timeout = 120)
+    public function setVerifyCode($key, $value, int $timeout = 120): array
     {
         $result = $this->redisClient->setValue($key, strtoupper($value), ['EX' => $timeout]);
         if (!$result) {
@@ -187,8 +189,9 @@ class BaseService
      * @param $key
      * @param $value
      * @return array
+     * @throws RedisException
      */
-    public function getVerifyCode($key, $value)
+    public function getVerifyCode($key, $value): array
     {
         $result = $this->redisClient->getValue($key) && strtoupper($value) === $this->redisClient->getValue($key);
         if (!$result) {
@@ -207,7 +210,7 @@ class BaseService
      * @param $_role
      * @return array
      */
-    public function setUnauthorized($_user, $_role)
+    public function setUnauthorized($unauthorized, $_role): array
     {
         $adCode = request()->ip() === '127.0.0.1' ? 440305 : getCityCode();
         if (!empty($adCode['code']) && $adCode['code'] === Code::SERVER_ERROR) {
@@ -217,13 +220,13 @@ class BaseService
         $province = $this->areaModel->getOne(['id' => $area->parent_id], ['name']);
         $this->return['lists'] = array(
             'auth'              => json_decode(($_role->auth_api ?? ''), true),
-            'remember_token'    => $_user->remember_token ?? '',
-            'username'          => $_user->username ?? '',
+            'remember_token'    => $unauthorized->remember_token ?? '',
+            'username'          => $unauthorized->username ?? '',
             'socket'            => config('app.socket_url') ?? '',
-            'avatar_url'        => ($_user->username ?? '') == 'admin' ? config('app.avatar_url') : $_user->avatar_url,
+            'avatar_url'        => ($unauthorized->username ?? '') == 'admin' ? config('app.avatar_url') : $unauthorized->avatar_url,
             'websocket'         => config('app.websocket') ?? '',
-            'role_id'           => encrypt($_user->role_id ?? ''),
-            'uuid'              => $_user->uuid ?? '',
+            'role_id'           => encrypt($unauthorized->role_id ?? ''),
+            'uuid'              => $unauthorized->uuid ?? '',
             'local'             => config('app.url') ?? '',
             'adcode'            => $adCode ?? '',
             'city'              => !empty($province->name) ? $province->name . $area->name : $area->name,
@@ -245,7 +248,7 @@ class BaseService
      * @param array $authIds
      * @return array
      */
-    protected function getDefaultAuth(array $authIds = [])
+    protected function getDefaultAuth(array $authIds = []): array
     {
         /* 获取默认的权限 */
         $_defaultAuth = Cache::get('_default_permission');
@@ -277,7 +280,7 @@ class BaseService
      * @param $userId
      * @return array
      */
-    public function getUserAuth($userId)
+    public function getUserAuth($userId): array
     {
         /* 获取用户信息 */
         $_user = $this->userModel->getOne(['id' => $userId], ['role_id']);
@@ -302,7 +305,7 @@ class BaseService
      * @param int $status
      * @return array
      */
-    protected function getRoleAuth($requestAuthID, int $status)
+    protected function getRoleAuth($requestAuthID, int $status): array
     {
         /* 獲取当前记录的信息 */
         $_requestAuth = $this->permissionApplyModel->getOne(['id' => $requestAuthID], ['user_id', 'href']);
@@ -348,7 +351,7 @@ class BaseService
      * @param $form
      * @return array
      */
-    protected function webPushMessage($form)
+    protected function webPushMessage($form): array
     {
         try {
             $form['state'] = Code::WEBSOCKET_STATE[2];

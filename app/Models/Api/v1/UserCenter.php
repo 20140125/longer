@@ -52,7 +52,7 @@ class UserCenter extends Base
      * @param $form
      * @return int
      */
-    public function updateOne($where, $form)
+    public function updateOne($where, $form): int
     {
         return $this->updateResult($this->table, $where, $form);
     }
@@ -62,7 +62,7 @@ class UserCenter extends Base
      * @param $form
      * @return int
      */
-    public function saveOne($form)
+    public function saveOne($form): int
     {
         return $this->saveResult($this->table, $form);
     }
